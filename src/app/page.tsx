@@ -73,10 +73,10 @@ export default async function HomePage() {
           </div>
           <div className="relative min-h-[360px] border-t border-co-border bg-white lg:min-h-[640px] lg:border-l lg:border-t-0">
             <ImagePlaceholder
-              hint="Clean, sharp desk shot on a plain background — no cluttered room scene"
-              alt="A clean Cohuman desk setup, shot sharp on a plain background"
+              hint="Bright, clean office desk/counter — sharp, minimal, full-bleed landscape shot"
+              alt="A bright, clean Cohuman workspace desk"
               src={stockPhotos.heroDeskClean}
-              variant="white"
+              variant="warm"
               priority
             />
           </div>
