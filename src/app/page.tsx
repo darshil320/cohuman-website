@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeroCarousel } from "@/components/common/hero-carousel";
 import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
@@ -16,6 +17,12 @@ const FEATURED_SLUGS = [
   "parlour-sofa",
   "assembly-conference",
   "stack-storage-wall",
+];
+
+const HERO_SLIDES = [
+  { src: stockPhotos.heroDeskClean, alt: "Bright, clean Cohuman workspace desk" },
+  { src: stockPhotos.openOfficeDesks, alt: "Row of ergonomic desks and chairs in an open office" },
+  { src: stockPhotos.conferenceTable, alt: "Boardroom conference table with floor-to-ceiling windows" },
 ];
 
 const STATS = [
@@ -42,45 +49,38 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="border-b border-co-border bg-co-bg">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col justify-center gap-7 px-[18px] py-16 sm:px-6 lg:px-11 lg:py-0 lg:pr-14">
-            <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-co-green">
-              Cohuman · Surat · Since {siteConfig.foundedYear}
-            </p>
-            <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(40px,4.6vw,64px)] font-medium leading-[1.02] tracking-tight text-co-ink">
-              Offices built around the people in them.
-            </h1>
-            <p className="max-w-[46ch] text-[17px] font-light leading-relaxed text-co-muted">
-              Thirty-seven years of making chairs, desks and rooms that people actually want to
-              sit in. We plan the space, build the furniture, install it, and look after it
-              afterwards.
-            </p>
-            <div className="flex flex-wrap gap-2.5 pt-1">
-              <Link
-                href="/contact"
-                className="border-0 bg-co-ink px-[26px] py-[15px] text-[15px] font-semibold text-co-bg hover:bg-co-green"
-              >
-                Request a Quote
-              </Link>
-              <Link
-                href="/catalog"
-                className="border border-co-border-strong px-[25px] py-3.5 text-[15px] font-semibold text-co-ink hover:border-co-ink hover:bg-co-bg-alt"
-              >
-                Browse the catalog
-              </Link>
+      <section className="border-b border-co-border">
+        <HeroCarousel slides={HERO_SLIDES} className="min-h-[520px] sm:min-h-[600px] lg:min-h-[720px]">
+          <div className="mx-auto flex h-full max-w-[1320px] items-center px-[18px] sm:px-6 lg:px-11">
+            <div className="flex max-w-[560px] flex-col gap-7 py-16 lg:py-0">
+              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-co-green-light">
+                Cohuman · Surat · Since {siteConfig.foundedYear}
+              </p>
+              <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(40px,4.6vw,64px)] font-medium leading-[1.02] tracking-tight text-co-panel-fg">
+                Offices built around the people in them.
+              </h1>
+              <p className="max-w-[46ch] text-[17px] font-light leading-relaxed text-co-panel-muted">
+                Thirty-seven years of making chairs, desks and rooms that people actually want to
+                sit in. We plan the space, build the furniture, install it, and look after it
+                afterwards.
+              </p>
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                <Link
+                  href="/contact"
+                  className="border-0 bg-co-ink px-[26px] py-[15px] text-[15px] font-semibold text-co-bg hover:bg-co-green"
+                >
+                  Request a Quote
+                </Link>
+                <Link
+                  href="/catalog"
+                  className="border border-co-panel-fg/40 px-[25px] py-3.5 text-[15px] font-semibold text-co-panel-fg hover:border-co-panel-fg hover:bg-white/10"
+                >
+                  Browse the catalog
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="relative min-h-[360px] border-t border-co-border bg-white lg:min-h-[640px] lg:border-l lg:border-t-0">
-            <ImagePlaceholder
-              hint="Bright, clean office desk/counter — sharp, minimal, full-bleed landscape shot"
-              alt="A bright, clean Cohuman workspace desk"
-              src={stockPhotos.heroDeskClean}
-              variant="warm"
-              priority
-            />
-          </div>
-        </div>
+        </HeroCarousel>
       </section>
 
 
