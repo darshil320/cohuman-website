@@ -10,6 +10,7 @@ function unsplash(id: string, width = 1600) {
 }
 
 export const stockPhotos = {
+  heroDeskClean: unsplash("photo-1518455027359-f3f8164ba6bd", 1600),
   heroChairWhite: unsplash("photo-1750306957077-b74e45fe1819", 1600),
   executiveCabin: unsplash("photo-1723810388971-f8cd6474597f"),
   conferenceTable: unsplash("photo-1431540015161-0bf868a2d407"),

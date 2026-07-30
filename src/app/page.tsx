@@ -73,9 +73,9 @@ export default async function HomePage() {
           </div>
           <div className="relative min-h-[360px] border-t border-co-border bg-white lg:min-h-[640px] lg:border-l lg:border-t-0">
             <ImagePlaceholder
-              hint="Studio shot: a signature Cohuman chair or desk on a seamless white background"
-              alt="A signature Cohuman piece, studio-lit on white"
-              src={stockPhotos.heroChairWhite}
+              hint="Clean, sharp desk shot on a plain background — no cluttered room scene"
+              alt="A clean Cohuman desk setup, shot sharp on a plain background"
+              src={stockPhotos.heroDeskClean}
               variant="white"
               priority
             />
@@ -90,7 +90,7 @@ export default async function HomePage() {
           {STATS.map((s) => (
             <div
               key={s.k}
-              className="border-co-border py-[clamp(26px,3vw,38px)] pr-6 [&:not(:last-child)]:border-r"
+              className="border-co-border py-[clamp(26px,3vw,38px)] px-6 first:pl-0 last:pr-0 [&:not(:last-child)]:border-r"
             >
               <p className="mb-1.5 whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight">
                 {s.v}
