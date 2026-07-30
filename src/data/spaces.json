@@ -1,0 +1,6 @@
+[
+  { "slug": "cabin", "num": "01", "name": "Cabin", "blurb": "Desk, storage, visitor seating and a door that closes. Specified as one room, not four line items.", "includes": "Meridian Executive · Archive Credenza · Assembly (small) · Parlour armchair", "slotHint": "Cabin: executive desk with visitor seating" },
+  { "slug": "workstation", "num": "02", "name": "Workstation", "blurb": "The open floor. Bench desking, screens, power, storage and a chair people will keep.", "includes": "Loom Linear · Pivot Height-Adjustable · Aria Task · Ledger Pedestal", "slotHint": "Open floor: bench desking with screens" },
+  { "slug": "meeting", "num": "03", "name": "Meeting", "blurb": "From a four-seat huddle to a thirty-seat boardroom, with the AV designed in from the start.", "includes": "Assembly Conference · Roundtable 8 · Nimbus Mesh · Stack Storage Wall", "slotHint": "Meeting room: conference table with AV" },
+  { "slug": "lounge", "num": "04", "name": "Lounge", "blurb": "Reception, breakout, café and the corner where the real conversations happen.", "includes": "Parlour Sofa · Nook Two-Seater · Alcove Modular · Roundtable 8", "slotHint": "Lounge: reception and breakout seating" }
+]

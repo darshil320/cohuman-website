@@ -1,0 +1,249 @@
+import Link from "next/link";
+import { ImagePlaceholder } from "@/components/common/image-placeholder";
+import { SectionHeading } from "@/components/common/section-heading";
+import { CtaBand } from "@/components/common/cta-band";
+import { CollectionCard } from "@/components/catalog/collection-card";
+import { ProductCard } from "@/components/catalog/product-card";
+import { catalog } from "@/lib/catalog";
+import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
+import { siteConfig } from "@/lib/site-config";
+import { projectPhoto, stockPhotos } from "@/lib/stock-photos";
+
+const FEATURED_SLUGS = [
+  "aria-task",
+  "loom-linear",
+  "meridian-executive",
+  "parlour-sofa",
+  "assembly-conference",
+  "stack-storage-wall",
+];
+
+const STATS = [
+  { v: String(siteConfig.foundedYear), k: "Furniture Concepts founded, Surat" },
+  { v: "37 yrs", k: "Designing and making workplaces" },
+  { v: "6", k: "Product families in production" },
+  { v: "~2 days", k: `Typical quote turnaround (${siteConfig.enquiryTurnaround})` },
+];
+
+export default async function HomePage() {
+  const [categories, collections, spaces, services, projects, allProducts] = await Promise.all([
+    catalog.getCategories(),
+    catalog.getCollections(),
+    catalog.getSpaces(),
+    catalog.getServices(),
+    catalog.getProjects(),
+    catalog.getProducts(),
+  ]);
+
+  const featured = FEATURED_SLUGS.map((slug) => allProducts.find((p) => p.slug === slug)).filter(
+    (p): p is NonNullable<typeof p> => Boolean(p),
+  );
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="border-b border-co-border bg-co-bg">
+        <div className="mx-auto grid max-w-[1320px] grid-cols-1 lg:grid-cols-2">
+          <div className="flex flex-col justify-center gap-7 px-[18px] py-16 sm:px-6 lg:px-11 lg:py-0 lg:pr-14">
+            <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-co-green">
+              Cohuman · Surat · Since {siteConfig.foundedYear}
+            </p>
+            <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(40px,4.6vw,64px)] font-medium leading-[1.02] tracking-tight text-co-ink">
+              Offices built around the people in them.
+            </h1>
+            <p className="max-w-[46ch] text-[17px] font-light leading-relaxed text-co-muted">
+              Thirty-seven years of making chairs, desks and rooms that people actually want to
+              sit in. We plan the space, build the furniture, install it, and look after it
+              afterwards.
+            </p>
+            <div className="flex flex-wrap gap-2.5 pt-1">
+              <Link
+                href="/contact"
+                className="border-0 bg-co-ink px-[26px] py-[15px] text-[15px] font-semibold text-co-bg hover:bg-co-green"
+              >
+                Request a Quote
+              </Link>
+              <Link
+                href="/catalog"
+                className="border border-co-border-strong px-[25px] py-3.5 text-[15px] font-semibold text-co-ink hover:border-co-ink hover:bg-co-bg-alt"
+              >
+                Browse the catalog
+              </Link>
+            </div>
+          </div>
+          <div className="relative min-h-[360px] border-t border-co-border bg-white lg:min-h-[640px] lg:border-l lg:border-t-0">
+            <ImagePlaceholder
+              hint="Studio shot: a signature Cohuman chair or desk on a seamless white background"
+              alt="A signature Cohuman piece, studio-lit on white"
+              src={stockPhotos.heroChairWhite}
+              variant="white"
+              priority
+            />
+          </div>
+        </div>
+      </section>
+
+
+      {/* Stats */}
+      <section className="border-b border-co-border bg-co-bg-alt">
+        <div className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-4 lg:px-11">
+          {STATS.map((s) => (
+            <div
+              key={s.k}
+              className="border-co-border py-[clamp(26px,3vw,38px)] pr-6 [&:not(:last-child)]:border-r"
+            >
+              <p className="mb-1.5 whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight">
+                {s.v}
+              </p>
+              <p className="text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Collections */}
+      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+        <SectionHeading
+          eyebrow="Collections"
+          title="Four families. One coherent floor."
+          linkHref="/collections"
+          linkLabel="All collections"
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {collections.map((c) => (
+            <CollectionCard key={c.slug} collection={c} />
+          ))}
+        </div>
+      </section>
+
+      {/* Furnish by space */}
+      <section className="bg-co-panel text-co-panel-fg">
+        <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+          <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
+            Furnish by space
+          </p>
+          <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
+            Tell us the room. We&apos;ll tell you what goes in it.
+          </h2>
+          <div className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
+            {spaces.map((sp) => (
+              <Link
+                key={sp.slug}
+                href="/solutions"
+                className="block min-h-[220px] bg-co-panel p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#232D22]"
+              >
+                <p className="font-display text-[13px] font-semibold tracking-wide text-co-green">
+                  {sp.num}
+                </p>
+                <h3 className="mb-2.5 mt-6 font-display text-[24px] font-medium tracking-tight">
+                  {sp.name}
+                </h3>
+                <p className="text-[14.5px] font-light leading-relaxed text-co-panel-muted">
+                  {sp.blurb}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Signature pieces */}
+      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+        <SectionHeading
+          eyebrow="Signature pieces"
+          title="The ones we get asked for."
+          linkHref="/catalog"
+          linkLabel="Full catalog"
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((p) => (
+            <ProductCard
+              key={p.slug}
+              product={p}
+              catLabel={resolveCatLabel(categories, p.cat)}
+              colName={resolveColName(collections, p.col)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* What we do */}
+      <section className="border-b border-t border-co-border bg-co-bg-alt">
+        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-[18px] py-[clamp(64px,8vw,100px)] sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-11">
+          <div>
+            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
+              What we do
+            </p>
+            <h2 className="mb-[18px] max-w-[20ch] font-display text-[clamp(28px,3.6vw,44px)] font-medium leading-[1.06] tracking-tight">
+              Not just the furniture. The whole fit-out.
+            </h2>
+            <p className="mb-[26px] max-w-[44ch] text-[16.5px] font-light leading-relaxed text-co-muted">
+              Most clients come to us with a floor plate and a headcount. We take it from there
+              — layout, specification, manufacture, install, and a service contract that keeps
+              it all working.
+            </p>
+            <Link
+              href="/services"
+              className="border-b-[1.5px] border-co-green pb-0.5 text-[15px] font-semibold text-co-ink hover:text-co-green"
+            >
+              Our services →
+            </Link>
+          </div>
+          <div className="grid gap-px border border-co-border bg-co-border">
+            {services.map((sv) => (
+              <div key={sv.num} className="flex gap-[18px] bg-co-bg p-[22px]">
+                <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-co-green">
+                  {sv.num}
+                </span>
+                <div>
+                  <h3 className="mb-1 font-display text-[18px] font-medium tracking-tight">
+                    {sv.name}
+                  </h3>
+                  <p className="text-sm font-light leading-relaxed text-co-muted-2">
+                    {sv.blurb}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recent work */}
+      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+        <SectionHeading
+          eyebrow="Recent work"
+          title="Floors we've finished."
+          linkHref="/projects"
+          linkLabel="All projects"
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.slice(0, 3).map((pr) => (
+            <Link key={pr.slug} href="/projects" className="group block text-co-ink">
+              <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
+                <ImagePlaceholder
+                  hint={pr.slotHint}
+                  alt={pr.name}
+                  src={projectPhoto[pr.slug]}
+                  className="transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
+                {pr.sector}
+              </p>
+              <h3 className="mb-1.5 font-display text-[20px] font-medium tracking-tight">
+                {pr.name}
+              </h3>
+              <p className="text-sm font-light text-co-muted-2">{pr.meta}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <CtaBand
+        heading="Send us your floor plan. Get a costed proposal."
+        body={`No obligation, no cart, no checkout — a real specification from a real person, usually inside ${siteConfig.enquiryTurnaround}.`}
+      />
+    </div>
+  );
+}

@@ -1,0 +1,8 @@
+[
+  { "id": "task", "label": "Ergonomic Seating", "shortLabel": "Task chairs" },
+  { "id": "exec", "label": "Executive Desks", "shortLabel": "Executive chairs" },
+  { "id": "work", "label": "Workstations", "shortLabel": "Workstations" },
+  { "id": "conf", "label": "Conference Tables", "shortLabel": "Conference tables" },
+  { "id": "store", "label": "Storage", "shortLabel": "Storage" },
+  { "id": "sofa", "label": "Reception", "shortLabel": "Sofas & lounge" }
+]

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand colors — extracted from the Cohuman design (Cohuman.dc.html) */
+  --color-co-bg: #ffffff;
+  --color-co-bg-alt: #f6f6f4;
+  --color-co-surface: #ffffff;
+  --color-co-ink: #1f2328;
+  --color-co-ink-soft: #3a4048;
+  --color-co-muted: #565c64;
+  --color-co-muted-2: #6b7178;
+  --color-co-faint: #8c929a;
+  --color-co-placeholder: #a8adb4;
+  --color-co-border: #dcd8cf;
+  --color-co-border-strong: #c8c3b8;
+  --color-co-card-border: #e4e0d7;
+  --color-co-green: #6fa82b;
+  --color-co-green-dark: #4e7d1f;
+  --color-co-green-light: #9cc763;
+  --color-co-green-pale: #c9dfa4;
+  --color-co-green-paler: #d6e8b8;
+  --color-co-panel: #1c241c;
+  --color-co-panel-border: #2e382d;
+  --color-co-panel-fg: #f0eee7;
+  --color-co-panel-muted: #a8b0a4;
+  --color-co-panel-faint: #6e7a6b;
+  --color-co-cta-green: #6fa82b;
+  --color-co-cta-green-ink: #12200a;
+  --color-co-placeholder-frame-1: #ffffff;
+  --color-co-placeholder-frame-2: #f6f4ee;
+  --color-co-placeholder-frame-3: #e8e4da;
+  --color-co-hero-bg: #ececea;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-figtree), system-ui, sans-serif;
+}
+
+:root {
+  --background: var(--color-co-bg);
+  --foreground: var(--color-co-ink);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-co-bg);
+  color: var(--color-co-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-co-green-light);
+  outline-offset: 1px;
+}
+
+::placeholder {
+  color: var(--color-co-placeholder);
+}
+
+::selection {
+  background: var(--color-co-green-paler);
+}
+
+@keyframes co-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes co-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-co-rise {
+  animation: co-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-co-fade {
+  animation: co-fade 0.6s ease both;
+}

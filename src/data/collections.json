@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "meridian",
+    "name": "Meridian",
+    "kicker": "Cabins & boardrooms",
+    "blurb": "Veneer, leather and weight. For cabins and boardrooms where decisions get made.",
+    "slotHint": "Meridian: executive cabin with veneer desk"
+  },
+  {
+    "slug": "origin",
+    "name": "Origin",
+    "kicker": "The workhorse",
+    "blurb": "Durable, value-engineered seating and desking for floors that need to last a decade.",
+    "slotHint": "Origin: open-plan floor of task chairs"
+  },
+  {
+    "slug": "loom",
+    "name": "Loom",
+    "kicker": "Desking systems",
+    "blurb": "Benches, screens, power and cable management that grows with headcount.",
+    "slotHint": "Loom: linear bench desking with screens"
+  },
+  {
+    "slug": "parlour",
+    "name": "Parlour",
+    "kicker": "Soft & social",
+    "blurb": "Sofas, booths and low tables for the parts of the day that are not at a desk.",
+    "slotHint": "Parlour: lounge seating in a breakout area"
+  }
+]
