@@ -3,7 +3,7 @@ import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { SiteHeader } from "@/components/layout/site-header";
+import { HEADER_HEIGHT, SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { QuoteDialogProvider } from "@/components/providers/quote-dialog-provider";
@@ -71,7 +71,9 @@ export default function RootLayout({
         />
         <QuoteDialogProvider>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
+            {children}
+          </main>
           <SiteFooter />
           <WhatsAppButton />
         </QuoteDialogProvider>

@@ -23,7 +23,12 @@ export function HeroCarousel({
   className,
 }: HeroCarouselProps) {
   const [active, setActive] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const pausedRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const startXRef = useRef(0);
+  const draggingRef = useRef(false);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -33,31 +38,74 @@ export function HeroCarousel({
     return () => clearInterval(id);
   }, [slides.length, intervalMs]);
 
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (slides.length <= 1) return;
+    draggingRef.current = true;
+    startXRef.current = event.clientX;
+    pausedRef.current = true;
+    setDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (!draggingRef.current) return;
+    setDragOffset(event.clientX - startXRef.current);
+  }
+
+  function endDrag() {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    setDragging(false);
+    pausedRef.current = false;
+
+    const width = containerRef.current?.offsetWidth ?? 1;
+    const threshold = width * 0.12;
+    if (dragOffset <= -threshold) {
+      setActive((i) => (i + 1) % slides.length);
+    } else if (dragOffset >= threshold) {
+      setActive((i) => (i - 1 + slides.length) % slides.length);
+    }
+    setDragOffset(0);
+  }
+
   return (
     <div
-      className={cn("relative overflow-hidden", className)}
+      ref={containerRef}
+      className={cn("relative touch-pan-y overflow-hidden select-none", className)}
       onMouseEnter={() => {
         pausedRef.current = true;
       }}
       onMouseLeave={() => {
         pausedRef.current = false;
       }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={endDrag}
+      onPointerLeave={endDrag}
+      onPointerCancel={endDrag}
     >
-      {slides.map((slide, i) => (
-        <Image
-          key={slide.src}
-          src={slide.src}
-          alt={slide.alt}
-          fill
-          priority={i === 0}
-          sizes="100vw"
-          className={cn(
-            "object-cover transition-opacity duration-1000 ease-in-out",
-            i === active ? "opacity-100" : "opacity-0",
-          )}
-        />
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-co-panel/85 via-co-panel/45 to-co-panel/10" />
+      <div
+        className={cn(
+          "absolute inset-0 flex cursor-grab active:cursor-grabbing",
+          !dragging && "transition-transform duration-500 ease-out",
+        )}
+        style={{ transform: `translateX(calc(${-active * 100}% + ${dragOffset}px))` }}
+      >
+        {slides.map((slide, i) => (
+          <div key={slide.src} className="relative h-full w-full shrink-0">
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              fill
+              priority={i === 0}
+              draggable={false}
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-co-panel/85 via-co-panel/45 to-co-panel/10" />
       <div className="relative z-10 h-full">{children}</div>
       {slides.length > 1 ? (
         <div className="absolute bottom-6 left-[18px] z-10 flex gap-1.5 sm:left-6 lg:left-11">
