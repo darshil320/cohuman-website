@@ -1,0 +1,298 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "CoHuman" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e7]:
+        - link "Collections" [ref=e8] [cursor=pointer]:
+          - /url: /collections
+        - link "Catalog" [ref=e9] [cursor=pointer]:
+          - /url: /catalog
+        - link "B2B / Bulk Orders" [ref=e10] [cursor=pointer]:
+          - /url: /b2b
+        - link "Solutions" [ref=e11] [cursor=pointer]:
+          - /url: /solutions
+        - link "Projects" [ref=e12] [cursor=pointer]:
+          - /url: /projects
+        - link "About" [ref=e13] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e14]:
+        - link "Contact" [ref=e15] [cursor=pointer]:
+          - /url: /contact
+        - button "Request a Quote" [ref=e16]
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - img "Bright, clean Cohuman workspace desk" [ref=e23]
+          - img "Row of ergonomic desks and chairs in an open office" [ref=e25]
+          - img "Boardroom conference table with floor-to-ceiling windows" [ref=e27]
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: Cohuman · Surat · Since 1989
+          - heading "Offices built around the people in them." [level=1] [ref=e32]
+          - paragraph [ref=e33]: Thirty-seven years of making chairs, desks and rooms that people actually want to sit in. We plan the space, build the furniture, install it, and look after it afterwards.
+          - generic [ref=e34]:
+            - link "Request a Quote" [ref=e35] [cursor=pointer]:
+              - /url: /contact
+            - link "Browse the catalog" [ref=e36] [cursor=pointer]:
+              - /url: /catalog
+        - generic [ref=e37]:
+          - button "Show slide 1" [ref=e38]
+          - button "Show slide 2" [ref=e40]
+          - button "Show slide 3" [ref=e42]
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: "1989"
+          - paragraph [ref=e48]: Furniture Concepts founded, Surat
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: 37 yrs
+          - paragraph [ref=e51]: Designing and making workplaces
+        - generic [ref=e52]:
+          - paragraph [ref=e53]: "6"
+          - paragraph [ref=e54]: Product families in production
+        - generic [ref=e55]:
+          - paragraph [ref=e56]: ~2 days
+          - paragraph [ref=e57]: Typical quote turnaround (two working days)
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - paragraph [ref=e61]: Collections
+            - heading "Four families. One coherent floor." [level=2] [ref=e62]
+          - link "All collections →" [ref=e63] [cursor=pointer]:
+            - /url: /collections
+        - generic [ref=e64]:
+          - link [ref=e65] [cursor=pointer]:
+            - /url: /collections/meridian
+            - img "Meridian" [ref=e67]
+            - generic [ref=e68]:
+              - paragraph [ref=e69]: Cabins & boardrooms
+              - heading "Meridian" [level=3] [ref=e70]
+              - paragraph [ref=e71]: Veneer, leather and weight. For cabins and boardrooms where decisions get made.
+          - link [ref=e72] [cursor=pointer]:
+            - /url: /collections/origin
+            - img "Origin" [ref=e74]
+            - generic [ref=e75]:
+              - paragraph [ref=e76]: The workhorse
+              - heading "Origin" [level=3] [ref=e77]
+              - paragraph [ref=e78]: Durable, value-engineered seating and desking for floors that need to last a decade.
+          - link [ref=e79] [cursor=pointer]:
+            - /url: /collections/loom
+            - img "Loom" [ref=e81]
+            - generic [ref=e82]:
+              - paragraph [ref=e83]: Desking systems
+              - heading "Loom" [level=3] [ref=e84]
+              - paragraph [ref=e85]: Benches, screens, power and cable management that grows with headcount.
+          - link [ref=e86] [cursor=pointer]:
+            - /url: /collections/parlour
+            - img "Parlour" [ref=e88]
+            - generic [ref=e89]:
+              - paragraph [ref=e90]: Soft & social
+              - heading "Parlour" [level=3] [ref=e91]
+              - paragraph [ref=e92]: Sofas, booths and low tables for the parts of the day that are not at a desk.
+      - generic [ref=e94]:
+        - paragraph [ref=e95]: Furnish by space
+        - heading "Tell us the room. We'll tell you what goes in it." [level=2] [ref=e96]
+        - generic [ref=e97]:
+          - link [ref=e98] [cursor=pointer]:
+            - /url: /solutions
+            - paragraph [ref=e99]: "01"
+            - heading "Cabin" [level=3] [ref=e100]
+            - paragraph [ref=e101]: Desk, storage, visitor seating and a door that closes. Specified as one room, not four line items.
+          - link [ref=e102] [cursor=pointer]:
+            - /url: /solutions
+            - paragraph [ref=e103]: "02"
+            - heading "Workstation" [level=3] [ref=e104]
+            - paragraph [ref=e105]: The open floor. Bench desking, screens, power, storage and a chair people will keep.
+          - link [ref=e106] [cursor=pointer]:
+            - /url: /solutions
+            - paragraph [ref=e107]: "03"
+            - heading "Meeting" [level=3] [ref=e108]
+            - paragraph [ref=e109]: From a four-seat huddle to a thirty-seat boardroom, with the AV designed in from the start.
+          - link [ref=e110] [cursor=pointer]:
+            - /url: /solutions
+            - paragraph [ref=e111]: "04"
+            - heading "Lounge" [level=3] [ref=e112]
+            - paragraph [ref=e113]: Reception, breakout, café and the corner where the real conversations happen.
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - paragraph [ref=e117]: Signature pieces
+            - heading "The ones we get asked for." [level=2] [ref=e118]
+          - link "Full catalog →" [ref=e119] [cursor=pointer]:
+            - /url: /catalog
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - link [ref=e122] [cursor=pointer]:
+              - /url: /catalog/aria-task
+              - img "Aria Task" [ref=e123]
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - paragraph [ref=e126]: Task chairs · Origin
+                - link [ref=e127] [cursor=pointer]:
+                  - /url: /catalog/aria-task
+                  - heading "Aria Task" [level=3] [ref=e128]
+                - paragraph [ref=e129]: A mesh task chair light enough to forget you are sitting in it.
+              - button "Enquire" [ref=e131]
+          - generic [ref=e132]:
+            - link [ref=e133] [cursor=pointer]:
+              - /url: /catalog/loom-linear
+              - img "Loom Linear" [ref=e134]
+            - generic [ref=e135]:
+              - generic [ref=e136]:
+                - paragraph [ref=e137]: Workstations · Loom
+                - link [ref=e138] [cursor=pointer]:
+                  - /url: /catalog/loom-linear
+                  - heading "Loom Linear" [level=3] [ref=e139]
+                - paragraph [ref=e140]: Bench desking that keeps cables, power and privacy in one place.
+              - button "Enquire" [ref=e142]
+          - generic [ref=e143]:
+            - link [ref=e144] [cursor=pointer]:
+              - /url: /catalog/meridian-executive
+              - img "Meridian Executive" [ref=e145]
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - paragraph [ref=e148]: Executive chairs · Meridian
+                - link [ref=e149] [cursor=pointer]:
+                  - /url: /catalog/meridian-executive
+                  - heading "Meridian Executive" [level=3] [ref=e150]
+                - paragraph [ref=e151]: A high-back chair with the presence of a piece of furniture.
+              - button "Enquire" [ref=e153]
+          - generic [ref=e154]:
+            - link [ref=e155] [cursor=pointer]:
+              - /url: /catalog/parlour-sofa
+              - img "Parlour Sofa" [ref=e156]
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - paragraph [ref=e159]: Sofas & lounge · Parlour
+                - link [ref=e160] [cursor=pointer]:
+                  - /url: /catalog/parlour-sofa
+                  - heading "Parlour Sofa" [level=3] [ref=e161]
+                - paragraph [ref=e162]: Deep enough to relax in, firm enough to get out of.
+              - button "Enquire" [ref=e164]
+          - generic [ref=e165]:
+            - link [ref=e166] [cursor=pointer]:
+              - /url: /catalog/assembly-conference
+              - img "Assembly Conference" [ref=e167]
+            - generic [ref=e168]:
+              - generic [ref=e169]:
+                - paragraph [ref=e170]: Conference tables · Meridian
+                - link [ref=e171] [cursor=pointer]:
+                  - /url: /catalog/assembly-conference
+                  - heading "Assembly Conference" [level=3] [ref=e172]
+                - paragraph [ref=e173]: A boardroom table with the wiring designed in, not drilled in.
+              - button "Enquire" [ref=e175]
+          - generic [ref=e176]:
+            - link [ref=e177] [cursor=pointer]:
+              - /url: /catalog/stack-storage-wall
+              - img "Stack Storage Wall" [ref=e178]
+            - generic [ref=e179]:
+              - generic [ref=e180]:
+                - paragraph [ref=e181]: Storage · Loom
+                - link [ref=e182] [cursor=pointer]:
+                  - /url: /catalog/stack-storage-wall
+                  - heading "Stack Storage Wall" [level=3] [ref=e183]
+                - paragraph [ref=e184]: A storage wall that doubles as the room divider.
+              - button "Enquire" [ref=e186]
+      - generic [ref=e188]:
+        - generic [ref=e189]:
+          - paragraph [ref=e190]: What we do
+          - heading "Not just the furniture. The whole fit-out." [level=2] [ref=e191]
+          - paragraph [ref=e192]: Most clients come to us with a floor plate and a headcount. We take it from there — layout, specification, manufacture, install, and a service contract that keeps it all working.
+          - link "Our services →" [ref=e193] [cursor=pointer]:
+            - /url: /services
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - generic [ref=e196]: "01"
+            - generic [ref=e197]:
+              - heading "Space planning" [level=3] [ref=e198]
+              - paragraph [ref=e199]: Test-fits, seat counts and circulation drawings from your floor plan — usually inside a week.
+          - generic [ref=e200]:
+            - generic [ref=e201]: "02"
+            - generic [ref=e202]:
+              - heading "Turnkey fit-out" [level=3] [ref=e203]
+              - paragraph [ref=e204]: One contract for furniture, partitions, storage walls and the coordination between them.
+          - generic [ref=e205]:
+            - generic [ref=e206]: "03"
+            - generic [ref=e207]:
+              - heading "Delivery & installation" [level=3] [ref=e208]
+              - paragraph [ref=e209]: Our own crews, out of hours if the floor is live, with the packaging taken away.
+          - generic [ref=e210]:
+            - generic [ref=e211]: "04"
+            - generic [ref=e212]:
+              - heading "AMC & aftercare" [level=3] [ref=e213]
+              - paragraph [ref=e214]: Annual maintenance, spares held in stock, and upholstery refresh instead of replacement.
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e217]:
+            - paragraph [ref=e218]: Recent work
+            - heading "Floors we've finished." [level=2] [ref=e219]
+          - link "All projects →" [ref=e220] [cursor=pointer]:
+            - /url: /projects
+        - generic [ref=e221]:
+          - link [ref=e222] [cursor=pointer]:
+            - /url: /projects
+            - img "Meridian Tower" [ref=e224]
+            - paragraph [ref=e225]: Corporate HQ
+            - heading "Meridian Tower" [level=3] [ref=e226]
+            - paragraph [ref=e227]: 340 seats · 4 floors
+          - link [ref=e228] [cursor=pointer]:
+            - /url: /projects
+            - img "Northline Studio" [ref=e230]
+            - paragraph [ref=e231]: Design studio
+            - heading "Northline Studio" [level=3] [ref=e232]
+            - paragraph [ref=e233]: 48 seats · 1 floor
+          - link [ref=e234] [cursor=pointer]:
+            - /url: /projects
+            - img "Kelvin Labs" [ref=e236]
+            - paragraph [ref=e237]: R&D campus
+            - heading "Kelvin Labs" [level=3] [ref=e238]
+            - paragraph [ref=e239]: 210 seats · 2 buildings
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - heading "Send us your floor plan. Get a costed proposal." [level=2] [ref=e243]
+          - paragraph [ref=e244]: No obligation, no cart, no checkout — a real specification from a real person, usually inside two working days.
+        - button "Request a Quote" [ref=e245]
+  - contentinfo [ref=e246]:
+    - generic [ref=e247]:
+      - generic [ref=e248]:
+        - generic [ref=e249]:
+          - generic [ref=e250]: CoHuman
+          - paragraph [ref=e253]: People-first office furniture, made in Surat. A Furniture Concepts 2.0 brand, crafting spaces since 1989.
+          - button "Request a Quote" [ref=e254]
+        - generic [ref=e255]:
+          - paragraph [ref=e256]: Explore
+          - generic [ref=e257]:
+            - link "Full catalog" [ref=e258] [cursor=pointer]:
+              - /url: /catalog
+            - link "Collections" [ref=e259] [cursor=pointer]:
+              - /url: /collections
+            - link "Workspace solutions" [ref=e260] [cursor=pointer]:
+              - /url: /solutions
+            - link "B2B / Bulk orders" [ref=e261] [cursor=pointer]:
+              - /url: /b2b
+        - generic [ref=e262]:
+          - paragraph [ref=e263]: Company
+          - generic [ref=e264]:
+            - link "About Cohuman" [ref=e265] [cursor=pointer]:
+              - /url: /about
+            - link "Projects" [ref=e266] [cursor=pointer]:
+              - /url: /projects
+            - link "Services" [ref=e267] [cursor=pointer]:
+              - /url: /services
+            - link "Contact & showroom" [ref=e268] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e269]:
+          - paragraph [ref=e270]: Get in touch
+          - generic [ref=e271]:
+            - generic [ref=e272]: Showroom · Surat, Gujarat
+            - generic [ref=e273]: "Showroom address line 1 — TODO: confirm"
+            - generic [ref=e274]: +91 00000 00000
+            - generic [ref=e275]: hello@cohuman.example.com
+            - link "Enquiry form →" [ref=e276] [cursor=pointer]:
+              - /url: /contact
+      - generic [ref=e277]:
+        - generic [ref=e278]: © 2026 Cohuman · Furniture Concepts 2.0, Surat
+        - generic [ref=e279]: Founded by Tushar Shah, 1989
+  - link "Chat with Cohuman on WhatsApp" [ref=e280] [cursor=pointer]:
+    - /url: https://wa.me/910000000000?text=Hi%20Cohuman%2C%20I'd%20like%20to%20ask%20about%20office%20furniture%20for%20our%20space.
+  - alert [ref=e283]

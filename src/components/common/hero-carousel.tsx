@@ -105,28 +105,32 @@ export function HeroCarousel({
           </div>
         ))}
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-co-panel/85 via-co-panel/45 to-co-panel/10" />
+      {/* Vignette & side gradient overlays for crisp contrast and dark navbar glass support */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/60" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0f1710]/95 via-[#0f1710]/55 to-transparent" />
       <div className="relative z-10 h-full">{children}</div>
       {slides.length > 1 ? (
-        <div className="absolute bottom-6 left-[18px] z-20 flex items-center gap-2 sm:bottom-8 sm:left-6 lg:bottom-10 lg:left-11">
-          {slides.map((slide, i) => (
-            <button
-              key={slide.src}
-              type="button"
-              aria-label={`Show slide ${i + 1}`}
-              onClick={() => setActive(i)}
-              className="group p-1 focus:outline-none"
-            >
-              <span
-                className={cn(
-                  "block h-2 rounded-full transition-all duration-300",
-                  i === active
-                    ? "w-8 bg-co-green-light shadow-[0_0_10px_rgba(166,216,91,0.6)]"
-                    : "w-2.5 bg-white/40 group-hover:bg-white/70",
-                )}
-              />
-            </button>
-          ))}
+        <div className="absolute bottom-6 left-[18px] z-20 sm:bottom-8 sm:left-6 lg:bottom-8 lg:left-11">
+          <div className="flex items-center gap-2.5 rounded-full border border-white/20 bg-black/50 px-3.5 py-1.5 backdrop-blur-md shadow-lg">
+            {slides.map((slide, i) => (
+              <button
+                key={slide.src}
+                type="button"
+                aria-label={`Show slide ${i + 1}`}
+                onClick={() => setActive(i)}
+                className="group p-0.5 focus:outline-none"
+              >
+                <span
+                  className={cn(
+                    "block h-2 rounded-full transition-all duration-300",
+                    i === active
+                      ? "w-7 bg-[#a6d85b] shadow-[0_0_10px_rgba(166,216,91,0.8)]"
+                      : "w-2 bg-white/40 group-hover:bg-white/70",
+                  )}
+                />
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

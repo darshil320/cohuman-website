@@ -29,8 +29,8 @@ export function SiteHeader() {
       className={cn(
         "fixed inset-x-0 top-0 z-[60] transition-all duration-300 ease-in-out",
         solid
-          ? "border-b border-white/10 bg-[#141d13]/85 backdrop-blur-xl shadow-lg shadow-black/20"
-          : "border-b border-white/10 bg-[#141d13]/35 backdrop-blur-xl shadow-sm",
+          ? "border-b border-white/15 bg-[#0f1710]/90 backdrop-blur-xl shadow-lg shadow-black/40"
+          : "border-b border-white/10 bg-[#0f1710]/60 backdrop-blur-xl shadow-md shadow-black/20",
       )}
     >
       <div
@@ -38,7 +38,7 @@ export function SiteHeader() {
         className="mx-auto flex max-w-[1320px] items-center gap-8 px-[18px] sm:px-6 lg:px-11"
       >
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-          <span className="block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%] bg-co-green shadow-[0_0_10px_rgba(111,168,43,0.6)] transition-transform group-hover:scale-110" />
+          <span className="block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%] bg-[#6fa82b] shadow-[0_0_10px_rgba(111,168,43,0.7)] transition-transform group-hover:scale-110" />
           <span className="font-display text-[23px] font-semibold tracking-tight text-white">
             Co
             <span className="font-medium text-white/70 transition-colors group-hover:text-white/90">
@@ -47,7 +47,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-1.5 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1 lg:flex">
           {primaryNav.map((item) => (
             <Link
               key={item.href}
@@ -69,7 +69,7 @@ export function SiteHeader() {
           <Button
             size="sm"
             onClick={() => openQuote()}
-            className="rounded-md bg-co-green px-4 py-2 text-[14px] font-semibold text-co-panel-fg shadow-[0_0_15px_rgba(111,168,43,0.3)] transition-all hover:bg-co-green-light hover:shadow-[0_0_20px_rgba(166,216,91,0.5)]"
+            className="rounded-md bg-[#6fa82b] px-4 py-2 text-[14px] font-semibold text-[#0d140e] shadow-[0_0_15px_rgba(111,168,43,0.4)] transition-all hover:bg-[#80bc33] hover:shadow-[0_0_20px_rgba(128,188,51,0.6)]"
           >
             Request a Quote
           </Button>
@@ -78,7 +78,7 @@ export function SiteHeader() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-1 rounded-md border border-white/20 bg-white/5 lg:hidden"
+            className="flex h-10 w-10 flex-col items-center justify-center gap-1 rounded-md border border-white/20 bg-white/10 lg:hidden"
           >
             <span className="block h-[1.5px] w-4 bg-white" />
             <span className="block h-[1.5px] w-4 bg-white" />
@@ -87,7 +87,7 @@ export function SiteHeader() {
       </div>
 
       {mobileOpen ? (
-        <div className="animate-co-fade grid gap-0.5 border-t border-white/10 bg-[#141d13] px-[18px] pb-[22px] pt-2.5 lg:hidden">
+        <div className="animate-co-fade grid gap-0.5 border-t border-white/10 bg-[#0f1710] px-[18px] pb-[22px] pt-2.5 lg:hidden">
           {fullNav.map((item) => (
             <Link
               key={item.href}

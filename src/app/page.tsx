@@ -53,31 +53,31 @@ export default async function HomePage() {
       <section className="border-b border-co-border" style={{ marginTop: -HEADER_HEIGHT }}>
         <HeroCarousel
           slides={HERO_SLIDES}
-          className="h-[100dvh] min-h-[580px] max-h-[850px]"
+          className="h-[calc(100vh-20px)] min-h-[540px] max-h-[760px]"
         >
-          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-center px-[18px] pb-16 pt-[120px] sm:px-6 sm:pt-[130px] lg:px-11">
-            <div className="flex max-w-[560px] flex-col gap-7 py-16 lg:py-0">
-              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-co-green-light">
+          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-start px-[18px] pb-20 pt-[145px] sm:px-6 sm:pt-[155px] lg:px-11 lg:pt-[165px]">
+            <div className="flex max-w-[560px] flex-col gap-6">
+              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-[#a6d85b]">
                 Cohuman · Surat · Since {siteConfig.foundedYear}
               </p>
-              <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(40px,4.6vw,64px)] font-medium leading-[1.02] tracking-tight text-co-panel-fg">
+              <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-white">
                 Offices built around the people in them.
               </h1>
-              <p className="max-w-[46ch] text-[17px] font-light leading-relaxed text-co-panel-muted">
+              <p className="max-w-[46ch] text-[16.5px] font-light leading-relaxed text-white/80">
                 Thirty-seven years of making chairs, desks and rooms that people actually want to
                 sit in. We plan the space, build the furniture, install it, and look after it
                 afterwards.
               </p>
-              <div className="flex flex-wrap gap-2.5 pt-1">
+              <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   href="/contact"
-                  className="border-0 bg-co-ink px-[26px] py-[15px] text-[15px] font-semibold text-co-bg hover:bg-co-green"
+                  className="rounded-md bg-[#6fa82b] px-[26px] py-[14px] text-[15px] font-semibold text-[#0d140e] shadow-[0_0_15px_rgba(111,168,43,0.3)] transition-all hover:bg-[#80bc33]"
                 >
                   Request a Quote
                 </Link>
                 <Link
                   href="/catalog"
-                  className="border border-co-panel-fg/40 px-[25px] py-3.5 text-[15px] font-semibold text-co-panel-fg hover:border-co-panel-fg hover:bg-white/10"
+                  className="rounded-md border border-white/30 bg-white/10 px-[25px] py-3.5 text-[15px] font-semibold text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white/20"
                 >
                   Browse the catalog
                 </Link>
