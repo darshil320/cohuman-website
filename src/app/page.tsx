@@ -53,9 +53,9 @@ export default async function HomePage() {
       <section className="border-b border-co-border" style={{ marginTop: -HEADER_HEIGHT }}>
         <HeroCarousel
           slides={HERO_SLIDES}
-          className="min-h-[594px] sm:min-h-[674px] lg:min-h-[794px]"
+          className="h-[100dvh] min-h-[580px] max-h-[850px]"
         >
-          <div className="mx-auto flex h-full max-w-[1320px] items-center px-[18px] pt-[74px] sm:px-6 lg:px-11">
+          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-center px-[18px] pb-16 pt-[120px] sm:px-6 sm:pt-[130px] lg:px-11">
             <div className="flex max-w-[560px] flex-col gap-7 py-16 lg:py-0">
               <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-co-green-light">
                 Cohuman · Surat · Since {siteConfig.foundedYear}

@@ -108,18 +108,24 @@ export function HeroCarousel({
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-co-panel/85 via-co-panel/45 to-co-panel/10" />
       <div className="relative z-10 h-full">{children}</div>
       {slides.length > 1 ? (
-        <div className="absolute bottom-6 left-[18px] z-10 flex gap-1.5 sm:left-6 lg:left-11">
+        <div className="absolute bottom-6 left-[18px] z-20 flex items-center gap-2 sm:bottom-8 sm:left-6 lg:bottom-10 lg:left-11">
           {slides.map((slide, i) => (
             <button
               key={slide.src}
               type="button"
               aria-label={`Show slide ${i + 1}`}
               onClick={() => setActive(i)}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                i === active ? "w-6 bg-white" : "w-1.5 bg-white/50 hover:bg-white/75",
-              )}
-            />
+              className="group p-1 focus:outline-none"
+            >
+              <span
+                className={cn(
+                  "block h-2 rounded-full transition-all duration-300",
+                  i === active
+                    ? "w-8 bg-co-green-light shadow-[0_0_10px_rgba(166,216,91,0.6)]"
+                    : "w-2.5 bg-white/40 group-hover:bg-white/70",
+                )}
+              />
+            </button>
           ))}
         </div>
       ) : null}

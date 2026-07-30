@@ -22,74 +22,54 @@ export function SiteHeader() {
   }, []);
 
   const solid = scrolled || mobileOpen;
+  const glassText = solid ? "" : "[text-shadow:0_1px_3px_rgb(0_0_0_/_0.5)]";
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] transition-colors duration-300",
+        "fixed inset-x-0 top-0 z-[60] transition-all duration-300 ease-in-out",
         solid
-          ? "border-b border-co-border bg-co-bg/90 backdrop-blur-md"
-          : "border-b border-white/15 bg-black/20 backdrop-blur-xl",
+          ? "border-b border-white/10 bg-[#141d13]/85 backdrop-blur-xl shadow-lg shadow-black/20"
+          : "border-b border-white/10 bg-[#141d13]/35 backdrop-blur-xl shadow-sm",
       )}
     >
       <div
         style={{ height: HEADER_HEIGHT }}
         className="mx-auto flex max-w-[1320px] items-center gap-8 px-[18px] sm:px-6 lg:px-11"
       >
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span
-            className={cn(
-              "block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%]",
-              solid ? "bg-co-green" : "bg-co-green-light",
-            )}
-          />
-          <span
-            className={cn(
-              "font-display text-[23px] font-semibold tracking-tight",
-              solid ? "text-co-ink" : "text-white",
-            )}
-          >
+        <Link href="/" className="group flex shrink-0 items-center gap-2.5">
+          <span className="block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%] bg-co-green shadow-[0_0_10px_rgba(111,168,43,0.6)] transition-transform group-hover:scale-110" />
+          <span className="font-display text-[23px] font-semibold tracking-tight text-white">
             Co
-            <span className={solid ? "font-medium text-co-muted" : "font-medium text-white/70"}>
+            <span className="font-medium text-white/70 transition-colors group-hover:text-white/90">
               Human
             </span>
           </span>
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-1 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1.5 lg:flex">
           {primaryNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                "px-3 py-2 text-[14.5px] font-medium",
-                solid
-                  ? "text-co-muted hover:bg-co-bg-alt hover:text-co-ink"
-                  : "text-white/90 hover:bg-white/10 hover:text-white",
-              )}
+              className="rounded-full px-3.5 py-1.5 text-[14.5px] font-medium text-white/85 transition-all duration-200 hover:bg-white/15 hover:text-white"
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2.5 lg:ml-0">
+        <div className="ml-auto flex items-center gap-3 lg:ml-0">
           <Link
             href="/contact"
-            className={cn(
-              "hidden text-[14.5px] font-medium lg:inline-block",
-              solid ? "text-co-muted hover:text-co-ink" : "text-white/90 hover:text-white",
-            )}
+            className="hidden rounded-full px-3.5 py-1.5 text-[14.5px] font-medium text-white/85 transition-all duration-200 hover:bg-white/15 hover:text-white lg:inline-block"
           >
             Contact
           </Link>
           <Button
             size="sm"
             onClick={() => openQuote()}
-            className={cn(
-              "whitespace-nowrap",
-              solid ? undefined : "bg-white text-co-ink hover:bg-white/90",
-            )}
+            className="rounded-md bg-co-green px-4 py-2 text-[14px] font-semibold text-co-panel-fg shadow-[0_0_15px_rgba(111,168,43,0.3)] transition-all hover:bg-co-green-light hover:shadow-[0_0_20px_rgba(166,216,91,0.5)]"
           >
             Request a Quote
           </Button>
@@ -98,25 +78,22 @@ export function SiteHeader() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
-            className={cn(
-              "flex h-10 w-10 flex-col items-center justify-center gap-1 border lg:hidden",
-              solid ? "border-co-border" : "border-white/40",
-            )}
+            className="flex h-10 w-10 flex-col items-center justify-center gap-1 rounded-md border border-white/20 bg-white/5 lg:hidden"
           >
-            <span className={cn("block h-[1.5px] w-4", solid ? "bg-co-ink" : "bg-white")} />
-            <span className={cn("block h-[1.5px] w-4", solid ? "bg-co-ink" : "bg-white")} />
+            <span className="block h-[1.5px] w-4 bg-white" />
+            <span className="block h-[1.5px] w-4 bg-white" />
           </button>
         </div>
       </div>
 
       {mobileOpen ? (
-        <div className="animate-co-fade grid gap-0.5 border-t border-co-border bg-co-bg px-[18px] pb-[22px] pt-2.5 lg:hidden">
+        <div className="animate-co-fade grid gap-0.5 border-t border-white/10 bg-[#141d13] px-[18px] pb-[22px] pt-2.5 lg:hidden">
           {fullNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="border-b border-co-bg-alt py-3.5 font-display text-[19px] font-medium text-co-ink"
+              className="border-b border-white/10 py-3.5 font-display text-[19px] font-medium text-white"
             >
               {item.label}
             </Link>
