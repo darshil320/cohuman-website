@@ -5,9 +5,9 @@ import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
 import { CollectionCard } from "@/components/catalog/collection-card";
 import { ProductCard } from "@/components/catalog/product-card";
-import { HEADER_HEIGHT } from "@/components/layout/site-header";
 import { catalog } from "@/lib/catalog";
 import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
+import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 import { projectPhoto, stockPhotos } from "@/lib/stock-photos";
 

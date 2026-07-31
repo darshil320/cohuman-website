@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { cn } from "@/lib/utils";
+import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
-
-export const HEADER_HEIGHT = 74;
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
