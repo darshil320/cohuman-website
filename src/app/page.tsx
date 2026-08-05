@@ -3,8 +3,10 @@ import { HeroCarousel } from "@/components/common/hero-carousel";
 import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
+import { BrandMarquee } from "@/components/common/brand-marquee";
 import { CollectionCard } from "@/components/catalog/collection-card";
 import { ProductCard } from "@/components/catalog/product-card";
+import { brandLogos } from "@/lib/brand-logos";
 import { catalog } from "@/lib/catalog";
 import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
@@ -103,6 +105,17 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Brands represented */}
+      <section className="border-b border-co-border bg-co-panel">
+        <div className="mx-auto max-w-[1320px] px-[18px] pt-[clamp(28px,3.5vw,40px)] sm:px-6 lg:px-11">
+          <p className="mb-6 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
+            Brands we&apos;ve represented
+          </p>
+        </div>
+        <BrandMarquee brands={brandLogos} />
+        <div className="h-[clamp(28px,3.5vw,40px)]" />
       </section>
 
       {/* Collections */}

@@ -17,7 +17,7 @@ export async function GET() {
     `> ${siteConfig.tagline}. ${siteConfig.legalName}, founded ${siteConfig.foundedYear} in Surat, Gujarat, India. Request-a-quote office furniture manufacturer and fit-out contractor — no online checkout, no public price list, no accounts.`,
     "",
     "## Company",
-    `- Founded ${siteConfig.foundedYear} by ${siteConfig.founder} as Furniture Concepts 2.0, rebranded Cohuman.`,
+    `- Founded ${siteConfig.foundedYear} by ${siteConfig.founder} as Furniture Concepts, rebranded Cohuman.`,
     `- Typical quote turnaround: ${siteConfig.enquiryTurnaround}.`,
     "- Pricing is quote-based, shown only as qualitative bands (Value / Mid / Premium) on product pages — never a fixed public price.",
     "- No e-commerce cart, no user accounts, no AI room visualizer.",

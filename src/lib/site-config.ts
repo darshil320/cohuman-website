@@ -3,7 +3,7 @@
 // to render. Swap them for the confirmed values and remove this comment.
 export const siteConfig = {
   name: "Cohuman",
-  legalName: "Furniture Concepts 2.0",
+  legalName: "Cohuman Modularr LLP",
   tagline: "People-first office furniture, crafted since 1989",
   founder: "Tushar Shah",
   foundedYear: 1989,
@@ -13,11 +13,11 @@ export const siteConfig = {
   phoneE164: "910000000000", // TODO: confirm — digits only, country code first, no leading +
   whatsappE164: "910000000000", // TODO: confirm — usually same as phoneE164
   address: {
-    line1: "Showroom address line 1 — TODO: confirm", // TODO: confirm
-    line2: "Surat, Gujarat",
+    line1: "376-378 RJD Integrated Textile Park, Hazira Rd",
+    line2: "Ichchhapor, Surat, Gujarat 394510",
     country: "India",
   },
-  hours: "Monday – Saturday, hours to be confirmed. Site visits by appointment.", // TODO: confirm
+  hours: "Open · Closes 8 pm",
   mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
   enquiryTurnaround: "two working days",
   brandsRepresented: ["Herman Miller", "Steelcase", "Humanscale", "Bristol", "Hunter Douglas"],

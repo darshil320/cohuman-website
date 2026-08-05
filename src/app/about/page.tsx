@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { CtaBand } from "@/components/common/cta-band";
 import { AnimatedStat } from "@/components/about/animated-stat";
-import { BrandMarquee } from "@/components/about/brand-marquee";
+import { BrandMarquee } from "@/components/common/brand-marquee";
 import { StoryTimeline } from "@/components/about/story-timeline";
+import { brandLogos } from "@/lib/brand-logos";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -140,7 +141,7 @@ export default function AboutPage() {
             bringing their manufacturing and design standards into everything we build ourselves.
           </p>
         </div>
-        <BrandMarquee brands={siteConfig.brandsRepresented} />
+        <BrandMarquee brands={brandLogos} />
         <div className="h-[clamp(52px,6vw,88px)]" />
       </section>
 
