@@ -7,6 +7,7 @@ import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -74,28 +75,76 @@ export function SiteHeader() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-50 lg:hidden"
+            className="relative flex h-10 w-10 flex-col items-center justify-center gap-[4px] rounded-full border border-slate-200/80 bg-white shadow-sm transition-colors hover:bg-slate-50 lg:hidden"
           >
-            <span className="block h-[1.5px] w-4 bg-slate-800" />
-            <span className="block h-[1.5px] w-4 bg-slate-800" />
+            <span className={cn("block h-[1.5px] w-4 bg-slate-800 transition-all duration-300", mobileOpen ? "absolute rotate-45" : "")} />
+            <span className={cn("block h-[1.5px] w-4 bg-slate-800 transition-all duration-300", mobileOpen ? "absolute -rotate-45" : "")} />
           </button>
         </div>
       </div>
 
-      {mobileOpen ? (
-        <div className="animate-co-fade grid gap-0.5 border-t border-slate-200 bg-white px-[18px] pb-[22px] pt-2.5 lg:hidden">
-          {fullNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className="border-b border-slate-100 py-3.5 font-display text-[19px] font-medium text-slate-900"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10, transition: { duration: 0.2, delay: 0 } }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-x-0 top-full flex flex-col border-t border-slate-200/60 bg-white/95 px-[22px] pb-10 pt-6 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.1)] backdrop-blur-2xl lg:hidden"
+          >
+            <div className="flex flex-col">
+              {fullNav.map((item, i) => (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.4, delay: i * 0.05 + 0.1, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="group flex items-center justify-between border-b border-slate-200/50 py-4 font-display text-[24px] font-medium tracking-tight text-slate-900 transition-colors hover:text-[#6fa82b]"
+                  >
+                    {item.label}
+                    <span className="text-slate-300 opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#6fa82b] group-hover:opacity-100">
+                      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 11L11 1M11 1H1M11 1V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, delay: fullNav.length * 0.05 + 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-8 flex flex-col gap-4"
             >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      ) : null}
+              <Button
+                size="lg"
+                onClick={() => {
+                  setMobileOpen(false);
+                  openQuote();
+                }}
+                className="w-full rounded-full bg-[#6fa82b] py-6 text-[16px] font-semibold text-slate-950 shadow-[0_0_20px_rgba(111,168,43,0.2)] transition-all hover:bg-[#80bc33] hover:shadow-[0_0_25px_rgba(111,168,43,0.4)]"
+              >
+                Request a Quote
+              </Button>
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="flex w-full items-center justify-center rounded-full border border-slate-200 bg-slate-50 py-4 text-[15px] font-semibold text-slate-800 transition-colors hover:bg-slate-100"
+              >
+                Contact Showroom
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
