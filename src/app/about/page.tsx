@@ -55,11 +55,11 @@ export default function AboutPage() {
     <div>
       {/* Hero */}
       <section className="relative border-b border-co-border">
-        <div className="mx-auto max-w-[1000px] px-[18px] py-[clamp(48px,7vw,96px)] pb-[clamp(56px,7vw,88px)] sm:px-6 lg:px-11">
+        <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(48px,7vw,96px)] pb-[clamp(56px,7vw,88px)] sm:px-6 lg:px-11">
           <p className="animate-co-fade mb-4 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
             About · Cohuman
           </p>
-          <h1 className="animate-co-rise mb-6 font-display text-[clamp(34px,5.4vw,66px)] font-medium leading-none tracking-tight">
+          <h1 className="animate-co-rise mb-6 max-w-[18ch] font-display text-[clamp(34px,5.4vw,66px)] font-medium leading-none tracking-tight">
             Thirty-seven years of watching how people actually work.
           </h1>
           <p className="max-w-[44ch] text-[clamp(18px,1.8vw,24px)] font-light leading-[1.45] text-co-ink-soft">
