@@ -20,6 +20,12 @@ export const siteConfig = {
   hours: "Monday – Saturday, hours to be confirmed. Site visits by appointment.", // TODO: confirm
   mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
   enquiryTurnaround: "two working days",
+  brandsRepresented: ["Herman Miller", "Steelcase", "Humanscale", "Bristol", "Hunter Douglas"],
+  locations: [
+    { city: "Surat", role: "Head office & manufacturing", detail: "Gujarat" },
+    { city: "Mumbai", role: "Showroom", detail: "Maharashtra" },
+    { city: "Ahmedabad", role: "Representative office", detail: "Gujarat" },
+  ],
 } as const;
 
 export function whatsappHref(prefilledMessage?: string) {
