@@ -15,7 +15,9 @@ interface ParallaxImageProps extends Omit<ImageProps, "className"> {
  * Wraps next/image and applies a subtle vertical translation based on scroll position,
  * creating a premium sense of physical depth.
  */
-export function ParallaxImage({ className, imageClassName, ...props }: ParallaxImageProps) {
+// `alt` is destructured rather than left in the spread so it is visible to readers and
+// to jsx-a11y; ImageProps makes it required either way.
+export function ParallaxImage({ className, imageClassName, alt, ...props }: ParallaxImageProps) {
   const ref = useRef<HTMLDivElement>(null);
   
   // Track the scroll progress of this specific component relative to the viewport
@@ -36,7 +38,7 @@ export function ParallaxImage({ className, imageClassName, ...props }: ParallaxI
         // Expand the container slightly past the edges so the image doesn't get clipped during parallax
         className="absolute -inset-y-[10%] inset-x-0"
       >
-        <Image {...props} className={cn("object-cover", imageClassName)} />
+        <Image {...props} alt={alt} className={cn("object-cover", imageClassName)} />
       </motion.div>
     </div>
   );
