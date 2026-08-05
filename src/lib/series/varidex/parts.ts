@@ -4,6 +4,11 @@ import type { SeriesPart } from "../types";
  * Every distinct component called out on the VARIDEX specification pages, with the
  * material and finish exactly as printed. The PDF repeats the same part across product
  * pages under different numbers; this is the union, renumbered in assembly order.
+ *
+ * `focus` was measured off `/varidex/bench-2.jpg`. Only the foot, the end leg, the mid
+ * leg and the top are identifiable in it; the beams, connectors and cable channels sit
+ * inside the assembly, so they carry no focus and the stage says so instead of pointing
+ * a number at a plausible-looking pixel.
  */
 export const VARIDEX_PARTS: SeriesPart[] = [
   {
@@ -15,7 +20,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Material", v: "ABS plastic" },
       { k: "Adjustment", v: "30mm travel" },
     ],
-    pin: { x: 12, y: 72 },
+    focus: { x: 12.4, y: 82.2, zoom: 3.4 },
   },
   {
     n: "2",
@@ -26,7 +31,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Material", v: "2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 14, y: 58 },
+    focus: { x: 12.4, y: 64, zoom: 2.5 },
   },
   {
     n: "3",
@@ -37,7 +42,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Material", v: "40×25×T2mm rectangular metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 37, y: 58 },
+    focus: { x: 60.3, y: 55, zoom: 2.5 },
   },
   {
     n: "4",
@@ -48,7 +53,6 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=2mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 50, y: 58 },
   },
   {
     n: "5",
@@ -100,7 +104,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Finishing", v: "Melamine paper" },
       { k: "Edge banding", v: "T=2mm PVC" },
     ],
-    pin: { x: 51, y: 52 },
+    focus: { x: 64, y: 31, zoom: 1.9 },
   },
   {
     n: "10",
@@ -112,7 +116,6 @@ export const VARIDEX_PARTS: SeriesPart[] = [
       { k: "Finishing", v: "Melamine" },
       { k: "Edge banding", v: "T=2mm PVC" },
     ],
-    pin: { x: 51, y: 52 },
   },
   {
     n: "11",

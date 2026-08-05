@@ -39,8 +39,11 @@ export const VARIDEX_SERIES: SeriesDefinition = {
     eyebrow: "Anatomy",
     heading: "Thirteen parts, each with a gauge you can hold us to.",
   },
-  anatomyImage: "/varidex/bench-4-screen.jpg",
-  anatomyCaption: "Face to face bench · 4 seaters with side screens",
+  // The 2-seater shot: the frame is unobstructed and the legs read against the floor,
+  // which the 4-seater render's chairs hide.
+  anatomyImage: "/varidex/bench-2.jpg",
+  anatomyImageSize: { w: 1400, h: 842 },
+  anatomyCaption: "Face to face bench · 2 seaters with side screens",
 
   accessory: {
     eyebrow: "Cable management",

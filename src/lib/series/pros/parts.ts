@@ -3,6 +3,12 @@ import type { SeriesPart } from "../types";
 /**
  * The ten numbered components called out in the PROS specification sheet, with the
  * gauge and finish quoted for each.
+ *
+ * `focus` was measured off `/pros/bench-2.jpg` — the near-elevation render, which is the
+ * only shot where the chassis reads honestly. Four parts (horizontal bar, vertical cable
+ * channel, side bar, wires box) sit inside the assembly and are not visible in any render
+ * the manufacturer ships, so they carry no focus and the stage says as much rather than
+ * pointing a number at a plausible-looking pixel.
  */
 export const PROS_PARTS: SeriesPart[] = [
   {
@@ -14,7 +20,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 37, y: 62 },
+    focus: { x: 54.8, y: 56, zoom: 2.4 },
   },
   {
     n: "2",
@@ -25,7 +31,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 14, y: 58 },
+    focus: { x: 14.6, y: 58, zoom: 2.5 },
   },
   {
     n: "3",
@@ -36,7 +42,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "ABS plastic" },
       { k: "Adjustment", v: "30mm travel" },
     ],
-    pin: { x: 12, y: 72 },
+    focus: { x: 13.2, y: 76.9, zoom: 3.2 },
   },
   {
     n: "4",
@@ -47,7 +53,6 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 18, y: 58 },
   },
   {
     n: "5",
@@ -58,7 +63,6 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.5mm aluminium profile" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 37, y: 58 },
   },
   {
     n: "6",
@@ -69,7 +73,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=3.0mm metal sheet & T=2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 37, y: 52 },
+    focus: { x: 54.8, y: 43.4, zoom: 2.9 },
   },
   {
     n: "7",
@@ -81,7 +85,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Finishing", v: "Melamine paper" },
       { k: "Edge banding", v: "T=2mm PVC" },
     ],
-    pin: { x: 51, y: 52 },
+    focus: { x: 60, y: 38, zoom: 1.9 },
   },
   {
     n: "8",
@@ -92,7 +96,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.2mm aluminium profile" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 29, y: 54 },
+    focus: { x: 33.4, y: 33.4, zoom: 2.8 },
   },
   {
     n: "9",
@@ -103,7 +107,6 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "60×25×T1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 57, y: 55 },
   },
   {
     n: "10",
@@ -114,7 +117,6 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "0.7mm metal sheet" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
-    pin: { x: 18, y: 52 },
   },
 ];
 

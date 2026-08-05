@@ -36,8 +36,11 @@ export const PROS_SERIES: SeriesDefinition = {
     eyebrow: "Anatomy",
     heading: "Ten parts, each with a gauge you can hold us to.",
   },
-  anatomyImage: "/pros/bench-4-screen.jpg",
-  anatomyCaption: "Bench · 4 seaters with side screens",
+  // The near-elevation shot, not the three-quarter one: it is the only render where the
+  // frame reads square-on, which is what makes the part callouts land on the real part.
+  anatomyImage: "/pros/bench-2.jpg",
+  anatomyImageSize: { w: 1400, h: 808 },
+  anatomyCaption: "Bench · 2 seaters with side screens",
 
   swatches: PROS_SWATCHES,
   swatchesSection: {

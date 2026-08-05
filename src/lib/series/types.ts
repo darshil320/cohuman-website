@@ -61,14 +61,30 @@ export interface SeriesPartRow {
   v: string;
 }
 
+/**
+ * Where the anatomy camera goes for one part.
+ *
+ * `x`/`y` are percentages of the anatomy render itself (not of the stage box — the
+ * stage is sized to the render's own aspect ratio so the two coincide), measured off
+ * the image. A part only carries a focus when that exact component is identifiable in
+ * the render; internal parts are left without one rather than pinned to a plausible
+ * pixel, and the stage says so.
+ */
+export interface SeriesPartFocus {
+  x: number;
+  y: number;
+  /** How far the camera pushes in. 1 is the whole frame. */
+  zoom: number;
+}
+
 export interface SeriesPart {
   n: string;
   name: string;
   group: string;
   why: string;
   rows: SeriesPartRow[];
-  /** Coordinates (percentages) for the clickable overlay on the anatomy image */
-  pin?: { x: number; y: number };
+  /** Camera framing on the anatomy render. Omitted where the part is not visible in it. */
+  focus?: SeriesPartFocus;
 }
 
 export interface SeriesSwatch {
@@ -145,6 +161,11 @@ export interface SeriesDefinition {
   anatomySection: SeriesSection;
   /** Public path to the render shown beside the part list. */
   anatomyImage: string;
+  /**
+   * Pixel size of that render. The anatomy stage takes its aspect ratio from this, so a
+   * part's focus percentages address the image itself and never drift into a letterbox.
+   */
+  anatomyImageSize: { w: number; h: number };
   anatomyCaption: string;
 
   /** Finish/material board. Omit to drop the section. */
