@@ -47,9 +47,9 @@ today, both ported from the manufacturer's own specification PDFs (`PROS.pdf` vi
 Claude Design source `PROS Series PDP.dc.html`, and `VARIDEX.pdf`).
 
 The four demo collections (Meridian, Origin, Loom, Parlour) were invented for the
-original e-commerce demo and are **gone**. `src/data/products.json` still references
-them in its `col` field, which is why `resolveColName` returns `null` for an unknown
-slug and callers omit the line — see "Demo catalog" below.
+original e-commerce demo and are **gone**, along with the `col` field that pointed at
+them from `src/data/products.json`. Products belong to a category and a price band; a
+collection is a desking series with a configurator, not a bucket for SKUs.
 
 - **Data** — `src/lib/series/`: `types.ts` (`SeriesDefinition`), `derive.ts` (every
   size/label derivation), then one folder per series (`pros/`, `varidex/`) holding
@@ -98,11 +98,10 @@ There are no image placeholders left on these pages.
 
 ## Demo catalog
 
-`src/data/products.json` (18 products) and `projects.json` are still the illustrative
+`src/data/products.json` (16 products) and `projects.json` are still the illustrative
 data carried over from the original demo, and `/catalog` still serves them. They are
-not real Cohuman products. Because their `col` values point at deleted collections, the
-catalog's collection filter only renders for collections that actually have products,
-and product cards fall back to the category label alone.
+not real Cohuman products — replace them as real product data arrives. The catalog
+filters by category and price band only.
 
 ## Lead capture
 

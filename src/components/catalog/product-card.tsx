@@ -10,10 +10,9 @@ import type { Product } from "@/lib/catalog";
 interface ProductCardProps {
   product: Product;
   catLabel: string;
-  colName: string | null;
 }
 
-export function ProductCard({ product, catLabel, colName }: ProductCardProps) {
+export function ProductCard({ product, catLabel }: ProductCardProps) {
   const { openQuote } = useQuoteDialog();
   const href = `/catalog/${product.slug}`;
 
@@ -30,7 +29,7 @@ export function ProductCard({ product, catLabel, colName }: ProductCardProps) {
       <div className="flex flex-1 flex-col gap-2.5 p-[18px] pb-[18px]">
         <div>
           <p className="mb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.15em] text-co-faint">
-            {colName ? `${catLabel} · ${colName}` : catLabel}
+            {catLabel}
           </p>
           <Link href={href} className="text-co-ink">
             <h3 className="mb-1.5 font-display text-[19px] font-medium tracking-tight">

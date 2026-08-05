@@ -4,14 +4,13 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { ProductCard } from "@/components/catalog/product-card";
-import { PRICE_BAND_LABEL, type Category, type Collection, type PriceBand, type Product } from "@/lib/catalog";
-import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
+import { PRICE_BAND_LABEL, type Category, type PriceBand, type Product } from "@/lib/catalog";
+import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { cn } from "@/lib/utils";
 
 interface CatalogBrowserProps {
   products: Product[];
   categories: Category[];
-  collections: Collection[];
 }
 
 const BANDS: { id: PriceBand | "all"; label: string }[] = [
@@ -28,27 +27,18 @@ function chipClass(active: boolean) {
   );
 }
 
-export function CatalogBrowser({ products, categories, collections }: CatalogBrowserProps) {
+export function CatalogBrowser({ products, categories }: CatalogBrowserProps) {
   const [cat, setCat] = useState<string>("all");
   const [band, setBand] = useState<string>("all");
-  const [col, setCol] = useState<string>("all");
   const { openQuote } = useQuoteDialog();
-
-  // Collections are desking systems with their own configurators, not buckets the demo
-  // catalog products belong to — so the filter only appears for ones that have products.
-  const filterableCollections = useMemo(
-    () => collections.filter((c) => products.some((p) => p.col === c.slug)),
-    [collections, products],
-  );
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
       if (cat !== "all" && p.cat !== cat) return false;
       if (band !== "all" && p.band !== band) return false;
-      if (col !== "all" && p.col !== col) return false;
       return true;
     });
-  }, [products, cat, band, col]);
+  }, [products, cat, band]);
 
   return (
     <div>
@@ -80,28 +70,6 @@ export function CatalogBrowser({ products, categories, collections }: CatalogBro
                 {b.label}
               </button>
             ))}
-            {filterableCollections.length > 0 ? (
-              <>
-                <span className="mx-1 h-5 w-px bg-co-border" />
-                <button
-                  type="button"
-                  onClick={() => setCol("all")}
-                  className={chipClass(col === "all")}
-                >
-                  All collections
-                </button>
-                {filterableCollections.map((c) => (
-                  <button
-                    key={c.slug}
-                    type="button"
-                    onClick={() => setCol(c.slug)}
-                    className={chipClass(col === c.slug)}
-                  >
-                    {c.name}
-                  </button>
-                ))}
-              </>
-            ) : null}
             <span className="ml-auto whitespace-nowrap text-[13px] text-co-faint">
               {filtered.length} products
             </span>
@@ -117,7 +85,6 @@ export function CatalogBrowser({ products, categories, collections }: CatalogBro
                 key={p.slug}
                 product={p}
                 catLabel={resolveCatLabel(categories, p.cat)}
-                colName={resolveColName(collections, p.col)}
               />
             ))}
           </div>
@@ -135,7 +102,6 @@ export function CatalogBrowser({ products, categories, collections }: CatalogBro
                 onClick={() => {
                   setCat("all");
                   setBand("all");
-                  setCol("all");
                 }}
               >
                 Clear filters

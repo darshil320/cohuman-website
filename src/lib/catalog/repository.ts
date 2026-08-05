@@ -19,7 +19,6 @@ export interface CatalogRepository {
   getProducts(filters?: ProductFilters): Promise<Product[]>;
   getProduct(slug: string): Promise<Product | null>;
   getRelatedProducts(product: Product, limit?: number): Promise<Product[]>;
-  getProductsByCollection(collectionSlug: string): Promise<Product[]>;
   getProjects(): Promise<Project[]>;
   getProject(slug: string): Promise<Project | null>;
   getSpaces(): Promise<Space[]>;

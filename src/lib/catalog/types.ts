@@ -24,7 +24,6 @@ export interface Product {
   slug: string;
   name: string;
   cat: string;
-  col: string;
   band: PriceBand;
   tagline: string;
   materials: string;
@@ -65,6 +64,5 @@ export interface Service {
 
 export interface ProductFilters {
   cat?: string;
-  col?: string;
   band?: PriceBand;
 }

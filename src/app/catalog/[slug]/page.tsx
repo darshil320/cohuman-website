@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/catalog/product-card";
 import { ProductQuoteActions } from "@/components/catalog/product-quote-actions";
 import { PRICE_BAND_LABEL } from "@/lib/catalog";
 import { catalog } from "@/lib/catalog";
-import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
+import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { siteConfig } from "@/lib/site-config";
 import { categoryPhoto } from "@/lib/stock-photos";
 
@@ -31,10 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
-  const [product, categories, collections] = await Promise.all([
+  const [product, categories] = await Promise.all([
     catalog.getProduct(slug),
     catalog.getCategories(),
-    catalog.getCollections(),
   ]);
 
   if (!product) notFound();
@@ -42,12 +41,10 @@ export default async function ProductPage({ params }: PageProps) {
   const [related] = await Promise.all([catalog.getRelatedProducts(product, 3)]);
 
   const catLabel = resolveCatLabel(categories, product.cat);
-  const colName = resolveColName(collections, product.col);
   const bandLabel = PRICE_BAND_LABEL[product.band];
 
   const specRows = [
     { k: "Category", v: catLabel },
-    ...(colName ? [{ k: "Collection", v: colName }] : []),
     { k: "Materials", v: product.materials },
     { k: "Dimensions", v: product.sizes },
     { k: "Lead time", v: `${product.lead} from order confirmation` },
@@ -125,7 +122,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         <div>
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.18em] text-co-green">
-            {colName ? `${colName} collection` : catLabel}
+            {catLabel}
           </p>
           <h1 className="mb-3.5 font-display text-[clamp(32px,4vw,50px)] font-medium leading-[1.03] tracking-tight">
             {product.name}
@@ -185,7 +182,6 @@ export default async function ProductPage({ params }: PageProps) {
                   key={p.slug}
                   product={p}
                   catLabel={resolveCatLabel(categories, p.cat)}
-                  colName={resolveColName(collections, p.col)}
                 />
               ))}
             </div>

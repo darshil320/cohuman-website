@@ -5,14 +5,13 @@ import { catalog } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Catalog",
   description:
-    "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category, budget and collection.",
+    "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category and budget band.",
 };
 
 export default async function CatalogPage() {
-  const [products, categories, collections] = await Promise.all([
+  const [products, categories] = await Promise.all([
     catalog.getProducts(),
     catalog.getCategories(),
-    catalog.getCollections(),
   ]);
 
   return (
@@ -32,7 +31,7 @@ export default async function CatalogPage() {
         </div>
       </section>
 
-      <CatalogBrowser products={products} categories={categories} collections={collections} />
+      <CatalogBrowser products={products} categories={categories} />
     </div>
   );
 }

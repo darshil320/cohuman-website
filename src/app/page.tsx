@@ -8,7 +8,7 @@ import { CollectionCard } from "@/components/catalog/collection-card";
 import { ProductCard } from "@/components/catalog/product-card";
 import { brandLogos } from "@/lib/brand-logos";
 import { catalog } from "@/lib/catalog";
-import { resolveCatLabel, resolveColName } from "@/lib/catalog/resolve";
+import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 import { projectPhoto, stockPhotos } from "@/lib/stock-photos";
@@ -178,7 +178,6 @@ export default async function HomePage() {
               key={p.slug}
               product={p}
               catLabel={resolveCatLabel(categories, p.cat)}
-              colName={resolveColName(collections, p.col)}
             />
           ))}
         </div>

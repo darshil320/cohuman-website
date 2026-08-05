@@ -39,7 +39,6 @@ export class LocalCatalogRepository implements CatalogRepository {
   async getProducts(filters?: ProductFilters): Promise<Product[]> {
     return products.filter((p) => {
       if (filters?.cat && p.cat !== filters.cat) return false;
-      if (filters?.col && p.col !== filters.col) return false;
       if (filters?.band && p.band !== (filters.band as PriceBand)) return false;
       return true;
     });
@@ -51,16 +50,8 @@ export class LocalCatalogRepository implements CatalogRepository {
 
   async getRelatedProducts(product: Product, limit = 3): Promise<Product[]> {
     return products
-      .filter(
-        (p) =>
-          p.slug !== product.slug &&
-          (p.cat === product.cat || p.col === product.col),
-      )
+      .filter((p) => p.slug !== product.slug && p.cat === product.cat)
       .slice(0, limit);
-  }
-
-  async getProductsByCollection(collectionSlug: string): Promise<Product[]> {
-    return products.filter((p) => p.col === collectionSlug);
   }
 
   async getProjects(): Promise<Project[]> {
