@@ -34,23 +34,28 @@ export function SeriesElements() {
               as="li"
               key={element.code}
               step={index}
-              className="bg-co-bg px-5 pb-5 pt-[22px] shadow-[0_0_0_1px_var(--color-co-border)] transition-colors hover:bg-white"
+              className="bg-co-bg px-4 py-3.5 shadow-[0_0_0_1px_var(--color-co-border)] transition-colors hover:bg-white sm:px-5 sm:pb-5 sm:pt-[22px]"
             >
-              <div className="mb-4 flex items-baseline justify-between gap-2.5">
-                <span className="font-display text-[26px] font-medium tracking-[-0.03em] text-co-green">
+              {/*
+                One flex row, reordered rather than duplicated: on a phone the reference,
+                name and kind share a line so a card is a schedule row; from `sm` the name
+                takes a full basis and drops to its own line, which is the card layout.
+              */}
+              <div className="mb-1.5 flex flex-wrap items-baseline gap-x-2.5 gap-y-1 sm:mb-2">
+                <span className="order-1 font-display text-[19px] font-medium leading-none tracking-[-0.03em] text-co-green sm:text-[26px]">
                   {element.ref}
                 </span>
-                <span className="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-co-placeholder">
+                <h3 className="order-2 min-w-0 font-display text-[15.5px] font-medium leading-tight tracking-[-0.02em] sm:order-3 sm:mt-3 sm:basis-full sm:text-lg">
+                  {element.name}
+                </h3>
+                <span className="order-3 ml-auto shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-co-placeholder sm:order-2 sm:text-[10.5px] sm:tracking-[0.13em]">
                   {element.kind}
                 </span>
               </div>
-              <h3 className="mb-2 font-display text-lg font-medium leading-tight tracking-[-0.02em]">
-                {element.name}
-              </h3>
-              <p className="mb-3.5 text-[13.5px] font-light leading-normal text-co-muted">
+              <p className="mb-1.5 text-[13px] font-light leading-snug text-co-muted sm:mb-3.5 sm:text-[13.5px] sm:leading-normal">
                 {element.note}
               </p>
-              <p className="font-mono text-xs text-co-faint">{element.code}</p>
+              <p className="font-mono text-[11px] text-co-faint sm:text-xs">{element.code}</p>
             </Reveal>
           ))}
         </ul>
