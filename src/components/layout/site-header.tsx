@@ -89,7 +89,7 @@ export function SiteHeader() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10, transition: { duration: 0.2, delay: 0 } }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
             className="absolute inset-x-0 top-full flex flex-col border-t border-slate-200/60 bg-white/95 px-[22px] pb-10 pt-6 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.1)] backdrop-blur-2xl lg:hidden"
           >
             <div className="flex flex-col">

@@ -14,6 +14,7 @@ import { siteConfig } from "@/lib/site-config";
 import { sitePhotos } from "@/lib/photos";
 import { OrgatecBanner } from "@/components/home/orgatec-banner";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 const FEATURED_SLUGS = [
   "aria-task",
@@ -64,8 +65,8 @@ export default async function HomePage() {
               <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-[#a6d85b]">
                 Cohuman · Surat · Since {siteConfig.foundedYear}
               </p>
-              <h1 className="animate-co-rise max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-white">
-                Offices built around the people in them.
+              <h1 className="max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-white">
+                <TextReveal>Offices built around the people in them.</TextReveal>
               </h1>
               <p className="max-w-[46ch] text-[16.5px] font-light leading-relaxed text-white/80">
                 Thirty-seven years of making chairs, desks and rooms that people actually want to
@@ -148,7 +149,7 @@ export default async function HomePage() {
               Furnish by space
             </p>
             <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
-              Tell us the room. We&apos;ll tell you what goes in it.
+              <TextReveal>Tell us the room. We&apos;ll tell you what goes in it.</TextReveal>
             </h2>
           </Reveal>
           <StaggerContainer className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
@@ -202,7 +203,7 @@ export default async function HomePage() {
               What we do
             </p>
             <h2 className="mb-[18px] max-w-[20ch] font-display text-[clamp(28px,3.6vw,44px)] font-medium leading-[1.06] tracking-tight">
-              Not just the furniture. The whole fit-out.
+              <TextReveal>Not just the furniture. The whole fit-out.</TextReveal>
             </h2>
             <p className="mb-[26px] max-w-[44ch] text-[16.5px] font-light leading-relaxed text-co-muted">
               Most clients come to us with a floor plate and a headcount. We take it from there

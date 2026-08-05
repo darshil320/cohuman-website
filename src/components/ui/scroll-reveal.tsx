@@ -17,7 +17,7 @@ export function Reveal({ children, className, delay = 0, yOffset = 30 }: RevealP
       initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -63,7 +63,7 @@ export function StaggerItem({ children, className, yOffset = 20 }: StaggerItemPr
     <motion.div
       variants={{
         hidden: { opacity: 0, y: yOffset },
-        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+        show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
       }}
       className={className}
     >

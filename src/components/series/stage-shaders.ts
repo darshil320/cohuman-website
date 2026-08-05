@@ -22,28 +22,8 @@ export const STAGE_VERTEX_SHADER = /* glsl */ `
  * hairline horizon at 71% down the stage.
  */
 export const BACKDROP_FRAGMENT_SHADER = /* glsl */ `
-  varying vec2 vUv;
-
-  // The centre stays essentially white because that is what the product renders sit on
-  // — the closer these agree, the less the plate reads as a pasted-on panel.
-  const vec3 NEAR = vec3(1.0, 1.0, 1.0);
-  const vec3 MID = vec3(0.992, 0.988, 0.980);
-  const vec3 FAR = vec3(0.906, 0.890, 0.851);
-  const vec3 HORIZON = vec3(0.878, 0.882, 0.886);
-
   void main() {
-    // Gradient origin sits just above the top edge, matching "at 50% -6%".
-    vec2 p = vec2((vUv.x - 0.5) / 0.625, (vUv.y - 1.06));
-    float d = clamp(length(p), 0.0, 1.0);
-
-    vec3 col = mix(NEAR, MID, smoothstep(0.0, 0.46, d));
-    col = mix(col, FAR, smoothstep(0.46, 1.0, d));
-
-    float line = 1.0 - smoothstep(0.0, 0.003, abs(vUv.y - 0.29));
-    float taper = smoothstep(0.0, 0.18, vUv.x) * smoothstep(0.0, 0.18, 1.0 - vUv.x);
-    col = mix(col, HORIZON, line * taper * 0.55);
-
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
   }
 `;
 

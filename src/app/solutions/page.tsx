@@ -4,6 +4,7 @@ import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { EnquireButton } from "@/components/common/enquire-button";
 import { catalog } from "@/lib/catalog";
 import { spacePhoto } from "@/lib/photos";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: "Workspace Solutions",
@@ -29,7 +30,7 @@ export default async function SolutionsPage() {
             Workspace solutions
           </p>
           <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            Specified by the room, not the SKU.
+            <TextReveal>Specified by the room, not the SKU.</TextReveal>
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
             Most enquiries start with a room and a headcount rather than a product code. Pick
@@ -92,7 +93,7 @@ export default async function SolutionsPage() {
       <section className="bg-co-panel">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <h2 className="mb-[clamp(28px,3.5vw,44px)] max-w-[24ch] font-display text-[clamp(25px,3vw,40px)] font-medium leading-[1.08] tracking-tight text-co-panel-fg">
-            How a whole floor comes together.
+            <TextReveal>How a whole floor comes together.</TextReveal>
           </h2>
           <div className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS_STEPS.map((ps) => (

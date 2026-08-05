@@ -8,6 +8,7 @@ import { brandLogos } from "@/lib/brand-logos";
 import { sitePhotos } from "@/lib/photos";
 import { siteConfig } from "@/lib/site-config";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: "About",
@@ -62,8 +63,8 @@ export default function AboutPage() {
           <p className="animate-co-fade mb-4 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
             About · Cohuman
           </p>
-          <h1 className="animate-co-rise mb-6 max-w-[18ch] font-display text-[clamp(34px,5.4vw,66px)] font-medium leading-none tracking-tight">
-            Thirty-seven years of watching how people actually work.
+          <h1 className="mb-6 max-w-[18ch] font-display text-[clamp(34px,5.4vw,66px)] font-medium leading-none tracking-tight">
+            <TextReveal>Thirty-seven years of watching how people actually work.</TextReveal>
           </h1>
           <p className="max-w-[44ch] text-[clamp(18px,1.8vw,24px)] font-light leading-[1.45] text-co-ink-soft">
             {siteConfig.founder} started Furniture Concepts in Surat in {siteConfig.foundedYear}
@@ -140,7 +141,7 @@ export default function AboutPage() {
       <section className="border-t border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <h2 className="mb-[clamp(28px,3.5vw,46px)] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
-            A short timeline
+            <TextReveal>A short timeline</TextReveal>
           </h2>
           <StoryTimeline items={TIMELINE} />
           <p className="mt-5 text-[13px] font-light text-co-faint">
@@ -153,7 +154,7 @@ export default function AboutPage() {
       <section className="border-t border-co-border bg-co-panel">
         <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <h2 className="mb-3 max-w-[26ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight text-co-panel-fg">
-            International standards, close to home.
+            <TextReveal>International standards, close to home.</TextReveal>
           </h2>
           <p className="mb-10 max-w-[58ch] text-[15.5px] font-light leading-relaxed text-co-panel-muted">
             Over three decades we have represented and marketed globally renowned brands,
@@ -169,7 +170,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <Reveal>
             <h2 className="mb-3 max-w-[24ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
-              A game changer in metal bases.
+              <TextReveal>A game changer in metal bases.</TextReveal>
             </h2>
             <p className="mb-[clamp(28px,3.5vw,46px)] max-w-[58ch] text-[15.5px] font-light leading-relaxed text-co-muted">
               Most furniture makers outsource the metal base. We manufacture ours in-house on
@@ -198,7 +199,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <Reveal>
             <h2 className="mb-[clamp(28px,3.5vw,46px)] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
-              Where we work from.
+              <TextReveal>Where we work from.</TextReveal>
             </h2>
           </Reveal>
           <StaggerContainer className="grid grid-cols-1 gap-px border border-co-border bg-co-border sm:grid-cols-3">
@@ -220,7 +221,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <Reveal>
             <h2 className="mb-[clamp(28px,3.5vw,44px)] max-w-[22ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight text-co-panel-fg">
-              What we hold ourselves to.
+              <TextReveal>What we hold ourselves to.</TextReveal>
             </h2>
           </Reveal>
           <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-11">

@@ -40,7 +40,7 @@ export function SeriesStage() {
     <div
       className={cn(
         "relative aspect-[16/10] overflow-hidden border border-co-card-border",
-        "bg-[radial-gradient(125%_100%_at_50%_-6%,#FFFFFF_0%,#F8F6F1_46%,#E7E3D9_100%)]",
+        "bg-white",
         webglOk && "cursor-crosshair",
       )}
       onPointerEnter={() => setPointerActive(true)}

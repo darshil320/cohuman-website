@@ -16,6 +16,7 @@ import { SeriesSizeChart } from "./series-size-chart";
 import { SeriesSpecPanel } from "./series-spec-panel";
 import { SeriesStage } from "./series-stage";
 import { SeriesStickyBar } from "./series-sticky-bar";
+import { Reveal } from "@/components/ui/scroll-reveal";
 
 /** Scroll distance before the sticky bar is worth showing. */
 const BAR_REVEAL_OFFSET = 320;
@@ -45,27 +46,31 @@ function SeriesPdpBody() {
     <div>
       <section className="border-b border-co-border">
         <div className="mx-auto max-w-[1320px] px-[18px] pb-[clamp(34px,4vw,56px)] pt-[clamp(20px,3vw,40px)] sm:px-6 lg:px-11">
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-[clamp(18px,2.4vw,30px)] flex items-center gap-2 overflow-hidden whitespace-nowrap text-[12.5px] text-co-faint"
-          >
-            <Link href="/catalog" className="hover:text-co-ink">
-              Catalog
-            </Link>
-            <span aria-hidden>/</span>
-            <Link href="/collections" className="hover:text-co-ink">
-              Collections
-            </Link>
-            <span aria-hidden>/</span>
-            <span className="font-medium text-co-ink">{series.name}</span>
-          </nav>
+          <Reveal>
+            <nav
+              aria-label="Breadcrumb"
+              className="mb-[clamp(18px,2.4vw,30px)] flex items-center gap-2 overflow-hidden whitespace-nowrap text-[12.5px] text-co-faint"
+            >
+              <Link href="/catalog" className="hover:text-co-ink">
+                Catalog
+              </Link>
+              <span aria-hidden>/</span>
+              <Link href="/collections" className="hover:text-co-ink">
+                Collections
+              </Link>
+              <span aria-hidden>/</span>
+              <span className="font-medium text-co-ink">{series.name}</span>
+            </nav>
+          </Reveal>
 
           <div className="grid items-start gap-[clamp(26px,3.4vw,54px)] lg:grid-cols-[minmax(0,1.32fr)_minmax(300px,0.68fr)]">
-            <div className="min-w-0">
+            <Reveal className="min-w-0" delay={0.1}>
               <SeriesStage />
               <SeriesConfigRail />
-            </div>
-            <SeriesSpecPanel />
+            </Reveal>
+            <Reveal delay={0.2}>
+              <SeriesSpecPanel />
+            </Reveal>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { B2bForm } from "@/components/forms/b2b-form";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: "B2B & Bulk Orders",
@@ -39,7 +40,7 @@ export default function B2bPage() {
             B2B / Bulk orders
           </p>
           <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(34px,5vw,60px)] font-medium leading-[1.02] tracking-tight">
-            Furnishing more than one desk? This is the fast lane.
+            <TextReveal>Furnishing more than one desk? This is the fast lane.</TextReveal>
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
             For corporate offices, franchise rollouts and multi-site fit-outs, tell us the scale

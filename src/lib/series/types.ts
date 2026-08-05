@@ -67,6 +67,8 @@ export interface SeriesPart {
   group: string;
   why: string;
   rows: SeriesPartRow[];
+  /** Coordinates (percentages) for the clickable overlay on the anatomy image */
+  pin?: { x: number; y: number };
 }
 
 export interface SeriesSwatch {

@@ -43,7 +43,7 @@ export function SeriesGalleryStrip() {
               step={index}
               className="border border-co-card-border bg-white"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-[radial-gradient(100%_90%_at_50%_10%,#FFFFFF_0%,#F8F6F1_60%,#EFECE4_100%)]">
+              <div className="relative aspect-[4/3] overflow-hidden bg-white">
                 <Image
                   src={item.image}
                   alt={item.imageAlt}

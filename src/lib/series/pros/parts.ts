@@ -14,6 +14,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 37, y: 62 },
   },
   {
     n: "2",
@@ -24,6 +25,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 14, y: 58 },
   },
   {
     n: "3",
@@ -34,6 +36,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "ABS plastic" },
       { k: "Adjustment", v: "30mm travel" },
     ],
+    pin: { x: 12, y: 72 },
   },
   {
     n: "4",
@@ -44,6 +47,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 18, y: 58 },
   },
   {
     n: "5",
@@ -54,6 +58,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.5mm aluminium profile" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 37, y: 58 },
   },
   {
     n: "6",
@@ -64,6 +69,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=3.0mm metal sheet & T=2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 37, y: 52 },
   },
   {
     n: "7",
@@ -75,6 +81,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Finishing", v: "Melamine paper" },
       { k: "Edge banding", v: "T=2mm PVC" },
     ],
+    pin: { x: 51, y: 52 },
   },
   {
     n: "8",
@@ -85,6 +92,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "T=1.2mm aluminium profile" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 29, y: 54 },
   },
   {
     n: "9",
@@ -95,6 +103,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "60×25×T1.5mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 57, y: 55 },
   },
   {
     n: "10",
@@ -105,6 +114,7 @@ export const PROS_PARTS: SeriesPart[] = [
       { k: "Material", v: "0.7mm metal sheet" },
       { k: "Finishing", v: "Powder coating, 80–120μ" },
     ],
+    pin: { x: 18, y: 52 },
   },
 ];
 

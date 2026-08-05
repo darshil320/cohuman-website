@@ -20,7 +20,7 @@ export function SeriesAnatomy() {
   const section = series.anatomySection;
 
   return (
-    <section id="anatomy" className="scroll-mt-[82px] border-b border-co-border">
+    <section id="anatomy" className="scroll-mt-[82px] border-b border-co-border bg-[#F6F5F2]">
       <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
         <Reveal>
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
@@ -32,14 +32,46 @@ export function SeriesAnatomy() {
         </Reveal>
 
         <div className="grid items-start gap-[clamp(22px,3vw,46px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)]">
-          <div className="relative aspect-[16/10] overflow-hidden border border-co-card-border bg-[radial-gradient(120%_100%_at_50%_0%,#FFFFFF_0%,#F8F6F1_50%,#EDEAE2_100%)]">
-            <Image
-              src={series.anatomyImage}
-              alt={series.anatomyCaption}
-              fill
-              sizes="(min-width: 1024px) 55vw, 100vw"
-              className="object-contain p-[4%] mix-blend-multiply"
-            />
+          <div className="relative aspect-[16/10] overflow-hidden border border-co-card-border bg-white">
+            <motion.div
+              className="absolute inset-0"
+              animate={{
+                scale: part?.pin ? 1.55 : 1,
+                x: part?.pin ? `${(50 - part.pin.x) * 0.55}%` : "0%",
+                y: part?.pin ? `${(50 - part.pin.y) * 0.55}%` : "0%",
+              }}
+              transition={{ type: "spring", damping: 28, stiffness: 220, mass: 0.9 }}
+            >
+              <Image
+                src={series.anatomyImage}
+                alt={series.anatomyCaption}
+                fill
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="object-contain p-[4%] mix-blend-multiply"
+              />
+              {series.parts.map((item, index) => {
+                if (!item.pin) return null;
+                const on = index === partIndex;
+                return (
+                  <button
+                    key={item.n}
+                    type="button"
+                    title={item.name}
+                    aria-pressed={on}
+                    onClick={() => setPart(index)}
+                    className={cn(
+                      "absolute flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center border text-[12.5px] font-semibold transition-all hover:scale-110",
+                      on
+                        ? "border-co-ink bg-co-ink text-co-bg z-10 shadow-lg"
+                        : "border-co-border bg-co-bg/90 text-co-faint shadow-sm backdrop-blur-sm hover:border-co-ink hover:text-co-ink z-0",
+                    )}
+                    style={{ left: `${item.pin.x}%`, top: `${item.pin.y}%` }}
+                  >
+                    {item.n}
+                  </button>
+                );
+              })}
+            </motion.div>
             <p className="absolute left-4 top-4 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-co-placeholder">
               {series.anatomyCaption}
             </p>

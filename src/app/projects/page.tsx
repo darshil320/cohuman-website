@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { CtaBand } from "@/components/common/cta-band";
 import { catalog } from "@/lib/catalog";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -20,7 +21,7 @@ export default async function ProjectsPage() {
             Projects
           </p>
           <h1 className="mb-4 max-w-[18ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            Floors we have finished.
+            <TextReveal>Floors we have finished.</TextReveal>
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
             Photographed on site after handover. Some of these are named, some are known by

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CatalogBrowser } from "@/components/catalog/catalog-browser";
 import { catalog } from "@/lib/catalog";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: "Catalog",
@@ -22,7 +23,7 @@ export default async function CatalogPage() {
             Catalog
           </p>
           <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            Everything we make, in one place.
+            <TextReveal>Everything we make, in one place.</TextReveal>
           </h1>
           <p className="max-w-[56ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
             Prices are quoted, not listed — cost depends on finish, quantity and installation.
