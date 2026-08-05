@@ -12,6 +12,7 @@ import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 import { sitePhotos } from "@/lib/photos";
+import { OrgatecBanner } from "@/components/home/orgatec-banner";
 
 const FEATURED_SLUGS = [
   "aria-task",
@@ -89,6 +90,9 @@ export default async function HomePage() {
         </HeroCarousel>
       </section>
 
+
+      {/* Orgatec Banner */}
+      <OrgatecBanner />
 
       {/* Stats */}
       <section className="border-b border-co-border bg-co-bg-alt">

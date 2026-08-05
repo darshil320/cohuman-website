@@ -56,20 +56,28 @@ const contactRows = [
   { k: "Legal entity", v: `${siteConfig.legalName} — founded ${siteConfig.foundedYear} by ${siteConfig.founder}` },
 ];
 
-export default function ContactPage() {
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function ContactPage({ searchParams }: Props) {
+  const resolvedSearchParams = await searchParams;
+  const isOrgatec = resolvedSearchParams?.source === "orgatec";
+
   return (
     <div>
       <section className="mx-auto grid max-w-[1320px] grid-cols-1 items-start gap-[clamp(30px,4vw,68px)] px-[18px] py-[clamp(44px,6vw,82px)] pb-[clamp(64px,8vw,104px)] sm:px-6 lg:grid-cols-2 lg:px-11">
         <div>
           <p className="mb-3.5 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
-            Contact
+            {isOrgatec ? "ORGATEC 2026" : "Contact"}
           </p>
           <h1 className="mb-5 max-w-[18ch] font-display text-[clamp(32px,4.4vw,56px)] font-medium leading-[1.02] tracking-tight">
-            Tell us about the space.
+            {isOrgatec ? "Let's meet at the event." : "Tell us about the space."}
           </h1>
           <p className="mb-[34px] max-w-[42ch] text-[clamp(16.5px,1.5vw,19.5px)] font-light leading-relaxed text-co-muted">
-            A floor plan and a headcount are enough to start. You will hear back from a
-            specifier, not a chatbot, within {siteConfig.enquiryTurnaround}.
+            {isOrgatec
+              ? "Attending ORGATEC? Reach out to schedule a consultation with our design team. We'd love to connect."
+              : `A floor plan and a headcount are enough to start. You will hear back from a specifier, not a chatbot, within ${siteConfig.enquiryTurnaround}.`}
           </p>
 
           <div className="mb-4 flex flex-wrap gap-2.5">
