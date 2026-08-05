@@ -13,7 +13,7 @@ import { siteConfig } from "@/lib/site-config";
 
 const baseInterestOptions = [
   "Not sure yet — advise me",
-  ...collections.map((c) => `${c.name} collection`),
+  ...collections.map((c) => c.name),
   ...categories.map((c) => c.label),
   "Full turnkey fit-out",
   "Space planning only",

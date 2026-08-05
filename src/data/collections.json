@@ -1,30 +1,16 @@
 [
   {
-    "slug": "meridian",
-    "name": "Meridian",
-    "kicker": "Cabins & boardrooms",
-    "blurb": "Veneer, leather and weight. For cabins and boardrooms where decisions get made.",
-    "slotHint": "Meridian: executive cabin with veneer desk"
+    "slug": "pros",
+    "name": "PROS Series",
+    "kicker": "Beam desking system",
+    "blurb": "One A-leg and beam chassis, fourteen configurations — from an 800mm single desk to a 4-metre boardroom table.",
+    "slotHint": "PROS: bench desking run with screens and cable management"
   },
   {
-    "slug": "origin",
-    "name": "Origin",
-    "kicker": "The workhorse",
-    "blurb": "Durable, value-engineered seating and desking for floors that need to last a decade.",
-    "slotHint": "Origin: open-plan floor of task chairs"
-  },
-  {
-    "slug": "loom",
-    "name": "Loom",
-    "kicker": "Desking systems",
-    "blurb": "Benches, screens, power and cable management that grows with headcount.",
-    "slotHint": "Loom: linear bench desking with screens"
-  },
-  {
-    "slug": "parlour",
-    "name": "Parlour",
-    "kicker": "Soft & social",
-    "blurb": "Sofas, booths and low tables for the parts of the day that are not at a desk.",
-    "slotHint": "Parlour: lounge seating in a breakout area"
+    "slug": "varidex",
+    "name": "VARIDEX Series",
+    "kicker": "Adjustable-beam desking system",
+    "blurb": "The beam adjusts, so one chassis covers a span of sizes: desks, returns, benches and meeting tables off eight part numbers.",
+    "slotHint": "VARIDEX: face-to-face bench with side screens and wire channel"
   }
 ]

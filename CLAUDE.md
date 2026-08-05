@@ -38,6 +38,72 @@ file is the implementation-facing summary.
   `src/data/*.json` directly except the local repository and, for form option
   lists, `enquiry-form.tsx`/`b2b-form.tsx`.
 
+## Collections are desking series, not SKU lists
+
+Every collection is a configurable desking system, so `/collections/[slug]` renders a
+configurator rather than a product grid: the customer picks a configuration plus a
+length and depth before enquiring, and the quote depends on all three. Two series ship
+today, both ported from the manufacturer's own specification PDFs (`PROS.pdf` via the
+Claude Design source `PROS Series PDP.dc.html`, and `VARIDEX.pdf`).
+
+The four demo collections (Meridian, Origin, Loom, Parlour) were invented for the
+original e-commerce demo and are **gone**. `src/data/products.json` still references
+them in its `col` field, which is why `resolveColName` returns `null` for an unknown
+slug and callers omit the line — see "Demo catalog" below.
+
+- **Data** — `src/lib/series/`: `types.ts` (`SeriesDefinition`), `derive.ts` (every
+  size/label derivation), then one folder per series (`pros/`, `varidex/`) holding
+  configs, elements, anatomy parts and finishes. `index.ts` exports `ALL_SERIES` and
+  `findSeries`. This is spec data quoted to customers — treat edits as data changes,
+  not copy tweaks.
+- **Adding a series** — write a `SeriesDefinition`, add it to `ALL_SERIES`, and add a
+  matching entry to `src/data/collections.json` (which drives /collections, the
+  sitemap and llms.txt). No component changes.
+- **Optional sections** — a definition can omit `swatches` (finish board), `accessory`
+  (VARIDEX's wire-channel SKU table) or `gallery` (photographed-but-unquoted
+  products); those components return `null`. VARIDEX has no finish filter because its
+  PDF specifies materials, not colours.
+- **One client boundary** — `src/components/series/series-pdp.tsx` shares configurator
+  state, so the viewer, size chart, sticky bar and enquiry payload cannot disagree.
+  The enquiry posts to the existing `POST /api/enquiry` with configuration, size and
+  bill of components folded into `interest`/`message`.
+- **Viewer** — WebGL stage (`three` + `@react-three/fiber`, demand-driven frame loop:
+  frames are requested by the animations, so an idle viewer costs nothing). A
+  `next/image` poster sits under the canvas as both first paint and the no-WebGL
+  fallback; `WebglBoundary` catches a lost context. Product shots are on white, so
+  every one of them composites with `mix-blend-multiply` (CSS) or the feathered plate
+  shader (WebGL) — do not swap either for luminance keying, it eats the white frame legs.
+- **Motion** — `framer-motion` under `MotionConfig reducedMotion="user"`. Do not branch
+  on `useReducedMotion` in markup; it produces different server and client trees and
+  trips hydration.
+
+### Photography
+
+`public/pros/` and `public/varidex/` hold the manufacturer's studio renders, extracted
+from the two PDFs (page layers → auto-cropped to content → 1400px JPEG). Several
+configurations legitimately share one shot where the PDF photographs a family once.
+There are no image placeholders left on these pages.
+
+**Open items:**
+
+- **Four inferred PROS part numbers** (straight connector, side cabinet, credenza,
+  wire box) are pattern-matched, not confirmed. They render with a `°` marker plus a
+  footnote; the list is `inferredCodes` on the PROS definition. Every VARIDEX code is
+  printed in its PDF.
+- **PROS finish swatches** are CSS gradients, not photographed swatches, and the finish
+  names/codes (`PROS-TOP-NOK`…) came from the design source rather than the PDF.
+- **VARIDEX sizes are ranges.** The PDF quotes each top between two limits; only the
+  endpoints are offered, and no intermediate size is invented. Seat counts show `—`
+  where the PDF does not state one.
+
+## Demo catalog
+
+`src/data/products.json` (18 products) and `projects.json` are still the illustrative
+data carried over from the original demo, and `/catalog` still serves them. They are
+not real Cohuman products. Because their `col` values point at deleted collections, the
+catalog's collection filter only renders for collections that actually have products,
+and product cards fall back to the category label alone.
+
 ## Lead capture
 
 Three separately-tracked lead sources (analytics `source` field), each with its

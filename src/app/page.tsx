@@ -122,11 +122,11 @@ export default async function HomePage() {
       <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
         <SectionHeading
           eyebrow="Collections"
-          title="Four families. One coherent floor."
+          title="Two desking systems, specified to the millimetre."
           linkHref="/collections"
           linkLabel="All collections"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {collections.map((c) => (
             <CollectionCard key={c.slug} collection={c} />
           ))}

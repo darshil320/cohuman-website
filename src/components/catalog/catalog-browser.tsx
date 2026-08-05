@@ -34,6 +34,13 @@ export function CatalogBrowser({ products, categories, collections }: CatalogBro
   const [col, setCol] = useState<string>("all");
   const { openQuote } = useQuoteDialog();
 
+  // Collections are desking systems with their own configurators, not buckets the demo
+  // catalog products belong to — so the filter only appears for ones that have products.
+  const filterableCollections = useMemo(
+    () => collections.filter((c) => products.some((p) => p.col === c.slug)),
+    [collections, products],
+  );
+
   const filtered = useMemo(() => {
     return products.filter((p) => {
       if (cat !== "all" && p.cat !== cat) return false;
@@ -73,20 +80,28 @@ export function CatalogBrowser({ products, categories, collections }: CatalogBro
                 {b.label}
               </button>
             ))}
-            <span className="mx-1 h-5 w-px bg-co-border" />
-            <button type="button" onClick={() => setCol("all")} className={chipClass(col === "all")}>
-              All collections
-            </button>
-            {collections.map((c) => (
-              <button
-                key={c.slug}
-                type="button"
-                onClick={() => setCol(c.slug)}
-                className={chipClass(col === c.slug)}
-              >
-                {c.name}
-              </button>
-            ))}
+            {filterableCollections.length > 0 ? (
+              <>
+                <span className="mx-1 h-5 w-px bg-co-border" />
+                <button
+                  type="button"
+                  onClick={() => setCol("all")}
+                  className={chipClass(col === "all")}
+                >
+                  All collections
+                </button>
+                {filterableCollections.map((c) => (
+                  <button
+                    key={c.slug}
+                    type="button"
+                    onClick={() => setCol(c.slug)}
+                    className={chipClass(col === c.slug)}
+                  >
+                    {c.name}
+                  </button>
+                ))}
+              </>
+            ) : null}
             <span className="ml-auto whitespace-nowrap text-[13px] text-co-faint">
               {filtered.length} products
             </span>

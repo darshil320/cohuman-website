@@ -9,9 +9,9 @@ export const siteConfig = {
   foundedYear: 1989,
   url: "https://cohuman.example.com", // TODO: confirm production domain
   email: "hello@cohuman.example.com", // TODO: confirm current inbox
-  phoneDisplay: "+91 00000 00000", // TODO: confirm current showroom number
-  phoneE164: "910000000000", // TODO: confirm — digits only, country code first, no leading +
-  whatsappE164: "910000000000", // TODO: confirm — usually same as phoneE164
+  phoneDisplay: "+91 98251 43360",
+  phoneE164: "919825143360",
+  whatsappE164: "919825143360",
   address: {
     line1: "376-378 RJD Integrated Textile Park, Hazira Rd",
     line2: "Ichchhapor, Surat, Gujarat 394510",

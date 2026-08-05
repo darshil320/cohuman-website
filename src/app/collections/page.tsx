@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { ImagePlaceholder } from "@/components/common/image-placeholder";
+import Image from "next/image";
+import Link from "next/link";
 import { CollectionActions } from "@/components/catalog/collection-actions";
 import { catalog } from "@/lib/catalog";
+import { findSeries } from "@/lib/series";
 import { collectionPhoto } from "@/lib/stock-photos";
 
 export const metadata: Metadata = {
   title: "Collections",
   description:
-    "Four furniture collections designed to sit in the same building — Meridian, Origin, Loom and Parlour.",
+    "Two desking systems, specified to the millimetre — PROS on a fixed beam chassis and VARIDEX on an adjustable one.",
 };
 
 export default async function CollectionsPage() {
-  const [collections, allProducts] = await Promise.all([
-    catalog.getCollections(),
-    catalog.getProducts(),
-  ]);
+  const collections = await catalog.getCollections();
 
   return (
     <div>
@@ -24,49 +23,59 @@ export default async function CollectionsPage() {
             Collections
           </p>
           <h1 className="mb-4 max-w-[22ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            Four families, designed to sit in the same building.
+            Two desking systems, one working height.
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-            Finishes, edge profiles and upholstery ranges carry across all four, so a cabin, an
-            open floor and a lounge read as one office rather than three procurement rounds.
+            Both run at 720mm, so tops sit flush wherever two configurations meet — and both
+            are built from a short element set rather than one-off parts. Pick a system, then
+            configure the table.
           </p>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-[1320px] gap-[clamp(30px,4vw,54px)] px-[18px] py-[clamp(44px,6vw,84px)] sm:px-6 lg:px-11">
-        {collections.map((c) => {
-          const items = allProducts.filter((p) => p.col === c.slug);
+        {collections.map((collection) => {
+          const series = findSeries(collection.slug);
+          const href = `/collections/${collection.slug}`;
           return (
             <div
-              key={c.slug}
+              key={collection.slug}
               className="grid grid-cols-1 items-center gap-6 border-b border-co-border pb-[clamp(30px,4vw,54px)] last:border-b-0 lg:grid-cols-2 lg:gap-12"
             >
-              <a
-                href={`/collections/${c.slug}`}
-                className="group relative block aspect-[16/11] overflow-hidden bg-co-hero-bg"
+              <Link
+                href={href}
+                className="group relative block aspect-[16/11] overflow-hidden bg-[radial-gradient(110%_90%_at_50%_5%,#FFFFFF_0%,#F8F6F1_55%,#EFECE4_100%)]"
               >
-                <ImagePlaceholder
-                  hint={c.slotHint}
-                  alt={c.name}
-                  src={collectionPhoto[c.slug]}
-                  className="transition-transform duration-500 group-hover:scale-105"
+                <Image
+                  src={collectionPhoto[collection.slug]}
+                  alt={collection.name}
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-contain p-6 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
                 />
-              </a>
+              </Link>
               <div>
                 <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-co-faint">
-                  {c.kicker} · {items.length} products
+                  {collection.kicker}
+                  {series ? ` · ${series.configs.length} configurations` : null}
                 </p>
                 <h2 className="mb-3.5 font-display text-[clamp(28px,3.4vw,42px)] font-medium leading-[1.05] tracking-tight">
-                  {c.name}
+                  {collection.name}
                 </h2>
                 <p className="mb-5 max-w-[44ch] text-[clamp(16px,1.4vw,18.5px)] font-light leading-relaxed text-co-muted">
-                  {c.blurb}
+                  {collection.blurb}
                 </p>
-                <p className="mb-6 text-[14.5px] font-light text-co-muted-2">
-                  <span className="text-co-faint">Includes</span>{" "}
-                  {items.map((p) => p.name).join(" · ")}
-                </p>
-                <CollectionActions name={c.name} href={`/collections/${c.slug}`} />
+                {series ? (
+                  <p className="mb-6 text-[14.5px] font-light text-co-muted-2">
+                    <span className="text-co-faint">Includes</span>{" "}
+                    {series.configs
+                      .slice(0, 5)
+                      .map((config) => config.short)
+                      .join(" · ")}
+                    {series.configs.length > 5 ? " · …" : null}
+                  </p>
+                ) : null}
+                <CollectionActions name={collection.name} href={href} />
               </div>
             </div>
           );

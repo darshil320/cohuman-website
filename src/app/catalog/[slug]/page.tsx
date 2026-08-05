@@ -47,7 +47,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   const specRows = [
     { k: "Category", v: catLabel },
-    { k: "Collection", v: colName },
+    ...(colName ? [{ k: "Collection", v: colName }] : []),
     { k: "Materials", v: product.materials },
     { k: "Dimensions", v: product.sizes },
     { k: "Lead time", v: `${product.lead} from order confirmation` },
@@ -125,7 +125,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         <div>
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.18em] text-co-green">
-            {colName} collection
+            {colName ? `${colName} collection` : catLabel}
           </p>
           <h1 className="mb-3.5 font-display text-[clamp(32px,4vw,50px)] font-medium leading-[1.03] tracking-tight">
             {product.name}

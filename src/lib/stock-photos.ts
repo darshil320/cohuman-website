@@ -35,12 +35,13 @@ export const categoryPhoto: Record<string, string> = {
   sofa: stockPhotos.loungeReception,
 };
 
-/** Collection (`Collection.slug`) → representative stock photo. */
+/**
+ * Collection (`Collection.slug`) → hero image. Not stock: both series carry the
+ * manufacturer's own studio photography, extracted from their specification PDFs.
+ */
 export const collectionPhoto: Record<string, string> = {
-  meridian: stockPhotos.executiveCabin,
-  origin: stockPhotos.heroChairWhite,
-  loom: stockPhotos.openOfficeDesks,
-  parlour: stockPhotos.loungeReception,
+  pros: "/pros/bench-4-screen.jpg",
+  varidex: "/varidex/bench-4-screen.jpg",
 };
 
 /** Project (`Project.slug`) → representative stock photo — six distinct shots. */
