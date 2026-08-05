@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+import { Reveal } from "@/components/ui/scroll-reveal";
+
 interface SectionHeadingProps {
   eyebrow: string;
   title: string;
@@ -19,7 +21,7 @@ export function SectionHeading({
   titleClassName,
 }: SectionHeadingProps) {
   return (
-    <div
+    <Reveal
       className={cn(
         "mb-8 flex flex-wrap items-end justify-between gap-5 sm:mb-11",
         className,
@@ -46,6 +48,6 @@ export function SectionHeading({
           {linkLabel} →
         </Link>
       ) : null}
-    </div>
+    </Reveal>
   );
 }

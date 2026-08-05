@@ -7,6 +7,7 @@ import { StoryTimeline } from "@/components/about/story-timeline";
 import { brandLogos } from "@/lib/brand-logos";
 import { sitePhotos } from "@/lib/photos";
 import { siteConfig } from "@/lib/site-config";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 
 export const metadata: Metadata = {
   title: "About",
@@ -76,7 +77,7 @@ export default function AboutPage() {
 
       {/* Origin story, sticky image */}
       <section className="mx-auto grid max-w-[1320px] grid-cols-1 items-start gap-[clamp(28px,4vw,68px)] px-[18px] py-[clamp(44px,6vw,80px)] sm:px-6 lg:grid-cols-2 lg:px-11">
-        <div className="grid max-w-[62ch] gap-[22px]">
+        <Reveal className="grid max-w-[62ch] gap-[22px]">
           <p className="text-[clamp(16.5px,1.5vw,19px)] font-light leading-[1.65] text-co-ink-soft">
             The first workshop made desks for one accountancy practice on Ring Road. The brief
             has not changed much since: a surface at the right height, storage that locks, and a
@@ -97,7 +98,7 @@ export default function AboutPage() {
             industry — exposure that set a standard for what &ldquo;quality&rdquo; means before we
             ever apply it to something we make ourselves.
           </p>
-        </div>
+        </Reveal>
         <div className="grid gap-3.5 lg:sticky lg:top-[100px] lg:self-start">
           {/*
             Finished work rather than workshop or founder photography — the client's photo
@@ -127,12 +128,12 @@ export default function AboutPage() {
 
       {/* Stat strip */}
       <section className="bg-co-panel">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-2 gap-8 px-[18px] py-[clamp(40px,5vw,60px)] sm:grid-cols-4 sm:px-6 lg:px-11">
-          <AnimatedStat value={siteConfig.foundedYear} label="Founded" />
-          <AnimatedStat value={2026 - siteConfig.foundedYear} suffix=" yrs" label="In business" />
-          <AnimatedStat value={siteConfig.locations.length} label="Cities we work from" />
-          <AnimatedStat value={siteConfig.brandsRepresented.length} label="Global brands represented" />
-        </div>
+        <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 gap-8 px-[18px] py-[clamp(40px,5vw,60px)] sm:grid-cols-4 sm:px-6 lg:px-11">
+          <StaggerItem><AnimatedStat value={siteConfig.foundedYear} label="Founded" /></StaggerItem>
+          <StaggerItem><AnimatedStat value={2026 - siteConfig.foundedYear} suffix=" yrs" label="In business" /></StaggerItem>
+          <StaggerItem><AnimatedStat value={siteConfig.locations.length} label="Cities we work from" /></StaggerItem>
+          <StaggerItem><AnimatedStat value={siteConfig.brandsRepresented.length} label="Global brands represented" /></StaggerItem>
+        </StaggerContainer>
       </section>
 
       {/* Timeline */}
@@ -150,7 +151,7 @@ export default function AboutPage() {
 
       {/* Brand partnerships */}
       <section className="border-t border-co-border bg-co-panel">
-        <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
+        <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <h2 className="mb-3 max-w-[26ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight text-co-panel-fg">
             International standards, close to home.
           </h2>
@@ -158,7 +159,7 @@ export default function AboutPage() {
             Over three decades we have represented and marketed globally renowned brands,
             bringing their manufacturing and design standards into everything we build ourselves.
           </p>
-        </div>
+        </Reveal>
         <BrandMarquee brands={brandLogos} />
         <div className="h-[clamp(52px,6vw,88px)]" />
       </section>
@@ -166,17 +167,19 @@ export default function AboutPage() {
       {/* Manufacturing capability */}
       <section className="border-t border-co-border">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
-          <h2 className="mb-3 max-w-[24ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
-            A game changer in metal bases.
-          </h2>
-          <p className="mb-[clamp(28px,3.5vw,46px)] max-w-[58ch] text-[15.5px] font-light leading-relaxed text-co-muted">
-            Most furniture makers outsource the metal base. We manufacture ours in-house on
-            advanced European machinery — which is why the modular systems we build hold their
-            precision on-site, not just on a drawing.
-          </p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <Reveal>
+            <h2 className="mb-3 max-w-[24ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
+              A game changer in metal bases.
+            </h2>
+            <p className="mb-[clamp(28px,3.5vw,46px)] max-w-[58ch] text-[15.5px] font-light leading-relaxed text-co-muted">
+              Most furniture makers outsource the metal base. We manufacture ours in-house on
+              advanced European machinery — which is why the modular systems we build hold their
+              precision on-site, not just on a drawing.
+            </p>
+          </Reveal>
+          <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             {CAPABILITIES.map((c) => (
-              <div
+              <StaggerItem
                 key={c.name}
                 className="border border-co-border p-6 transition-colors hover:border-co-green hover:bg-co-bg-alt"
               >
@@ -184,50 +187,54 @@ export default function AboutPage() {
                   {c.name}
                 </h3>
                 <p className="text-[14.5px] font-light leading-relaxed text-co-muted">{c.blurb}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Locations */}
       <section className="border-t border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
-          <h2 className="mb-[clamp(28px,3.5vw,46px)] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
-            Where we work from.
-          </h2>
-          <div className="grid grid-cols-1 gap-px border border-co-border bg-co-border sm:grid-cols-3">
+          <Reveal>
+            <h2 className="mb-[clamp(28px,3.5vw,46px)] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
+              Where we work from.
+            </h2>
+          </Reveal>
+          <StaggerContainer className="grid grid-cols-1 gap-px border border-co-border bg-co-border sm:grid-cols-3">
             {siteConfig.locations.map((loc) => (
-              <div key={loc.city} className="bg-co-bg p-[clamp(24px,3vw,32px)]">
+              <StaggerItem key={loc.city} className="bg-co-bg p-[clamp(24px,3vw,32px)] h-full">
                 <p className="mb-1 font-display text-2xl font-medium tracking-tight text-co-ink">
                   {loc.city}
                 </p>
                 <p className="mb-3 text-[13px] font-light text-co-faint">{loc.detail}</p>
                 <p className="text-[15px] font-light leading-relaxed text-co-ink-soft">{loc.role}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Principles */}
       <section className="bg-co-panel">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
-          <h2 className="mb-[clamp(28px,3.5vw,44px)] max-w-[22ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight text-co-panel-fg">
-            What we hold ourselves to.
-          </h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-11">
+          <Reveal>
+            <h2 className="mb-[clamp(28px,3.5vw,44px)] max-w-[22ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight text-co-panel-fg">
+              What we hold ourselves to.
+            </h2>
+          </Reveal>
+          <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-11">
             {PRINCIPLES.map((p) => (
-              <div key={p.name}>
+              <StaggerItem key={p.name}>
                 <h3 className="mb-2.5 font-display text-xl font-medium tracking-tight text-co-panel-fg">
                   {p.name}
                 </h3>
                 <p className="text-[15.5px] font-light leading-relaxed text-co-panel-muted">
                   {p.blurb}
                 </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 

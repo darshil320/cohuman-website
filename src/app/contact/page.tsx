@@ -4,6 +4,7 @@ import { ContactFormTabs } from "@/components/forms/contact-form-tabs";
 import { FaqSection } from "@/components/common/faq-section";
 import { SectionHeading } from "@/components/common/section-heading";
 import { siteConfig, telHref, whatsappHref } from "@/lib/site-config";
+import { Reveal } from "@/components/ui/scroll-reveal";
 
 const FAQ_ITEMS = [
   {
@@ -67,7 +68,7 @@ export default async function ContactPage({ searchParams }: Props) {
   return (
     <div>
       <section className="mx-auto grid max-w-[1320px] grid-cols-1 items-start gap-[clamp(30px,4vw,68px)] px-[18px] py-[clamp(44px,6vw,82px)] pb-[clamp(64px,8vw,104px)] sm:px-6 lg:grid-cols-2 lg:px-11">
-        <div>
+        <Reveal>
           <p className="mb-3.5 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
             {isOrgatec ? "ORGATEC 2026" : "Contact"}
           </p>
@@ -124,14 +125,18 @@ export default async function ContactPage({ searchParams }: Props) {
               Map embed pending confirmed showroom address
             </div>
           )}
-        </div>
+        </Reveal>
 
-        <ContactFormTabs />
+        <Reveal delay={0.15}>
+          <ContactFormTabs />
+        </Reveal>
       </section>
 
       <section className="mx-auto max-w-[1320px] px-[18px] pb-[clamp(64px,8vw,104px)] sm:px-6 lg:px-11">
         <SectionHeading eyebrow="FAQ" title="Common questions, answered plainly." />
-        <FaqSection items={FAQ_ITEMS} />
+        <Reveal delay={0.1}>
+          <FaqSection items={FAQ_ITEMS} />
+        </Reveal>
       </section>
     </div>
   );

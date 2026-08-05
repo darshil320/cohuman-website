@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { cn } from "@/lib/utils";
 
+import { Reveal } from "@/components/ui/scroll-reveal";
+
 interface CtaBandProps {
   heading: string;
   body: string;
@@ -24,7 +26,7 @@ export function CtaBand({
 
   return (
     <section className={cn(isGreen ? "bg-co-green" : "bg-co-panel")}>
-      <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-8 px-[18px] py-14 sm:px-6 sm:py-20 lg:px-11">
+      <Reveal className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-8 px-[18px] py-14 sm:px-6 sm:py-20 lg:px-11">
         <div>
           <h2
             className={cn(
@@ -53,7 +55,7 @@ export function CtaBand({
         >
           {buttonLabel}
         </Button>
-      </div>
+      </Reveal>
     </section>
   );
 }

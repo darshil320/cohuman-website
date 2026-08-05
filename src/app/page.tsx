@@ -13,6 +13,7 @@ import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 import { sitePhotos } from "@/lib/photos";
 import { OrgatecBanner } from "@/components/home/orgatec-banner";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 
 const FEATURED_SLUGS = [
   "aria-task",
@@ -96,9 +97,9 @@ export default async function HomePage() {
 
       {/* Stats */}
       <section className="border-b border-co-border bg-co-bg-alt">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-4 lg:px-11">
+        <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-4 lg:px-11">
           {STATS.map((s) => (
-            <div
+            <StaggerItem
               key={s.k}
               className="border-co-border py-[clamp(26px,3vw,38px)] px-6 first:pl-0 last:pr-0 [&:not(:last-child)]:border-r"
             >
@@ -106,9 +107,9 @@ export default async function HomePage() {
                 {s.v}
               </p>
               <p className="text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* Brands represented */}
@@ -130,41 +131,46 @@ export default async function HomePage() {
           linkHref="/collections"
           linkLabel="All collections"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {collections.map((c) => (
-            <CollectionCard key={c.slug} collection={c} />
+            <StaggerItem key={c.slug}>
+              <CollectionCard collection={c} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* Furnish by space */}
       <section className="bg-co-panel text-co-panel-fg">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
-          <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
-            Furnish by space
-          </p>
-          <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
-            Tell us the room. We&apos;ll tell you what goes in it.
-          </h2>
-          <div className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
+          <Reveal>
+            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
+              Furnish by space
+            </p>
+            <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
+              Tell us the room. We&apos;ll tell you what goes in it.
+            </h2>
+          </Reveal>
+          <StaggerContainer className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
             {spaces.map((sp) => (
-              <Link
-                key={sp.slug}
-                href="/solutions"
-                className="block min-h-[220px] bg-co-panel p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#232D22]"
-              >
-                <p className="font-display text-[13px] font-semibold tracking-wide text-co-green">
-                  {sp.num}
-                </p>
-                <h3 className="mb-2.5 mt-6 font-display text-[24px] font-medium tracking-tight">
-                  {sp.name}
-                </h3>
-                <p className="text-[14.5px] font-light leading-relaxed text-co-panel-muted">
-                  {sp.blurb}
-                </p>
-              </Link>
+              <StaggerItem key={sp.slug} className="block min-h-[220px] bg-co-panel h-full">
+                <Link
+                  href="/solutions"
+                  className="block h-full w-full p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#232D22]"
+                >
+                  <p className="font-display text-[13px] font-semibold tracking-wide text-co-green">
+                    {sp.num}
+                  </p>
+                  <h3 className="mb-2.5 mt-6 font-display text-[24px] font-medium tracking-tight">
+                    {sp.name}
+                  </h3>
+                  <p className="text-[14.5px] font-light leading-relaxed text-co-panel-muted">
+                    {sp.blurb}
+                  </p>
+                </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -176,21 +182,22 @@ export default async function HomePage() {
           linkHref="/catalog"
           linkLabel="Full catalog"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((p) => (
-            <ProductCard
-              key={p.slug}
-              product={p}
-              catLabel={resolveCatLabel(categories, p.cat)}
-            />
+            <StaggerItem key={p.slug}>
+              <ProductCard
+                product={p}
+                catLabel={resolveCatLabel(categories, p.cat)}
+              />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* What we do */}
       <section className="border-b border-t border-co-border bg-co-bg-alt">
         <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-[18px] py-[clamp(64px,8vw,100px)] sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-11">
-          <div>
+          <Reveal>
             <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
               What we do
             </p>
@@ -208,10 +215,10 @@ export default async function HomePage() {
             >
               Our services →
             </Link>
-          </div>
-          <div className="grid gap-px border border-co-border bg-co-border">
+          </Reveal>
+          <StaggerContainer className="grid gap-px border border-co-border bg-co-border">
             {services.map((sv) => (
-              <div key={sv.num} className="flex gap-[18px] bg-co-bg p-[22px]">
+              <StaggerItem key={sv.num} className="flex gap-[18px] bg-co-bg p-[22px]">
                 <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-co-green">
                   {sv.num}
                 </span>
@@ -223,9 +230,9 @@ export default async function HomePage() {
                     {sv.blurb}
                   </p>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -237,32 +244,34 @@ export default async function HomePage() {
           linkHref="/projects"
           linkLabel="All projects"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.slice(0, 3).map((pr) => (
-            <Link key={pr.slug} href="/projects" className="group block text-co-ink">
-              <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
-                <Image
-                  src={pr.images[0]}
-                  alt={`${pr.name} — completed fit-out`}
-                  fill
-                  sizes="(min-width: 1024px) 30vw, 100vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              {pr.city ? (
-                <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
-                  {pr.city}
-                </p>
-              ) : (
-                <div className="mt-3.5" />
-              )}
-              <h3 className="mb-1.5 font-display text-[20px] font-medium tracking-tight">
-                {pr.name}
-              </h3>
-              <p className="line-clamp-2 text-sm font-light text-co-muted-2">{pr.delivered}</p>
-            </Link>
+            <StaggerItem key={pr.slug}>
+              <Link href="/projects" className="group block text-co-ink">
+                <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
+                  <Image
+                    src={pr.images[0]}
+                    alt={`${pr.name} — completed fit-out`}
+                    fill
+                    sizes="(min-width: 1024px) 30vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                {pr.city ? (
+                  <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
+                    {pr.city}
+                  </p>
+                ) : (
+                  <div className="mt-3.5" />
+                )}
+                <h3 className="mb-1.5 font-display text-[20px] font-medium tracking-tight">
+                  {pr.name}
+                </h3>
+                <p className="line-clamp-2 text-sm font-light text-co-muted-2">{pr.delivered}</p>
+              </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       <CtaBand
