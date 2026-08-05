@@ -1,8 +1,69 @@
 [
-  { "slug": "meridian-tower", "name": "Meridian Tower", "sector": "Corporate HQ", "city": "Surat", "meta": "340 seats · 4 floors", "scope": "Full turnkey: layout, desking, seating, cabins, boardroom, cafeteria.", "collections": "Loom, Meridian, Parlour", "quote": "They gave us a floor plate and a headcount. We gave back a drawing set, then a working office.", "slotHint": "Corporate HQ: open floor with bench desking" },
-  { "slug": "northline-studio", "name": "Northline Studio", "sector": "Design studio", "city": "Ahmedabad", "meta": "48 seats · 1 floor", "scope": "Bench desking, storage wall, lounge and a shared model-making table.", "collections": "Loom, Parlour", "quote": "A studio wants one long table and somewhere soft to argue over drawings.", "slotHint": "Design studio: long shared table and lounge" },
-  { "slug": "kelvin-labs", "name": "Kelvin Labs", "sector": "R&D campus", "city": "Vadodara", "meta": "210 seats · 2 buildings", "scope": "Height-adjustable desking throughout, write-up areas, quiet booths.", "collections": "Loom, Origin", "quote": "Everyone sits differently in a lab. Every desk moves.", "slotHint": "R&D campus: height-adjustable desks and booths" },
-  { "slug": "harbour-chambers", "name": "Harbour Chambers", "sector": "Legal", "city": "Mumbai", "meta": "62 seats · partner cabins", "scope": "Veneer cabins, library storage, conference suite, client lounge.", "collections": "Meridian, Parlour", "quote": "Chambers need weight. Veneer, leather, and no visible cables.", "slotHint": "Legal chambers: veneer cabin and library storage" },
-  { "slug": "ground-floor-co", "name": "Ground Floor Co.", "sector": "Coworking", "city": "Surat", "meta": "180 desks · 3 floors", "scope": "Hot-desking, lockers, phone booths, café seating, event floor.", "collections": "Origin, Loom, Parlour", "quote": "Furniture that survives two hundred strangers a day.", "slotHint": "Coworking: hot desks, lockers and café seating" },
-  { "slug": "saraswati-institute", "name": "Saraswati Institute", "sector": "Education", "city": "Rajkot", "meta": "90 staff · 6 training rooms", "scope": "Stackable seating, flip-top training tables, staff room, admin cabins.", "collections": "Origin", "quote": "Rooms that change use four times a day need furniture on wheels.", "slotHint": "Education: flip-top training tables and stack chairs" }
+  {
+    "slug": "narola",
+    "name": "Narola",
+    "delivered": "Open-plan floors of bench desking with upholstered acoustic screens, planter-topped storage runs, glazed meeting rooms, a long shared café table and colour-blocked breakout seating.",
+    "images": [
+      "/projects/narola/01.jpg",
+      "/projects/narola/02.jpg",
+      "/projects/narola/03.jpg",
+      "/projects/narola/04.jpg",
+      "/projects/narola/05.jpg"
+    ]
+  },
+  {
+    "slug": "pnr",
+    "name": "PNR Industries",
+    "city": "Palsana, Surat",
+    "delivered": "Reception desk in marble and brass, boardroom and meeting suites, glazed cabins, workstation floors and lounge seating across a new four-storey building.",
+    "images": [
+      "/projects/pnr/01.jpg",
+      "/projects/pnr/02.jpg",
+      "/projects/pnr/03.jpg",
+      "/projects/pnr/04.jpg",
+      "/projects/pnr/05.jpg"
+    ]
+  },
+  {
+    "slug": "unit-708",
+    "name": "Unit 708",
+    "delivered": "Two workstation floors on a teal-screened bench system, a timber-slat reception, breakout seating, and three glazed meeting rooms.",
+    "images": [
+      "/projects/unit-708/01.jpg",
+      "/projects/unit-708/02.jpg",
+      "/projects/unit-708/03.jpg",
+      "/projects/unit-708/04.jpg"
+    ]
+  },
+  {
+    "slug": "unit-501",
+    "name": "Unit 501",
+    "delivered": "Executive cabins with integrated credenzas and lounge seating, a stone-topped meeting table, a workstation bay and a soft-seating reception.",
+    "images": [
+      "/projects/unit-501/01.jpg",
+      "/projects/unit-501/02.jpg",
+      "/projects/unit-501/03.jpg",
+      "/projects/unit-501/04.jpg"
+    ]
+  },
+  {
+    "slug": "unit-312",
+    "name": "Unit 312",
+    "delivered": "Open-plan desking with a standing collaboration table, a glazed boardroom, and a wood-panelled cabin wall with concealed storage.",
+    "images": [
+      "/projects/unit-312/01.jpg",
+      "/projects/unit-312/02.jpg",
+      "/projects/unit-312/03.jpg"
+    ]
+  },
+  {
+    "slug": "devshree",
+    "name": "Devshree",
+    "delivered": "Workstation runs with planter dividers and pedestal storage, a full-height locker wall, a curved reception counter and glazed cabin fronts.",
+    "images": [
+      "/projects/devshree/01.jpg",
+      "/projects/devshree/02.jpg",
+      "/projects/devshree/03.jpg"
+    ]
+  }
 ]

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { EnquireButton } from "@/components/common/enquire-button";
 import { catalog } from "@/lib/catalog";
-import { spacePhoto } from "@/lib/stock-photos";
+import { spacePhoto } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Workspace Solutions",

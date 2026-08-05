@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
-import { categoryPhoto } from "@/lib/stock-photos";
+import { categoryPhoto } from "@/lib/photos";
 import type { Product } from "@/lib/catalog";
 
 interface ProductCardProps {

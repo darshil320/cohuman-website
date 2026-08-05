@@ -8,7 +8,7 @@ import { PRICE_BAND_LABEL } from "@/lib/catalog";
 import { catalog } from "@/lib/catalog";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { siteConfig } from "@/lib/site-config";
-import { categoryPhoto } from "@/lib/stock-photos";
+import { categoryPhoto } from "@/lib/photos";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

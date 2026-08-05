@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CollectionActions } from "@/components/catalog/collection-actions";
 import { catalog } from "@/lib/catalog";
 import { findSeries } from "@/lib/series";
-import { collectionPhoto } from "@/lib/stock-photos";
+import { collectionPhoto } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Collections",

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { ImagePlaceholder } from "@/components/common/image-placeholder";
+import Image from "next/image";
 import { CtaBand } from "@/components/common/cta-band";
 import { catalog } from "@/lib/catalog";
-import { projectPhoto } from "@/lib/stock-photos";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Recent Cohuman fit-outs across corporate, legal, education, research and coworking spaces.",
+    "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
 };
 
 export default async function ProjectsPage() {
@@ -24,47 +23,65 @@ export default async function ProjectsPage() {
             Floors we have finished.
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-            A selection of recent fit-outs across corporate, legal, education, research and
-            coworking. Client names and photography are shared with permission — details marked
-            to be confirmed are awaiting sign-off.
+            Photographed on site after handover. Some of these are named, some are known by
+            the unit they were built into — where a client has not asked to be listed, we do
+            not list them.
           </p>
         </div>
       </section>
 
-      {/*
-        PLACEHOLDER GALLERY — these are illustrative case studies from the original
-        demo, not real Cohuman projects. Swap for confirmed client work (with
-        permission to publish) before launch.
-      */}
-      <section className="mx-auto grid max-w-[1320px] grid-cols-1 gap-[clamp(22px,2.6vw,38px)] px-[18px] py-[clamp(40px,5vw,72px)] pb-[clamp(64px,8vw,100px)] sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-11">
-        {projects.map((pr) => (
-          <article key={pr.slug} className="group flex flex-col">
-            <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
-              <ImagePlaceholder
-                hint={pr.slotHint}
-                alt={pr.name}
-                src={projectPhoto[pr.slug]}
-                className="transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <p className="mb-1.5 mt-[18px] text-[11.5px] font-semibold uppercase tracking-[0.16em] text-co-faint">
-              {pr.sector} · {pr.city}
-            </p>
-            <h2 className="mb-2.5 font-display text-[clamp(22px,2.2vw,28px)] font-medium tracking-tight">
-              {pr.name}
-            </h2>
-            <p className="mb-3.5 text-[15.5px] font-light leading-relaxed text-co-muted">
-              {pr.scope}
-            </p>
-            <blockquote className="mb-4 border-l-2 border-co-green pl-4 font-display text-[16.5px] font-normal leading-tight text-co-ink-soft">
-              {pr.quote}
-            </blockquote>
-            <div className="mt-auto flex flex-wrap gap-x-5 gap-y-1.5 border-t border-co-border pt-3.5 text-[13.5px] text-co-muted-2">
-              <span>{pr.meta}</span>
-              <span className="text-co-faint">{pr.collections}</span>
-            </div>
-          </article>
-        ))}
+      <section className="mx-auto grid max-w-[1320px] gap-[clamp(40px,5vw,72px)] px-[18px] py-[clamp(40px,5vw,72px)] pb-[clamp(64px,8vw,100px)] sm:px-6 lg:px-11">
+        {projects.map((project, index) => {
+          const [lead, ...rest] = project.images;
+          return (
+            <article
+              key={project.slug}
+              className="grid gap-[clamp(16px,2vw,28px)] border-b border-co-border pb-[clamp(36px,4.4vw,60px)] last:border-b-0 last:pb-0"
+            >
+              <div className="grid items-start gap-[clamp(18px,2.4vw,40px)] lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.45fr)]">
+                <div className="relative aspect-[3/2] overflow-hidden bg-co-hero-bg">
+                  <Image
+                    src={lead}
+                    alt={`${project.name} — completed fit-out`}
+                    fill
+                    sizes="(min-width: 1024px) 64vw, 100vw"
+                    priority={index === 0}
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  {project.city ? (
+                    <p className="mb-1.5 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-co-faint">
+                      {project.city}
+                    </p>
+                  ) : null}
+                  <h2 className="mb-3 font-display text-[clamp(24px,2.6vw,34px)] font-medium tracking-tight">
+                    {project.name}
+                  </h2>
+                  <p className="text-[15.5px] font-light leading-relaxed text-co-muted">
+                    {project.delivered}
+                  </p>
+                </div>
+              </div>
+
+              {rest.length > 0 ? (
+                <ul className="grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-4">
+                  {rest.map((image, i) => (
+                    <li key={image} className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
+                      <Image
+                        src={image}
+                        alt={`${project.name} — view ${i + 2}`}
+                        fill
+                        sizes="(min-width: 640px) 22vw, 45vw"
+                        className="object-cover"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </article>
+          );
+        })}
       </section>
 
       <CtaBand

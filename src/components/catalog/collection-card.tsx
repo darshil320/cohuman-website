@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { collectionPhoto } from "@/lib/stock-photos";
+import { collectionPhoto } from "@/lib/photos";
 import type { Collection } from "@/lib/catalog";
 
 export function CollectionCard({ collection }: { collection: Collection }) {

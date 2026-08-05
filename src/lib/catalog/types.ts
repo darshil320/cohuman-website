@@ -33,16 +33,20 @@ export interface Product {
   warranty: string;
 }
 
+/**
+ * A completed fit-out. Only fields the client has actually confirmed are present —
+ * seat counts, sectors and testimonial quotes are deliberately absent rather than
+ * estimated, and `city`/`name` carry a real client name only where one was shared.
+ */
 export interface Project {
   slug: string;
+  /** Client name where shared, otherwise the unit the job is known by. */
   name: string;
-  sector: string;
-  city: string;
-  meta: string;
-  scope: string;
-  collections: string;
-  quote: string;
-  slotHint: string;
+  city?: string;
+  /** What was supplied and installed, described from the photography. */
+  delivered: string;
+  /** Photographs of the finished install; the first is the lead image. */
+  images: string[];
 }
 
 export interface Space {

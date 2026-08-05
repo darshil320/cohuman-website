@@ -1,6 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import { HeroCarousel } from "@/components/common/hero-carousel";
-import { ImagePlaceholder } from "@/components/common/image-placeholder";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
 import { BrandMarquee } from "@/components/common/brand-marquee";
@@ -11,7 +11,7 @@ import { catalog } from "@/lib/catalog";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
-import { projectPhoto, stockPhotos } from "@/lib/stock-photos";
+import { sitePhotos } from "@/lib/photos";
 
 const FEATURED_SLUGS = [
   "aria-task",
@@ -23,9 +23,9 @@ const FEATURED_SLUGS = [
 ];
 
 const HERO_SLIDES = [
-  { src: stockPhotos.heroDeskClean, alt: "Bright, clean Cohuman workspace desk" },
-  { src: stockPhotos.openOfficeDesks, alt: "Row of ergonomic desks and chairs in an open office" },
-  { src: stockPhotos.conferenceTable, alt: "Boardroom conference table with floor-to-ceiling windows" },
+  { src: sitePhotos.heroOpenPlan, alt: "Open-plan Cohuman workstation floor with acoustic screens" },
+  { src: sitePhotos.heroBenching, alt: "Bench desking run with task seating in a finished office" },
+  { src: sitePhotos.heroBoardroom, alt: "Boardroom table and seating in a completed fit-out" },
 ];
 
 const STATS = [
@@ -237,20 +237,25 @@ export default async function HomePage() {
           {projects.slice(0, 3).map((pr) => (
             <Link key={pr.slug} href="/projects" className="group block text-co-ink">
               <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
-                <ImagePlaceholder
-                  hint={pr.slotHint}
-                  alt={pr.name}
-                  src={projectPhoto[pr.slug]}
-                  className="transition-transform duration-500 group-hover:scale-105"
+                <Image
+                  src={pr.images[0]}
+                  alt={`${pr.name} — completed fit-out`}
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 100vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
-                {pr.sector}
-              </p>
+              {pr.city ? (
+                <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
+                  {pr.city}
+                </p>
+              ) : (
+                <div className="mt-3.5" />
+              )}
               <h3 className="mb-1.5 font-display text-[20px] font-medium tracking-tight">
                 {pr.name}
               </h3>
-              <p className="text-sm font-light text-co-muted-2">{pr.meta}</p>
+              <p className="line-clamp-2 text-sm font-light text-co-muted-2">{pr.delivered}</p>
             </Link>
           ))}
         </div>

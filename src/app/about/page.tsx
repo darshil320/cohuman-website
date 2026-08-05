@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { ImagePlaceholder } from "@/components/common/image-placeholder";
+import Image from "next/image";
 import { CtaBand } from "@/components/common/cta-band";
 import { AnimatedStat } from "@/components/about/animated-stat";
 import { BrandMarquee } from "@/components/common/brand-marquee";
 import { StoryTimeline } from "@/components/about/story-timeline";
 import { brandLogos } from "@/lib/brand-logos";
+import { sitePhotos } from "@/lib/photos";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -98,11 +99,28 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="grid gap-3.5 lg:sticky lg:top-[100px] lg:self-start">
+          {/*
+            Finished work rather than workshop or founder photography — the client's photo
+            library covers completed installs only. Swap these two for a workshop shot and a
+            making detail if that photography ever arrives.
+          */}
           <div className="relative aspect-[4/5] overflow-hidden bg-co-hero-bg">
-            <ImagePlaceholder hint="Workshop or founder portrait" alt="Cohuman workshop or founder portrait" />
+            <Image
+              src={sitePhotos.aboutCabin}
+              alt="Executive cabin delivered by Cohuman, with integrated credenza and lounge seating"
+              fill
+              sizes="(min-width: 1024px) 32vw, 100vw"
+              className="object-cover"
+            />
           </div>
           <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
-            <ImagePlaceholder hint="Making: joinery or upholstery detail" alt="Joinery or upholstery detail" />
+            <Image
+              src={sitePhotos.aboutMeeting}
+              alt="Glazed meeting room and timber cabin wall in a completed Cohuman fit-out"
+              fill
+              sizes="(min-width: 1024px) 32vw, 100vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
