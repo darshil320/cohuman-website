@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { ImageLightbox, type LightboxItem } from "@/components/common/image-lightbox";
 import { selectedLength } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
@@ -20,9 +21,11 @@ const CORNERS = [
 ];
 
 export function SeriesStage() {
-  const { series, config, selection, dimensionsOn, toggleDimensions } = useSeriesConfigurator();
+  const { series, config, selection, dimensionsOn, toggleDimensions, pickConfigBySlug } =
+    useSeriesConfigurator();
   const reduceMotion = useReducedMotion();
   const [pointerActive, setPointerActive] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const webglOk = useWebglAvailable();
 
   // Every render in the series stays resident on the GPU, so switching configuration is
@@ -32,14 +35,32 @@ export function SeriesStage() {
     [series],
   );
 
+  // One entry per distinct render, so paging the viewer never shows the same photograph
+  // twice for two configurations the manufacturer photographed once.
+  const shots = useMemo(() => {
+    const seen = new Map<string, { slug: string; item: LightboxItem }>();
+    for (const item of series.configs) {
+      if (seen.has(item.image)) continue;
+      seen.set(item.image, {
+        slug: item.slug,
+        item: { src: item.image, alt: item.imageAlt, caption: `${item.name} · ${item.code}` },
+      });
+    }
+    return [...seen.values()];
+  }, [series]);
+
+  const shotIndex = Math.max(
+    0,
+    shots.findIndex((shot) => shot.item.src === config.image),
+  );
+
   const length = selectedLength(selection);
   const widthLabel = config.dia ? `Ø ${length}` : `W ${length}`;
-
 
   return (
     <div
       className={cn(
-        "relative aspect-[16/10] overflow-hidden border border-co-card-border",
+        "group relative aspect-[16/10] overflow-hidden border border-co-card-border",
         "bg-white",
         webglOk && "cursor-crosshair",
       )}
@@ -74,12 +95,42 @@ export function SeriesStage() {
         </WebglBoundary>
       ) : null}
 
+      {/*
+        Sits over the render and under the chrome below it, so the whole picture opens the
+        viewer while the corner controls keep their own hit areas.
+      */}
+      <button
+        type="button"
+        aria-label={`Open ${config.name} at full size`}
+        onClick={() => setLightboxOpen(true)}
+        className="absolute inset-0 z-[1] cursor-zoom-in"
+      />
+
       {CORNERS.map((position) => (
         <span
           key={position}
-          className={`pointer-events-none absolute h-[22px] w-[22px] border-co-border-strong ${position}`}
+          className={`pointer-events-none absolute z-[2] h-[22px] w-[22px] border-co-border-strong ${position}`}
         />
       ))}
+
+      <span
+        aria-hidden
+        className={cn(
+          // Always offered on touch, where there is no hover to discover it with; on a
+          // pointer device it stays out of the frame until you go looking.
+          "pointer-events-none absolute right-0 top-0 z-[2] flex items-center gap-1.5 border-b border-l border-co-card-border bg-co-bg/85 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100",
+          pointerActive ? "text-co-ink" : "text-co-faint",
+        )}
+      >
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+          <path
+            d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
+            stroke="currentColor"
+            strokeWidth="1.4"
+          />
+        </svg>
+        Expand
+      </span>
 
       <AnimatePresence>
         {dimensionsOn ? (
@@ -107,7 +158,7 @@ export function SeriesStage() {
         ) : null}
       </AnimatePresence>
 
-      <p className="absolute bottom-0 left-0 m-0 border-r border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 font-mono text-[11.5px] font-semibold uppercase tracking-[0.1em] text-co-faint backdrop-blur-sm">
+      <p className="absolute bottom-0 left-0 z-[2] m-0 border-r border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 font-mono text-[11.5px] font-semibold uppercase tracking-[0.1em] text-co-faint backdrop-blur-sm">
         {config.code}
       </p>
 
@@ -116,12 +167,22 @@ export function SeriesStage() {
         onClick={toggleDimensions}
         aria-pressed={dimensionsOn}
         className={cn(
-          "absolute bottom-0 right-0 border-l border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm transition-colors hover:text-co-ink",
+          "absolute bottom-0 right-0 z-[2] border-l border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm transition-colors hover:text-co-ink",
           dimensionsOn ? "text-co-green" : "text-co-faint",
         )}
       >
         Dimensions
       </button>
+
+      <ImageLightbox
+        items={shots.map((shot) => shot.item)}
+        index={shotIndex}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        // Paging the viewer drives the configurator, so closing it leaves the page on
+        // the configuration you were last looking at.
+        onIndexChange={(next) => pickConfigBySlug(shots[next].slug)}
+      />
     </div>
   );
 }

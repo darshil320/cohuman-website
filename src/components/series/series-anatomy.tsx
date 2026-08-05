@@ -173,7 +173,7 @@ export function SeriesAnatomy() {
                           aria-pressed={active}
                           onClick={() => pickPart(index)}
                           className={cn(
-                            "flex h-7 w-7 items-center justify-center rounded-full border text-[12.5px] font-semibold transition-colors",
+                            "flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors sm:h-7 sm:w-7 sm:text-[12.5px]",
                             active
                               ? "border-co-ink bg-co-ink text-co-bg shadow-lg"
                               : "border-co-border bg-co-bg/90 text-co-faint shadow-sm backdrop-blur-sm hover:border-co-ink hover:text-co-ink",
@@ -186,7 +186,7 @@ export function SeriesAnatomy() {
                             initial={{ opacity: 0, y: -4 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={FADE}
-                            className="pointer-events-none absolute left-1/2 top-[38px] w-max max-w-[220px] -translate-x-1/2 whitespace-nowrap bg-co-ink/92 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.11em] text-co-bg backdrop-blur-sm"
+                            className="pointer-events-none absolute left-1/2 top-[32px] w-max max-w-[200px] -translate-x-1/2 truncate bg-co-ink/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-co-bg backdrop-blur-sm sm:top-[38px] sm:px-2.5 sm:text-[11px] sm:tracking-[0.11em]"
                           >
                             {item.name}
                           </motion.span>
@@ -209,7 +209,7 @@ export function SeriesAnatomy() {
               transition={FADE}
             />
 
-            <p className="pointer-events-none absolute left-3.5 top-3.5 bg-co-bg/70 px-2 py-1 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-co-placeholder backdrop-blur-sm">
+            <p className="pointer-events-none absolute left-3 top-3 max-w-[calc(100%-124px)] truncate bg-co-bg/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-co-placeholder backdrop-blur-sm sm:left-3.5 sm:top-3.5 sm:text-[10.5px] sm:tracking-[0.14em]">
               {series.anatomyCaption}
             </p>
 
@@ -223,7 +223,7 @@ export function SeriesAnatomy() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={FADE}
-                  className="absolute right-3.5 top-3.5 border border-co-border bg-co-bg/85 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-co-ink-soft backdrop-blur-sm transition-colors hover:border-co-ink hover:text-co-ink"
+                  className="absolute right-3 top-3 border border-co-border bg-co-bg/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-co-ink-soft backdrop-blur-sm transition-colors hover:border-co-ink hover:text-co-ink sm:right-3.5 sm:top-3.5 sm:px-3 sm:text-[11px] sm:tracking-[0.12em]"
                 >
                   Whole bench
                 </motion.button>
@@ -261,7 +261,7 @@ export function SeriesAnatomy() {
           </div>
 
           <div>
-            <div className="mb-5 grid grid-cols-[repeat(auto-fill,minmax(34px,1fr))] gap-1">
+            <div className="mb-5 grid grid-cols-5 gap-1 sm:grid-cols-[repeat(auto-fill,minmax(34px,1fr))]">
               {series.parts.map((item, index) => {
                 const active = index === partIndex;
                 return (
@@ -272,7 +272,7 @@ export function SeriesAnatomy() {
                     aria-pressed={active}
                     onClick={() => pickPart(index)}
                     className={cn(
-                      "aspect-square border p-0 text-[13px] font-semibold transition-colors",
+                      "h-11 w-full border p-0 text-[13px] font-semibold transition-colors sm:aspect-square sm:h-auto",
                       active
                         ? "border-co-ink bg-co-ink text-co-bg"
                         : "border-co-border bg-co-bg text-co-faint hover:border-co-ink",

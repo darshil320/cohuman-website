@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import { ImageLightbox } from "@/components/common/image-lightbox";
 import { useSeriesConfigurator } from "./series-context";
 import { Reveal } from "./reveal";
 
@@ -11,6 +13,7 @@ import { Reveal } from "./reveal";
  */
 export function SeriesGalleryStrip() {
   const { series } = useSeriesConfigurator();
+  const [openAt, setOpenAt] = useState<number | null>(null);
   const gallery = series.gallery;
   if (!gallery?.items.length) return null;
 
@@ -43,15 +46,32 @@ export function SeriesGalleryStrip() {
               step={index}
               className="border border-co-card-border bg-white"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-white">
+              <button
+                type="button"
+                aria-label={`Open ${item.name} at full size`}
+                onClick={() => setOpenAt(index)}
+                className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden bg-white p-0"
+              >
                 <Image
                   src={item.image}
                   alt={item.imageAlt}
                   fill
                   sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-contain p-3 mix-blend-multiply"
+                  className="object-contain p-3 mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                 />
-              </div>
+                <span
+                  aria-hidden
+                  className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center border border-co-card-border bg-co-bg/85 text-co-faint opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                >
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    />
+                  </svg>
+                </span>
+              </button>
               <div className="border-t border-co-card-border px-4 py-3.5">
                 <h3 className="mb-1 font-display text-[17px] font-medium tracking-[-0.02em]">
                   {item.name}
@@ -66,6 +86,18 @@ export function SeriesGalleryStrip() {
           Quoted from the drawing — send us the space and we size these against the rest of
           the run.
         </p>
+
+        <ImageLightbox
+          items={gallery.items.map((item) => ({
+            src: item.image,
+            alt: item.imageAlt,
+            caption: `${item.name} — ${item.note}`,
+          }))}
+          index={openAt ?? 0}
+          open={openAt !== null}
+          onClose={() => setOpenAt(null)}
+          onIndexChange={setOpenAt}
+        />
       </div>
     </section>
   );

@@ -145,12 +145,22 @@ export function SeriesSpecPanel() {
       <div className="mb-3.5 flex flex-wrap gap-2.5">
         <a
           href="#enquire"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelector('#enquire')?.scrollIntoView({ behavior: 'smooth' });
+            history.pushState(null, '', '#enquire');
+          }}
           className="bg-co-ink px-6 py-3.5 text-[15px] font-semibold text-co-bg transition-colors hover:bg-co-green hover:text-co-cta-green-ink"
         >
           Enquire — this configuration
         </a>
         <a
           href="#anatomy"
+          onClick={(e) => {
+            e.preventDefault();
+            document.querySelector('#anatomy')?.scrollIntoView({ behavior: 'smooth' });
+            history.pushState(null, '', '#anatomy');
+          }}
           className="border border-co-border-strong px-5 py-3.5 text-[15px] font-semibold text-co-ink transition-colors hover:border-co-ink hover:bg-co-bg-alt"
         >
           See the anatomy

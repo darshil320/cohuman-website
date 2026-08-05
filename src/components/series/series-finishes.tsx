@@ -22,11 +22,13 @@ export function SeriesFinishes() {
           </h2>
         </Reveal>
 
-        <ul className="grid list-none grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-[clamp(14px,1.8vw,24px)] p-0">
+        {/* Two-up on a phone: at one card per row the board ran to five full-width tiles
+            and buried the footnote a screen and a half down. */}
+        <ul className="grid list-none grid-cols-2 gap-x-3 gap-y-[18px] p-0 sm:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] sm:gap-[clamp(14px,1.8vw,24px)]">
           {swatches.map((swatch, index) => (
             <Reveal as="li" key={swatch.name} step={index}>
               <div
-                className="relative aspect-[5/4] overflow-hidden border border-co-panel-fg/15"
+                className="relative aspect-square overflow-hidden border border-co-panel-fg/15 sm:aspect-[5/4]"
                 style={{ background: swatch.fill ?? "#2A322A" }}
               >
                 <span
@@ -41,14 +43,14 @@ export function SeriesFinishes() {
                   />
                 ) : null}
               </div>
-              <h3 className="mb-1 mt-3.5 font-display text-[17.5px] font-medium tracking-[-0.02em] text-co-panel-fg">
+              <h3 className="mb-0.5 mt-2.5 font-display text-[15px] font-medium leading-tight tracking-[-0.02em] text-co-panel-fg sm:mb-1 sm:mt-3.5 sm:text-[17.5px]">
                 {swatch.name}
               </h3>
-              <p className="mb-1 text-[13.5px] font-light leading-normal text-co-panel-muted">
+              <p className="mb-1 text-[12.5px] font-light leading-normal text-co-panel-muted sm:text-[13.5px]">
                 {swatch.spec}
               </p>
               {swatch.code ? (
-                <p className="font-mono text-[11.5px] text-co-panel-faint">{swatch.code}</p>
+                <p className="font-mono text-[10.5px] text-co-panel-faint sm:text-[11.5px]">{swatch.code}</p>
               ) : null}
             </Reveal>
           ))}

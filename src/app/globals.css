@@ -41,7 +41,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Removed scroll-behavior: smooth to fix Next.js page transition scroll bugs */
 }
 
 body {
