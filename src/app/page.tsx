@@ -81,10 +81,10 @@ export default async function HomePage() {
                   Request a Quote
                 </Link>
                 <Link
-                  href="/catalog"
+                  href="/collections"
                   className="rounded-md border border-white/30 bg-white/10 px-[25px] py-3.5 text-[15px] font-semibold text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white/20"
                 >
-                  Browse the catalog
+                  Browse collections
                 </Link>
               </div>
             </div>

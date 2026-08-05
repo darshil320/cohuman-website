@@ -48,10 +48,10 @@ export function OrgatecBanner() {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
             <Link
-              href="/catalog"
+              href="/collections"
               className="flex items-center justify-center rounded-md border border-co-panel-border bg-white/5 px-[25px] py-[14px] text-[15px] font-semibold text-white backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10"
             >
-              Browse catalog
+              See collections
             </Link>
           </div>
         </div>

@@ -79,10 +79,10 @@ export default async function SolutionsPage() {
                   Get a {sp.name} schedule
                 </EnquireButton>
                 <Link
-                  href="/catalog"
+                  href="/collections"
                   className="border border-co-border-strong px-[22px] py-3 text-[15px] font-semibold text-co-muted hover:border-co-ink hover:bg-co-bg-alt hover:text-co-ink"
                 >
-                  Browse products
+                  Browse collections
                 </Link>
               </div>
             </div>

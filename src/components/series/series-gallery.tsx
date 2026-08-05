@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ImageLightbox } from "@/components/common/image-lightbox";
+import { MobilePeek } from "@/components/common/mobile-peek";
 import { useSeriesConfigurator } from "./series-context";
 import { Reveal } from "./reveal";
 
@@ -38,49 +39,51 @@ export function SeriesGalleryStrip() {
           ) : null}
         </div>
 
-        <ul className="grid list-none grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 p-0">
-          {gallery.items.map((item, index) => (
-            <Reveal
-              as="li"
-              key={item.name}
-              step={index}
-              className="border border-co-card-border bg-white"
-            >
-              <button
-                type="button"
-                aria-label={`Open ${item.name} at full size`}
-                onClick={() => setOpenAt(index)}
-                className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden bg-white p-0"
+        <MobilePeek peek={2} total={gallery.items.length} noun="products">
+          <ul className="grid list-none grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 p-0">
+            {gallery.items.map((item, index) => (
+              <Reveal
+                as="li"
+                key={item.name}
+                step={index}
+                className="border border-co-card-border bg-white"
               >
-                <Image
-                  src={item.image}
-                  alt={item.imageAlt}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-contain p-3 mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-                />
-                <span
-                  aria-hidden
-                  className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center border border-co-card-border bg-co-bg/85 text-co-faint opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                <button
+                  type="button"
+                  aria-label={`Open ${item.name} at full size`}
+                  onClick={() => setOpenAt(index)}
+                  className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden bg-white p-0"
                 >
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <div className="border-t border-co-card-border px-4 py-3.5">
-                <h3 className="mb-1 font-display text-[17px] font-medium tracking-[-0.02em]">
-                  {item.name}
-                </h3>
-                <p className="text-[13px] font-light leading-normal text-co-muted">{item.note}</p>
-              </div>
-            </Reveal>
-          ))}
-        </ul>
+                  <Image
+                    src={item.image}
+                    alt={item.imageAlt}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, 50vw"
+                    className="object-contain p-3 mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                  />
+                  <span
+                    aria-hidden
+                    className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center border border-co-card-border bg-co-bg/85 text-co-faint opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <div className="border-t border-co-card-border px-4 py-3.5">
+                  <h3 className="mb-1 font-display text-[17px] font-medium tracking-[-0.02em]">
+                    {item.name}
+                  </h3>
+                  <p className="text-[13px] font-light leading-normal text-co-muted">{item.note}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </MobilePeek>
 
         <p className="mt-5 text-[12.5px] font-light leading-snug text-co-placeholder">
           Quoted from the drawing — send us the space and we size these against the rest of

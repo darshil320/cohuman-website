@@ -5,7 +5,7 @@ export interface NavLink {
 
 export const primaryNav: NavLink[] = [
   { label: "Collections", href: "/collections" },
-  { label: "Catalog", href: "/catalog" },
+  // { label: "Catalog", href: "/catalog" },
   { label: "B2B / Bulk Orders", href: "/b2b" },
   { label: "Solutions", href: "/solutions" },
   { label: "Projects", href: "/projects" },
@@ -23,7 +23,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
     title: "Explore",
     links: [
-      { label: "Full catalog", href: "/catalog" },
+      // { label: "Full catalog", href: "/catalog" },
       { label: "Collections", href: "/collections" },
       { label: "Workspace solutions", href: "/solutions" },
       { label: "B2B / Bulk orders", href: "/b2b" },

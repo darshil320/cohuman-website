@@ -51,8 +51,8 @@ function SeriesPdpBody() {
               aria-label="Breadcrumb"
               className="mb-[clamp(18px,2.4vw,30px)] flex items-center gap-2 overflow-hidden whitespace-nowrap text-[12.5px] text-co-faint"
             >
-              <Link href="/catalog" className="hover:text-co-ink">
-                Catalog
+              <Link href="/collections" className="hover:text-co-ink">
+                Collections
               </Link>
               <span aria-hidden>/</span>
               <Link href="/collections" className="hover:text-co-ink">

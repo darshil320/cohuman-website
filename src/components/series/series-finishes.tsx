@@ -28,7 +28,7 @@ export function SeriesFinishes() {
           {swatches.map((swatch, index) => (
             <Reveal as="li" key={swatch.name} step={index}>
               <div
-                className="relative aspect-square overflow-hidden border border-co-panel-fg/15 sm:aspect-[5/4]"
+                className="relative aspect-[4/3] overflow-hidden border border-co-panel-fg/15 sm:aspect-[5/4]"
                 style={{ background: swatch.fill ?? "#2A322A" }}
               >
                 <span
