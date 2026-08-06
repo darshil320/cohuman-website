@@ -21,7 +21,7 @@ export function SiteFooter() {
                 alt="CoHuman Modularr LLP"
                 width={200}
                 height={50}
-                className="h-8 w-auto object-contain brightness-0 invert"
+                className="h-8 w-auto object-contain mix-blend-screen"
               />
             </div>
             <p className="mb-5 max-w-[34ch] text-[15px] font-light leading-relaxed">
