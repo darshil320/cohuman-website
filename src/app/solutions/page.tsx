@@ -39,14 +39,19 @@ export default async function SolutionsPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1320px] gap-[clamp(34px,4.5vw,62px)] px-[18px] py-[clamp(44px,6vw,84px)] sm:px-6 lg:px-11">
+      {/*
+        Editorial rows, not cards — a swipe rail would shrink them and bury the
+        "typically specified" list, which is the part a specifier is here for. Compacted
+        instead: a shallower image, tighter type and less air between rows on a phone.
+      */}
+      <section className="mx-auto grid max-w-[1320px] gap-[clamp(30px,4.5vw,62px)] px-[18px] py-[clamp(38px,6vw,84px)] sm:px-6 lg:px-11">
         {spaces.map((sp, i) => (
           <div
             key={sp.slug}
-            className="grid grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-12"
+            className="grid grid-cols-1 items-center gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-12"
           >
             <div
-              className="group relative aspect-[16/11] overflow-hidden bg-co-hero-bg"
+              className="group relative aspect-[16/9] overflow-hidden bg-co-hero-bg sm:aspect-[16/11]"
               style={{ order: i % 2 === 1 ? 2 : 0 }}
             >
               <ImagePlaceholder
@@ -57,16 +62,16 @@ export default async function SolutionsPage() {
               />
             </div>
             <div>
-              <p className="mb-3.5 font-display text-[12.5px] font-semibold tracking-wide text-co-green">
+              <p className="mb-2.5 font-display text-[12.5px] font-semibold tracking-wide text-co-green sm:mb-3.5">
                 {sp.num} · Space type
               </p>
-              <h2 className="mb-3.5 font-display text-[clamp(28px,3.4vw,42px)] font-medium leading-[1.05] tracking-tight">
+              <h2 className="mb-2.5 font-display text-[clamp(24px,3.4vw,42px)] font-medium leading-[1.05] tracking-tight sm:mb-3.5">
                 {sp.name}
               </h2>
-              <p className="mb-[22px] max-w-[46ch] text-[clamp(16px,1.4vw,18.5px)] font-light leading-relaxed text-co-muted">
+              <p className="mb-4 max-w-[46ch] text-[clamp(15px,1.4vw,18.5px)] font-light leading-relaxed text-co-muted sm:mb-[22px]">
                 {sp.blurb}
               </p>
-              <div className="mb-6 border-t border-co-border pt-4">
+              <div className="mb-5 border-t border-co-border pt-3.5 sm:mb-6 sm:pt-4">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
                   Typically specified
                 </p>

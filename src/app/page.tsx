@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroCarousel } from "@/components/common/hero-carousel";
-import { AnimatedStat } from "@/components/about/animated-stat";
+import { CountUp } from "@/components/common/count-up";
 import { MobileRail } from "@/components/common/mobile-rail";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
@@ -13,6 +13,7 @@ import { catalog } from "@/lib/catalog";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 import { sitePhotos } from "@/lib/photos";
 import { OrgatecBanner } from "@/components/home/orgatec-banner";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
@@ -112,18 +113,24 @@ export default async function HomePage() {
           {STATS.map((s) => (
             <StaggerItem
               key={s.k}
-              className="border-co-border py-[clamp(26px,3vw,38px)] px-6 first:pl-0 last:pr-0 [&:not(:last-child)]:border-r"
-            >
-              {s.n ? (
-                <AnimatedStat value={s.n} suffix={s.suffix} label={s.k} tone="page" />
-              ) : (
-                <>
-                  <p className="mb-1.5 whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight">
-                    {s.v}
-                  </p>
-                  <p className="text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
-                </>
+              className={cn(
+                "flex flex-col border-co-border py-[clamp(26px,3vw,38px)]",
+                // Two-up on a phone needs a horizontal rule between the rows as well as
+                // the vertical one, or the four cells read as one undifferentiated block.
+                "px-4 [&:nth-child(-n+2)]:border-b [&:nth-child(odd)]:border-r sm:px-6",
+                "lg:border-b-0 lg:px-6 lg:first:pl-0 lg:last:pr-0 lg:[&:not(:last-child)]:border-r",
               )}
+            >
+              {/*
+                Both variants render the same two elements in the same box: the figure on
+                a fixed line box, the label pinned to the bottom. Animating one of them
+                used to add a wrapper, which pulled its figure off the row's baseline and
+                left the four labels at four different heights.
+              */}
+              <p className="mb-2 flex min-h-[1.05em] items-end whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight text-co-ink">
+                {s.n ? <CountUp value={s.n} suffix={s.suffix} /> : s.v}
+              </p>
+              <p className="mt-auto text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
             </StaggerItem>
           ))}
         </StaggerContainer>

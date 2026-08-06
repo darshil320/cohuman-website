@@ -42,11 +42,11 @@ export default async function CollectionsPage() {
           return (
             <StaggerItem
               key={collection.slug}
-              className="grid grid-cols-1 items-center gap-6 border-b border-co-border pb-[clamp(30px,4vw,54px)] last:border-b-0 lg:grid-cols-2 lg:gap-12"
+              className="grid grid-cols-1 items-center gap-4 border-b border-co-border pb-[clamp(26px,4vw,54px)] last:border-b-0 sm:gap-6 lg:grid-cols-2 lg:gap-12"
             >
               <Link
                 href={href}
-                className="group relative block aspect-[16/11] overflow-hidden bg-[radial-gradient(110%_90%_at_50%_5%,#FFFFFF_0%,#F8F6F1_55%,#EFECE4_100%)]"
+                className="group relative block aspect-[16/9] overflow-hidden sm:aspect-[16/11] bg-[radial-gradient(110%_90%_at_50%_5%,#FFFFFF_0%,#F8F6F1_55%,#EFECE4_100%)]"
               >
                 <ParallaxImage
                   src={collectionPhoto[collection.slug]}
@@ -61,14 +61,14 @@ export default async function CollectionsPage() {
                   {collection.kicker}
                   {series ? ` · ${series.configs.length} configurations` : null}
                 </p>
-                <h2 className="mb-3.5 font-display text-[clamp(28px,3.4vw,42px)] font-medium leading-[1.05] tracking-tight">
+                <h2 className="mb-2.5 font-display text-[clamp(24px,3.4vw,42px)] font-medium leading-[1.05] tracking-tight sm:mb-3.5">
                   {collection.name}
                 </h2>
-                <p className="mb-5 max-w-[44ch] text-[clamp(16px,1.4vw,18.5px)] font-light leading-relaxed text-co-muted">
+                <p className="mb-4 max-w-[44ch] text-[clamp(15px,1.4vw,18.5px)] font-light leading-relaxed text-co-muted sm:mb-5">
                   {collection.blurb}
                 </p>
                 {series ? (
-                  <p className="mb-6 text-[14.5px] font-light text-co-muted-2">
+                  <p className="mb-5 text-[13.5px] font-light text-co-muted-2 sm:mb-6 sm:text-[14.5px]">
                     <span className="text-co-faint">Includes</span>{" "}
                     {series.configs
                       .slice(0, 5)
