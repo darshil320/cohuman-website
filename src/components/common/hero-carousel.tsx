@@ -105,9 +105,7 @@ export function HeroCarousel({
           </div>
         ))}
       </div>
-      {/* Vignette & side gradient overlays for crisp contrast and dark navbar glass support */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/60" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0f1710]/95 via-[#0f1710]/55 to-transparent" />
+      {/* Removed dark vignette overlays as per user request */}
       <div className="relative z-10 h-full">{children}</div>
       {slides.length > 1 ? (
         <div className="absolute bottom-6 left-[18px] z-20 sm:bottom-8 sm:left-6 lg:bottom-8 lg:left-11">

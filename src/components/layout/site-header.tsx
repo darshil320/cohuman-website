@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -35,13 +36,14 @@ export function SiteHeader() {
         className="mx-auto flex max-w-[1320px] items-center gap-8 px-[18px] sm:px-6 lg:px-11"
       >
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-          <span className="block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%] bg-[#6fa82b] transition-transform group-hover:scale-110" />
-          <span className="font-display text-[23px] font-semibold tracking-tight text-slate-900">
-            Co
-            <span className="font-medium text-slate-600 transition-colors group-hover:text-slate-900">
-              Human
-            </span>
-          </span>
+          <Image
+            src="/logo.png"
+            alt="CoHuman Modularr LLP"
+            width={200}
+            height={50}
+            className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+            priority
+          />
         </Link>
 
         <nav className="ml-auto hidden items-center gap-1 lg:flex">

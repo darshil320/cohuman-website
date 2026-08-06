@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { footerColumns } from "@/lib/nav";
+import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
 
 export function SiteFooter() {
@@ -15,10 +16,13 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 pb-10 sm:grid-cols-2 sm:gap-14 lg:grid-cols-4 lg:pb-16">
           <div className="sm:col-span-2">
             <div className="mb-4 flex items-center gap-2.5">
-              <span className="block h-2.5 w-2.5 -rotate-[15deg] rounded-[50%_8%_50%_50%] bg-co-green" />
-              <span className="font-display text-[22px] font-semibold tracking-tight text-co-panel-fg">
-                Co<span className="font-medium text-co-panel-muted">Human</span>
-              </span>
+              <Image
+                src="/logo.png"
+                alt="CoHuman Modularr LLP"
+                width={200}
+                height={50}
+                className="h-8 w-auto object-contain brightness-0 invert"
+              />
             </div>
             <p className="mb-5 max-w-[34ch] text-[15px] font-light leading-relaxed">
               People-first office furniture, made in Surat. A {siteConfig.legalName} brand,

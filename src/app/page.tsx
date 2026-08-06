@@ -26,9 +26,9 @@ const FEATURED_SLUGS = [
 ];
 
 const HERO_SLIDES = [
-  { src: sitePhotos.heroOpenPlan, alt: "Open-plan Cohuman workstation floor with acoustic screens" },
-  { src: sitePhotos.heroBenching, alt: "Bench desking run with task seating in a finished office" },
-  { src: sitePhotos.heroBoardroom, alt: "Boardroom table and seating in a completed fit-out" },
+  { src: "/hero-1.jpg", alt: "Open-plan Cohuman workstation floor with acoustic screens" },
+  { src: "/hero-2.jpg", alt: "Executive desk with a view of the city skyline" },
+  { src: "/hero-3.jpg", alt: "Spacious executive office with a meeting area" },
 ];
 
 const STATS = [
@@ -62,13 +62,13 @@ export default async function HomePage() {
         >
           <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-start px-[18px] pb-20 pt-[145px] sm:px-6 sm:pt-[155px] lg:px-11 lg:pt-[165px]">
             <div className="flex max-w-[560px] flex-col gap-6">
-              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-[#a6d85b]">
+              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-[#6fa82b]">
                 Cohuman · Surat · Since {siteConfig.foundedYear}
               </p>
-              <h1 className="max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-white">
+              <h1 className="max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-slate-900">
                 <TextReveal>Offices built around Human.</TextReveal>
               </h1>
-              <p className="max-w-[46ch] text-[16.5px] font-light leading-relaxed text-white/80">
+              <p className="max-w-[46ch] text-[16.5px] font-medium leading-relaxed text-slate-800">
                 Thirty-seven years of making chairs, desks and rooms that people actually want to
                 sit in. We plan the space, build the furniture, install it, and look after it
                 afterwards.
@@ -82,7 +82,7 @@ export default async function HomePage() {
                 </Link>
                 <Link
                   href="/collections"
-                  className="rounded-md border border-white/30 bg-white/10 px-[25px] py-3.5 text-[15px] font-semibold text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white/20"
+                  className="rounded-md border border-slate-900/30 bg-slate-900/5 px-[25px] py-3.5 text-[15px] font-semibold text-slate-900 backdrop-blur-sm transition-all hover:border-slate-900/50 hover:bg-slate-900/10"
                 >
                   Browse collections
                 </Link>
@@ -92,9 +92,6 @@ export default async function HomePage() {
         </HeroCarousel>
       </section>
 
-
-      {/* Orgatec Banner */}
-      <OrgatecBanner />
 
       {/* Stats */}
       <section className="border-b border-co-border bg-co-bg-alt">
