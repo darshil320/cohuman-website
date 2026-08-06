@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -50,6 +50,20 @@ export function HeroCarousel({
   const pointerIdRef = useRef<number | null>(null);
   /** Whether a mouse is resting over the carousel — the other reason to hold the timer. */
   const hoverRef = useRef(false);
+
+  /*
+    Scroll-linked parallax. The photograph leaves at roughly two thirds of the scroll
+    speed and dims as it goes, so the first section slides over a hero that is still
+    moving rather than a static block — the cue that there is more below. Reduced motion
+    gets the plain version.
+  */
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const parallaxFade = useTransform(scrollYProgress, [0, 0.85], [1, 0.35]);
 
   /*
     The timer restarts whenever `active` changes, so choosing a slide by hand gives you a
@@ -135,6 +149,10 @@ export function HeroCarousel({
       onPointerLeave={endDrag}
       onPointerCancel={endDrag}
     >
+      <motion.div
+        className="absolute inset-0"
+        style={reduceMotion ? undefined : { y: parallaxY, opacity: parallaxFade }}
+      >
       <div
         className={cn(
           "absolute inset-0 flex cursor-grab active:cursor-grabbing",
@@ -159,7 +177,8 @@ export function HeroCarousel({
           </div>
         ))}
       </div>
-      
+      </motion.div>
+
       {/*
         Scrim weighted to the left, where the copy sits, and fading out well before the
         middle so it never dulls the furniture the photograph is there to sell.

@@ -33,7 +33,7 @@ export function SiteHeader() {
     >
       <div
         style={{ height: HEADER_HEIGHT }}
-        className="mx-auto flex max-w-[1320px] items-center gap-8 px-[18px] sm:px-6 lg:px-11"
+        className="mx-auto flex max-w-[1320px] items-center justify-between gap-4 px-[18px] sm:gap-8 sm:px-6 lg:px-11"
       >
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <Image
@@ -58,7 +58,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-3 lg:ml-0">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/contact"
             className="hidden rounded-full px-3.5 py-1.5 text-[14.5px] font-medium text-slate-700 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 lg:inline-block"
@@ -68,7 +68,7 @@ export function SiteHeader() {
           <Button
             size="sm"
             onClick={() => openQuote()}
-            className="rounded-md bg-[#6fa82b] px-4 py-2 text-[14px] font-semibold text-slate-950 shadow-sm transition-all hover:bg-[#80bc33] hover:shadow-md"
+            className="hidden rounded-md bg-[#6fa82b] px-3.5 py-2 text-[13px] font-semibold text-slate-950 shadow-sm transition-all hover:bg-[#80bc33] hover:shadow-md min-[380px]:inline-flex sm:px-4 sm:text-[14px]"
           >
             Request a Quote
           </Button>
@@ -77,10 +77,10 @@ export function SiteHeader() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={mobileOpen}
-            className="relative flex h-10 w-10 flex-col items-center justify-center gap-[4px] rounded-full border border-slate-200/80 bg-white shadow-sm transition-colors hover:bg-slate-50 lg:hidden"
+            className="relative flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-[4px] rounded-full border border-slate-200/80 bg-white shadow-sm transition-colors hover:bg-slate-50 sm:h-10 sm:w-10 lg:hidden"
           >
-            <span className={cn("block h-[1.5px] w-4 bg-slate-800 transition-all duration-300", mobileOpen ? "absolute rotate-45" : "")} />
-            <span className={cn("block h-[1.5px] w-4 bg-slate-800 transition-all duration-300", mobileOpen ? "absolute -rotate-45" : "")} />
+            <span className={cn("block h-[1.5px] w-3.5 bg-slate-800 transition-all duration-300 sm:w-4", mobileOpen ? "absolute rotate-45" : "")} />
+            <span className={cn("block h-[1.5px] w-3.5 bg-slate-800 transition-all duration-300 sm:w-4", mobileOpen ? "absolute -rotate-45" : "")} />
           </button>
         </div>
       </div>

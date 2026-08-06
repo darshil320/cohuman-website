@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroCarousel } from "@/components/common/hero-carousel";
+import { AnimatedStat } from "@/components/about/animated-stat";
+import { MobileRail } from "@/components/common/mobile-rail";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
 import { BrandMarquee } from "@/components/common/brand-marquee";
@@ -70,10 +72,11 @@ const HERO_SLIDES = [
   },
 ];
 
+/** `n` counts up when the strip scrolls into view; the rest render as written. */
 const STATS = [
   { v: String(siteConfig.foundedYear), k: "Furniture Concepts founded, Surat" },
-  { v: "37 yrs", k: "Designing and making workplaces" },
-  { v: "6", k: "Product families in production" },
+  { n: 37, suffix: " yrs", v: "37 yrs", k: "Designing and making workplaces" },
+  { n: 6, v: "6", k: "Product families in production" },
   { v: "~2 days", k: `Typical quote turnaround (${siteConfig.enquiryTurnaround})` },
 ];
 
@@ -111,10 +114,16 @@ export default async function HomePage() {
               key={s.k}
               className="border-co-border py-[clamp(26px,3vw,38px)] px-6 first:pl-0 last:pr-0 [&:not(:last-child)]:border-r"
             >
-              <p className="mb-1.5 whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight">
-                {s.v}
-              </p>
-              <p className="text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
+              {s.n ? (
+                <AnimatedStat value={s.n} suffix={s.suffix} label={s.k} tone="page" />
+              ) : (
+                <>
+                  <p className="mb-1.5 whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight">
+                    {s.v}
+                  </p>
+                  <p className="text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
+                </>
+              )}
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -190,16 +199,19 @@ export default async function HomePage() {
           linkHref="/catalog"
           linkLabel="Full catalog"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((p) => (
-            <StaggerItem key={p.slug}>
-              <ProductCard
-                product={p}
-                catLabel={resolveCatLabel(categories, p.cat)}
-              />
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+        {/* One swipe apart on a phone, a three-up grid from `sm`. */}
+        <MobileRail total={featured.length} label="Signature pieces">
+          <StaggerContainer className="flex gap-3 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:gap-4 sm:[&>*]:w-auto sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((p) => (
+              <StaggerItem key={p.slug}>
+                <ProductCard
+                  product={p}
+                  catLabel={resolveCatLabel(categories, p.cat)}
+                />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </MobileRail>
       </section>
 
       {/* What we do */}
@@ -252,8 +264,9 @@ export default async function HomePage() {
           linkHref="/projects"
           linkLabel="All projects"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.slice(0, 3).map((pr) => (
+        <MobileRail total={Math.min(projects.length, 3)} label="Recent work">
+          <StaggerContainer className="flex gap-3 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:gap-4 sm:[&>*]:w-auto sm:grid-cols-2 lg:grid-cols-3">
+            {projects.slice(0, 3).map((pr) => (
             <StaggerItem key={pr.slug}>
               <Link href="/projects" className="group block text-co-ink">
                 <div className="relative aspect-[4/3] overflow-hidden bg-co-hero-bg">
@@ -278,8 +291,9 @@ export default async function HomePage() {
                 <p className="line-clamp-2 text-sm font-light text-co-muted-2">{pr.delivered}</p>
               </Link>
             </StaggerItem>
-          ))}
-        </StaggerContainer>
+            ))}
+          </StaggerContainer>
+        </MobileRail>
       </section>
 
       <CtaBand

@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface AnimatedStatProps {
   value: number;
   suffix?: string;
   label: string;
+  /**
+   * Which surface this sits on. The original colours assumed the dark panel on /about;
+   * on a light strip they rendered near-white on near-white.
+   */
+  tone?: "panel" | "page";
 }
 
-export function AnimatedStat({ value, suffix = "", label }: AnimatedStatProps) {
+export function AnimatedStat({ value, suffix = "", label, tone = "panel" }: AnimatedStatProps) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
@@ -42,11 +48,27 @@ export function AnimatedStat({ value, suffix = "", label }: AnimatedStatProps) {
 
   return (
     <div ref={ref}>
-      <p className="mb-1.5 font-display text-[clamp(34px,4vw,52px)] font-medium leading-none tracking-tight text-co-panel-fg">
+      <p
+        className={cn(
+          "mb-1.5 whitespace-nowrap font-display font-medium leading-none tracking-tight",
+          // Matches the type scale of whichever strip it sits in, so a counted figure and
+          // a written one are the same size in the same row.
+          tone === "panel"
+            ? "text-[clamp(34px,4vw,52px)] text-co-panel-fg"
+            : "text-[clamp(30px,3.2vw,42px)] text-co-ink",
+        )}
+      >
         {count}
         {suffix}
       </p>
-      <p className="text-[14px] leading-snug text-co-panel-muted">{label}</p>
+      <p
+        className={cn(
+          "leading-snug",
+          tone === "panel" ? "text-[14px] text-co-panel-muted" : "text-[13.5px] text-co-muted-2",
+        )}
+      >
+        {label}
+      </p>
     </div>
   );
 }
