@@ -6,7 +6,8 @@ import { BrandMarquee } from "@/components/common/brand-marquee";
 import { StoryTimeline } from "@/components/about/story-timeline";
 import { brandLogos } from "@/lib/brand-logos";
 import { sitePhotos } from "@/lib/photos";
-import { siteConfig } from "@/lib/site-config";
+import { publicFileExists } from "@/lib/public-assets";
+import { siteConfig, telHref } from "@/lib/site-config";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
 
@@ -55,6 +56,10 @@ const CAPABILITIES = [
 ];
 
 export default function AboutPage() {
+  // Rendered from whatever photography is actually in `public/` — drop the files in and
+  // the section appears, with no code change and no broken image while we wait.
+  const suratPhotos = siteConfig.suratPhotos.filter((photo) => publicFileExists(photo.src));
+
   return (
     <div>
       {/* Hero */}
@@ -132,7 +137,7 @@ export default function AboutPage() {
         <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 gap-8 px-[18px] py-[clamp(40px,5vw,60px)] sm:grid-cols-4 sm:px-6 lg:px-11">
           <StaggerItem><AnimatedStat value={siteConfig.foundedYear} label="Founded" /></StaggerItem>
           <StaggerItem><AnimatedStat value={2026 - siteConfig.foundedYear} suffix=" yrs" label="In business" /></StaggerItem>
-          <StaggerItem><AnimatedStat value={siteConfig.locations.length} label="Cities we work from" /></StaggerItem>
+          <StaggerItem><AnimatedStat value={siteConfig.offices.length} label="Cities we work from" /></StaggerItem>
           <StaggerItem><AnimatedStat value={siteConfig.brandsRepresented.length} label="Global brands represented" /></StaggerItem>
         </StaggerContainer>
       </section>
@@ -194,22 +199,100 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Locations */}
+      {/* The Surat showroom */}
+      {suratPhotos.length ? (
+        <section className="border-t border-co-border">
+          <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
+            <div className="mb-[clamp(24px,3vw,40px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
+              <Reveal>
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
+                  The showroom
+                </p>
+                <h2 className="max-w-[18ch] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
+                  <TextReveal>Hazira Road, Surat.</TextReveal>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p className="max-w-[46ch] text-[15.5px] font-light leading-relaxed text-co-muted">
+                  Thirty-seven years in one city. Come and sit on it before you specify it —
+                  the floor carries desking, seating, storage and acoustics, and Tushar is
+                  usually on it.
+                </p>
+              </Reveal>
+            </div>
+
+            <StaggerContainer
+              className={
+                suratPhotos.length > 1
+                  ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
+                  : "grid grid-cols-1"
+              }
+            >
+              {suratPhotos.map((photo) => (
+                <StaggerItem key={photo.src} className="border border-co-card-border bg-co-bg-alt">
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(min-width: 1024px) 60vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="border-t border-co-card-border px-4 py-3 text-[12.5px] font-light text-co-muted">
+                    {photo.caption}
+                  </p>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Offices */}
       <section className="border-t border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(52px,6vw,88px)] sm:px-6 lg:px-11">
           <Reveal>
-            <h2 className="mb-[clamp(28px,3.5vw,46px)] font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
+            <h2 className="mb-3 font-display text-[clamp(25px,3vw,40px)] font-medium tracking-tight">
               <TextReveal>Where we work from.</TextReveal>
             </h2>
+            <p className="mb-[clamp(24px,3vw,40px)] max-w-[46ch] text-[15.5px] font-light leading-relaxed text-co-muted">
+              Each office has a person, not a queue. Ask for them by name.
+            </p>
           </Reveal>
           <StaggerContainer className="grid grid-cols-1 gap-px border border-co-border bg-co-border sm:grid-cols-3">
-            {siteConfig.locations.map((loc) => (
-              <StaggerItem key={loc.city} className="bg-co-bg p-[clamp(24px,3vw,32px)] h-full">
+            {siteConfig.offices.map((office) => (
+              <StaggerItem
+                key={office.city}
+                className="flex h-full flex-col bg-co-bg p-[clamp(24px,3vw,32px)]"
+              >
                 <p className="mb-1 font-display text-2xl font-medium tracking-tight text-co-ink">
-                  {loc.city}
+                  {office.city}
                 </p>
-                <p className="mb-3 text-[13px] font-light text-co-faint">{loc.detail}</p>
-                <p className="text-[15px] font-light leading-relaxed text-co-ink-soft">{loc.role}</p>
+                <p className="mb-3 text-[13px] font-light text-co-faint">{office.state}</p>
+                <p className="mb-4 text-[15px] font-light leading-relaxed text-co-ink-soft">
+                  {office.role}
+                </p>
+
+                {office.contact ? (
+                  <div className="mt-auto border-t border-co-card-border pt-3.5">
+                    <p className="text-[14.5px] font-medium text-co-ink">
+                      {office.contact.name}
+                    </p>
+                    <p className="text-[12.5px] font-light text-co-faint">
+                      {office.contact.title}
+                    </p>
+                    {/* Rendered only where a number exists — see `offices` in site-config. */}
+                    {office.phoneDisplay && office.phoneE164 ? (
+                      <a
+                        href={telHref(office.phoneE164)}
+                        className="mt-1.5 inline-block text-[13.5px] font-light text-co-ink-soft underline-offset-4 hover:text-co-ink hover:underline"
+                      >
+                        {office.phoneDisplay}
+                      </a>
+                    ) : null}
+                  </div>
+                ) : null}
               </StaggerItem>
             ))}
           </StaggerContainer>

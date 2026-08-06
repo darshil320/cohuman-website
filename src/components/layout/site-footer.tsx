@@ -60,7 +60,15 @@ export function SiteFooter() {
               <span className="text-co-panel-muted">Showroom · {siteConfig.address.line2}</span>
               <span className="text-[13px] text-co-panel-faint">{siteConfig.address.line1}</span>
               <span className="text-[13px] text-co-panel-faint">{siteConfig.phoneDisplay}</span>
-              <span className="text-[13px] text-co-panel-faint">{siteConfig.email}</span>
+              {siteConfig.emails.map((inbox) => (
+                <a
+                  key={inbox.address}
+                  href={`mailto:${inbox.address}`}
+                  className="break-all text-[13px] text-co-panel-faint hover:text-co-panel-fg"
+                >
+                  {inbox.address}
+                </a>
+              ))}
               <Link href="/contact" className="mt-1 font-medium text-co-green-pale">
                 Enquiry form →
               </Link>

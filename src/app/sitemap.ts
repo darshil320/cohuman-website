@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/site-config";
 const STATIC_ROUTES = [
   "",
   "/collections",
+  "/sectors",
   "/catalog",
   "/b2b",
   "/solutions",
@@ -15,9 +16,10 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections] = await Promise.all([
+  const [products, collections, sectors] = await Promise.all([
     catalog.getProducts(),
     catalog.getCollections(),
+    catalog.getSectors(),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
@@ -32,11 +34,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const sectorEntries: MetadataRoute.Sitemap = sectors.map((s) => ({
+    url: `${siteConfig.url}/sectors/${s.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   const productEntries: MetadataRoute.Sitemap = products.map((p) => ({
     url: `${siteConfig.url}/catalog/${p.slug}`,
     changeFrequency: "monthly",
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...collectionEntries, ...productEntries];
+  return [...staticEntries, ...collectionEntries, ...sectorEntries, ...productEntries];
 }

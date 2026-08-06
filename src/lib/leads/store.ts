@@ -67,7 +67,8 @@ async function sendLeadEmail(record: LeadRecord) {
   const resend = new Resend(apiKey);
   await resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL ?? "leads@cohuman.example.com",
-    to: siteConfig.email,
+    // Every inbox the client listed, so a lead never waits on one person being away.
+    to: siteConfig.emails.map((inbox) => inbox.address),
     subject: `[Cohuman website] ${LEAD_SOURCE_LABEL[record.source]}`,
     html: renderEmailHtml(record),
   });

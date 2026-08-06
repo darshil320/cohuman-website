@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "executive",
+    "name": "Executive",
+    "kicker": "CEO cabins, directors' offices and boardrooms",
+    "blurb": "A cabin is one room, not four line items. The desk, the credenza behind it, the storage wall, the visitor chairs and the table people actually meet at are specified together, in one finish story, and installed in one visit.",
+    "considerations": [
+      {
+        "title": "Quoted as a room",
+        "detail": "Desk, return, credenza, storage and seating on one schedule, so the finishes match and nothing arrives in the wrong wood three weeks later."
+      },
+      {
+        "title": "Built on the same chassis",
+        "detail": "Executive tops sit on the desking systems the rest of the floor uses, at the same 720mm working height — so a director's cabin and the open plan stay part of one building, and spares stay in stock."
+      },
+      {
+        "title": "Finishes matched, not chosen from a card",
+        "detail": "We manufacture, so a veneer, a laminate or a powder-coat colour can be matched to what the architect has already specified elsewhere in the fit-out."
+      }
+    ],
+    "ranges": [],
+    "photos": [],
+    "projectSlugs": [],
+    "enquirySubject": "Executive cabin enquiry"
+  },
+  {
+    "slug": "healthcare",
+    "name": "Healthcare",
+    "kicker": "Hospitals, clinics and diagnostic centres",
+    "blurb": "Furniture for buildings that are cleaned every day and never close. Reception and waiting areas, consulting rooms, nurse stations, administration floors and staff rooms — specified for the wipe-down, the wheelchair turning circle and the ten-year replacement cycle.",
+    "considerations": [
+      {
+        "title": "Surfaces that survive cleaning",
+        "detail": "Finishes and upholstery are chosen for repeated disinfection rather than for a showroom photograph — the thing that fails first in a hospital is the material, not the frame."
+      },
+      {
+        "title": "Circulation before layout",
+        "detail": "Waiting rows, consulting rooms and nurse stations are planned around wheelchair and trolley clearances first, then filled with furniture."
+      },
+      {
+        "title": "Phased installation",
+        "detail": "A working hospital cannot close for a fit-out. Delivery is sequenced ward by ward, out of hours where it has to be, by our own installation crews."
+      }
+    ],
+    "ranges": [],
+    "photos": [],
+    "projectSlugs": [],
+    "enquirySubject": "Hospital / healthcare furniture enquiry"
+  },
+  {
+    "slug": "residence",
+    "name": "Residence",
+    "kicker": "Premium home interiors and home offices",
+    "blurb": "The same workshop, a different brief. Wardrobes, storage walls, study desks and home offices, made to the dimensions of the room rather than to a catalogue size — and finished to sit beside the rest of the interior.",
+    "considerations": [
+      {
+        "title": "Made to the room",
+        "detail": "Sizes come off a site measure. A wall is rarely the length a flat-pack expects it to be, and a made piece does not need filler panels to pretend otherwise."
+      },
+      {
+        "title": "One finish across the house",
+        "detail": "Because we manufacture, the study, the wardrobe and the media wall can share a veneer and an edge, which is what makes a house read as designed rather than assembled."
+      },
+      {
+        "title": "The same hardware as the offices",
+        "detail": "Runners, hinges and mechanisms are specified to the standard a commercial fit-out demands, which is a higher one than most residential work uses."
+      }
+    ],
+    "ranges": [],
+    "photos": [],
+    "projectSlugs": [],
+    "enquirySubject": "Home / residential furniture enquiry"
+  }
+]

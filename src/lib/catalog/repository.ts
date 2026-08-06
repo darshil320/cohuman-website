@@ -4,6 +4,7 @@ import type {
   Product,
   ProductFilters,
   Project,
+  Sector,
   Service,
   Space,
 } from "./types";
@@ -21,6 +22,8 @@ export interface CatalogRepository {
   getRelatedProducts(product: Product, limit?: number): Promise<Product[]>;
   getProjects(): Promise<Project[]>;
   getProject(slug: string): Promise<Project | null>;
+  getSectors(): Promise<Sector[]>;
+  getSector(slug: string): Promise<Sector | null>;
   getSpaces(): Promise<Space[]>;
   getServices(): Promise<Service[]>;
 }

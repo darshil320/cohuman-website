@@ -22,13 +22,13 @@ export default async function CollectionsPage() {
       <section className="border-b border-co-border bg-co-bg-alt">
         <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
-            Collections
+            Featured collections
           </p>
           <h1 className="mb-4 max-w-[22ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
             <TextReveal>Two desking systems, one working height.</TextReveal>
           </h1>
           <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-            Both run at 720mm, so tops sit flush wherever two configurations meet — and both
+            Both run at 720mm, so tops sit flush wherever two configurations meet and both
             are built from a short element set rather than one-off parts. Pick a system, then
             configure the table.
           </p>

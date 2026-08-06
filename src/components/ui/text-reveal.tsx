@@ -70,19 +70,30 @@ export function TextReveal({ children, className, delay = 0 }: TextRevealProps) 
 
         const order = wordIndex++;
         return (
-          <span key={index} className="-my-1 inline-flex overflow-hidden py-1">
-            <motion.span
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{
-                duration: 0.7,
-                ease: [0.16, 1, 0.3, 1],
-                delay: delay + order * 0.03, // Slight stagger per word
-              }}
-              className="inline-block"
-            >
-              {piece.text}
-            </motion.span>
+          <span key={index} className="contents">
+            {/*
+              A real space between the words. The gap is drawn by `gap-x`, but that is CSS
+              only — without this text node the heading's `textContent` came out as
+              "Wherewework from", which is what a screen reader announces, what a copy
+              lands in the clipboard, and what an in-page search looks through. A
+              whitespace-only node between flex items is not itself rendered, so it costs
+              nothing visually.
+            */}
+            {order > 0 ? " " : null}
+            <span className="-my-1 inline-flex overflow-hidden py-1">
+              <motion.span
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: delay + order * 0.03, // Slight stagger per word
+                }}
+                className="inline-block"
+              >
+                {piece.text}
+              </motion.span>
+            </span>
           </span>
         );
       })}

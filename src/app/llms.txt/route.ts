@@ -5,10 +5,11 @@ import { siteConfig } from "@/lib/site-config";
 // answer engines (ChatGPT, Perplexity, Claude, etc.), generated from the same
 // catalog data as the sitemap so it can't drift out of sync.
 export async function GET() {
-  const [categories, collections, services] = await Promise.all([
+  const [categories, collections, services, sectors] = await Promise.all([
     catalog.getCategories(),
     catalog.getCollections(),
     catalog.getServices(),
+    catalog.getSectors(),
   ]);
 
   const lines = [
@@ -27,6 +28,11 @@ export async function GET() {
     "",
     "## Collections",
     ...collections.map((c) => `- [${c.name}](${siteConfig.url}/collections/${c.slug}): ${c.blurb}`),
+    "",
+    "## Sectors",
+    ...sectors.map(
+      (s) => `- [${s.name}](${siteConfig.url}/sectors/${s.slug}): ${s.kicker}. ${s.blurb}`,
+    ),
     "",
     "## Services",
     ...services.map((s) => `- ${s.name}: ${s.blurb}`),

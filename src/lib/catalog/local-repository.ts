@@ -2,6 +2,7 @@ import categoriesData from "@/data/categories.json";
 import collectionsData from "@/data/collections.json";
 import productsData from "@/data/products.json";
 import projectsData from "@/data/projects.json";
+import sectorsData from "@/data/sectors.json";
 import servicesData from "@/data/services.json";
 import spacesData from "@/data/spaces.json";
 import type { CatalogRepository } from "./repository";
@@ -12,6 +13,7 @@ import type {
   Product,
   ProductFilters,
   Project,
+  Sector,
   Service,
   Space,
 } from "./types";
@@ -20,6 +22,7 @@ const categories = categoriesData as Category[];
 const collections = collectionsData as Collection[];
 const products = productsData as Product[];
 const projects = projectsData as Project[];
+const sectors = sectorsData as Sector[];
 const services = servicesData as Service[];
 const spaces = spacesData as Space[];
 
@@ -60,6 +63,14 @@ export class LocalCatalogRepository implements CatalogRepository {
 
   async getProject(slug: string): Promise<Project | null> {
     return projects.find((p) => p.slug === slug) ?? null;
+  }
+
+  async getSectors(): Promise<Sector[]> {
+    return sectors;
+  }
+
+  async getSector(slug: string): Promise<Sector | null> {
+    return sectors.find((s) => s.slug === slug) ?? null;
   }
 
   async getSpaces(): Promise<Space[]> {

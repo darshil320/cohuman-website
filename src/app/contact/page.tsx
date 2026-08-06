@@ -3,7 +3,7 @@ import { Phone, MessageCircle } from "lucide-react";
 import { ContactFormTabs } from "@/components/forms/contact-form-tabs";
 import { FaqSection } from "@/components/common/faq-section";
 import { SectionHeading } from "@/components/common/section-heading";
-import { siteConfig, telHref, whatsappHref } from "@/lib/site-config";
+import { mailtoHref, siteConfig, telHref, whatsappHref } from "@/lib/site-config";
 import { Reveal } from "@/components/ui/scroll-reveal";
 
 const FAQ_ITEMS = [
@@ -52,7 +52,6 @@ export const metadata: Metadata = {
 const contactRows = [
   { k: "Showroom", v: `${siteConfig.address.line2} — ${siteConfig.address.line1}` },
   { k: "Phone / WhatsApp", v: siteConfig.phoneDisplay },
-  { k: "Email", v: siteConfig.email },
   { k: "Hours", v: siteConfig.hours },
   { k: "Legal entity", v: `${siteConfig.legalName} — founded ${siteConfig.foundedYear} by ${siteConfig.founder}` },
 ];
@@ -108,6 +107,53 @@ export default async function ContactPage({ searchParams }: Props) {
               </div>
             ))}
           </div>
+          {/* Both inboxes, addressed to a person rather than hidden behind one form. */}
+          <div className="mt-[26px] grid gap-px border border-co-border bg-co-border sm:grid-cols-2">
+            {siteConfig.emails.map((inbox) => (
+              <div key={inbox.address} className="bg-co-bg p-[clamp(16px,2vw,20px)]">
+                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
+                  {inbox.label}
+                </p>
+                <a
+                  href={mailtoHref(inbox.address, "Enquiry from the Cohuman website")}
+                  className="block break-all text-[15px] font-medium text-co-ink underline-offset-4 hover:underline"
+                >
+                  {inbox.address}
+                </a>
+                <p className="mt-1 text-[13px] font-light leading-snug text-co-muted">
+                  {inbox.note}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Who actually answers, city by city. */}
+          <div className="mt-4 grid gap-px border border-co-border bg-co-border sm:grid-cols-2">
+            {siteConfig.offices
+              .filter((office) => office.contact)
+              .map((office) => (
+                <div key={office.city} className="bg-co-bg p-[clamp(16px,2vw,20px)]">
+                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
+                    {office.city} · {office.role}
+                  </p>
+                  <p className="text-[15px] font-medium text-co-ink">{office.contact?.name}</p>
+                  {office.phoneDisplay && office.phoneE164 ? (
+                    <a
+                      href={telHref(office.phoneE164)}
+                      className="mt-1 block text-[14px] font-light text-co-ink-soft underline-offset-4 hover:text-co-ink hover:underline"
+                    >
+                      {office.phoneDisplay}
+                    </a>
+                  ) : (
+                    <p className="mt-1 text-[13px] font-light text-co-faint">
+                      Direct line to follow — reach {office.contact?.name.split(" ")[0]} on the
+                      sales inbox meanwhile.
+                    </p>
+                  )}
+                </div>
+              ))}
+          </div>
+
           <p className="mt-[18px] text-[13px] font-light text-co-faint">
             Showroom address, phone and hours above are placeholders pending confirmation —
             send over the current details and they will drop straight in.

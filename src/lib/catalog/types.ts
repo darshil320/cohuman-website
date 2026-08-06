@@ -49,6 +49,34 @@ export interface Project {
   images: string[];
 }
 
+/**
+ * A market Cohuman sells into — healthcare, private residence, executive.
+ *
+ * Everything the client has not supplied yet is an empty array rather than invented
+ * content: `ranges` waits on real product names and specs, `photos` on real photography,
+ * `projectSlugs` on installs cleared for publication. Each section renders only when its
+ * array has entries, so the page is honest at every stage of being filled in.
+ */
+export interface Sector {
+  slug: string;
+  /** Nav/card name, e.g. "Healthcare". */
+  name: string;
+  /** One line under the name, e.g. "Hospitals, clinics and diagnostic centres". */
+  kicker: string;
+  /** Hero paragraph — what Cohuman does for this market. */
+  blurb: string;
+  /** What makes specifying for this sector different. Structural, not promotional. */
+  considerations: { title: string; detail: string }[];
+  /** Named ranges with their specs. Empty until the client supplies real ones. */
+  ranges: { name: string; note: string; spec?: string }[];
+  /** Photographs; each renders only once the file is in `public/`. */
+  photos: { src: string; alt: string; caption?: string }[];
+  /** Slugs from projects.json to show as proof. */
+  projectSlugs: string[];
+  /** Subject line the enquiry dialog opens with. */
+  enquirySubject: string;
+}
+
 export interface Space {
   slug: string;
   num: string;
