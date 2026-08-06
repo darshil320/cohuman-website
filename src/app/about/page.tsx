@@ -33,7 +33,7 @@ const PRINCIPLES = [
 
 const CAPABILITIES = [
   {
-    name: "Metal bases, made in-house",
+    name: "Metal bases, Cutting edge Technology",
     blurb:
       "Advanced European machinery producing precision metal bases ourselves — the one component most furniture makers still outsource.",
   },

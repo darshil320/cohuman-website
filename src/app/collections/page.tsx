@@ -11,7 +11,7 @@ import { ParallaxImage } from "@/components/ui/parallax-image";
 export const metadata: Metadata = {
   title: "Collections",
   description:
-    "Two desking systems, specified to the millimetre — PROS on a fixed beam chassis and VARIDEX on an adjustable one.",
+    "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
 };
 
 export default async function CollectionsPage() {

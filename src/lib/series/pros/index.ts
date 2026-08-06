@@ -10,8 +10,8 @@ import { PROS_FINISH_FILTERS, PROS_SWATCHES } from "./swatches";
  */
 export const PROS_SERIES: SeriesDefinition = {
   slug: "pros",
-  name: "PROS Series",
-  wordmark: "PROS",
+  name: "STRETCHS Series",
+  wordmark: "STRETCHS",
   eyebrow: "Beam desking system",
   promise: "Seven components. Fourteen configurations. One office.",
   intro:
@@ -65,5 +65,5 @@ export const PROS_SERIES: SeriesDefinition = {
 
   // TODO(client): confirm these four with Tushar/Vaibhav, then replace the codes in
   // ./configs.ts and empty this list.
-  inferredCodes: ["PROS-SCON-PC", "PROS-SCAB-1200", "PROS-CRED-1600", "PROS-WBOX-PC"],
+  inferredCodes: ["CHSS-SCON-PC", "CHSS-SCAB-1200", "CHSS-CRED-1600", "CHSS-WBOX-PC"],
 };

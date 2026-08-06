@@ -66,7 +66,7 @@ export default async function HomePage() {
                 Cohuman · Surat · Since {siteConfig.foundedYear}
               </p>
               <h1 className="max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-white">
-                <TextReveal>Offices built around the people in them.</TextReveal>
+                <TextReveal>Offices built around Human.</TextReveal>
               </h1>
               <p className="max-w-[46ch] text-[16.5px] font-light leading-relaxed text-white/80">
                 Thirty-seven years of making chairs, desks and rooms that people actually want to

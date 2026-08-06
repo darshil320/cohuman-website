@@ -22,9 +22,9 @@ export const siteConfig = {
   enquiryTurnaround: "two working days",
   brandsRepresented: ["Herman Miller", "Steelcase", "Humanscale", "Bristol", "Hunter Douglas"],
   locations: [
-    { city: "Surat", role: "Head office & manufacturing", detail: "Gujarat" },
-    { city: "Mumbai", role: "Showroom", detail: "Maharashtra" },
-    { city: "Ahmedabad", role: "Representative office", detail: "Gujarat" },
+    { city: "Surat", role: "Showroom & Factory", detail: "Gujarat" },
+    { city: "Mumbai", role: "Showroom & Project Office", detail: "Maharashtra" },
+    { city: "Ahmedabad", role: "Representative Engineer", detail: "Gujarat" },
   ],
 } as const;
 
