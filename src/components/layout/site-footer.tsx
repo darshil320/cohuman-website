@@ -17,7 +17,7 @@ export function SiteFooter() {
           <div className="sm:col-span-2">
             <div className="mb-4 flex items-center gap-2.5">
               <Image
-                src="/logo.png"
+                src="/logo.jpg"
                 alt="CoHuman Modularr LLP"
                 width={200}
                 height={50}

@@ -26,9 +26,24 @@ const FEATURED_SLUGS = [
 ];
 
 const HERO_SLIDES = [
-  { src: "/hero-1.jpg", alt: "Open-plan Cohuman workstation floor with acoustic screens" },
-  { src: "/hero-2.jpg", alt: "Executive desk with a view of the city skyline" },
-  { src: "/hero-3.jpg", alt: "Spacious executive office with a meeting area" },
+  { 
+    src: "/hero-3.png", 
+    alt: "Height Adjustable Workstations",
+    linkLabel: "Height Adjustable Table",
+    linkHref: "/collections/stretchs"
+  },
+  { 
+    src: "/hero-2.png", 
+    alt: "Executive desk with a view of the city skyline",
+    linkLabel: "Executive Suites",
+    linkHref: "/collections"
+  },
+  { 
+    src: "/hero-1.png", 
+    alt: "Spacious executive office with a meeting area",
+    linkLabel: "Open Plan Benching",
+    linkHref: "/collections"
+  },
 ];
 
 const STATS = [
@@ -60,33 +75,34 @@ export default async function HomePage() {
           slides={HERO_SLIDES}
           className="h-[calc(100vh-20px)] min-h-[540px] max-h-[760px]"
         >
-          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-start px-[18px] pb-20 pt-[145px] sm:px-6 sm:pt-[155px] lg:px-11 lg:pt-[165px]">
-            <div className="flex max-w-[560px] flex-col gap-6">
-              <p className="animate-co-fade text-xs font-semibold uppercase tracking-[0.22em] text-[#6fa82b]">
-                Cohuman · Surat · Since {siteConfig.foundedYear}
-              </p>
-              <h1 className="max-w-[13ch] font-display text-[clamp(38px,4.4vw,60px)] font-medium leading-[1.03] tracking-tight text-slate-900">
-                <TextReveal>Offices built around Human.</TextReveal>
+          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-center px-[18px] pb-[10vh] sm:px-6 lg:px-11">
+            {/*
+              Hero type is set three steps quieter than it was: 3.1vw rather than 5.5vw,
+              semibold rather than bold, and −0.028em of tracking, because a display face
+              set this large reads too loose at its default fit. The soft shadow replaces
+              `drop-shadow-lg`, which was thick enough to furr the edges of the glyphs on
+              the lighter slides.
+            */}
+            {/*
+              Wide enough that the headline breaks only where the `<br />`s put it: a
+              character-width cap re-wrapped "Workstations for" and turned three lines
+              into five.
+            */}
+            <div className="flex max-w-[640px] flex-col gap-[clamp(18px,2vw,28px)]">
+              <h1 className="font-display text-[clamp(32px,3.1vw,48px)] font-semibold leading-[1.08] tracking-[-0.028em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.4)]">
+                <TextReveal>
+                  Height Adjustable
+                  <br />
+                  Workstations for
+                  <br />
+                  Modern Offices
+                </TextReveal>
               </h1>
-              <p className="max-w-[46ch] text-[16.5px] font-medium leading-relaxed text-slate-800">
-                Thirty-seven years of making chairs, desks and rooms that people actually want to
-                sit in. We plan the space, build the furniture, install it, and look after it
-                afterwards.
+              <p className="max-w-[40ch] text-[clamp(14.5px,1.2vw,17px)] font-normal leading-relaxed tracking-[0.002em] text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
+                Modular office furniture,
+                <br />
+                manufactured for enterprise scale
               </p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link
-                  href="/contact"
-                  className="rounded-md bg-[#6fa82b] px-[26px] py-[14px] text-[15px] font-semibold text-[#0d140e] shadow-[0_0_15px_rgba(111,168,43,0.3)] transition-all hover:bg-[#80bc33]"
-                >
-                  Request a Quote
-                </Link>
-                <Link
-                  href="/collections"
-                  className="rounded-md border border-slate-900/30 bg-slate-900/5 px-[25px] py-3.5 text-[15px] font-semibold text-slate-900 backdrop-blur-sm transition-all hover:border-slate-900/50 hover:bg-slate-900/10"
-                >
-                  Browse collections
-                </Link>
-              </div>
             </div>
           </div>
         </HeroCarousel>

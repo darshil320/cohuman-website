@@ -1,12 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 interface HeroSlide {
   src: string;
   alt: string;
+  linkLabel?: string;
+  linkHref?: string;
 }
 
 interface HeroCarouselProps {
@@ -18,7 +22,7 @@ interface HeroCarouselProps {
 
 export function HeroCarousel({
   slides,
-  intervalMs = 3200,
+  intervalMs = 4000,
   children,
   className,
 }: HeroCarouselProps) {
@@ -87,7 +91,7 @@ export function HeroCarousel({
       <div
         className={cn(
           "absolute inset-0 flex cursor-grab active:cursor-grabbing",
-          !dragging && "transition-transform duration-500 ease-out",
+          !dragging && "transition-transform duration-700 ease-out",
         )}
         style={{ transform: `translateX(calc(${-active * 100}% + ${dragOffset}px))` }}
       >
@@ -100,37 +104,58 @@ export function HeroCarousel({
               priority={i === 0}
               draggable={false}
               sizes="100vw"
+              quality={100}
+              unoptimized
               className="object-cover"
             />
           </div>
         ))}
       </div>
-      {/* Removed dark vignette overlays as per user request */}
+      
+      {/* Subtle gradient to ensure white text is readable without being overwhelming */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      
       <div className="relative z-10 h-full">{children}</div>
-      {slides.length > 1 ? (
-        <div className="absolute bottom-6 left-[18px] z-20 sm:bottom-8 sm:left-6 lg:bottom-8 lg:left-11">
-          <div className="flex items-center gap-2.5 rounded-full border border-white/20 bg-black/50 px-3.5 py-1.5 backdrop-blur-md shadow-lg">
+      
+      {/* Bottom Nav: Dots (Left) and Link (Right) */}
+      <div className="absolute bottom-12 left-0 right-0 z-20 mx-auto max-w-[1320px] px-[18px] sm:px-6 lg:px-11 flex justify-between items-end pointer-events-none">
+        
+        {slides.length > 1 ? (
+          <div className="flex items-center gap-3 pointer-events-auto pb-2">
             {slides.map((slide, i) => (
               <button
                 key={slide.src}
                 type="button"
                 aria-label={`Show slide ${i + 1}`}
                 onClick={() => setActive(i)}
-                className="group p-0.5 focus:outline-none"
+                className="group p-1 focus:outline-none"
               >
                 <span
                   className={cn(
-                    "block h-2 rounded-full transition-all duration-300",
+                    "block h-2 w-2 rounded-full transition-colors duration-300",
                     i === active
-                      ? "w-7 bg-[#a6d85b] shadow-[0_0_10px_rgba(166,216,91,0.8)]"
-                      : "w-2 bg-white/40 group-hover:bg-white/70",
+                      ? "bg-red-600"
+                      : "bg-white/70 group-hover:bg-white",
                   )}
                 />
               </button>
             ))}
           </div>
-        </div>
-      ) : null}
+        ) : <div />}
+
+        {slides[active]?.linkLabel && slides[active]?.linkHref && (
+          <Link 
+            href={slides[active].linkHref!} 
+            className="pointer-events-auto flex items-center gap-3 text-white font-medium hover:text-white/80 transition-colors group"
+          >
+            {slides[active].linkLabel}
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/60 group-hover:bg-black/80 transition-colors">
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

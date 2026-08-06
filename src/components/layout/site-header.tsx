@@ -36,14 +36,14 @@ export function SiteHeader() {
         className="mx-auto flex max-w-[1320px] items-center gap-8 px-[18px] sm:px-6 lg:px-11"
       >
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-          <Image
-            src="/logo.png"
-            alt="CoHuman Modularr LLP"
-            width={200}
-            height={50}
-            className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
-            priority
-          />
+            <Image
+              src="/logo.jpg"
+              alt="CoHuman Modularr LLP"
+              width={200}
+              height={50}
+              className="h-8 w-auto object-contain transition-transform group-hover:scale-105 invert hue-rotate-180 mix-blend-multiply"
+              priority
+            />
         </Link>
 
         <nav className="ml-auto hidden items-center gap-1 lg:flex">

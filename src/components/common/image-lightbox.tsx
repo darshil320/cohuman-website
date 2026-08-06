@@ -521,7 +521,7 @@ export function ImageLightbox({
                   alt={item.alt}
                   fill
                   sizes="100vw"
-                  quality={92}
+                  quality={90}
                   priority
                   draggable={false}
                   onLoad={(event) =>
