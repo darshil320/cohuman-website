@@ -25,24 +25,48 @@ const FEATURED_SLUGS = [
   "stack-storage-wall",
 ];
 
+/**
+ * Hero slides.
+ *
+ * Each photograph gets its own headline, describing what is actually in that frame, and
+ * its own `objectPosition`. The three shots put their furniture in three different
+ * places, so a single crop and a single caption meant the words landed on top of the
+ * product in at least one of them. Panning the crop toward the subject clears the left
+ * column, which is where the copy sits in all three.
+ */
 const HERO_SLIDES = [
-  { 
-    src: "/hero-3.png", 
-    alt: "Height Adjustable Workstations",
+  {
+    src: "/hero-3.png",
+    alt: "Open-plan bench desking with task chairs and a city skyline beyond",
+    // The benching is dead centre in this shot, so the crop is pulled toward the left of
+    // the source, which pushes the desks right and away from the copy. A third line of
+    // headline would have reached them regardless — the sub-line carries the rest.
+    objectPosition: "22% center",
+    headline: ["Height adjustable", "workstations"],
+    sub: "Bench desking that raises and lowers, specified to the millimetre and quoted off a component schedule.",
     linkLabel: "Height Adjustable Table",
-    linkHref: "/collections/stretchs"
+    linkHref: "/collections/stretchs",
   },
-  { 
-    src: "/hero-2.png", 
-    alt: "Executive desk with a view of the city skyline",
+  {
+    src: "/hero-2.png",
+    alt: "Executive desk and credenza in a corner office overlooking the city",
+    // Desk and both figures already sit right of centre; this holds them there.
+    objectPosition: "58% center",
+    headline: ["The cabin,", "quoted as one room"],
+    sub: "Desk, credenza, storage and seating on a single schedule, in one finish, installed in one visit.",
     linkLabel: "Executive Suites",
-    linkHref: "/collections"
+    linkHref: "/sectors/executive",
   },
-  { 
-    src: "/hero-1.png", 
-    alt: "Spacious executive office with a meeting area",
+  {
+    src: "/hero-1.png",
+    alt: "Executive office with desk, credenza and a meeting setting along the glazed wall",
+    // Desk group is centred, lounge to the right; bias left so the empty floor and the
+    // glazed wall sit under the copy.
+    objectPosition: "28% center",
+    headline: ["A floor that still", "works in year seven"],
+    sub: "Made in our own workshop in Surat, so finishes can be matched and spares still exist a decade later.",
     linkLabel: "Open Plan Benching",
-    linkHref: "/collections"
+    linkHref: "/collections",
   },
 ];
 
@@ -71,41 +95,11 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="border-b border-co-border" style={{ marginTop: -HEADER_HEIGHT }}>
+        {/* Copy lives on each slide now — see HERO_SLIDES. */}
         <HeroCarousel
           slides={HERO_SLIDES}
           className="h-[calc(100vh-20px)] min-h-[540px] max-h-[760px]"
-        >
-          <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-center px-[18px] pb-[10vh] sm:px-6 lg:px-11">
-            {/*
-              Hero type is set three steps quieter than it was: 3.1vw rather than 5.5vw,
-              semibold rather than bold, and −0.028em of tracking, because a display face
-              set this large reads too loose at its default fit. The soft shadow replaces
-              `drop-shadow-lg`, which was thick enough to furr the edges of the glyphs on
-              the lighter slides.
-            */}
-            {/*
-              Wide enough that the headline breaks only where the `<br />`s put it: a
-              character-width cap re-wrapped "Workstations for" and turned three lines
-              into five.
-            */}
-            <div className="flex max-w-[640px] flex-col gap-[clamp(18px,2vw,28px)]">
-              <h1 className="font-display text-[clamp(32px,3.1vw,48px)] font-semibold leading-[1.08] tracking-[-0.028em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.4)]">
-                <TextReveal>
-                  Height Adjustable
-                  <br />
-                  Workstations for
-                  <br />
-                  Modern Offices
-                </TextReveal>
-              </h1>
-              <p className="max-w-[40ch] text-[clamp(14.5px,1.2vw,17px)] font-normal leading-relaxed tracking-[0.002em] text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
-                Modular office furniture,
-                <br />
-                manufactured for enterprise scale
-              </p>
-            </div>
-          </div>
-        </HeroCarousel>
+        />
       </section>
 
 
