@@ -17,7 +17,7 @@ export function SeriesAccessory() {
       <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
         <div className="grid items-start gap-[clamp(24px,3.4vw,54px)] lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.9fr)]">
           <Reveal>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green-light">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-panel-muted">
               {accessory.eyebrow}
             </p>
             <h2 className="mb-4 max-w-[22ch] font-display text-[clamp(28px,3.4vw,44px)] font-medium leading-[1.03] tracking-[-0.033em] text-co-panel-fg">

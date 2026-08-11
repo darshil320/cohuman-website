@@ -11,7 +11,8 @@ interface CtaBandProps {
   body: string;
   buttonLabel?: string;
   subject?: string;
-  tone?: "green" | "dark";
+  /** `light` is a bone-toned band with ink type; `dark` is the near-black panel. */
+  tone?: "light" | "dark";
 }
 
 export function CtaBand({
@@ -19,19 +20,23 @@ export function CtaBand({
   body,
   buttonLabel = "Request a Quote",
   subject,
-  tone = "green",
+  tone = "light",
 }: CtaBandProps) {
   const { openQuote } = useQuoteDialog();
-  const isGreen = tone === "green";
+  const isLight = tone === "light";
 
   return (
-    <section className={cn(isGreen ? "bg-co-green" : "bg-co-panel")}>
+    <section
+      className={cn(
+        isLight ? "border-y border-co-border bg-co-bg-alt" : "bg-co-panel",
+      )}
+    >
       <Reveal className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-8 px-[18px] py-14 sm:px-6 sm:py-20 lg:px-11">
         <div>
           <h2
             className={cn(
               "mb-2.5 max-w-[24ch] font-display text-[26px] font-medium leading-[1.06] tracking-tight sm:text-[36px] lg:text-[44px]",
-              isGreen ? "text-co-cta-green-ink" : "text-co-panel-fg",
+              isLight ? "text-co-ink" : "text-co-panel-fg",
             )}
           >
             {heading}
@@ -39,7 +44,7 @@ export function CtaBand({
           <p
             className={cn(
               "max-w-[46ch] text-[16.5px]",
-              isGreen ? "text-[#24380F]" : "text-co-panel-muted",
+              isLight ? "text-co-muted" : "text-co-panel-muted",
             )}
           >
             {body}
@@ -47,11 +52,9 @@ export function CtaBand({
         </div>
         <Button
           size="lg"
+          variant={isLight ? "primary" : "onDark"}
           onClick={() => openQuote(subject)}
-          className={cn(
-            "whitespace-nowrap",
-            isGreen ? "bg-co-cta-green-ink text-co-green-paler hover:bg-co-ink" : "",
-          )}
+          className="whitespace-nowrap"
         >
           {buttonLabel}
         </Button>

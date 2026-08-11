@@ -14,7 +14,7 @@ export function SeriesFinishes() {
     <section className="border-b border-co-border bg-co-panel text-co-panel-fg">
       <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
         <Reveal>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green-light">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-panel-muted">
             {section.eyebrow}
           </p>
           <h2 className="mb-[clamp(26px,3.2vw,42px)] max-w-[22ch] font-display text-[clamp(28px,3.4vw,44px)] font-medium leading-[1.03] tracking-[-0.033em] text-co-panel-fg">
@@ -29,7 +29,7 @@ export function SeriesFinishes() {
             <Reveal as="li" key={swatch.name} step={index}>
               <div
                 className="relative aspect-[4/3] overflow-hidden border border-co-panel-fg/15 sm:aspect-[5/4]"
-                style={{ background: swatch.fill ?? "#2A322A" }}
+                style={{ background: swatch.fill ?? "#2b2d30" }}
               >
                 <span
                   aria-hidden

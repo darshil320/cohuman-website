@@ -9,9 +9,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-co-ink text-co-bg hover:bg-co-green hover:text-co-cta-green-ink",
+          "bg-co-ink text-co-bg hover:bg-co-green-light hover:text-co-cta-green-ink",
         onDark:
-          "bg-co-green text-co-cta-green-ink hover:bg-co-bg hover:text-co-ink",
+          "bg-co-bg text-co-ink hover:bg-co-green-light hover:text-co-cta-green-ink",
         outline:
           "border border-co-border-strong bg-transparent text-co-ink hover:bg-co-bg-alt hover:border-co-ink",
         outlineOnDark:

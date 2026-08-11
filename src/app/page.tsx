@@ -139,8 +139,8 @@ export default async function HomePage() {
       {/* Brands represented */}
       <section className="border-b border-co-border bg-co-panel">
         <div className="mx-auto max-w-[1320px] px-[18px] pt-[clamp(28px,3.5vw,40px)] sm:px-6 lg:px-11">
-          <p className="mb-6 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
-            Brands we&apos;ve represented
+          <p className="mb-6 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-panel-muted">
+            x&apos;ve represented
           </p>
         </div>
         <BrandMarquee brands={brandLogos} />
@@ -168,7 +168,7 @@ export default async function HomePage() {
       <section className="bg-co-panel text-co-panel-fg">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
           <Reveal>
-            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green-light">
+            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-panel-muted">
               Furnish by space
             </p>
             <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
@@ -180,9 +180,9 @@ export default async function HomePage() {
               <StaggerItem key={sp.slug} className="block min-h-[220px] bg-co-panel h-full">
                 <Link
                   href="/solutions"
-                  className="block h-full w-full p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#232D22]"
+                  className="block h-full w-full p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#1e2024]"
                 >
-                  <p className="font-display text-[13px] font-semibold tracking-wide text-co-green">
+                  <p className="font-display text-[13px] font-semibold tracking-wide text-co-panel-faint">
                     {sp.num}
                   </p>
                   <h3 className="mb-2.5 mt-6 font-display text-[24px] font-medium tracking-tight">

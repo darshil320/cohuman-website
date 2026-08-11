@@ -68,7 +68,7 @@ export function SiteHeader() {
           <Button
             size="sm"
             onClick={() => openQuote()}
-            className="hidden rounded-md bg-[#6fa82b] px-3.5 py-2 text-[13px] font-semibold text-slate-950 shadow-sm transition-all hover:bg-[#80bc33] hover:shadow-md min-[380px]:inline-flex sm:px-4 sm:text-[14px]"
+            className="hidden rounded-md bg-co-ink px-3.5 py-2 text-[13px] font-semibold text-co-bg shadow-sm transition-all hover:bg-co-green-light hover:shadow-md min-[380px]:inline-flex sm:px-4 sm:text-[14px]"
           >
             Request a Quote
           </Button>
@@ -106,10 +106,10 @@ export function SiteHeader() {
                   <Link
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="group flex items-center justify-between border-b border-slate-200/50 py-4 font-display text-[24px] font-medium tracking-tight text-slate-900 transition-colors hover:text-[#6fa82b]"
+                    className="group flex items-center justify-between border-b border-slate-200/50 py-4 font-display text-[24px] font-medium tracking-tight text-slate-900 transition-colors hover:text-co-muted"
                   >
                     {item.label}
-                    <span className="text-slate-300 opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#6fa82b] group-hover:opacity-100">
+                    <span className="text-slate-300 opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-co-ink group-hover:opacity-100">
                       <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 11L11 1M11 1H1M11 1V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
@@ -132,7 +132,7 @@ export function SiteHeader() {
                   setMobileOpen(false);
                   openQuote();
                 }}
-                className="w-full rounded-full bg-[#6fa82b] py-6 text-[16px] font-semibold text-slate-950 shadow-[0_0_20px_rgba(111,168,43,0.2)] transition-all hover:bg-[#80bc33] hover:shadow-[0_0_25px_rgba(111,168,43,0.4)]"
+                className="w-full rounded-full bg-co-ink py-6 text-[16px] font-semibold text-co-bg shadow-[0_10px_28px_rgba(0,0,0,0.14)] transition-all hover:bg-co-green-light hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)]"
               >
                 Request a Quote
               </Button>

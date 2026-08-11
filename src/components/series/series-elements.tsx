@@ -71,7 +71,7 @@ export function SeriesElements() {
             <span className="shrink-0 pt-0.5 text-[11px] font-bold tracking-[0.1em] text-co-green-dark">
               NOTE
             </span>
-            <p className="text-[14.5px] leading-snug text-[#35461C]">{series.elementsNote}</p>
+            <p className="text-[14.5px] leading-snug text-co-ink-soft">{series.elementsNote}</p>
           </div>
         ) : null}
       </div>

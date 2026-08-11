@@ -41,7 +41,7 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
                 document.querySelector('#enquire')?.scrollIntoView({ behavior: 'smooth' });
                 history.pushState(null, '', '#enquire');
               }}
-              className="shrink-0 whitespace-nowrap bg-co-green px-5 py-3 text-[14.5px] font-semibold text-co-cta-green-ink transition-colors hover:bg-co-bg hover:text-co-ink"
+              className="shrink-0 whitespace-nowrap bg-co-bg px-5 py-3 text-[14.5px] font-semibold text-co-ink transition-colors hover:bg-co-bg-alt"
             >
               Enquire
             </a>

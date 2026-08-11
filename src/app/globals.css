@@ -14,18 +14,21 @@
   --color-co-border: #dcd8cf;
   --color-co-border-strong: #c8c3b8;
   --color-co-card-border: #e4e0d7;
-  --color-co-green: #6fa82b;
-  --color-co-green-dark: #4e7d1f;
-  --color-co-green-light: #9cc763;
-  --color-co-green-pale: #c9dfa4;
-  --color-co-green-paler: #d6e8b8;
-  --color-co-panel: #1c241c;
-  --color-co-panel-border: #2e382d;
-  --color-co-panel-fg: #f0eee7;
-  --color-co-panel-muted: #a8b0a4;
-  --color-co-panel-faint: #6e7a6b;
-  --color-co-cta-green: #6fa82b;
-  --color-co-cta-green-ink: #12200a;
+  /* Accent scale — monochrome. The brand is black/white; only the logo carries
+     colour. These keep their historical `green` names so the ~90 call sites stay
+     untouched, but every value is a neutral ink tone. */
+  --color-co-green: #16181b;
+  --color-co-green-dark: #000000;
+  --color-co-green-light: #4a4f56;
+  --color-co-green-pale: #cfcdc7;
+  --color-co-green-paler: #e6e4de;
+  --color-co-panel: #121316;
+  --color-co-panel-border: #2a2c30;
+  --color-co-panel-fg: #f4f3f0;
+  --color-co-panel-muted: #a9abaf;
+  --color-co-panel-faint: #6d7075;
+  --color-co-cta-green: #16181b;
+  --color-co-cta-green-ink: #ffffff;
   --color-co-placeholder-frame-1: #ffffff;
   --color-co-placeholder-frame-2: #f6f4ee;
   --color-co-placeholder-frame-3: #e8e4da;

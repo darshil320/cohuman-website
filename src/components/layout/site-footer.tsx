@@ -69,7 +69,7 @@ export function SiteFooter() {
                   {inbox.address}
                 </a>
               ))}
-              <Link href="/contact" className="mt-1 font-medium text-co-green-pale">
+              <Link href="/contact" className="mt-1 font-medium text-co-panel-fg underline decoration-co-panel-faint underline-offset-4 hover:decoration-co-panel-fg">
                 Enquiry form →
               </Link>
             </div>
