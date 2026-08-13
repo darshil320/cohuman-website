@@ -64,9 +64,19 @@ async function sendLeadEmail(record: LeadRecord) {
     // Set RESEND_API_KEY (and RESEND_FROM_EMAIL) before launch.
     return;
   }
+  // No placeholder fallback: an unverified sender domain makes Resend reject the send,
+  // which would lose the lead silently. Either both variables are set or no email is
+  // attempted at all (the submission still succeeds and is logged).
+  const from = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!from) {
+    throw new Error(
+      "RESEND_API_KEY is set but RESEND_FROM_EMAIL is not — set a verified sender (e.g. leads@cohuman.in).",
+    );
+  }
+
   const resend = new Resend(apiKey);
   await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL ?? "leads@cohuman.example.com",
+    from,
     // Every inbox the client listed, so a lead never waits on one person being away.
     to: siteConfig.emails.map((inbox) => inbox.address),
     subject: `[Cohuman website] ${LEAD_SOURCE_LABEL[record.source]}`,

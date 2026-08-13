@@ -23,9 +23,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const product = await catalog.getProduct(slug);
   if (!product) return {};
+
+  // A share card needs an absolute image and a canonical of its own, or WhatsApp and
+  // LinkedIn fall back to the site-wide card for all 16 products.
+  const image = product.images?.[0]?.src ?? categoryPhoto[product.cat];
+
   return {
     title: product.name,
     description: product.tagline,
+    alternates: { canonical: `/catalog/${product.slug}` },
+    openGraph: {
+      title: `${product.name} — ${siteConfig.name}`,
+      description: product.tagline,
+      url: `/catalog/${product.slug}`,
+      images: image ? [{ url: image, alt: product.name }] : undefined,
+    },
   };
 }
 
@@ -42,6 +54,10 @@ export default async function ProductPage({ params }: PageProps) {
 
   const catLabel = resolveCatLabel(categories, product.cat);
   const bandLabel = PRICE_BAND_LABEL[product.band];
+
+  // `images` is absent on every demo product, so `lead` falls back to the category
+  // photograph and `thumbnails` is empty rather than three duplicates of it.
+  const [lead, ...thumbnails] = product.images ?? [];
 
   const specRows = [
     { k: "Category", v: catLabel },
@@ -90,34 +106,42 @@ export default async function ProductPage({ params }: PageProps) {
           <div className="relative aspect-[4/3] overflow-hidden border border-co-card-border bg-co-bg-alt">
             <ImagePlaceholder
               hint={`${product.name} — main product shot`}
-              alt={product.name}
-              src={categoryPhoto[product.cat]}
+              alt={lead ? lead.alt : `${catLabel} by ${siteConfig.name}`}
+              src={lead ? lead.src : categoryPhoto[product.cat]}
+              sizes="(min-width: 1024px) 46vw, 100vw"
               priority
             />
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="relative aspect-square overflow-hidden border border-co-card-border bg-co-bg-alt">
-              <ImagePlaceholder
-                hint="Detail"
-                alt={`${product.name} detail`}
-                src={categoryPhoto[product.cat]}
-              />
+          {/*
+            Thumbnails only exist where real extra frames do. This used to render three
+            fixed tiles all pointing at the same category photograph as the main shot, so
+            every one of the 16 PDPs showed one image four times under the labels
+            "Detail", "Angle" and "In situ" — visibly broken, and the same four files
+            across the whole catalog. Until a product is shot, one honest photograph of
+            the category beats four copies of it.
+          */}
+          {thumbnails.length > 0 ? (
+            <div className="grid grid-cols-3 gap-3">
+              {thumbnails.map((image) => (
+                <div
+                  key={image.src}
+                  className="relative aspect-square overflow-hidden border border-co-card-border bg-co-bg-alt"
+                >
+                  <ImagePlaceholder
+                    hint={image.alt}
+                    alt={image.alt}
+                    src={image.src}
+                    sizes="(min-width: 1024px) 15vw, 30vw"
+                  />
+                </div>
+              ))}
             </div>
-            <div className="relative aspect-square overflow-hidden border border-co-card-border bg-co-bg-alt">
-              <ImagePlaceholder
-                hint="Angle"
-                alt={`${product.name} angle view`}
-                src={categoryPhoto[product.cat]}
-              />
-            </div>
-            <div className="relative aspect-square overflow-hidden border border-co-card-border bg-co-bg-alt">
-              <ImagePlaceholder
-                hint="In situ"
-                alt={`${product.name} in a finished room`}
-                src={categoryPhoto[product.cat]}
-              />
-            </div>
-          </div>
+          ) : (
+            <p className="text-[12.5px] font-light leading-snug text-co-faint">
+              Photographed in a completed {catLabel.toLowerCase()} install. Finish samples and
+              detail shots come with the quote.
+            </p>
+          )}
         </div>
 
         <div>

@@ -125,7 +125,18 @@ engagement.
 
 `RESEND_API_KEY` and `RESEND_FROM_EMAIL` are read from env; without
 `RESEND_API_KEY` set, submissions still succeed (validated + logged) but no
-email sends — set it before launch.
+email sends — set it before launch. Setting `RESEND_API_KEY` **without**
+`RESEND_FROM_EMAIL` now throws rather than falling back to a placeholder sender:
+an unverified from-address makes Resend reject the send, which would drop the lead
+silently. Use a verified sender on the real domain (e.g. `leads@cohuman.in`).
+
+## Environment variables
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Production: no. Previews: yes | Canonical origin for `metadataBase`, every `canonical`/`og:url`, sitemap, robots.txt and llms.txt. Defaults to `https://cohuman.in`. Set it to the deployment's own origin on preview environments so previews don't advertise production URLs to crawlers and scrapers. |
+| `RESEND_API_KEY` | Before launch | Sends the lead email. Absent → leads validate and log, no email. |
+| `RESEND_FROM_EMAIL` | Whenever `RESEND_API_KEY` is set | Verified sender address. |
 
 The quote dialog (`src/components/providers/quote-dialog-provider.tsx`) is a
 global context (`useQuoteDialog().openQuote(subject?)`) — any component can pop
@@ -134,16 +145,27 @@ space type).
 
 ## Placeholder content — do not ship as-is
 
-- **`src/lib/site-config.ts`** — phone, WhatsApp number, email, showroom address,
-  hours, map embed URL are all placeholders marked `TODO: confirm`. Nothing here
-  is real.
+- **`src/lib/site-config.ts`** — anything still marked `TODO: confirm` (phone,
+  WhatsApp number, hours, map embed URL) is a placeholder. The email addresses,
+  office contacts and `url` are confirmed; `url` resolves to `https://cohuman.in`
+  and is no longer the old `cohuman.example.com`, which used to poison every
+  canonical, `og:url` and sitemap entry.
 - **`src/components/common/image-placeholder.tsx`** — every product/project/hero
   image renders a labelled gradient card until a real `src` is passed. Grep for
   `<ImagePlaceholder` usages without `src` before launch.
 - **`src/data/products.json`, `projects.json`** — SKUs, specs and case studies
   are illustrative, carried over from the original demo. Real product data,
   photography, and project case studies (with permission to publish) are open
-  items with the client.
+  items with the client. **No product has been photographed:** `Product.images`
+  is optional and absent on all 16, so each PDP shows one photograph of its
+  category and no thumbnail strip. Do not re-add filler frames — the page
+  previously rendered the same category file four times under the labels
+  "Detail"/"Angle"/"In situ", so all 16 PDPs shared four images between them.
+  Populate `images` per product as real shots arrive and the strip appears.
+- **`src/app/about/page.tsx`** — four of the five `TIMELINE` milestones (1998,
+  2009, 2018 and the wording of the 2026 relaunch) are reconstructed and need
+  Tushar's sign-off. Correct the data; do not re-add a public "dates to be
+  confirmed" caveat, which is an internal note and was shipping to visitors.
 - **`src/app/about/page.tsx`** — the "Partnerships" section intentionally has no
   logos. Whether MERRYFAIR/SPACEWOOD/Humanscale partnerships still apply to the
   Cohuman entity is unconfirmed; do not add them until Tushar/Vaibhav confirm.
@@ -161,10 +183,19 @@ e-commerce or SaaS product.
 ## Commands
 
 ```bash
-npm run dev      # local dev
-npm run build    # production build
-npm run lint      # eslint
+npm run dev          # local dev
+npm run build        # production build (runs check:links first via prebuild)
+npm run lint         # eslint
+npm run check:links  # every literal internal href resolves to a real route
 ```
+
+`check:links` (`scripts/check-links.mjs`) walks the App Router for real routes,
+expands dynamic segments against `src/data/*.json` slugs, and fails the build on any
+hard-coded `href`/`*Href` string that resolves to nothing. It exists because
+`/collections/stretchs` shipped as the homepage's primary hero CTA and 404'd — the
+series **wordmarks** became STRETCH/STRETCHS in the rebrand while the route **slugs**
+stayed `varidex`/`pros`. Slugs are the URL contract; renaming a wordmark never renames
+a route. Template-literal and variable hrefs are out of the checker's reach.
 
 ## Conventions
 
@@ -177,3 +208,10 @@ npm run lint      # eslint
   filters) are client components.
 - No `console.log` in committed code; surface errors via thrown errors / API
   error responses instead.
+- Animated figures use `useCountUp` (`src/lib/use-count-up.ts`) via `CountUp` or
+  `AnimatedStat`. The hook's state **starts at the finished value** and only resets to
+  zero in a browser-only layout effect, so the served HTML carries the real number.
+  Initialising a counter at zero puts `0 yrs` in the static HTML — which is what a
+  crawler reads and what stays on screen if JS is blocked or hydration fails.
+- Year counts are derived from `siteConfig.foundedYear` and `new Date()`, never typed
+  as literals — a hardcoded "37 yrs" is wrong every January.

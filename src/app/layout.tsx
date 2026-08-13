@@ -30,12 +30,35 @@ export const metadata: Metadata = {
   },
   description:
     "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, manufactured in Surat since 1989.",
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description:
       "Office furniture designed around the people who use it. Request a quote for your space.",
+    // Site-wide share card. Every page that does not set its own image inherits this one;
+    // without a default, a shared link from /about, /contact or a sector page renders as
+    // a bare text row in WhatsApp, Slack and LinkedIn. `metadataBase` above makes it
+    // absolute, which is why that value must be the real production origin.
+    // Dimensions are the file's real ones (3168×1344). Declaring the conventional
+    // 1200×630 for a 2.36:1 image makes scrapers letterbox or crop to a ratio the file
+    // does not have.
+    images: [
+      {
+        url: "/hero-1.png",
+        width: 3168,
+        height: 1344,
+        alt: "A completed Cohuman office fit-out — executive desk, credenza and meeting setting",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description:
+      "Office furniture designed around the people who use it. Request a quote for your space.",
+    images: ["/hero-1.png"],
   },
 };
 

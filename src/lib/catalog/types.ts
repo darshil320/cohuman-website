@@ -31,6 +31,21 @@ export interface Product {
   features: string[];
   lead: string;
   warranty: string;
+  /**
+   * Photographs of this product, first one leading.
+   *
+   * Absent on every demo product today — none of the 16 has been shot. The PDP falls back
+   * to a single photograph of the category and does NOT repeat it as fake detail/angle
+   * frames; four copies of one image reads as a broken gallery, not as three viewpoints.
+   * Add real shots here (and only real ones) as they arrive.
+   */
+  images?: ProductImage[];
+}
+
+export interface ProductImage {
+  src: string;
+  /** What the frame shows, for the alt text — not the product name over again. */
+  alt: string;
 }
 
 /**

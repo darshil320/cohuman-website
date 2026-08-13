@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCountUp } from "@/lib/use-count-up";
 
 interface AnimatedStatProps {
   value: number;
@@ -13,39 +13,11 @@ interface AnimatedStatProps {
  *
  * For a figure that has to line up beside plain ones in a shared row, use `CountUp`
  * (src/components/common/count-up.tsx) instead — it renders the text only, so it inherits
- * the surrounding layout rather than bringing its own.
+ * the surrounding layout rather than bringing its own. Both share `useCountUp`
+ * (src/lib/use-count-up.ts), so both put the real figure in the server-rendered HTML.
  */
 export function AnimatedStat({ value, suffix = "", label }: AnimatedStatProps) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const startedRef = useRef(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || startedRef.current) return;
-        startedRef.current = true;
-
-        const durationMs = 1200;
-        const startTime = performance.now();
-
-        function tick(now: number) {
-          const progress = Math.min((now - startTime) / durationMs, 1);
-          const eased = 1 - (1 - progress) * (1 - progress);
-          setCount(Math.round(eased * value));
-          if (progress < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-      },
-      { threshold: 0.4 },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [value]);
+  const { ref, count } = useCountUp<HTMLDivElement>(value);
 
   return (
     <div ref={ref}>

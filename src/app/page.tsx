@@ -48,7 +48,11 @@ const HERO_SLIDES = [
     headline: ["Height adjustable", "workstations"],
     sub: "Bench desking that raises and lowers, specified to the millimetre and quoted off a component schedule.",
     linkLabel: "Height Adjustable Table",
-    linkHref: "/collections/stretchs",
+    // STRETCH (`varidex`) is the adjustable-beam series, which is what this slide's copy
+    // describes. The route is keyed on the series slug, not the wordmark — the wordmark
+    // changed to STRETCH/STRETCHS in the rebrand and the slugs deliberately did not, so
+    // `/collections/stretchs` never existed and 404'd.
+    linkHref: "/collections/varidex",
   },
   {
     src: "/hero-2.png",
@@ -73,11 +77,19 @@ const HERO_SLIDES = [
   },
 ];
 
-/** `n` counts up when the strip scrolls into view; the rest render as written. */
+/**
+ * `n` counts up when the strip scrolls into view; the rest render as written.
+ *
+ * Years in business is derived, not typed: a hardcoded "37 yrs" is wrong every January
+ * and nobody remembers to edit it. `CountUp` puts the finished figure in the served HTML,
+ * so `v` is only needed by the cells that are not counted.
+ */
+const yearsInBusiness = new Date().getFullYear() - siteConfig.foundedYear;
+
 const STATS = [
   { v: String(siteConfig.foundedYear), k: "Furniture Concepts founded, Surat" },
-  { n: 37, suffix: " yrs", v: "37 yrs", k: "Designing and making workplaces" },
-  { n: 6, v: "6", k: "Product families in production" },
+  { n: yearsInBusiness, suffix: " yrs", k: "Designing and making workplaces" },
+  { n: 6, k: "Product families in production" },
   { v: "~2 days", k: `Typical quote turnaround (${siteConfig.enquiryTurnaround})` },
 ];
 

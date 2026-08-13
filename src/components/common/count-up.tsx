@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCountUp } from "@/lib/use-count-up";
 
 interface CountUpProps {
   value: number;
@@ -14,49 +14,12 @@ interface CountUpProps {
  * whatever element the surrounding layout already uses. A component that brings its own
  * wrapper cannot be mixed with plain figures in one row without pulling itself off the
  * shared baseline, which is exactly what went wrong on the stats strip.
+ *
+ * The counting itself, and the reason the served HTML carries the finished figure rather
+ * than a zero, lives in `useCountUp` (src/lib/use-count-up.ts).
  */
 export function CountUp({ value, suffix = "" }: CountUpProps) {
-  // Starts at zero and animates, except under reduced motion, where the figure is the
-  // point and the performance is not. Resolved in the initialiser rather than in an
-  // effect so it is right on the first paint and never counts a frame it should not.
-  const [count, setCount] = useState(() =>
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? value
-      : 0,
-  );
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let frame = 0;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-
-        const durationMs = 1200;
-        const startTime = performance.now();
-        const tick = (now: number) => {
-          const progress = Math.min((now - startTime) / durationMs, 1);
-          const eased = 1 - (1 - progress) * (1 - progress);
-          setCount(Math.round(eased * value));
-          if (progress < 1) frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
-      },
-      { threshold: 0.4 },
-    );
-
-    observer.observe(node);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [value]);
+  const { ref, count } = useCountUp<HTMLSpanElement>(value);
 
   return (
     <span ref={ref}>

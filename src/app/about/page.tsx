@@ -17,6 +17,12 @@ export const metadata: Metadata = {
     "Thirty-seven years of watching how people actually work — the story of Furniture Concepts becoming Cohuman, founded by Tushar Shah in Surat, 1989.",
 };
 
+/**
+ * UNCONFIRMED DATES — 1989 and the 2026 relaunch are certain; the four milestones in
+ * between are reconstructed and still need Tushar's sign-off. Correct them here rather
+ * than hedging them on the page: a public "dates to be confirmed" note tells a visitor
+ * the company does not know its own history.
+ */
 const TIMELINE = [
   { year: "1989", what: "Furniture Concepts opens in Surat. Desks for one accountancy practice on Ring Road." },
   { year: "1998", what: "First full-floor contract. Manufacturing moves into a dedicated workshop." },
@@ -136,7 +142,8 @@ export default function AboutPage() {
       <section className="bg-co-panel">
         <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 gap-8 px-[18px] py-[clamp(40px,5vw,60px)] sm:grid-cols-4 sm:px-6 lg:px-11">
           <StaggerItem><AnimatedStat value={siteConfig.foundedYear} label="Founded" /></StaggerItem>
-          <StaggerItem><AnimatedStat value={2026 - siteConfig.foundedYear} suffix=" yrs" label="In business" /></StaggerItem>
+          {/* Derived, not typed — a hardcoded year count is wrong every January. */}
+          <StaggerItem><AnimatedStat value={new Date().getFullYear() - siteConfig.foundedYear} suffix=" yrs" label="In business" /></StaggerItem>
           <StaggerItem><AnimatedStat value={siteConfig.offices.length} label="Cities we work from" /></StaggerItem>
           <StaggerItem><AnimatedStat value={siteConfig.brandsRepresented.length} label="Global brands represented" /></StaggerItem>
         </StaggerContainer>
@@ -149,9 +156,11 @@ export default function AboutPage() {
             <TextReveal>A short timeline</TextReveal>
           </h2>
           <StoryTimeline items={TIMELINE} />
-          <p className="mt-5 text-[13px] font-light text-co-faint">
-            Milestone dates to be confirmed with the founder before publication.
-          </p>
+          {/*
+            The "milestone dates to be confirmed with the founder" line that used to sit
+            here was an internal note to ourselves and was shipping to visitors. Internal
+            caveats belong in TIMELINE's own comment, not in the rendered page.
+          */}
         </div>
       </section>
 

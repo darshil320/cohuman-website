@@ -1,13 +1,38 @@
 // PARTLY CONFIRMED — the two email addresses and the office contacts below are real and
 // supplied by the client. Everything still marked `TODO: confirm` is a placeholder that
 // must be replaced before launch.
+
+/**
+ * Canonical origin, used for `metadataBase`, every `canonical`/`og:url`, the sitemap,
+ * robots.txt and llms.txt.
+ *
+ * `cohuman.in` is the live domain (it matches the confirmed `Jigar@cohuman.in` inbox).
+ * `NEXT_PUBLIC_SITE_URL` overrides it so preview deployments advertise their own origin
+ * instead of pointing every crawler and social scraper at production — set it to
+ * `https://$VERCEL_URL` on preview environments. Trailing slashes are stripped because
+ * every consumer concatenates a path onto this value.
+ */
+function resolveSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return "https://cohuman.in";
+
+  const withScheme = /^https?:\/\//.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(withScheme).origin;
+  } catch {
+    throw new Error(
+      `NEXT_PUBLIC_SITE_URL is not a valid URL: ${raw}. Use an origin like https://cohuman.in.`,
+    );
+  }
+}
+
 export const siteConfig = {
   name: "Cohuman",
   legalName: "Cohuman Modularr LLP",
   tagline: "People-first office furniture, crafted since 1989",
   founder: "Tushar Shah",
   foundedYear: 1989,
-  url: "https://cohuman.example.com", // TODO: confirm production domain
+  url: resolveSiteUrl(),
   /** General inbox. Every website lead lands here — see `emails` for the full set. */
   email: "sales.cohuman@gmail.com",
   emails: [
