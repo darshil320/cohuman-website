@@ -16,12 +16,15 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 pb-10 sm:grid-cols-2 sm:gap-14 lg:grid-cols-4 lg:pb-16">
           <div className="sm:col-span-2">
             <div className="mb-4 flex items-center gap-2.5">
+              {/* Dark charcoal wordmark disappears on the near-black panel, so the
+                  footer uses a variant whose lettering is panel-foreground white.
+                  The leaf keeps its brand green in both files. */}
               <Image
-                src="/logo.jpg"
+                src="/logo-light.png"
                 alt="CoHuman Modularr LLP"
-                width={200}
-                height={50}
-                className="h-8 w-auto object-contain mix-blend-screen"
+                width={1780}
+                height={343}
+                className="h-8 w-auto object-contain"
               />
             </div>
             <p className="mb-5 max-w-[34ch] text-[15px] font-light leading-relaxed">

@@ -37,11 +37,11 @@ export function SiteHeader() {
       >
         <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <Image
-              src="/logo.jpg"
+              src="/logo.png"
               alt="CoHuman Modularr LLP"
-              width={200}
-              height={50}
-              className="h-8 w-auto object-contain transition-transform group-hover:scale-105 invert hue-rotate-180 mix-blend-multiply"
+              width={1780}
+              height={343}
+              className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
               priority
             />
         </Link>
