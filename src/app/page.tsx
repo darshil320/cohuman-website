@@ -90,7 +90,6 @@ const STATS = [
   { v: String(siteConfig.foundedYear), k: "Furniture Concepts founded, Surat" },
   { n: yearsInBusiness, suffix: " yrs", k: "Designing and making workplaces" },
   { n: 6, k: "Product families in production" },
-  { v: "~2 days", k: `Typical quote turnaround (${siteConfig.enquiryTurnaround})` },
 ];
 
 export default async function HomePage() {
@@ -121,15 +120,17 @@ export default async function HomePage() {
 
       {/* Stats */}
       <section className="border-b border-co-border bg-co-bg-alt">
-        <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-4 lg:px-11">
+        <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-3 lg:px-11">
           {STATS.map((s) => (
             <StaggerItem
               key={s.k}
               className={cn(
                 "flex flex-col border-co-border py-[clamp(26px,3vw,38px)]",
-                // Two-up on a phone needs a horizontal rule between the rows as well as
-                // the vertical one, or the four cells read as one undifferentiated block.
-                "px-4 [&:nth-child(-n+2)]:border-b [&:nth-child(odd)]:border-r sm:px-6",
+                // Three cells wrap 2 + 1 on a phone, so the first row needs a horizontal
+                // rule under it and a vertical rule between its two cells. The lone cell
+                // on the second row must not carry a right border — it has nothing beside
+                // it, and the rule would hang in open space.
+                "px-4 [&:nth-child(-n+2)]:border-b [&:first-child]:border-r sm:px-6",
                 "lg:border-b-0 lg:px-6 lg:first:pl-0 lg:last:pr-0 lg:[&:not(:last-child)]:border-r",
               )}
             >
@@ -137,7 +138,7 @@ export default async function HomePage() {
                 Both variants render the same two elements in the same box: the figure on
                 a fixed line box, the label pinned to the bottom. Animating one of them
                 used to add a wrapper, which pulled its figure off the row's baseline and
-                left the four labels at four different heights.
+                left the labels at differing heights.
               */}
               <p className="mb-2 flex min-h-[1.05em] items-end whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight text-co-ink">
                 {s.n ? <CountUp value={s.n} suffix={s.suffix} /> : s.v}
