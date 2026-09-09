@@ -47,3 +47,6 @@ next-env.d.ts
 .playwright-mcp/
 *.png
 !public/**/*.png
+# App Router icon conventions live in src/app/, not public/, so the blanket *.png rule
+# above would drop them — a missing apple-icon costs a home-screen icon silently.
+!src/app/**/*.png

@@ -42,7 +42,17 @@ export function SiteHeader() {
               width={1780}
               height={343}
               className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
-              priority
+              /*
+                Eager, but not preloaded. The logo is above the fold on every page, so it
+                must not be lazy — a lazy header mark pops in after first paint. It is
+                never the LCP element either: the hero photograph or the headline always
+                outweighs a 32px-tall wordmark, and a `<link rel="preload">` here would
+                queue ahead of the image that actually is the LCP. `fetchPriority="low"`
+                for the same reason, which is also why `preload` is absent — Next
+                documents the two as props not to combine.
+              */
+              loading="eager"
+              fetchPriority="low"
             />
         </Link>
 

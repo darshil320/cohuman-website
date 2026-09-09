@@ -7,18 +7,46 @@ import { catalog } from "@/lib/catalog";
 import { publicFileExists } from "@/lib/public-assets";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
+import { itemListJsonLd } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "Sectors",
   description:
     "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+  alternates: { canonical: "/sectors" },
+  openGraph: {
+    title: "Sectors",
+    description:
+      "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+    url: "/sectors",
+  },
+  twitter: {
+    title: "Sectors",
+    description:
+      "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+  },
 };
 
 export default async function SectorsPage() {
   const sectors = await catalog.getSectors();
 
+  const itemList = itemListJsonLd(
+    "Sectors Cohuman supplies",
+    "/sectors",
+    sectors.map((sector) => ({
+      name: sector.name,
+      path: `/sectors/${sector.slug}`,
+      description: sector.blurb,
+    })),
+  );
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+      />
+
       <section className="border-b border-co-border bg-co-bg-alt">
         <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">

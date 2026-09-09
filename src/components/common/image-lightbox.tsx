@@ -522,7 +522,16 @@ export function ImageLightbox({
                   fill
                   sizes="100vw"
                   quality={90}
-                  priority
+                  /*
+                    Eager rather than preloaded: this mounts only after a visitor clicks a
+                    thumbnail, so a `<link rel="preload">` in the head would fetch a
+                    full-screen image nobody has opened yet. By the time this renders the
+                    request is already the urgent one on the page, which is what
+                    `fetchPriority="high"` says — and Next documents `fetchPriority` as a
+                    prop not to combine with `preload`.
+                  */
+                  loading="eager"
+                  fetchPriority="high"
                   draggable={false}
                   onLoad={(event) =>
                     setNatural({

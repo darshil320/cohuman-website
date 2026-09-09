@@ -7,18 +7,46 @@ import { collectionPhoto } from "@/lib/photos";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { ParallaxImage } from "@/components/ui/parallax-image";
+import { itemListJsonLd } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "Collections",
   description:
     "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+  alternates: { canonical: "/collections" },
+  openGraph: {
+    title: "Collections",
+    description:
+      "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+    url: "/collections",
+  },
+  twitter: {
+    title: "Collections",
+    description:
+      "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+  },
 };
 
 export default async function CollectionsPage() {
   const collections = await catalog.getCollections();
 
+  const itemList = itemListJsonLd(
+    "Cohuman desking series",
+    "/collections",
+    collections.map((collection) => ({
+      name: collection.name,
+      path: `/collections/${collection.slug}`,
+      description: collection.blurb,
+    })),
+  );
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+      />
+
       <section className="border-b border-co-border bg-co-bg-alt">
         <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">

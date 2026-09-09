@@ -47,6 +47,18 @@ export const metadata: Metadata = {
   title: "Contact & Showroom",
   description:
     "Visit the Cohuman showroom in Surat, or send us your floor plan and headcount for a costed proposal.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact & Showroom",
+    description:
+      "Visit the Cohuman showroom in Surat, or send us your floor plan and headcount for a costed proposal.",
+    url: "/contact",
+  },
+  twitter: {
+    title: "Contact & Showroom",
+    description:
+      "Visit the Cohuman showroom in Surat, or send us your floor plan and headcount for a costed proposal.",
+  },
 };
 
 const contactRows = [

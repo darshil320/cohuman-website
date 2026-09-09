@@ -8,7 +8,14 @@ interface ImagePlaceholderProps {
   src?: string;
   className?: string;
   sizes?: string;
-  priority?: boolean;
+  /**
+   * Preload this image — a `<link rel="preload">` in the head, for the one image on a
+   * page that is its LCP element. Replaces the `priority` prop, which Next 16
+   * deprecated in favour of `preload` to make the behaviour legible at the call site.
+   * Never set it on more than one image per page, and never together with `loading` or
+   * `fetchPriority`, which Next documents as the props not to combine with it.
+   */
+  preload?: boolean;
   /**
    * "warm" (default) — the room/lifestyle gradient used for hero and project shots.
    * "white" — flat, near-white studio background for isolated product shots
@@ -29,7 +36,7 @@ export function ImagePlaceholder({
   src,
   className,
   sizes = "(min-width: 1024px) 33vw, 100vw",
-  priority = false,
+  preload = false,
   variant = "warm",
 }: ImagePlaceholderProps) {
   if (src) {
@@ -39,7 +46,7 @@ export function ImagePlaceholder({
         alt={alt}
         fill
         sizes={sizes}
-        priority={priority}
+        preload={preload}
         className={cn(variant === "white" ? "object-contain" : "object-cover", className)}
       />
     );

@@ -2,11 +2,24 @@ import type { Metadata } from "next";
 import { CatalogBrowser } from "@/components/catalog/catalog-browser";
 import { catalog } from "@/lib/catalog";
 import { TextReveal } from "@/components/ui/text-reveal";
+import { itemListJsonLd } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "Catalog",
   description:
     "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category and budget band.",
+  alternates: { canonical: "/catalog" },
+  openGraph: {
+    title: "Catalog",
+    description:
+      "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category and budget band.",
+    url: "/catalog",
+  },
+  twitter: {
+    title: "Catalog",
+    description:
+      "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category and budget band.",
+  },
 };
 
 export default async function CatalogPage() {
@@ -15,8 +28,25 @@ export default async function CatalogPage() {
     catalog.getCategories(),
   ]);
 
+  // Sixteen product links are otherwise an unstructured wall to a crawler; the list
+  // states what this page enumerates so a result can carry the set, not one child.
+  const itemList = itemListJsonLd(
+    "Cohuman office furniture catalog",
+    "/catalog",
+    products.map((product) => ({
+      name: product.name,
+      path: `/catalog/${product.slug}`,
+      description: product.tagline,
+    })),
+  );
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
+      />
+
       <section className="border-b border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] pb-[clamp(32px,4vw,48px)] sm:px-6 lg:px-11">
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">

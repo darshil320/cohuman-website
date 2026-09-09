@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +19,13 @@ export interface HeroSlide {
    * different, and the crop is what keeps the furniture out from under the words.
    */
   objectPosition?: string;
+  /**
+   * Inline LQIP for `placeholder="blur"` — a base64 JPEG a couple of dozen pixels
+   * wide, so a colour-correct blur is in the first HTML byte rather than an empty
+   * stage waiting on the network. Regenerate with `sharp` when the photograph
+   * changes: resize to 24px wide, encode JPEG, inline as a data URL.
+   */
+  blurDataURL?: string;
   /** Headline, one array entry per line — no `<br />` to parse. */
   headline?: string[];
   sub?: string;
@@ -55,9 +62,10 @@ export function HeroCarousel({
     Scroll-linked parallax. The photograph leaves at roughly two thirds of the scroll
     speed and dims as it goes, so the first section slides over a hero that is still
     moving rather than a static block — the cue that there is more below. Reduced motion
-    gets the plain version.
+    gets the plain version, via the app-level `MotionConfig reducedMotion="user"` —
+    branching on `useReducedMotion()` here would render a different tree on the server
+    than in the browser and break hydration.
   */
-  const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -149,10 +157,7 @@ export function HeroCarousel({
       onPointerLeave={endDrag}
       onPointerCancel={endDrag}
     >
-      <motion.div
-        className="absolute inset-0"
-        style={reduceMotion ? undefined : { y: parallaxY, opacity: parallaxFade }}
-      >
+      <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxFade }}>
       <div
         className={cn(
           "absolute inset-0 flex cursor-grab active:cursor-grabbing",
@@ -162,15 +167,30 @@ export function HeroCarousel({
       >
         {slides.map((slide, i) => (
           <div key={slide.src} className="relative h-full w-full shrink-0">
+            {/*
+              Every slide is mounted in one flex track, so without `loading` the browser
+              would fetch all three on first paint and the LCP image would queue behind
+              two photographs nobody has asked to see yet.
+
+              Slide 0 is the LCP element, so it gets `preload` — a `<link rel="preload">`
+              in the `<head>`, which the browser acts on before it has parsed the body,
+              let alone hydrated this client component. `preload` is deliberately alone
+              on it: Next 16 documents `loading` and `fetchPriority` as the props not to
+              combine with it, and `priority` is deprecated in favour of it. Slides 1-2
+              stay lazy and low so they arrive while the first slide is on screen.
+            */}
             <Image
               src={slide.src}
               alt={slide.alt}
               fill
-              priority={i === 0}
+              {...(i === 0
+                ? { preload: true }
+                : { loading: "lazy" as const, fetchPriority: "low" as const })}
               draggable={false}
               sizes="100vw"
-              quality={100}
-              unoptimized
+              quality={72}
+              placeholder={slide.blurDataURL ? "blur" : "empty"}
+              blurDataURL={slide.blurDataURL}
               className="object-cover"
               style={{ objectPosition: slide.objectPosition ?? "center" }}
             />
@@ -194,9 +214,15 @@ export function HeroCarousel({
       */}
       <div className="pointer-events-none absolute inset-0 z-10">
         <div className="mx-auto flex h-full max-w-[1320px] flex-col justify-center px-[18px] pb-[10vh] sm:px-6 lg:px-11">
+          {/*
+            Keyed on the slide, not on `active`: re-keying every tick remounted the
+            headline and replayed `TextReveal`'s word-by-word rise on a four-second
+            loop, which read as flicker rather than motion. Keying on `src` still
+            crossfades between slides, but a returning slide keeps the text it had.
+          */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={active}
+              key={slides[active]?.src ?? active}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

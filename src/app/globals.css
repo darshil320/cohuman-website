@@ -112,3 +112,76 @@ a:focus-visible {
 .animate-co-marquee {
   animation: co-marquee 26s linear infinite;
 }
+
+/*
+  JS-free reveal primitives.
+
+  Every reveal on this site used to be a `framer-motion` `initial={{opacity:0,…}}`, which
+  serializes into the server HTML as `opacity:0` inline. If hydration is slow — or never
+  happens, because JS is blocked or a chunk 404s — the visitor reads a blank page. These
+  keyframes carry the same easing framer used, and `both` fill-mode applies the `from`
+  state before the animation starts and holds the `to` state after it ends, so content
+  ends up visible with no JavaScript at all.
+
+  `co-reveal-*` are the scroll-triggered variants: an `IntersectionObserver` (or the
+  `no-js` fallback below) adds `data-shown` when the element enters the viewport. Until
+  then `opacity:0` is set by CSS, not by an inline style, so a crawler reading the raw
+  HTML still sees the text.
+*/
+@keyframes co-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--co-reveal-y, 30px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes co-word-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+  Scroll reveal. The element is hidden only while it is both un-shown AND the observer
+  is known to be running (`html.co-js`). The class is set by an inline script in the
+  document head, so if scripting is off the guard never applies and everything paints.
+*/
+.co-reveal {
+  animation: co-reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-play-state: paused;
+}
+
+.co-js .co-reveal:not([data-shown]) {
+  opacity: 0;
+}
+
+.co-reveal[data-shown] {
+  animation-play-state: running;
+}
+
+/* Word mask for the typographic headline reveal. */
+.co-word {
+  animation: co-word-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co-reveal,
+  .co-word,
+  .animate-co-rise,
+  .animate-co-fade {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-co-marquee {
+    animation: none !important;
+  }
+}

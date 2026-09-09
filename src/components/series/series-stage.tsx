@@ -78,7 +78,7 @@ export function SeriesStage() {
         alt={config.imageAlt}
         fill
         sizes="(min-width: 1024px) 62vw, 100vw"
-        priority
+        preload
         // The renders are shot on white, so multiply drops their background into the
         // studio sweep instead of laying a white panel over it.
         className="object-contain p-[4%] mix-blend-multiply"

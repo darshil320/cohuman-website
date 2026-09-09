@@ -8,6 +8,18 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Projects",
+    description:
+      "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+    url: "/projects",
+  },
+  twitter: {
+    title: "Projects",
+    description:
+      "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+  },
 };
 
 export default async function ProjectsPage() {
@@ -46,7 +58,7 @@ export default async function ProjectsPage() {
                     alt={`${project.name} — completed fit-out`}
                     fill
                     sizes="(min-width: 1024px) 64vw, 100vw"
-                    priority={index === 0}
+                    preload={index === 0}
                     className="object-cover"
                   />
                 </div>

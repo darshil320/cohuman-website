@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroCarousel } from "@/components/common/hero-carousel";
@@ -14,10 +15,17 @@ import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import { sitePhotos } from "@/lib/photos";
-import { OrgatecBanner } from "@/components/home/orgatec-banner";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
+
+/*
+  The homepage declares its own canonical rather than leaning on the root layout, which
+  no longer sets one — every route now states its own. Title and description come from
+  the layout defaults, which are already written for this page.
+*/
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const FEATURED_SLUGS = [
   "aria-task",
@@ -39,7 +47,9 @@ const FEATURED_SLUGS = [
  */
 const HERO_SLIDES = [
   {
-    src: "/hero-3.png",
+    src: "/hero-3.jpg",
+    blurDataURL:
+      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAgT/xAAfEAEAAwABBAMAAAAAAAAAAAABAAIRBQMhMVEykcH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABYRAQEBAAAAAAAAAAAAAAAAAAABEf/aAAwDAQACEQMRAD8AfnK9Fc76+yc5zBbwVdc+X5Jxs4937mDyQKPqcjVvWqVBc01hEtbPthLtTI//2Q==",
     alt: "Open-plan bench desking with task chairs and a city skyline beyond",
     // The benching is dead centre in this shot, so the crop is pulled toward the left of
     // the source, which pushes the desks right and away from the copy. A third line of
@@ -55,7 +65,9 @@ const HERO_SLIDES = [
     linkHref: "/collections/varidex",
   },
   {
-    src: "/hero-2.png",
+    src: "/hero-2.jpg",
+    blurDataURL:
+      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAANABgDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAEDBP/EACAQAAICAgICAwAAAAAAAAAAAAECAxEAIQQSEzFBYXH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANc8Uar2Xv1Hu1+sSvAIqBYvRHv5rWCzuW3v9xTcKCc95F3VaoZaV45+KZmUo1KQbIu7GGUh8ddfEp1W94YH/9k=",
     alt: "Executive desk and credenza in a corner office overlooking the city",
     // Desk and both figures already sit right of centre; this holds them there.
     objectPosition: "58% center",
@@ -65,7 +77,9 @@ const HERO_SLIDES = [
     linkHref: "/sectors/executive",
   },
   {
-    src: "/hero-1.png",
+    src: "/hero-1.jpg",
+    blurDataURL:
+      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAQCAwX/xAAgEAACAQQCAwEAAAAAAAAAAAABAgADBBEhEjEFFUFC/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8AftWy6F1LYde9/RJ+ytXu0pLxBDFSvHZMpsCcHf6EXrqB5CkQACX3qUbL3lC3ZFqUwpbGDw13CK3ozasTvAhIR//Z",
     alt: "Executive office with desk, credenza and a meeting setting along the glazed wall",
     // Desk group is centred, lounge to the right; bias left so the empty floor and the
     // glazed wall sit under the copy.

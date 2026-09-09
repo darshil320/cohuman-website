@@ -6,6 +6,7 @@ import { CtaBand } from "@/components/common/cta-band";
 import { EnquireButton } from "@/components/common/enquire-button";
 import { catalog } from "@/lib/catalog";
 import { publicFileExists } from "@/lib/public-assets";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
 
@@ -23,6 +24,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${sector.name} furniture`,
     description: sector.blurb,
+    alternates: { canonical: `/sectors/${sector.slug}` },
+    openGraph: {
+      title: `${sector.name} furniture`,
+      description: sector.blurb,
+      url: `/sectors/${sector.slug}`,
+      // First sector photograph where there is one, so a shared sector link previews
+      // that sector rather than the site-wide hero crop it would otherwise inherit.
+      ...(sector.photos[0] ? { images: [{ url: sector.photos[0].src }] } : {}),
+    },
+    twitter: {
+      title: `${sector.name} furniture`,
+      description: sector.blurb,
+      ...(sector.photos[0] ? { images: [sector.photos[0].src] } : {}),
+    },
   };
 }
 
@@ -43,8 +58,18 @@ export default async function SectorPage({ params }: Props) {
   const allProjects = await catalog.getProjects();
   const projects = allProjects.filter((project) => sector.projectSlugs.includes(project.slug));
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Sectors", path: "/sectors" },
+    { name: sector.name },
+  ]);
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+
       {/* Hero */}
       <section className="border-b border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">

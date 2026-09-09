@@ -1,18 +1,43 @@
 import type { Metadata } from "next";
 import { EnquireButton } from "@/components/common/enquire-button";
 import { catalog } from "@/lib/catalog";
+import { servicesJsonLd } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
     "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+  alternates: { canonical: "/services" },
+  openGraph: {
+    title: "Services",
+    description:
+      "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+    url: "/services",
+  },
+  twitter: {
+    title: "Services",
+    description:
+      "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+  },
 };
 
 export default async function ServicesPage() {
   const services = await catalog.getServices();
 
+  /*
+    `Service` nodes rather than an ItemList of links: services have no page of their own,
+    so a list of URLs would point every entry back at this one. Each node names its
+    provider by `@id` and states that it is quoted per project.
+  */
+  const servicesLd = servicesJsonLd(services);
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesLd) }}
+      />
+
       <section className="border-b border-co-border bg-co-bg-alt">
         <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
           <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">

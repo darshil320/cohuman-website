@@ -10,6 +10,18 @@ export const metadata: Metadata = {
   title: "Workspace Solutions",
   description:
     "Specified by the room, not the SKU — cabin, workstation, meeting and lounge furniture schedules from Cohuman.",
+  alternates: { canonical: "/solutions" },
+  openGraph: {
+    title: "Workspace Solutions",
+    description:
+      "Specified by the room, not the SKU — cabin, workstation, meeting and lounge furniture schedules from Cohuman.",
+    url: "/solutions",
+  },
+  twitter: {
+    title: "Workspace Solutions",
+    description:
+      "Specified by the room, not the SKU — cabin, workstation, meeting and lounge furniture schedules from Cohuman.",
+  },
 };
 
 const PROCESS_STEPS = [

@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: "B2B & Bulk Orders",
   description:
     "Furnishing an office, a franchise, or multiple sites at once? Get a scoped bulk-order proposal from Cohuman's B2B desk.",
+  alternates: { canonical: "/b2b" },
+  openGraph: {
+    title: "B2B & Bulk Orders",
+    description:
+      "Furnishing an office, a franchise, or multiple sites at once? Get a scoped bulk-order proposal from Cohuman's B2B desk.",
+    url: "/b2b",
+  },
+  twitter: {
+    title: "B2B & Bulk Orders",
+    description:
+      "Furnishing an office, a franchise, or multiple sites at once? Get a scoped bulk-order proposal from Cohuman's B2B desk.",
+  },
 };
 
 const REASONS = [

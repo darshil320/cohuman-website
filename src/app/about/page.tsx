@@ -15,6 +15,18 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Thirty-seven years of watching how people actually work — the story of Furniture Concepts becoming Cohuman, founded by Tushar Shah in Surat, 1989.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About",
+    description:
+      "Thirty-seven years of watching how people actually work — the story of Furniture Concepts becoming Cohuman, founded by Tushar Shah in Surat, 1989.",
+    url: "/about",
+  },
+  twitter: {
+    title: "About",
+    description:
+      "Thirty-seven years of watching how people actually work — the story of Furniture Concepts becoming Cohuman, founded by Tushar Shah in Surat, 1989.",
+  },
 };
 
 /**

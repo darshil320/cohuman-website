@@ -7,6 +7,7 @@ import { ProductQuoteActions } from "@/components/catalog/product-quote-actions"
 import { PRICE_BAND_LABEL } from "@/lib/catalog";
 import { catalog } from "@/lib/catalog";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 import { siteConfig } from "@/lib/site-config";
 import { categoryPhoto } from "@/lib/photos";
 
@@ -84,11 +85,28 @@ export default async function ProductPage({ params }: PageProps) {
     },
   };
 
+  /*
+    Machine copy of the breadcrumb trail rendered just below. The category crumb carries
+    no `item`: the catalog's category filter is client-side state rather than a query
+    parameter, so there is no URL that resolves to "just the task chairs" — and a
+    breadcrumb pointing at a page that ignores the filter is worse than an unlinked
+    crumb, which schema.org allows.
+  */
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "Catalog", path: "/catalog" },
+    { name: catLabel },
+    { name: product.name },
+  ]);
+
   return (
     <div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
 
       <div className="mx-auto flex max-w-[1320px] flex-wrap gap-2 px-[18px] pt-[22px] text-[13px] text-co-faint sm:px-6 lg:px-11">
@@ -109,7 +127,7 @@ export default async function ProductPage({ params }: PageProps) {
               alt={lead ? lead.alt : `${catLabel} by ${siteConfig.name}`}
               src={lead ? lead.src : categoryPhoto[product.cat]}
               sizes="(min-width: 1024px) 46vw, 100vw"
-              priority
+              preload
             />
           </div>
           {/*
