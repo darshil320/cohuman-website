@@ -13,13 +13,6 @@ import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
 // WebGL only exists in the browser, and three should not be in the server bundle.
 const SeriesStageScene = dynamic(() => import("./series-stage-scene"), { ssr: false });
 
-const CORNERS = [
-  "left-[18px] top-[18px] border-l border-t",
-  "right-[18px] top-[18px] border-r border-t",
-  "left-[18px] bottom-[18px] border-l border-b",
-  "right-[18px] bottom-[18px] border-r border-b",
-];
-
 export function SeriesStage() {
   const { series, config, selection, dimensionsOn, toggleDimensions, pickConfigBySlug } =
     useSeriesConfigurator();
@@ -58,10 +51,10 @@ export function SeriesStage() {
   const widthLabel = config.dia ? `Ø ${length}` : `W ${length}`;
 
   return (
+    <div className="group">
     <div
       className={cn(
-        "group relative aspect-[16/10] overflow-hidden border border-co-card-border",
-        "bg-white",
+        "relative aspect-[16/10] overflow-hidden bg-white",
         webglOk && "cursor-crosshair",
       )}
       onPointerEnter={() => setPointerActive(true)}
@@ -81,7 +74,7 @@ export function SeriesStage() {
         preload
         // The renders are shot on white, so multiply drops their background into the
         // studio sweep instead of laying a white panel over it.
-        className="object-contain p-[4%] mix-blend-multiply"
+        className="object-contain p-[6%] mix-blend-multiply"
       />
 
       {webglOk ? (
@@ -106,32 +99,6 @@ export function SeriesStage() {
         className="absolute inset-0 z-[1] cursor-zoom-in"
       />
 
-      {CORNERS.map((position) => (
-        <span
-          key={position}
-          className={`pointer-events-none absolute z-[2] h-[22px] w-[22px] border-co-border-strong ${position}`}
-        />
-      ))}
-
-      <span
-        aria-hidden
-        className={cn(
-          // Always offered on touch, where there is no hover to discover it with; on a
-          // pointer device it stays out of the frame until you go looking.
-          "pointer-events-none absolute right-0 top-0 z-[2] flex items-center gap-1.5 border-b border-l border-co-card-border bg-co-bg/85 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100",
-          pointerActive ? "text-co-ink" : "text-co-faint",
-        )}
-      >
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-          <path
-            d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
-            stroke="currentColor"
-            strokeWidth="1.4"
-          />
-        </svg>
-        Expand
-      </span>
-
       <AnimatePresence>
         {dimensionsOn ? (
           <motion.div
@@ -142,37 +109,21 @@ export function SeriesStage() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <span className="absolute bottom-[13%] left-[8%] right-[8%] h-px bg-co-green" />
-            <span className="absolute bottom-[13%] left-[8%] h-4 w-px -translate-y-2 bg-co-green" />
-            <span className="absolute bottom-[13%] right-[8%] h-4 w-px -translate-y-2 bg-co-green" />
-            <span className="absolute bottom-[13%] left-1/2 -translate-x-1/2 translate-y-[13px] whitespace-nowrap bg-co-green px-2.5 py-1 text-[11.5px] font-semibold tracking-[0.06em] text-co-cta-green-ink">
+            <span className="absolute bottom-[13%] left-[8%] right-[8%] h-px bg-co-ink/45" />
+            <span className="absolute bottom-[13%] left-[8%] h-3.5 w-px -translate-y-[7px] bg-co-ink/45" />
+            <span className="absolute bottom-[13%] right-[8%] h-3.5 w-px -translate-y-[7px] bg-co-ink/45" />
+            <span className="absolute bottom-[13%] left-1/2 -translate-x-1/2 translate-y-[11px] whitespace-nowrap bg-white px-2 text-[11px] font-semibold tracking-[0.1em] text-co-ink">
               {widthLabel}
             </span>
-            <span className="absolute bottom-[32%] right-[5.5%] top-[20%] w-px bg-co-green" />
-            <span className="absolute right-[5.5%] top-[20%] h-px w-3.5 -translate-x-[6.5px] bg-co-green" />
-            <span className="absolute bottom-[32%] right-[5.5%] h-px w-3.5 -translate-x-[6.5px] bg-co-green" />
-            <span className="absolute right-[5.5%] top-1/2 -translate-x-[calc(100%+9px)] -translate-y-1/2 whitespace-nowrap bg-co-ink px-2.5 py-1 text-[11.5px] font-semibold tracking-[0.06em] text-co-bg">
+            <span className="absolute bottom-[32%] right-[5.5%] top-[20%] w-px bg-co-ink/45" />
+            <span className="absolute right-[5.5%] top-[20%] h-px w-3 -translate-x-[5.5px] bg-co-ink/45" />
+            <span className="absolute bottom-[32%] right-[5.5%] h-px w-3 -translate-x-[5.5px] bg-co-ink/45" />
+            <span className="absolute right-[5.5%] top-1/2 -translate-x-[calc(100%+7px)] -translate-y-1/2 whitespace-nowrap bg-white px-2 text-[11px] font-semibold tracking-[0.1em] text-co-ink">
               H {series.workingHeightMm}
             </span>
           </motion.div>
         ) : null}
       </AnimatePresence>
-
-      <p className="absolute bottom-0 left-0 z-[2] m-0 border-r border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 font-mono text-[11.5px] font-semibold uppercase tracking-[0.1em] text-co-faint backdrop-blur-sm">
-        {config.code}
-      </p>
-
-      <button
-        type="button"
-        onClick={toggleDimensions}
-        aria-pressed={dimensionsOn}
-        className={cn(
-          "absolute bottom-0 right-0 z-[2] border-l border-t border-co-card-border bg-co-bg/85 px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm transition-colors hover:text-co-ink",
-          dimensionsOn ? "text-co-green" : "text-co-faint",
-        )}
-      >
-        Dimensions
-      </button>
 
       <ImageLightbox
         items={shots.map((shot) => shot.item)}
@@ -183,6 +134,49 @@ export function SeriesStage() {
         // the configuration you were last looking at.
         onIndexChange={(next) => pickConfigBySlug(shots[next].slug)}
       />
+    </div>
+
+    {/*
+      Chrome under the render, not over it. The renders are shot on white and composite
+      with `mix-blend-multiply`, so any label laid on the frame either needs a plate
+      behind it — which puts the card back — or disappears into the sweep.
+    */}
+    <div className="mt-3.5 flex items-center gap-3 border-t border-co-border pt-3 sm:gap-4">
+      <p className="m-0 min-w-0 flex-1 truncate font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-co-placeholder">
+        {config.code}
+      </p>
+
+      <span
+        aria-hidden
+        className={cn(
+          // Always legible on touch, where there is no hover to discover it with; on a
+          // pointer device it stays quiet until you go looking.
+          "hidden shrink-0 items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] transition-colors duration-200 sm:flex",
+          pointerActive ? "text-co-ink" : "text-co-placeholder",
+        )}
+      >
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+          <path
+            d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
+            stroke="currentColor"
+            strokeWidth="1.4"
+          />
+        </svg>
+        Expand
+      </span>
+
+      <button
+        type="button"
+        onClick={toggleDimensions}
+        aria-pressed={dimensionsOn}
+        className={cn(
+          "shrink-0 text-[10.5px] font-semibold uppercase tracking-[0.16em] underline-offset-[5px] transition-colors hover:text-co-ink",
+          dimensionsOn ? "text-co-ink underline" : "text-co-placeholder",
+        )}
+      >
+        Dimensions
+      </button>
+    </div>
     </div>
   );
 }

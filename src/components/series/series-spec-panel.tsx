@@ -13,10 +13,12 @@ import { useSeriesConfigurator } from "./series-context";
 
 const sizeButton = (on: boolean) =>
   cn(
-    "border px-3 py-2 text-[13.5px] font-medium tabular-nums transition-colors",
+    // A rule under the value, not a box around it: the panel reads as a spec sheet
+    // rather than a row of chips.
+    "border-b-2 bg-transparent px-1 pb-1.5 pt-1 text-[14.5px] font-medium tabular-nums transition-colors",
     on
-      ? "border-co-ink bg-co-ink text-co-bg"
-      : "border-co-border-strong bg-transparent text-co-muted hover:border-co-ink",
+      ? "border-co-ink text-co-ink"
+      : "border-transparent text-co-placeholder hover:border-co-border-strong hover:text-co-ink",
   );
 
 export function SeriesSpecPanel() {
@@ -28,8 +30,8 @@ export function SeriesSpecPanel() {
   return (
     <div className="min-w-0">
       <div className="mb-3.5 flex items-center gap-2.5">
-        <span aria-hidden className="block h-px w-[22px] bg-co-green" />
-        <p className="text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
+        <span aria-hidden className="block h-px w-[26px] bg-co-ink" />
+        <p className="text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
           {series.eyebrow}
         </p>
       </div>
@@ -44,11 +46,11 @@ export function SeriesSpecPanel() {
         {series.intro}
       </p>
 
-      <dl className="mb-6 grid grid-cols-2 gap-x-4 border-y border-co-border py-3.5">
-        <dt className="text-[11px] font-semibold uppercase tracking-[0.11em] text-co-placeholder">
+      <dl className="mb-8 grid grid-cols-2 gap-x-4 border-y border-co-border py-4">
+        <dt className="text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder">
           Configuration
         </dt>
-        <dt className="text-[11px] font-semibold uppercase tracking-[0.11em] text-co-placeholder">
+        <dt className="text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder">
           {series.codeLabel ?? "Element code"}
         </dt>
         <dd className="mt-1 font-display text-lg font-medium leading-snug tracking-[-0.02em]">
@@ -57,10 +59,10 @@ export function SeriesSpecPanel() {
         <dd className="mt-1.5 font-mono text-[13px] text-co-muted">{config.code}</dd>
       </dl>
 
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
+      <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-co-placeholder">
         {lengthFieldLabel(config)}
       </p>
-      <div className="mb-[18px] flex flex-wrap gap-1.5">
+      <div className="mb-7 flex flex-wrap gap-x-5 gap-y-2">
         {config.lens.map((value, index) => (
           <button
             key={value}
@@ -74,10 +76,10 @@ export function SeriesSpecPanel() {
         ))}
       </div>
 
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
+      <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-co-placeholder">
         {depthFieldLabel(config)}
       </p>
-      <div className="mb-6 flex flex-wrap gap-1.5">
+      <div className="mb-8 flex flex-wrap gap-x-5 gap-y-2">
         {depths.values.map((value, index) => (
           <button
             key={value}
@@ -95,14 +97,14 @@ export function SeriesSpecPanel() {
         ))}
       </div>
 
-      <div className="mb-5 border border-co-card-border bg-co-bg-alt px-4 py-4">
-        <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-co-faint">
+      <div className="mb-7 border-t border-co-ink pt-5">
+        <p className="mb-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-co-placeholder">
           Bill of components
         </p>
         <AnimatePresence mode="wait">
           <motion.ul
             key={config.slug}
-            className="grid list-none gap-1.5 p-0"
+            className="grid list-none gap-2.5 p-0"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -123,7 +125,7 @@ export function SeriesSpecPanel() {
                     </span>
                   ) : null}
                 </span>
-                <span className="min-w-[34px] text-right text-[12.5px] font-semibold text-co-green">
+                <span className="min-w-[34px] text-right font-mono text-[12.5px] font-semibold tabular-nums text-co-ink">
                   {line.qty}
                 </span>
               </li>
@@ -131,18 +133,18 @@ export function SeriesSpecPanel() {
           </motion.ul>
         </AnimatePresence>
         {config.bomNote ? (
-          <p className="mt-3 text-[12.5px] font-light leading-snug text-co-muted">
+          <p className="mt-4 text-[12.5px] font-light leading-relaxed text-co-muted">
             {config.bomNote}
           </p>
         ) : null}
         {hasInferred ? (
-          <p className="mt-3 text-[11.5px] font-light leading-snug text-co-placeholder">
+          <p className="mt-3 text-[11.5px] font-light leading-relaxed text-co-placeholder">
             {INFERRED_CODE_FOOTNOTE}
           </p>
         ) : null}
       </div>
 
-      <div className="mb-3.5 flex flex-wrap gap-2.5">
+      <div className="mb-4 flex flex-wrap items-center gap-x-7 gap-y-2.5">
         <a
           href="#enquire"
           onClick={(e) => {
@@ -161,12 +163,12 @@ export function SeriesSpecPanel() {
             document.querySelector('#anatomy')?.scrollIntoView({ behavior: 'smooth' });
             history.pushState(null, '', '#anatomy');
           }}
-          className="border border-co-border-strong px-5 py-3.5 text-[15px] font-semibold text-co-ink transition-colors hover:border-co-ink hover:bg-co-bg-alt"
+          className="px-1 py-3.5 text-[15px] font-semibold text-co-ink underline decoration-co-border-strong underline-offset-[7px] transition-colors hover:decoration-co-ink"
         >
           See the anatomy
         </a>
       </div>
-      <p className="text-[12.5px] font-light leading-snug text-co-placeholder">
+      <p className="text-[12.5px] font-light leading-relaxed text-co-placeholder">
         Price on request. Quantity, finish and installation move the number, so we quote
         rather than list.
       </p>

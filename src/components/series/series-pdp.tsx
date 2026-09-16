@@ -45,11 +45,11 @@ function SeriesPdpBody() {
   return (
     <div>
       <section className="border-b border-co-border">
-        <div className="mx-auto max-w-[1320px] px-[18px] pb-[clamp(34px,4vw,56px)] pt-[clamp(20px,3vw,40px)] sm:px-6 lg:px-11">
+        <div className="mx-auto max-w-[1320px] px-[18px] pb-[clamp(48px,6vw,88px)] pt-[clamp(20px,3vw,40px)] sm:px-6 lg:px-11">
           <Reveal>
             <nav
               aria-label="Breadcrumb"
-              className="mb-[clamp(18px,2.4vw,30px)] flex items-center gap-2 overflow-hidden whitespace-nowrap text-[12.5px] text-co-faint"
+              className="mb-[clamp(24px,3.2vw,44px)] flex items-center gap-2 overflow-hidden whitespace-nowrap text-[11.5px] uppercase tracking-[0.14em] text-co-placeholder"
             >
               <Link href="/collections" className="hover:text-co-ink">
                 Collections
@@ -63,7 +63,7 @@ function SeriesPdpBody() {
             </nav>
           </Reveal>
 
-          <div className="grid items-start gap-[clamp(26px,3.4vw,54px)] lg:grid-cols-[minmax(0,1.32fr)_minmax(300px,0.68fr)]">
+          <div className="grid items-start gap-[clamp(30px,4vw,72px)] lg:grid-cols-[minmax(0,1.32fr)_minmax(300px,0.68fr)]">
             <Reveal className="min-w-0" delay={0.1}>
               <SeriesStage />
               <SeriesConfigRail />

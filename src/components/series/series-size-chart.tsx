@@ -50,13 +50,13 @@ export function SeriesSizeChart() {
 
   return (
     <section className="border-b border-co-border">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
-        <div className="mb-[clamp(24px,3vw,38px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
+      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
+        <div className="mb-[clamp(34px,4.4vw,64px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
           <Reveal>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
+            <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
               {section.eyebrow}
             </p>
-            <h2 className="max-w-[20ch] font-display text-[clamp(28px,3.4vw,44px)] font-medium leading-[1.03] tracking-[-0.033em]">
+            <h2 className="max-w-[20ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em]">
               {section.heading}
             </h2>
           </Reveal>
@@ -76,14 +76,14 @@ export function SeriesSizeChart() {
           // The rows sit two levels down, under the header row's sibling.
           rowSelector="button"
         >
-          <div className="border border-co-border sm:overflow-x-auto">
+          <div className="sm:overflow-x-auto">
             <div className="sm:min-w-[720px]">
               {/*
                 One legend for the whole list instead of four labels on every card: at
                 fourteen rows the repeated labels outweighed the numbers they described.
               */}
               <p
-                className="border-b border-co-border bg-co-bg-alt px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-co-placeholder sm:hidden"
+                className="border-b border-co-ink pb-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder sm:hidden"
                 aria-hidden
               >
                 Length × depth mm · beam · seats
@@ -92,7 +92,7 @@ export function SeriesSizeChart() {
               <div
                 className={cn(
                   ROW_GRID,
-                  "hidden border-b border-co-border bg-co-bg-alt px-4 py-3.5 sm:grid",
+                  "hidden border-b border-co-ink pb-3.5 sm:grid",
                 )}
                 aria-hidden
               >
@@ -100,7 +100,7 @@ export function SeriesSizeChart() {
                   <span
                     key={heading}
                     className={cn(
-                      "text-[10.5px] font-semibold uppercase tracking-[0.11em] text-co-placeholder",
+                      "text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder",
                       index === HEADINGS.length - 1 && "text-right",
                     )}
                   >
@@ -121,11 +121,9 @@ export function SeriesSizeChart() {
                     aria-pressed={on}
                     onClick={() => pickConfig(index)}
                     className={cn(
-                      "block w-full border-b border-co-card-border px-4 py-3 text-left transition-colors",
-                      "sm:grid sm:grid-cols-[44px_minmax(200px,1.5fr)_1.5fr_1fr_1fr_84px] sm:items-center sm:gap-4 sm:px-4 sm:py-3.5",
-                      on
-                        ? "bg-co-bg-alt shadow-[inset_3px_0_0_var(--color-co-green)]"
-                        : "bg-co-bg hover:bg-co-bg-alt",
+                      "block w-full border-b border-co-border bg-transparent py-3.5 text-left transition-colors",
+                      "sm:grid sm:grid-cols-[44px_minmax(200px,1.5fr)_1.5fr_1fr_1fr_84px] sm:items-center sm:gap-4 sm:py-4",
+                      on ? "text-co-ink" : "text-co-muted hover:text-co-ink",
                     )}
                   >
                     {/*
@@ -139,8 +137,8 @@ export function SeriesSizeChart() {
                       <span className="flex items-baseline gap-2.5">
                         <span
                           className={cn(
-                            "shrink-0 font-mono text-[12px]",
-                            on ? "text-co-green" : "text-co-placeholder",
+                            "shrink-0 font-mono text-[12px] tabular-nums",
+                            on ? "font-semibold text-co-ink underline underline-offset-[4px]" : "text-co-placeholder",
                           )}
                         >
                           {item.n}
@@ -174,13 +172,13 @@ export function SeriesSizeChart() {
 
                     <span
                       className={cn(
-                        "hidden font-mono text-[12.5px] sm:block",
-                        on ? "text-co-green" : "text-co-placeholder",
+                        "hidden font-mono text-[12.5px] tabular-nums sm:block",
+                        on ? "font-semibold text-co-ink underline underline-offset-[4px]" : "text-co-placeholder",
                       )}
                     >
                       {item.n}
                     </span>
-                    <span className="hidden text-[15px] font-medium text-co-ink sm:block">
+                    <span className={cn("hidden text-[15px] sm:block", on ? "font-semibold text-co-ink" : "font-medium text-co-ink")}>
                       {item.name}
                     </span>
                     <span className="hidden text-sm font-light tabular-nums text-co-muted sm:block">

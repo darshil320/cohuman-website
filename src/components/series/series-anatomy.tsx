@@ -104,20 +104,21 @@ export function SeriesAnatomy() {
   }, [driftX, driftY]);
 
   return (
-    <section id="anatomy" className="scroll-mt-[82px] border-b border-co-border bg-[#F6F5F2]">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
+    <section id="anatomy" className="scroll-mt-[82px] border-b border-co-border bg-co-bg">
+      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
         <Reveal>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
+          <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
             {section.eyebrow}
           </p>
-          <h2 className="mb-[clamp(26px,3.2vw,40px)] max-w-[24ch] font-display text-[clamp(28px,3.4vw,44px)] font-medium leading-[1.03] tracking-[-0.033em]">
+          <h2 className="mb-[clamp(34px,4.4vw,60px)] max-w-[24ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em]">
             {section.heading}
           </h2>
         </Reveal>
 
         <div className="grid items-start gap-[clamp(22px,3vw,46px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)]">
+          <div className="min-w-0">
           <div
-            className="relative select-none overflow-hidden border border-co-card-border bg-white"
+            className="relative select-none overflow-hidden bg-white"
             style={{ aspectRatio: `${w} / ${h}` }}
             onPointerMove={drift}
             onPointerLeave={settle}
@@ -209,59 +210,68 @@ export function SeriesAnatomy() {
               transition={FADE}
             />
 
-            <p className="pointer-events-none absolute left-3 top-3 max-w-[calc(100%-124px)] truncate bg-co-bg/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-co-placeholder backdrop-blur-sm sm:left-3.5 sm:top-3.5 sm:text-[10.5px] sm:tracking-[0.14em]">
+          </div>
+
+          {/*
+            Caption bar. With the frame gone there is no plate to set type against, and
+            laying it over a render shot on white left it unreadable — so the caption,
+            the state line and the pull-back control sit under the stage on a hairline,
+            where they read at any zoom level.
+          */}
+          <div className="mt-3.5 flex items-start gap-4 border-t border-co-border pt-3">
+            <p className="min-w-0 flex-1 text-[10.5px] font-semibold uppercase leading-relaxed tracking-[0.2em] text-co-placeholder">
               {series.anatomyCaption}
             </p>
-
             <AnimatePresence>
               {pushedIn && (
                 <motion.button
                   key="pull-back"
                   type="button"
                   onClick={pullBack}
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   transition={FADE}
-                  className="absolute right-3 top-3 border border-co-border bg-co-bg/85 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-co-ink-soft backdrop-blur-sm transition-colors hover:border-co-ink hover:text-co-ink sm:right-3.5 sm:top-3.5 sm:px-3 sm:text-[11px] sm:tracking-[0.12em]"
+                  className="shrink-0 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-co-ink underline underline-offset-[5px] transition-colors hover:text-co-muted"
                 >
                   Whole bench
                 </motion.button>
               )}
             </AnimatePresence>
+          </div>
 
-            <AnimatePresence mode="wait">
-              {!part.focus ? (
+          <AnimatePresence mode="wait">
+            {!part.focus ? (
+              <motion.p
+                key="not-visible"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={FADE}
+                className="mt-2.5 max-w-[60ch] text-[12.5px] font-light leading-relaxed text-co-muted"
+              >
+                <span className="font-medium text-co-ink">{part.name}</span> sits inside the
+                assembly — quoted from the specification sheet, not visible in this render.
+              </motion.p>
+            ) : (
+              !pushedIn && (
                 <motion.p
-                  key="not-visible"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  key="hint"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={FADE}
-                  className="absolute bottom-3.5 left-1/2 w-max max-w-[86%] -translate-x-1/2 border border-co-border bg-co-bg/90 px-3 py-1.5 text-center text-[11.5px] font-light text-co-muted backdrop-blur-sm"
+                  className="pointer-events-none mt-2.5 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-co-placeholder"
                 >
-                  <span className="font-medium text-co-ink">{part.name}</span> sits inside the
-                  assembly — quoted from the specification sheet, not visible in this render.
+                  Tap a number to look closer
                 </motion.p>
-              ) : (
-                !pushedIn && (
-                  <motion.p
-                    key="hint"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={FADE}
-                    className="pointer-events-none absolute bottom-3.5 left-1/2 w-max -translate-x-1/2 bg-co-bg/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-co-placeholder backdrop-blur-sm"
-                  >
-                    Tap a number to look closer
-                  </motion.p>
-                )
-              )}
-            </AnimatePresence>
+              )
+            )}
+          </AnimatePresence>
           </div>
 
           <div>
-            <div className="mb-5 grid grid-cols-5 gap-1 sm:grid-cols-[repeat(auto-fill,minmax(34px,1fr))]">
+            <div className="mb-7 grid grid-cols-5 gap-1.5 sm:grid-cols-[repeat(auto-fill,minmax(34px,1fr))]">
               {series.parts.map((item, index) => {
                 const active = index === partIndex;
                 return (
@@ -272,10 +282,10 @@ export function SeriesAnatomy() {
                     aria-pressed={active}
                     onClick={() => pickPart(index)}
                     className={cn(
-                      "h-11 w-full border p-0 text-[13px] font-semibold transition-colors sm:aspect-square sm:h-auto",
+                      "flex h-10 w-full items-center justify-center rounded-full p-0 text-[12.5px] font-semibold tabular-nums transition-colors sm:aspect-square sm:h-auto",
                       active
-                        ? "border-co-ink bg-co-ink text-co-bg"
-                        : "border-co-border bg-co-bg text-co-faint hover:border-co-ink",
+                        ? "bg-co-ink text-co-bg"
+                        : "bg-transparent text-co-placeholder hover:bg-co-bg-alt hover:text-co-ink",
                     )}
                   >
                     {item.n}
@@ -284,7 +294,7 @@ export function SeriesAnatomy() {
               })}
             </div>
 
-            <div className="border border-co-border bg-white shadow-[0_1px_0_#EDEAE3,0_14px_34px_-22px_rgba(31,35,40,0.3)]">
+            <div className="border-t border-co-ink">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={part.n}
@@ -293,15 +303,18 @@ export function SeriesAnatomy() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  <div className="flex items-start gap-3.5 border-b border-co-card-border px-5 pb-4 pt-5">
-                    <span className="flex h-[30px] w-[30px] shrink-0 items-center justify-center bg-co-green text-[13.5px] font-bold text-co-cta-green-ink">
-                      {part.n}
+                  <div className="flex items-start gap-4 pb-5 pt-5">
+                    <span
+                      aria-hidden
+                      className="font-display text-[clamp(26px,3vw,38px)] font-normal leading-none tracking-[-0.04em] tabular-nums text-co-border-strong"
+                    >
+                      {String(part.n).padStart(2, "0")}
                     </span>
-                    <div>
-                      <h3 className="mb-1 font-display text-[21px] font-medium leading-tight tracking-[-0.024em]">
+                    <div className="min-w-0">
+                      <h3 className="mb-1.5 font-display text-[clamp(19px,1.8vw,24px)] font-medium leading-tight tracking-[-0.028em]">
                         {part.name}
                       </h3>
-                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-co-placeholder">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder">
                         {part.group}
                       </p>
                     </div>
@@ -310,23 +323,23 @@ export function SeriesAnatomy() {
                     {part.rows.map((row) => (
                       <div
                         key={row.k}
-                        className="grid grid-cols-[minmax(88px,0.42fr)_1fr] gap-4 border-b border-co-card-border/60 px-5 py-3"
+                        className="grid grid-cols-[minmax(88px,0.42fr)_1fr] gap-4 border-t border-co-border py-3.5"
                       >
-                        <dt className="pt-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-co-placeholder">
+                        <dt className="pt-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-co-placeholder">
                           {row.k}
                         </dt>
                         <dd className="text-[14.5px] leading-normal text-co-ink-soft">{row.v}</dd>
                       </div>
                     ))}
                   </dl>
-                  <p className="px-5 pb-4 pt-3.5 text-[13.5px] font-light leading-snug text-co-muted">
+                  <p className="border-t border-co-border pt-4 text-[13.5px] font-light leading-relaxed text-co-muted">
                     {part.why}
                   </p>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            <p className="mt-3.5 text-[12.5px] font-light leading-snug text-co-placeholder">
+            <p className="mt-5 text-[12.5px] font-light leading-relaxed text-co-placeholder">
               Pick a number to read that part&apos;s gauge and finish. Materials are quoted from
               the manufacturer&apos;s specification sheet.
             </p>

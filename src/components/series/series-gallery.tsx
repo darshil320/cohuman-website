@@ -11,6 +11,10 @@ import { Reveal } from "./reveal";
  * Products the specification photographs and details but gives no size table or
  * component schedule for. Kept out of the configurator so nothing on the page implies a
  * size or a schedule the manufacturer has not published.
+ *
+ * Presented as plates on the page ground rather than as cards: the renders are shot on
+ * white, so `mix-blend-multiply` drops their background out and a frame would only put
+ * it back.
  */
 export function SeriesGalleryStrip() {
   const { series } = useSeriesConfigurator();
@@ -20,13 +24,13 @@ export function SeriesGalleryStrip() {
 
   return (
     <section className="border-b border-co-border">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(46px,5.4vw,82px)] sm:px-6 lg:px-11">
-        <div className="mb-[clamp(24px,3vw,38px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
+      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
+        <div className="mb-[clamp(34px,4.4vw,64px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
           <Reveal>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.19em] text-co-green">
+            <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
               {gallery.eyebrow}
             </p>
-            <h2 className="max-w-[22ch] font-display text-[clamp(28px,3.4vw,44px)] font-medium leading-[1.03] tracking-[-0.033em]">
+            <h2 className="max-w-[22ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em]">
               {gallery.heading}
             </h2>
           </Reveal>
@@ -40,52 +44,52 @@ export function SeriesGalleryStrip() {
         </div>
 
         <MobilePeek peek={2} total={gallery.items.length} noun="products">
-          <ul className="grid list-none grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 p-0">
+          <ul className="grid list-none grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-x-[clamp(18px,2.6vw,44px)] gap-y-[clamp(30px,3.6vw,58px)] p-0">
             {gallery.items.map((item, index) => (
-              <Reveal
-                as="li"
-                key={item.name}
-                step={index}
-                className="border border-co-card-border bg-white"
-              >
+              <Reveal as="li" key={item.name} step={index}>
                 <button
                   type="button"
                   aria-label={`Open ${item.name} at full size`}
                   onClick={() => setOpenAt(index)}
-                  className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden bg-white p-0"
+                  className="group block w-full cursor-zoom-in bg-transparent p-0 text-left"
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.imageAlt}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, 50vw"
-                    className="object-contain p-3 mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-                  />
+                  <span className="relative block aspect-[4/3] w-full overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.imageAlt}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      className="object-contain mix-blend-multiply transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+                    />
+                  </span>
+
+                  {/* Hairline under the plate carries the hover, so nothing is framed. */}
                   <span
                     aria-hidden
-                    className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center border border-co-card-border bg-co-bg/85 text-co-faint opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-                  >
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                      <path
-                        d="M4.5 1H1v3.5M7.5 1H11v3.5M4.5 11H1V7.5M7.5 11H11V7.5"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                    </svg>
+                    className="mt-[clamp(12px,1.4vw,18px)] block h-px w-full origin-left scale-x-100 bg-co-border transition-colors duration-500 group-hover:bg-co-ink"
+                  />
+
+                  <span className="mt-3 flex items-baseline gap-3">
+                    <h3 className="font-display text-[clamp(16px,1.35vw,19px)] font-medium leading-tight tracking-[-0.025em]">
+                      {item.name}
+                    </h3>
+                    <span
+                      aria-hidden
+                      className="ml-auto shrink-0 font-mono text-[10.5px] tabular-nums text-co-placeholder"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </span>
+                  <p className="mt-1.5 text-[13px] font-light leading-relaxed text-co-muted">
+                    {item.note}
+                  </p>
                 </button>
-                <div className="border-t border-co-card-border px-4 py-3.5">
-                  <h3 className="mb-1 font-display text-[17px] font-medium tracking-[-0.02em]">
-                    {item.name}
-                  </h3>
-                  <p className="text-[13px] font-light leading-normal text-co-muted">{item.note}</p>
-                </div>
               </Reveal>
             ))}
           </ul>
         </MobilePeek>
 
-        <p className="mt-5 text-[12.5px] font-light leading-snug text-co-placeholder">
+        <p className="mt-[clamp(26px,3vw,40px)] border-t border-co-border pt-5 text-[12.5px] font-light leading-relaxed text-co-placeholder">
           Quoted from the drawing — send us the space and we size these against the rest of
           the run.
         </p>
