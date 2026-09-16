@@ -2,13 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Wordmark } from "@/components/common/wordmark";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
+import { NavDrawer, type DrawerLink, type DrawerSeries } from "@/components/layout/nav-drawer";
+
+/** How long the drawer survives the pointer leaving, so a diagonal sweep to it is forgiving. */
+const DRAWER_CLOSE_MS = 180;
+
+const DRAWER_LINKS: DrawerLink[] = [
+  { label: "All collections", href: "/collections", note: "Both series, side by side." },
+  { label: "Configure a desk", href: "/configure", note: "Pick the size and finish, get the part numbers." },
+  { label: "Workspace solutions", href: "/solutions", note: "Furnish by room type." },
+  { label: "B2B / bulk orders", href: "/b2b", note: "Floor-plate quantities on one schedule." },
+];
 
 /** Scroll distance after which the header tightens onto a hairline. */
 const CONDENSE_AT = 20;
@@ -21,9 +32,11 @@ const CONDENSE_AT = 20;
  * route is marked by a rule under the label rather than a filled chip, which is the same
  * device the configurator and the collections index use for selection.
  */
-export function SiteHeader() {
+export function SiteHeader({ series }: { series: DrawerSeries[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const closeTimer = useRef<number | null>(null);
   const { openQuote } = useQuoteDialog();
   const pathname = usePathname();
 
@@ -33,6 +46,7 @@ export function SiteHeader() {
   if (renderedPath !== pathname) {
     setRenderedPath(pathname);
     setMobileOpen(false);
+    setDrawerOpen(false);
   }
 
   useEffect(() => {
@@ -52,6 +66,35 @@ export function SiteHeader() {
     };
   }, [mobileOpen]);
 
+  /*
+    A short close delay, so moving the pointer diagonally from the trigger into the panel
+    does not snap it shut on the way. Opening is immediate — a hover delay on open reads
+    as lag.
+  */
+  const openDrawer = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setDrawerOpen(false), DRAWER_CLOSE_MS);
+  };
+
+  useEffect(() => () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+  }, []);
+
+  // Escape closes it, which is the expected key for a hover-revealed panel.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDrawerOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [drawerOpen]);
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
@@ -70,28 +113,44 @@ export function SiteHeader() {
           <Wordmark className="text-[17px] text-co-ink transition-opacity duration-300 group-hover:opacity-60 sm:text-[19px]" />
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-7 lg:flex">
+        {/*
+          Nav labels are mono and tracked out, matching the part-code language the pages
+          use. The rule under a label grows from the left on hover as well as on the
+          active route, so the header moves the same way the section links do.
+        */}
+        <nav className="ml-auto hidden items-center gap-[clamp(18px,2vw,30px)] lg:flex">
           {primaryNav.map((item) => {
             const active = isActive(item.href);
+            const isCollections = item.href === "/collections";
             return (
-              <Link
+              <div
                 key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "relative py-1 text-[13.5px] font-medium transition-colors duration-200",
-                  active ? "text-co-ink" : "text-co-muted hover:text-co-ink",
-                )}
+                className="relative"
+                onMouseEnter={isCollections ? openDrawer : closeDrawer}
+                onMouseLeave={isCollections ? closeDrawer : undefined}
               >
-                {item.label}
-                <span
-                  aria-hidden
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  aria-expanded={isCollections ? drawerOpen : undefined}
+                  onFocus={isCollections ? openDrawer : undefined}
                   className={cn(
-                    "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
-                    active ? "scale-x-100" : "scale-x-0",
+                    "group relative block py-2 font-mono text-[11px] font-medium uppercase tracking-[0.18em] transition-colors duration-200",
+                    active || (isCollections && drawerOpen)
+                      ? "text-co-ink"
+                      : "text-co-muted hover:text-co-ink",
                   )}
-                />
-              </Link>
+                >
+                  {item.label}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-co-ink transition-transform duration-300 ease-[var(--ease-co)] group-hover:scale-x-100",
+                      active || (isCollections && drawerOpen) ? "scale-x-100" : "scale-x-0",
+                    )}
+                  />
+                </Link>
+              </div>
             );
           })}
         </nav>
@@ -99,14 +158,14 @@ export function SiteHeader() {
         <div className="flex items-center gap-5 sm:gap-6">
           <Link
             href="/contact"
-            className="hidden text-[13.5px] font-medium text-co-muted transition-colors hover:text-co-ink lg:inline-block"
+            className="hidden font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-co-muted transition-colors hover:text-co-ink lg:inline-block"
           >
             Contact
           </Link>
           <button
             type="button"
             onClick={() => openQuote()}
-            className="hidden border-b-2 border-co-ink pb-1 text-[13.5px] font-semibold text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted min-[380px]:inline-flex"
+            className="hidden border-b-2 border-co-ink pb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted min-[380px]:inline-flex"
           >
             Request a Quote
           </button>
@@ -134,6 +193,15 @@ export function SiteHeader() {
         </div>
       </div>
 
+      <div onMouseEnter={openDrawer} onMouseLeave={closeDrawer}>
+        <NavDrawer
+          open={drawerOpen}
+          series={series}
+          links={DRAWER_LINKS}
+          onClose={() => setDrawerOpen(false)}
+        />
+      </div>
+
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -144,41 +212,61 @@ export function SiteHeader() {
             style={{ top: HEADER_HEIGHT }}
             className="fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg lg:hidden"
           >
-            <nav className="co-shell flex flex-col pt-6">
-              {fullNav.map((item, index) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.035,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    className="group flex items-baseline gap-4 border-b border-co-border py-4"
+            {/*
+              Flush left against the page gutter, with the index in its own fixed column
+              so every label starts on the same vertical. The rules run the full width of
+              the shell rather than stopping under the text — the overlay reads as a
+              contents page, which is what the numbering implies.
+            */}
+            <nav className="co-shell flex flex-col pt-[clamp(20px,5vh,44px)]">
+              {fullNav.map((item, index) => {
+                const active = isActive(item.href);
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.035,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
                   >
-                    <span
-                      aria-hidden
-                      className="font-mono text-[10.5px] tabular-nums text-co-placeholder"
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      aria-current={active ? "page" : undefined}
+                      className="group grid grid-cols-[2rem_1fr_auto] items-baseline gap-x-4 border-b border-co-border py-[clamp(12px,2vh,18px)]"
                     >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={cn(
-                        "co-h3 transition-colors",
-                        isActive(item.href) ? "text-co-ink" : "text-co-ink group-hover:text-co-muted",
-                      )}
-                    >
-                      {item.label}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "font-mono text-[10.5px] tabular-nums transition-colors",
+                          active ? "text-co-ink" : "text-co-placeholder",
+                        )}
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className={cn(
+                          "font-display text-[clamp(21px,5.6vw,30px)] font-medium leading-tight tracking-[-0.03em] transition-colors",
+                          active ? "text-co-ink" : "text-co-ink group-hover:text-co-muted",
+                        )}
+                      >
+                        {item.label}
+                      </span>
+                      {/* Marks the route you are on without a second colour or a chip. */}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "block h-px w-6 self-center bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                          active ? "scale-x-100" : "scale-x-0",
+                        )}
+                      />
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
 
             <motion.div
@@ -189,7 +277,7 @@ export function SiteHeader() {
                 delay: fullNav.length * 0.035 + 0.05,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="co-shell mt-auto flex flex-col gap-5 py-10"
+              className="co-shell mt-auto flex flex-col gap-5 py-[clamp(24px,5vh,44px)]"
             >
               <button
                 type="button"
@@ -197,14 +285,14 @@ export function SiteHeader() {
                   setMobileOpen(false);
                   openQuote();
                 }}
-                className="w-full bg-co-ink py-4 text-[15px] font-semibold text-co-bg transition-colors hover:bg-co-green-light"
+                className="w-full bg-co-ink py-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-bg transition-colors hover:bg-co-green-light"
               >
                 Request a Quote
               </button>
               <Link
                 href="/contact"
                 onClick={() => setMobileOpen(false)}
-                className="w-full border-b-2 border-co-ink pb-2 text-center text-[15px] font-semibold text-co-ink"
+                className="self-start border-b-2 border-co-ink pb-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink"
               >
                 Contact showroom
               </Link>

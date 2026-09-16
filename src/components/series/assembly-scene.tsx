@@ -35,11 +35,13 @@ const LEG_FOOT_R = 0.019;
 /** Middle leg is the heavier 2.0mm pipe, and runs straight rather than splayed. */
 const MID_LEG_R = 0.028;
 /**
- * VARIDEX post: the part list calls it 40 × 25mm, but in the renders it reads square and
- * heavier than that, standing right at the corner of the top. Drawn to the render.
+ * VARIDEX post: a round tube, slimmer than the PROS leg, finished with a stepped collar
+ * and a dark cap at the floor — the detail in the manufacturer's close-up.
  */
-const POST_W = 0.05;
-const POST_D = 0.05;
+const POST_R = 0.019;
+const POST_COLLAR_R = 0.023;
+const POST_COLLAR_H = 0.03;
+const POST_CAP_H = 0.012;
 /** VARIDEX ties its legs with a perimeter rail rather than a pair of side bars. */
 const RAIL = 0.035;
 /**
@@ -129,20 +131,44 @@ function CornerLeg({
 }) {
   if (chassis === "straight-post") {
     /*
-      VARIDEX: a vertical rectangular post, 40 × 25mm, no lean and no taper. It drops
-      straight down from the top rather than swinging in.
+      VARIDEX: a slim vertical round tube, no lean and no taper, dropping straight down
+      from the underside of the top. The floor end steps out to a slightly wider collar
+      and finishes in a dark cap, which is the detail in the close-up — a plain square
+      post missed both the section and that foot.
     */
+    const shaft = h - POST_COLLAR_H - POST_CAP_H - 0.012;
     return (
       <group position={[0, h, 0]} rotation={[0, 0, (1 - legT) * 0.9 * dir]}>
-        <mesh position={[0, -h / 2 - 0.006, 0]} castShadow>
-          {/* Stops just under the top rather than passing through its surface. */}
-          <boxGeometry args={[POST_W, h - 0.012, POST_D]} />
+        {/* Shaft — stops just under the top rather than passing through its surface. */}
+        <mesh position={[0, -0.012 - shaft / 2, 0]} castShadow>
+          <cylinderGeometry args={[POST_R, POST_R, shaft, 32]} />
           <meshStandardMaterial
             color={color}
             roughness={0.42}
             metalness={0.28}
             envMapIntensity={0.6}
           />
+        </mesh>
+        {/* Collar, stepping out just above the floor. */}
+        <mesh
+          position={[0, -0.012 - shaft - POST_COLLAR_H / 2, 0]}
+          castShadow
+        >
+          <cylinderGeometry args={[POST_COLLAR_R, POST_COLLAR_R, POST_COLLAR_H, 32]} />
+          <meshStandardMaterial
+            color={color}
+            roughness={0.42}
+            metalness={0.28}
+            envMapIntensity={0.6}
+          />
+        </mesh>
+        {/* Dark cap at the floor. */}
+        <mesh
+          position={[0, -0.012 - shaft - POST_COLLAR_H - POST_CAP_H / 2, 0]}
+          castShadow
+        >
+          <cylinderGeometry args={[POST_COLLAR_R, POST_COLLAR_R * 0.94, POST_CAP_H, 32]} />
+          <meshStandardMaterial color="#1E2124" roughness={0.75} metalness={0.08} />
         </mesh>
       </group>
     );

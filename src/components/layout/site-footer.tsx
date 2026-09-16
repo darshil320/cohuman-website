@@ -27,7 +27,7 @@ export function SiteFooter() {
                 purely because a charcoal raster wordmark vanished on near-black. */}
             <Wordmark className="mb-7 block text-[22px] text-co-panel-fg" />
             <p className="mb-8 max-w-[32ch] font-display text-[clamp(20px,2vw,28px)] font-medium leading-[1.14] tracking-[-0.03em] text-co-panel-fg">
-              People-first office furniture, made in Surat since {siteConfig.foundedYear}.
+              Precision-made modular office furniture, built in Surat.
             </p>
             <button
               type="button"
@@ -87,7 +87,7 @@ export function SiteFooter() {
             © {year} Cohuman · {siteConfig.legalName}, Surat
           </span>
           <span>
-            Founded by {siteConfig.founder}, {siteConfig.foundedYear}
+            Founded by {siteConfig.founder}
           </span>
         </div>
       </div>

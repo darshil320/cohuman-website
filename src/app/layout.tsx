@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import { MotionConfig } from "framer-motion";
+import { RevealObserver } from "@/components/ui/reveal-observer";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -11,6 +12,9 @@ import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { QuoteDialogProvider } from "@/components/providers/quote-dialog-provider";
 import { ORGANIZATION_ID } from "@/lib/seo/structured-data";
 import { siteConfig } from "@/lib/site-config";
+import { ALL_SERIES } from "@/lib/series";
+import { collectionPhoto } from "@/lib/photos";
+import type { DrawerSeries } from "@/components/layout/nav-drawer";
 
 /*
   Both families are variable fonts, so `weight` is deliberately absent: it applies only
@@ -39,7 +43,7 @@ export const metadata: Metadata = {
     template: `%s · ${siteConfig.name}`,
   },
   description:
-    "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, manufactured in Surat since 1989.",
+    "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, designed and manufactured in Surat.",
   /*
     No `alternates` here on purpose. Metadata merges down from the layout, so a
     `canonical: "/"` at this level was inherited by every route that did not set its
@@ -138,6 +142,25 @@ export const metadata: Metadata = {
   Everything derives from `siteConfig`, so a corrected phone number or a new office
   updates the markup without a second edit here.
 */
+/*
+  The Collections drawer's plates, read off the series specifications rather than written
+  as copy: the configuration count and the millimetre span in the header can never drift
+  from what /collections/<slug> actually offers.
+*/
+const DRAWER_SERIES: DrawerSeries[] = ALL_SERIES.map((series) => {
+  const lens = series.configs.flatMap((config) => config.lens);
+  return {
+    slug: series.slug,
+    wordmark: series.wordmark,
+    name: series.name,
+    kicker: series.eyebrow,
+    blurb: series.promise,
+    image: collectionPhoto[series.slug],
+    configs: series.configs.length,
+    span: `${Math.min(...lens)}–${Math.max(...lens)} mm`,
+  };
+});
+
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 
 const jsonLd = {
@@ -153,7 +176,6 @@ const jsonLd = {
       image: `${siteConfig.url}/og.jpg`,
       description:
         "Office furniture manufacturer and fit-out contractor in Surat, Gujarat. Desking systems, ergonomic seating, conference tables, storage and reception furniture, supplied on quotation.",
-      foundingDate: String(siteConfig.foundedYear),
       founder: { "@type": "Person", name: siteConfig.founder },
       email: siteConfig.email,
       telephone: siteConfig.phoneDisplay,
@@ -170,10 +192,6 @@ const jsonLd = {
         { "@type": "State", name: "Maharashtra" },
         { "@type": "Country", name: "India" },
       ],
-      brand: siteConfig.brandsRepresented.map((brand) => ({
-        "@type": "Brand",
-        name: brand,
-      })),
       contactPoint: siteConfig.emails.map((inbox) => ({
         "@type": "ContactPoint",
         contactType: inbox.label,
@@ -241,7 +259,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${figtree.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${figtree.variable} h-full antialiased`}
+      /*
+        The head script below adds `co-js` before React hydrates, so the client's class
+        list legitimately differs from the server's. Without this, React reports a
+        hydration mismatch on every page load.
+      */
+      suppressHydrationWarning
+    >
+      <head>
+        {/*
+          Marks scripting as available, before first paint.
+
+          Every scroll reveal on the site hides itself with `.co-js .co-reveal:not([data-shown])`
+          — a rule that can only match once this class is set. So if JS is blocked, a chunk
+          404s, or the browser is a crawler, nothing is ever hidden and the whole page
+          paints as written. This has to be a blocking script in the head rather than an
+          effect: set after first paint, it would make content appear and then flash out.
+        */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `document.documentElement.classList.add('co-js')` }}
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-co-bg text-co-ink">
         <script
           type="application/ld+json"
@@ -262,8 +303,10 @@ export default function RootLayout({
           the browser and breaks hydration.
         */}
         <MotionConfig reducedMotion="user">
+          {/* One IntersectionObserver for every `[data-reveal]` on the page. */}
+          <RevealObserver />
           <QuoteDialogProvider>
-            <SiteHeader />
+            <SiteHeader series={DRAWER_SERIES} />
             <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
               {children}
             </main>

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ALL_OPTIONS } from "@/lib/configurator";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
-import { TextReveal } from "@/components/ui/text-reveal";
+import { KineticHeading } from "@/components/ui/kinetic-heading";
+import { SpecLabel } from "@/components/ui/spec-label";
 
 /**
  * Configurator teaser.
@@ -31,9 +32,11 @@ export function ConfigureTeaser() {
       <div className="co-shell co-section">
         <div className="grid grid-cols-1 items-end gap-x-[clamp(28px,4vw,80px)] gap-y-8 lg:grid-cols-[1.25fr_1fr]">
           <Reveal>
-            <p className="co-eyebrow mb-4">Configurator</p>
+            <SpecLabel rule className="mb-6">
+              04 / Configure
+            </SpecLabel>
             <h2 className="co-h2 max-w-[17ch]">
-              <TextReveal>Specify the table before you ask the price.</TextReveal>
+              <KineticHeading>Specify the table before you ask the price.</KineticHeading>
             </h2>
           </Reveal>
           <Reveal delay={0.1} className="lg:justify-self-end">
@@ -62,17 +65,27 @@ export function ConfigureTeaser() {
           </Reveal>
         </div>
 
-        <StaggerContainer className="mt-[clamp(44px,5.4vw,84px)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-[clamp(20px,2.4vw,44px)]">
+        {/*
+          One continuous rule across all four steps, with a marker sitting on it at each
+          one — a scale, rather than four separately bordered columns. The rule is drawn
+          only from `lg`, where the four steps actually share a row.
+        */}
+        <div className="relative mt-[clamp(44px,5.4vw,84px)]">
+          <span aria-hidden className="absolute inset-x-0 top-[7px] hidden h-px bg-co-border lg:block" />
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-[clamp(20px,2.4vw,44px)]">
           {choices.map((choice) => (
             <StaggerItem
               key={choice.n}
-              className="flex flex-col border-t border-co-border py-[clamp(20px,2.4vw,32px)]"
+              className="relative flex flex-col border-t border-co-border py-[clamp(20px,2.4vw,32px)] lg:border-t-0 lg:pt-0"
             >
               <span
                 aria-hidden
-                className="mb-[clamp(24px,3vw,44px)] font-display text-[clamp(22px,2.4vw,32px)] font-normal leading-none tracking-[-0.04em] tabular-nums text-co-border-strong"
+                className="mb-[clamp(20px,2.6vw,36px)] flex items-center gap-2.5"
               >
-                {choice.n}
+                <span className="hidden h-[15px] w-[15px] shrink-0 bg-co-bg ring-1 ring-co-border-strong lg:block" />
+                <span className="font-mono text-[10.5px] tracking-[0.16em] tabular-nums text-co-placeholder">
+                  {choice.n}
+                </span>
               </span>
               <p className="co-eyebrow mb-2.5">{choice.label}</p>
               <p className="max-w-[26ch] text-[13.5px] font-light leading-relaxed text-co-muted">
@@ -81,6 +94,7 @@ export function ConfigureTeaser() {
             </StaggerItem>
           ))}
         </StaggerContainer>
+        </div>
       </div>
     </section>
   );

@@ -15,7 +15,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: `${siteConfig.name} — ${siteConfig.tagline}`,
     short_name: siteConfig.name,
     description:
-      "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, manufactured in Surat since 1989.",
+      "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, designed and manufactured in Surat.",
     start_url: "/",
     display: "browser",
     // Matches `--color-co-bg` / `--color-co-green` in globals.css.

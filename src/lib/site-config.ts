@@ -29,9 +29,8 @@ function resolveSiteUrl(): string {
 export const siteConfig = {
   name: "Cohuman",
   legalName: "Cohuman Modularr LLP",
-  tagline: "People-first office furniture, crafted since 1989",
+  tagline: "Precision-made modular office furniture",
   founder: "Tushar Shah",
-  foundedYear: 1989,
   url: resolveSiteUrl(),
   /** General inbox. Every website lead lands here — see `emails` for the full set. */
   email: "sales.cohuman@gmail.com",
@@ -58,7 +57,6 @@ export const siteConfig = {
   hours: "Open · Closes 8 pm",
   mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
   enquiryTurnaround: "two working days",
-  brandsRepresented: ["Herman Miller", "Steelcase", "Humanscale", "Bristol", "Hunter Douglas"],
   /**
    * Offices, each with the person who actually answers for it. `phoneDisplay`/`phoneE164`
    * are omitted where the number has not been supplied yet — the UI drops the call link

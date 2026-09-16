@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { SERIES_BAR_HEIGHT } from "@/lib/layout";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
@@ -16,18 +17,24 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
     <AnimatePresence>
       {visible ? (
         <motion.div
-          className="fixed bottom-0 left-0 right-0 z-40 bg-co-panel/95 backdrop-blur-md"
+          style={{ height: SERIES_BAR_HEIGHT }}
+          className="fixed bottom-0 left-0 right-0 z-40 border-t border-co-panel-border bg-co-panel/95 backdrop-blur-md"
           initial={{ y: "100%", opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "100%", opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.2, 0.9, 0.25, 1] }}
         >
-          <div className="mx-auto flex max-w-[1320px] items-center gap-4 px-[18px] py-3 pr-[86px] sm:px-6 lg:px-11 lg:pr-[96px]">
+          {/*
+            Fixed height, matching `SERIES_BAR_HEIGHT`, because the assembly section
+            reserves exactly that much room under its pinned stage. A bar that grows with
+            its content would start clipping the 3D model again.
+          */}
+          <div className="mx-auto flex h-full max-w-[1320px] items-center gap-3 px-[18px] pr-[76px] sm:gap-4 sm:px-6 sm:pr-[86px] lg:px-11 lg:pr-[96px]">
             <div className="min-w-0 flex-1">
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-co-panel-faint">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-co-panel-faint">
                 Specifying {series.wordmark}
               </p>
-              <p className="truncate text-[14.5px] font-medium text-co-panel-fg">
+              <p className="mt-1 truncate text-[14px] font-medium text-co-panel-fg">
                 {config.name} — {size}
               </p>
             </div>
@@ -41,7 +48,7 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
                 document.querySelector('#enquire')?.scrollIntoView({ behavior: 'smooth' });
                 history.pushState(null, '', '#enquire');
               }}
-              className="shrink-0 whitespace-nowrap bg-co-bg px-5 py-3 text-[14.5px] font-semibold text-co-ink transition-colors hover:bg-co-bg-alt"
+              className="shrink-0 whitespace-nowrap bg-co-bg px-5 py-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink transition-colors hover:bg-co-bg-alt"
             >
               Enquire
             </a>

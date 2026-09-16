@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
-import { TextReveal } from "@/components/ui/text-reveal";
+import { KineticHeading } from "@/components/ui/kinetic-heading";
+import { SpecLabel } from "@/components/ui/spec-label";
 import type { Space } from "@/lib/catalog";
 import { spacePhoto } from "@/lib/photos";
 
@@ -23,9 +24,11 @@ export function SpaceTiles({ spaces }: { spaces: Space[] }) {
     <section className="bg-co-panel text-co-panel-fg">
       <div className="co-shell co-section">
         <Reveal>
-          <p className="co-eyebrow mb-4 text-co-panel-faint">Furnish by space</p>
+          <SpecLabel tone="dark" rule className="mb-6">
+            03 / By space
+          </SpecLabel>
           <h2 className="co-h2 mb-[clamp(38px,5vw,76px)] max-w-[22ch] text-co-panel-fg">
-            <TextReveal>Tell us the room. We&apos;ll tell you what goes in it.</TextReveal>
+            <KineticHeading>Tell us the room. We&apos;ll tell you what goes in it.</KineticHeading>
           </h2>
         </Reveal>
 

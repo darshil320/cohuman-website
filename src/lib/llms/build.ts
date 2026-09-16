@@ -28,11 +28,11 @@ function url(path: string): string {
 }
 
 /** The identity block both files open with, so a model reads the same company twice. */
-function identityLines(yearsInBusiness: number): string[] {
+function identityLines(): string[] {
   return [
     `# ${siteConfig.name}`,
     "",
-    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and turnkey fit-out contractor in Surat, Gujarat, India, founded ${siteConfig.foundedYear} by ${siteConfig.founder} (${yearsInBusiness} years). Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
+    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and turnkey fit-out contractor in Surat, Gujarat, India, founded by ${siteConfig.founder}. Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture, with metal bases fabricated in-house. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
     "",
   ];
 }
@@ -88,10 +88,8 @@ export async function buildLlmsTxt(): Promise<string> {
       catalog.getSpaces(),
     ]);
 
-  const yearsInBusiness = new Date().getFullYear() - siteConfig.foundedYear;
-
   const lines = [
-    ...identityLines(yearsInBusiness),
+    ...identityLines(),
     ...guidanceLines(),
 
     "## Desking series",
@@ -301,10 +299,8 @@ export async function buildLlmsFullTxt(): Promise<string> {
       catalog.getSpaces(),
     ]);
 
-  const yearsInBusiness = new Date().getFullYear() - siteConfig.foundedYear;
-
   const lines = [
-    ...identityLines(yearsInBusiness),
+    ...identityLines(),
     "This is the expanded companion to /llms.txt: the same site with its content inlined, so a question about a size, a material or a lead time can be answered from this file alone.",
     "",
     ...guidanceLines(),
@@ -312,12 +308,12 @@ export async function buildLlmsFullTxt(): Promise<string> {
     "## Company",
     "",
     `- Legal entity: ${siteConfig.legalName}`,
-    `- Founded: ${siteConfig.foundedYear} by ${siteConfig.founder}, in Surat, Gujarat, India`,
-    `- Trading name: ${siteConfig.name}, previously Furniture Concepts`,
+    `- Founded by: ${siteConfig.founder}, in Surat, Gujarat, India`,
+    `- Trading name: ${siteConfig.name}`,
     `- Address: ${siteConfig.address.line1}, ${siteConfig.address.line2}`,
     `- Email: ${siteConfig.email}`,
     ...siteConfig.emails.map((inbox) => `- ${inbox.label}: ${inbox.address}`),
-    `- Brands represented: ${siteConfig.brandsRepresented.join(", ")}`,
+    "- Manufacturing: metal bases fabricated in-house on European CNC machinery; modular systems built to technical drawings",
     "- Areas served: Gujarat and Maharashtra primarily, India nationally",
     `- Quote turnaround: ${siteConfig.enquiryTurnaround}`,
     "",

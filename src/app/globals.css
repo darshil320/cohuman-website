@@ -60,6 +60,16 @@
 
   /* Motion. One easing and two durations across the site. */
   --ease-co: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /*
+    Drawing-sheet hairlines. `--color-co-border` is the structural border; these are the
+    fainter measurement ticks that sit in the margins, and they are deliberately a step
+    back from it so a tick rail never competes with a real rule.
+  */
+  --color-co-tick: #cfcac0;
+  --color-co-tick-dark: #33363b;
+  --co-tick-gap: 12px;
+  --co-tick-len: 5px;
 }
 
 /*
@@ -163,6 +173,13 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-wrap: pretty;
+  /*
+    Nothing may scroll the page sideways. The manifest ticker's track is deliberately
+    wider than the viewport, so this is a standing guard rather than a fix for one
+    element. `clip` rather than `hidden`, because `overflow: hidden` on the body would
+    break `position: sticky` in the sections that rely on it.
+  */
+  overflow-x: clip;
 }
 
 input:focus-visible,
@@ -172,6 +189,15 @@ button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--color-co-green-light);
   outline-offset: 1px;
+}
+
+/*
+  The ink outline is all but invisible against the near-black panel, so dark sections
+  restate it in the panel foreground. Without this, keyboard focus is effectively
+  untrackable on every `bg-co-panel` chapter.
+*/
+.bg-co-panel :focus-visible {
+  outline-color: var(--color-co-panel-fg);
 }
 
 ::placeholder {
@@ -208,19 +234,6 @@ a:focus-visible {
 
 .animate-co-fade {
   animation: co-fade 0.6s ease both;
-}
-
-@keyframes co-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-co-marquee {
-  animation: co-marquee 26s linear infinite;
 }
 
 /*
@@ -276,22 +289,179 @@ a:focus-visible {
   animation-play-state: running;
 }
 
+/*
+  Stagger without JavaScript.
+
+  Each item's delay is its index times the container's `--co-stagger`. The index comes
+  from `nth-child` rather than being counted in JS, so a list of any length staggers
+  without its parent enumerating children. Twelve is plenty — past that the delay is long
+  enough that the reader has scrolled anyway, so later items all share the last step.
+*/
+.co-stagger-item {
+  animation-delay: calc(var(--co-i, 0) * var(--co-stagger, 0.1s));
+}
+
+.co-stagger-item:nth-child(1) { --co-i: 0; }
+.co-stagger-item:nth-child(2) { --co-i: 1; }
+.co-stagger-item:nth-child(3) { --co-i: 2; }
+.co-stagger-item:nth-child(4) { --co-i: 3; }
+.co-stagger-item:nth-child(5) { --co-i: 4; }
+.co-stagger-item:nth-child(6) { --co-i: 5; }
+.co-stagger-item:nth-child(7) { --co-i: 6; }
+.co-stagger-item:nth-child(8) { --co-i: 7; }
+.co-stagger-item:nth-child(9) { --co-i: 8; }
+.co-stagger-item:nth-child(10) { --co-i: 9; }
+.co-stagger-item:nth-child(11) { --co-i: 10; }
+.co-stagger-item:nth-child(n + 12) { --co-i: 11; }
+
 /* Word mask for the typographic headline reveal. */
 .co-word {
   animation: co-word-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/*
+  The manifest ticker. The track carries the list twice, so -50% lands exactly on the
+  seam and the loop is invisible. Slow on purpose: this is a readable manifest, not a
+  news crawl.
+*/
+@keyframes co-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-co-ticker {
+  animation: co-ticker 90s linear infinite;
+}
+
+/*
+  Kinetic headline, without JavaScript.
+
+  Each word is wrapped in an `overflow-hidden` span and lifted from behind it, staggered
+  by its index. Deliberately animates `transform` ONLY — never opacity — so the words are
+  painted, readable and measurable from the first frame. That is what lets the headline
+  stay the LCP element instead of waiting on hydration, and what a crawler reads.
+*/
+.co-kinetic-word {
+  animation: co-word-rise 0.75s var(--ease-co) both;
+  animation-delay: calc(var(--co-i, 0) * 40ms);
+}
+
+/*
+  Drawing-sheet primitives.
+
+  `co-tick-rail` is the coordinate margin: one element, one repeating gradient, no SVG
+  and no DOM per tick. `co-rule` is a dimension line that draws itself left to right, and
+  `co-clip` wipes an image up while its contents counter-scale, so the crop never shows
+  an edge. All three rest in their FINISHED state and are only held back while
+  `html.co-js` confirms the observer is running — no script, no hidden content.
+*/
+.co-tick-rail {
+  --tick: var(--color-co-tick);
+}
+
+.co-tick-rail[data-axis="x"] {
+  height: var(--co-tick-len);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--tick) 0 1px,
+    transparent 1px var(--co-tick-gap)
+  );
+}
+
+.co-tick-rail[data-axis="y"] {
+  width: var(--co-tick-len);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--tick) 0 1px,
+    transparent 1px var(--co-tick-gap)
+  );
+}
+
+.bg-co-panel .co-tick-rail {
+  --tick: var(--color-co-tick-dark);
+}
+
+@keyframes co-rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.co-rule {
+  transform-origin: left center;
+  animation: co-rule-draw 0.9s var(--ease-co) both;
+  animation-play-state: paused;
+}
+
+.co-js .co-rule:not([data-shown]) {
+  transform: scaleX(0);
+}
+
+.co-rule[data-shown] {
+  animation-play-state: running;
+}
+
+@keyframes co-clip-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes co-clip-scale {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.co-clip {
+  animation: co-clip-in 1.1s var(--ease-co) both;
+  animation-play-state: paused;
+}
+
+.co-clip > * {
+  animation: co-clip-scale 1.4s var(--ease-co) both;
+  animation-play-state: paused;
+}
+
+.co-js .co-clip:not([data-shown]) {
+  clip-path: inset(0 0 100% 0);
+}
+
+.co-clip[data-shown],
+.co-clip[data-shown] > * {
+  animation-play-state: running;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .co-reveal,
   .co-word,
+  .co-kinetic-word,
+  .co-rule,
+  .co-clip,
+  .co-clip > *,
   .animate-co-rise,
   .animate-co-fade {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
   }
 
-  .animate-co-marquee {
+  /* The ticker holds still rather than snapping to its start. */
+  .animate-co-ticker {
     animation: none !important;
   }
 }

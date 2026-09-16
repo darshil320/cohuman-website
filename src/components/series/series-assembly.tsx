@@ -7,6 +7,7 @@ import { useReducedMotion } from "framer-motion";
 import { optionsForSeries } from "@/lib/configurator";
 import { selectedDepth, selectedLength } from "@/lib/series";
 import { cn } from "@/lib/utils";
+import { HEADER_HEIGHT, SERIES_BAR_HEIGHT } from "@/lib/layout";
 import { useSeriesConfigurator } from "./series-context";
 import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
 import { ASSEMBLY_PARTS } from "./assembly-scene";
@@ -161,10 +162,23 @@ export function SeriesAssembly() {
       className="relative border-b border-co-border"
       style={{ height: `${SCROLL_LENGTH * 100}vh` }}
     >
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <div className="co-shell grid w-full grid-cols-1 items-center gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.52fr)] lg:gap-x-[clamp(28px,4vw,72px)]">
+      {/*
+        The pinned stage stops short of the sticky enquiry bar. Without the reserved
+        space the bar — which is `fixed`, so it is outside this flow — sat on top of the
+        canvas and clipped the bottom of the model just as it assembled.
+      */}
+      <div
+        className="sticky flex flex-col justify-center overflow-hidden"
+        style={{
+          // Pinned below the fixed header and above the sticky bar, so neither covers the
+          // stage or the part index.
+          top: HEADER_HEIGHT,
+          height: `calc(100svh - ${HEADER_HEIGHT + SERIES_BAR_HEIGHT}px)`,
+        }}
+      >
+        <div className="co-shell grid w-full grid-cols-1 items-center gap-y-5 sm:gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.52fr)] lg:gap-x-[clamp(28px,4vw,72px)]">
           {/* Stage */}
-          <div className="relative order-2 aspect-[4/3] w-full lg:order-1 lg:aspect-[16/11]">
+          <div className="relative order-1 aspect-[16/10] w-full sm:aspect-[4/3] lg:aspect-[16/11]">
             {webglOk && !reduceMotion ? (
               <WebglBoundary
                 fallback={
@@ -207,13 +221,13 @@ export function SeriesAssembly() {
           </div>
 
           {/* Part index */}
-          <div className="order-1 min-w-0 lg:order-2">
-            <p className="co-eyebrow mb-4">Assembly</p>
-            <h2 className="co-h2 mb-6 max-w-[16ch]">
+          <div className="order-2 min-w-0">
+            <p className="co-eyebrow mb-2.5 lg:mb-4">Assembly</p>
+            <h2 className="co-h2 mb-3 max-w-[16ch] lg:mb-6">
               {series.elements.length} components.{" "}
               {isBench ? `${benchConfig.seats} desks.` : "One table."}
             </h2>
-            <p className="mb-9 max-w-[38ch] text-[14px] font-light leading-relaxed text-co-muted">
+            <p className="mb-6 hidden max-w-[38ch] text-[14px] font-light leading-relaxed text-co-muted sm:block lg:mb-9">
               Scroll to build it. The legs, the bar, the tops and the screens are the
               numbered components on {series.wordmark}&apos;s own specification — drawn at the
               size you are being quoted, not a stand-in model.
@@ -227,7 +241,7 @@ export function SeriesAssembly() {
                 return (
                   <li
                     key={part.key}
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 border-t border-co-border py-3 last:border-b"
+                    className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 border-t border-co-border py-2 last:border-b sm:py-3"
                   >
                     <span
                       aria-hidden
@@ -272,7 +286,7 @@ export function SeriesAssembly() {
               })}
             </ol>
 
-            <div className="mt-7 flex items-center gap-4">
+            <div className="mt-4 flex items-center gap-4 lg:mt-7">
               <span className="font-mono text-[11px] tabular-nums text-co-placeholder">
                 {String(Math.round(progress * 100)).padStart(3, "0")}%
               </span>

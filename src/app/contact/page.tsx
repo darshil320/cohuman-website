@@ -65,7 +65,7 @@ const contactRows = [
   { k: "Showroom", v: `${siteConfig.address.line2} — ${siteConfig.address.line1}` },
   { k: "Phone / WhatsApp", v: siteConfig.phoneDisplay },
   { k: "Hours", v: siteConfig.hours },
-  { k: "Legal entity", v: `${siteConfig.legalName} — founded ${siteConfig.foundedYear} by ${siteConfig.founder}` },
+  { k: "Legal entity", v: `${siteConfig.legalName} — founded by ${siteConfig.founder}` },
 ];
 
 type Props = {

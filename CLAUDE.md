@@ -3,10 +3,14 @@
 # Cohuman marketing + lead-gen website
 
 Next.js (App Router) site for **Cohuman**, a Surat-based office-furniture brand
-(legal entity: Furniture Concepts 2.0, founder Tushar Shah, "crafting spaces since
-1989"). This is a rebrand/rebuild of an earlier "Furniture Concept 2.0" e-commerce
-demo, converted from cart/checkout into a **lead-generation** site: every page ends
-in a quote/enquiry CTA, not a purchase flow.
+(legal entity: Cohuman Modularr LLP, founder Tushar Shah). Built from an earlier
+e-commerce demo and converted from cart/checkout into a **lead-generation** site:
+every page ends in a quote/enquiry CTA, not a purchase flow.
+
+**Cohuman is presented as a NEW brand.** No founding year, no years-in-business, no
+"since", no previous trading name, no counted stats anywhere on the site — see
+"No heritage claims" under Conventions. `siteConfig` deliberately has no
+`foundedYear`.
 
 Full requirements live in `prospects/cohuman-quotation.md` (outside this repo) — this
 file is the implementation-facing summary.
@@ -162,13 +166,11 @@ space type).
   previously rendered the same category file four times under the labels
   "Detail"/"Angle"/"In situ", so all 16 PDPs shared four images between them.
   Populate `images` per product as real shots arrive and the strip appears.
-- **`src/app/about/page.tsx`** — four of the five `TIMELINE` milestones (1998,
-  2009, 2018 and the wording of the 2026 relaunch) are reconstructed and need
-  Tushar's sign-off. Correct the data; do not re-add a public "dates to be
-  confirmed" caveat, which is an internal note and was shipping to visitors.
-- **`src/app/about/page.tsx`** — the "Partnerships" section intentionally has no
-  logos. Whether MERRYFAIR/SPACEWOOD/Humanscale partnerships still apply to the
-  Cohuman entity is unconfirmed; do not add them until Tushar/Vaibhav confirm.
+- **Represented-brand claims are gone.** `brandsRepresented`, the brand marquee
+  (`brand-marquee.tsx`) and `brand-logos.ts` were removed: whether the
+  MERRYFAIR/SPACEWOOD/Humanscale partnerships apply to the Cohuman entity is
+  unconfirmed. Do not re-add them until Tushar/Vaibhav confirm. `public/brands/`
+  is still on disk pending that decision.
 - Pricing is shown only as a qualitative band (`budget`/`value`/`premium` →
   "Value"/"Mid"/"Premium") plus "Price on request" — whether real prices should
   ever be public is an open decision, not yet made.
@@ -213,5 +215,18 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   zero in a browser-only layout effect, so the served HTML carries the real number.
   Initialising a counter at zero puts `0 yrs` in the static HTML — which is what a
   crawler reads and what stays on screen if JS is blocked or hydration fails.
-- Year counts are derived from `siteConfig.foundedYear` and `new Date()`, never typed
-  as literals — a hardcoded "37 yrs" is wrong every January.
+- **No heritage claims.** Cohuman is a new brand: never add a founding year, a
+  years-in-business count, "since <year>", "Furniture Concepts", or any counted
+  proof stat (clients served, projects delivered, brands represented). The plain word
+  "founded" is fine. `siteConfig` has no `foundedYear` on purpose — if you find
+  yourself wanting to add one back, that is the rule firing, not a gap.
+- **Reveals are CSS, not framer.** `Reveal`/`StaggerItem` (`ui/scroll-reveal.tsx`) and
+  `KineticHeading` (`ui/kinetic-heading.tsx`) are server components that animate via
+  the `co-reveal`/`co-word-rise` keyframes, gated on `html.co-js` — a class set by a
+  blocking inline script in `layout.tsx`. No script means nothing is ever hidden. Do
+  not reintroduce framer `initial={{ opacity: 0 }}` on static content: it serializes
+  as an inline `opacity:0`, so the page is blank when JS fails. `TextReveal` is the
+  old framer version, still used on secondary routes; prefer `KineticHeading`.
+- The drawing-sheet primitives (`SpecLabel`, `TickRail`, `MeasureRule`, `ClipReveal`)
+  live in `src/components/ui/` and are shared by `/` and `/about`. Section labels read
+  `01 / Systems` on the homepage and `§01 — Definition` on /about.
