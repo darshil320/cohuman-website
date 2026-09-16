@@ -203,8 +203,8 @@ export function HeroCarousel({
         Scrim weighted to the left, where the copy sits, and fading out well before the
         middle so it never dulls the furniture the photograph is there to sell.
       */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/10 md:via-black/25 md:to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent md:from-black/45 md:via-transparent" />
 
       {/*
         Per-slide copy. Each photograph gets its own headline, so the words describe what
@@ -227,10 +227,15 @@ export function HeroCarousel({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="flex max-w-[min(46ch,52%)] flex-col gap-[clamp(16px,1.8vw,24px)]"
+              /*
+                The percentage cap keeps the copy clear of the furniture, but only once
+                there are two columns to divide: on a phone the frame is barely wider
+                than the text itself, and 54% left the headline in a 190px gutter.
+              */
+              className="flex max-w-[34ch] flex-col gap-[clamp(18px,2vw,28px)] md:max-w-[min(46ch,54%)]"
             >
               {slides[active]?.headline?.length ? (
-                <h1 className="font-display text-[clamp(30px,3vw,46px)] font-semibold leading-[1.08] tracking-[-0.028em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.4)]">
+                <h1 className="font-display text-[clamp(34px,4.6vw,70px)] font-medium leading-[0.98] tracking-[-0.042em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.38)]">
                   <TextReveal>
                     {slides[active].headline.map((line, index) => (
                       <span key={line}>
@@ -242,7 +247,7 @@ export function HeroCarousel({
                 </h1>
               ) : null}
               {slides[active]?.sub ? (
-                <p className="max-w-[38ch] text-[clamp(14px,1.15vw,16.5px)] font-normal leading-relaxed text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
+                <p className="max-w-[40ch] text-[clamp(14px,1.2vw,17px)] font-light leading-relaxed text-white/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
                   {slides[active].sub}
                 </p>
               ) : null}
@@ -253,41 +258,51 @@ export function HeroCarousel({
 
       <div className="relative z-10 h-full">{children}</div>
       
-      {/* Bottom Nav: Dots (Left) and Link (Right) */}
-      <div className="absolute bottom-12 left-0 right-0 z-20 mx-auto max-w-[1320px] px-[18px] sm:px-6 lg:px-11 flex justify-between items-end pointer-events-none">
-        
+      {/*
+        Slide index rather than dots. A numeral plus a rule per slide says which frame you
+        are on and how many there are, which a row of dots only implies — and it drops the
+        one filled red circle, the only non-brand colour that was on the page.
+      */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-[clamp(28px,4vw,56px)] z-20 mx-auto flex max-w-[1320px] items-end justify-between gap-6 px-[18px] sm:px-6 lg:px-11">
         {slides.length > 1 ? (
-          <div className="flex items-center gap-3 pointer-events-auto pb-2">
-            {slides.map((slide, i) => (
-              <button
-                key={slide.src}
-                type="button"
-                aria-label={`Show slide ${i + 1}`}
-                onClick={() => setActive(i)}
-                className="group p-1 focus:outline-none"
-              >
-                <span
-                  className={cn(
-                    "block h-2 w-2 rounded-full transition-colors duration-300",
-                    i === active
-                      ? "bg-red-600"
-                      : "bg-white/70 group-hover:bg-white",
-                  )}
-                />
-              </button>
-            ))}
+          <div className="pointer-events-auto flex items-center gap-4">
+            <span className="font-mono text-[11px] tabular-nums text-white/90">
+              {String(active + 1).padStart(2, "0")}
+            </span>
+            <div className="flex items-center gap-2">
+              {slides.map((slide, i) => (
+                <button
+                  key={slide.src}
+                  type="button"
+                  aria-label={`Show slide ${i + 1}`}
+                  aria-current={i === active ? "true" : undefined}
+                  onClick={() => setActive(i)}
+                  className="group py-2"
+                >
+                  <span
+                    className={cn(
+                      "block h-px transition-all duration-500 ease-[var(--ease-co)]",
+                      i === active ? "w-10 bg-white" : "w-5 bg-white/45 group-hover:bg-white/80",
+                    )}
+                  />
+                </button>
+              ))}
+            </div>
+            <span className="font-mono text-[11px] tabular-nums text-white/55">
+              {String(slides.length).padStart(2, "0")}
+            </span>
           </div>
-        ) : <div />}
+        ) : (
+          <div />
+        )}
 
         {slides[active]?.linkLabel && slides[active]?.linkHref && (
-          <Link 
-            href={slides[active].linkHref!} 
-            className="pointer-events-auto flex items-center gap-3 text-white font-medium hover:text-white/80 transition-colors group"
+          <Link
+            href={slides[active].linkHref!}
+            className="group pointer-events-auto inline-flex items-center gap-3 border-b border-white/50 pb-1.5 text-[13.5px] font-semibold text-white transition-colors hover:border-white"
           >
             {slides[active].linkLabel}
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/60 group-hover:bg-black/80 transition-colors">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 ease-[var(--ease-co)] group-hover:translate-x-1" />
           </Link>
         )}
       </div>

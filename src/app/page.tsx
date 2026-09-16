@@ -2,19 +2,20 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroCarousel } from "@/components/common/hero-carousel";
-import { CountUp } from "@/components/common/count-up";
 import { MobileRail } from "@/components/common/mobile-rail";
 import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
-import { BrandMarquee } from "@/components/common/brand-marquee";
+import { ConfigureTeaser } from "@/components/home/configure-teaser";
+import { HomeProof } from "@/components/home/home-proof";
+import { SpaceTiles } from "@/components/home/space-tiles";
+import { CapabilityEditorial } from "@/components/home/capability-editorial";
+import { HomeImageBand } from "@/components/home/image-band";
 import { CollectionCard } from "@/components/catalog/collection-card";
 import { ProductCard } from "@/components/catalog/product-card";
-import { brandLogos } from "@/lib/brand-logos";
 import { catalog } from "@/lib/catalog";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
-import { cn } from "@/lib/utils";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { TextReveal } from "@/components/ui/text-reveal";
 
@@ -91,21 +92,6 @@ const HERO_SLIDES = [
   },
 ];
 
-/**
- * `n` counts up when the strip scrolls into view; the rest render as written.
- *
- * Years in business is derived, not typed: a hardcoded "37 yrs" is wrong every January
- * and nobody remembers to edit it. `CountUp` puts the finished figure in the served HTML,
- * so `v` is only needed by the cells that are not counted.
- */
-const yearsInBusiness = new Date().getFullYear() - siteConfig.foundedYear;
-
-const STATS = [
-  { v: String(siteConfig.foundedYear), k: "Furniture Concepts founded, Surat" },
-  { n: yearsInBusiness, suffix: " yrs", k: "Designing and making workplaces" },
-  { n: 6, k: "Product families in production" },
-];
-
 export default async function HomePage() {
   const [categories, collections, spaces, services, projects, allProducts] = await Promise.all([
     catalog.getCategories(),
@@ -132,101 +118,30 @@ export default async function HomePage() {
       </section>
 
 
-      {/* Stats */}
-      <section className="border-b border-co-border bg-co-bg-alt">
-        <StaggerContainer className="mx-auto grid max-w-[1320px] grid-cols-2 px-[18px] sm:px-6 lg:grid-cols-3 lg:px-11">
-          {STATS.map((s) => (
-            <StaggerItem
-              key={s.k}
-              className={cn(
-                "flex flex-col border-co-border py-[clamp(26px,3vw,38px)]",
-                // Three cells wrap 2 + 1 on a phone, so the first row needs a horizontal
-                // rule under it and a vertical rule between its two cells. The lone cell
-                // on the second row must not carry a right border — it has nothing beside
-                // it, and the rule would hang in open space.
-                "px-4 [&:nth-child(-n+2)]:border-b [&:first-child]:border-r sm:px-6",
-                "lg:border-b-0 lg:px-6 lg:first:pl-0 lg:last:pr-0 lg:[&:not(:last-child)]:border-r",
-              )}
-            >
-              {/*
-                Both variants render the same two elements in the same box: the figure on
-                a fixed line box, the label pinned to the bottom. Animating one of them
-                used to add a wrapper, which pulled its figure off the row's baseline and
-                left the labels at differing heights.
-              */}
-              <p className="mb-2 flex min-h-[1.05em] items-end whitespace-nowrap font-display text-[clamp(30px,3.2vw,42px)] font-medium leading-none tracking-tight text-co-ink">
-                {s.n ? <CountUp value={s.n} suffix={s.suffix} /> : s.v}
-              </p>
-              <p className="mt-auto text-[13.5px] leading-snug text-co-muted-2">{s.k}</p>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-      </section>
-
-      {/* Brands represented */}
-      <section className="border-b border-co-border bg-co-panel">
-        <div className="mx-auto max-w-[1320px] px-[18px] pt-[clamp(28px,3.5vw,40px)] sm:px-6 lg:px-11">
-          <p className="mb-6 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-panel-muted">
-            x&apos;ve represented
-          </p>
-        </div>
-        <BrandMarquee brands={brandLogos} />
-        <div className="h-[clamp(28px,3.5vw,40px)]" />
-      </section>
+      {/* <HomeProof /> */}
 
       {/* Collections */}
-      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+      <section className="co-shell co-section-lg">
         <SectionHeading
           eyebrow="Collections"
           title="Two desking systems, specified to the millimetre."
+          blurb="Both run at 720mm, so tops sit flush wherever two configurations meet."
           linkHref="/collections"
           linkLabel="All collections"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {collections.map((c) => (
+        <StaggerContainer className="grid grid-cols-1 gap-x-[clamp(22px,3vw,56px)] gap-y-[clamp(34px,4vw,64px)] sm:grid-cols-2">
+          {collections.map((c, i) => (
             <StaggerItem key={c.slug}>
-              <CollectionCard collection={c} />
+              <CollectionCard collection={c} index={i} />
             </StaggerItem>
           ))}
         </StaggerContainer>
       </section>
 
-      {/* Furnish by space */}
-      <section className="bg-co-panel text-co-panel-fg">
-        <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
-          <Reveal>
-            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-panel-muted">
-              Furnish by space
-            </p>
-            <h2 className="mb-[clamp(34px,4vw,52px)] max-w-[24ch] font-display text-[clamp(28px,3.6vw,46px)] font-medium leading-[1.05] tracking-tight">
-              <TextReveal>Tell us the room. We&apos;ll tell you what goes in it.</TextReveal>
-            </h2>
-          </Reveal>
-          <StaggerContainer className="grid grid-cols-1 gap-px border border-co-panel-border bg-co-panel-border sm:grid-cols-2 lg:grid-cols-4">
-            {spaces.map((sp) => (
-              <StaggerItem key={sp.slug} className="block min-h-[220px] bg-co-panel h-full">
-                <Link
-                  href="/solutions"
-                  className="block h-full w-full p-[clamp(22px,2.4vw,30px)] py-[clamp(26px,3vw,36px)] text-co-panel-fg hover:bg-[#1e2024]"
-                >
-                  <p className="font-display text-[13px] font-semibold tracking-wide text-co-panel-faint">
-                    {sp.num}
-                  </p>
-                  <h3 className="mb-2.5 mt-6 font-display text-[24px] font-medium tracking-tight">
-                    {sp.name}
-                  </h3>
-                  <p className="text-[14.5px] font-light leading-relaxed text-co-panel-muted">
-                    {sp.blurb}
-                  </p>
-                </Link>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+      <SpaceTiles spaces={spaces} />
 
       {/* Signature pieces */}
-      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+      <section className="co-shell co-section">
         <SectionHeading
           eyebrow="Signature pieces"
           title="The ones we get asked for."
@@ -235,7 +150,7 @@ export default async function HomePage() {
         />
         {/* One swipe apart on a phone, a three-up grid from `sm`. */}
         <MobileRail total={featured.length} label="Signature pieces">
-          <StaggerContainer className="flex gap-3 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:gap-4 sm:[&>*]:w-auto sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="flex gap-5 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:grid-cols-2 sm:gap-x-[clamp(20px,2.6vw,48px)] sm:gap-y-[clamp(34px,4vw,60px)] sm:[&>*]:w-auto lg:grid-cols-3">
             {featured.map((p) => (
               <StaggerItem key={p.slug}>
                 <ProductCard
@@ -248,50 +163,14 @@ export default async function HomePage() {
         </MobileRail>
       </section>
 
-      {/* What we do */}
-      <section className="border-b border-t border-co-border bg-co-bg-alt">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-[18px] py-[clamp(64px,8vw,100px)] sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-11">
-          <Reveal>
-            <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
-              What we do
-            </p>
-            <h2 className="mb-[18px] max-w-[20ch] font-display text-[clamp(28px,3.6vw,44px)] font-medium leading-[1.06] tracking-tight">
-              <TextReveal>Not just the furniture. The whole fit-out.</TextReveal>
-            </h2>
-            <p className="mb-[26px] max-w-[44ch] text-[16.5px] font-light leading-relaxed text-co-muted">
-              Most clients come to us with a floor plate and a headcount. We take it from there
-              — layout, specification, manufacture, install, and a service contract that keeps
-              it all working.
-            </p>
-            <Link
-              href="/services"
-              className="border-b-[1.5px] border-co-green pb-0.5 text-[15px] font-semibold text-co-ink hover:text-co-green"
-            >
-              Our services →
-            </Link>
-          </Reveal>
-          <StaggerContainer className="grid gap-px border border-co-border bg-co-border">
-            {services.map((sv) => (
-              <StaggerItem key={sv.num} className="flex gap-[18px] bg-co-bg p-[22px]">
-                <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-co-green">
-                  {sv.num}
-                </span>
-                <div>
-                  <h3 className="mb-1 font-display text-[18px] font-medium tracking-tight">
-                    {sv.name}
-                  </h3>
-                  <p className="text-sm font-light leading-relaxed text-co-muted-2">
-                    {sv.blurb}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+      <CapabilityEditorial />
+
+      <ConfigureTeaser />
+
+      <HomeImageBand />
 
       {/* Recent work */}
-      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(64px,8vw,108px)] sm:px-6 lg:px-11">
+      <section className="co-shell co-section-lg">
         <SectionHeading
           eyebrow="Recent work"
           title="Floors we've finished."
@@ -299,7 +178,7 @@ export default async function HomePage() {
           linkLabel="All projects"
         />
         <MobileRail total={Math.min(projects.length, 3)} label="Recent work">
-          <StaggerContainer className="flex gap-3 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:gap-4 sm:[&>*]:w-auto sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="flex gap-5 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:grid-cols-2 sm:gap-x-[clamp(20px,2.6vw,48px)] sm:gap-y-[clamp(34px,4vw,60px)] sm:[&>*]:w-auto lg:grid-cols-3">
             {projects.slice(0, 3).map((pr) => (
             <StaggerItem key={pr.slug}>
               <Link href="/projects" className="group block text-co-ink">
@@ -309,20 +188,20 @@ export default async function HomePage() {
                     alt={`${pr.name} — completed fit-out`}
                     fill
                     sizes="(min-width: 1024px) 30vw, 100vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-[900ms] ease-[var(--ease-co)] group-hover:scale-[1.05]"
                   />
                 </div>
-                {pr.city ? (
-                  <p className="mb-1 mt-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-co-faint">
-                    {pr.city}
-                  </p>
-                ) : (
-                  <div className="mt-3.5" />
-                )}
-                <h3 className="mb-1.5 font-display text-[20px] font-medium tracking-tight">
+                <span
+                  aria-hidden
+                  className="mt-[clamp(12px,1.4vw,18px)] block h-px w-full bg-co-border transition-colors duration-500 group-hover:bg-co-ink"
+                />
+                {pr.city ? <p className="co-eyebrow mb-2.5 mt-4">{pr.city}</p> : <div className="mt-4" />}
+                <h3 className="mb-2 font-display text-[clamp(17px,1.5vw,20px)] font-medium leading-tight tracking-[-0.026em]">
                   {pr.name}
                 </h3>
-                <p className="line-clamp-2 text-sm font-light text-co-muted-2">{pr.delivered}</p>
+                <p className="line-clamp-2 text-[13.5px] font-light leading-relaxed text-co-muted">
+                  {pr.delivered}
+                </p>
               </Link>
             </StaggerItem>
             ))}
@@ -330,7 +209,65 @@ export default async function HomePage() {
         </MobileRail>
       </section>
 
+      {/* What we do */}
+      <section className="border-t border-co-border">
+        <div className="co-shell co-section grid grid-cols-1 gap-x-[clamp(28px,4vw,88px)] gap-y-12 lg:grid-cols-[1fr_1.1fr]">
+          <Reveal className="lg:sticky lg:top-[clamp(110px,12vw,160px)] lg:self-start">
+            <p className="co-eyebrow mb-4">What we do</p>
+            <h2 className="co-h2 mb-6 max-w-[18ch]">
+              <TextReveal>Not just the furniture. The whole fit-out.</TextReveal>
+            </h2>
+            <p className="co-lead mb-9 max-w-[42ch]">
+              Most clients come to us with a floor plate and a headcount. We take it from there
+              — layout, specification, manufacture, install, and a service contract that keeps
+              it all working.
+            </p>
+            <Link
+              href="/services"
+              className="group inline-flex items-center gap-2.5 border-b-2 border-co-ink pb-1.5 text-[14px] font-semibold text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted"
+            >
+              Our services
+              <svg
+                aria-hidden
+                width="13"
+                height="9"
+                viewBox="0 0 13 9"
+                fill="none"
+                className="transition-transform duration-300 ease-[var(--ease-co)] group-hover:translate-x-1"
+              >
+                <path d="M0 4.5h11M8 1l3.5 3.5L8 8" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </Link>
+          </Reveal>
+
+          <StaggerContainer className="grid">
+            {services.map((sv) => (
+              <StaggerItem
+                key={sv.num}
+                className="group grid grid-cols-[auto_1fr] items-start gap-x-5 border-t border-co-border py-[clamp(18px,2.2vw,30px)]"
+              >
+                <span
+                  aria-hidden
+                  className="font-display text-[clamp(22px,2.4vw,32px)] font-normal leading-none tracking-[-0.04em] tabular-nums text-co-border-strong transition-colors duration-300 group-hover:text-co-ink"
+                >
+                  {sv.num}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="mb-2 font-display text-[clamp(17px,1.5vw,21px)] font-medium leading-tight tracking-[-0.026em]">
+                    {sv.name}
+                  </h3>
+                  <p className="max-w-[46ch] text-[13.5px] font-light leading-relaxed text-co-muted">
+                    {sv.blurb}
+                  </p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
       <CtaBand
+        tone="dark"
         heading="Send us your floor plan. Get a costed proposal."
         body={`No obligation, no cart, no checkout — a real specification from a real person, usually inside ${siteConfig.enquiryTurnaround}.`}
       />

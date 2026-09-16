@@ -14,9 +14,10 @@
   --color-co-border: #dcd8cf;
   --color-co-border-strong: #c8c3b8;
   --color-co-card-border: #e4e0d7;
-  /* Accent scale — monochrome. The brand is black/white; only the logo carries
-     colour. These keep their historical `green` names so the ~90 call sites stay
-     untouched, but every value is a neutral ink tone. */
+  /* Accent scale — monochrome. The brand is black/white throughout: the wordmark is
+     type in `--color-co-ink`, not a coloured mark. These keep their historical
+     `green` names so the ~90 call sites stay untouched, but every value is a
+     neutral ink tone. */
   --color-co-green: #16181b;
   --color-co-green-dark: #000000;
   --color-co-green-light: #4a4f56;
@@ -36,6 +37,115 @@
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-figtree), system-ui, sans-serif;
+
+  /*
+    Editorial type scale.
+
+    One ramp for the whole site, so a section heading is the same size on /about as on
+    /catalog. Every step is a clamp: the small end is the 360px phone, the large end is
+    reached around 1440px. Tracking tightens as the size grows, which is what keeps a
+    60px headline from reading as a stretched 20px one.
+  */
+  --text-co-display: clamp(38px, 6.4vw, 92px);
+  --text-co-h1: clamp(34px, 5.2vw, 68px);
+  --text-co-h2: clamp(30px, 4vw, 54px);
+  --text-co-h3: clamp(21px, 2vw, 30px);
+  --text-co-lead: clamp(16px, 1.45vw, 20px);
+  --text-co-body: clamp(14.5px, 1.1vw, 16.5px);
+  --text-co-eyebrow: 10.5px;
+
+  /* Section rhythm — the whitespace is the design, so it is a token, not a guess. */
+  --space-co-section: clamp(58px, 7vw, 116px);
+  --space-co-section-lg: clamp(72px, 9vw, 148px);
+
+  /* Motion. One easing and two durations across the site. */
+  --ease-co: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/*
+  Shared typographic primitives.
+
+  These exist because the same eyebrow/heading pair appears on thirteen routes, and
+  before this each one carried its own tracking and size. Utilities keep them identical
+  without a component boundary around every heading.
+*/
+@utility co-eyebrow {
+  font-size: var(--text-co-eyebrow);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--color-co-placeholder);
+}
+
+@utility co-display {
+  font-family: var(--font-display);
+  font-size: var(--text-co-display);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.042em;
+}
+
+@utility co-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-co-h1);
+  font-weight: 500;
+  line-height: 0.99;
+  letter-spacing: -0.04em;
+}
+
+@utility co-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-co-h2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.038em;
+}
+
+@utility co-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-co-h3);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+}
+
+@utility co-lead {
+  font-size: var(--text-co-lead);
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--color-co-muted);
+}
+
+/* Page gutter + max width, identical on every route. */
+@utility co-shell {
+  margin-inline: auto;
+  max-width: 1320px;
+  padding-inline: 18px;
+}
+
+@media (min-width: 640px) {
+  .co-shell {
+    padding-inline: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .co-shell {
+    padding-inline: 44px;
+  }
+}
+
+@utility co-section {
+  padding-block: var(--space-co-section);
+}
+
+/*
+  The taller rhythm, for the three sections that anchor the page — the ones a visitor
+  should feel they have arrived at rather than scrolled past. Used sparingly on purpose:
+  if every section takes it, the distinction disappears and it is just a bigger page.
+*/
+@utility co-section-lg {
+  padding-block: var(--space-co-section-lg);
 }
 
 :root {

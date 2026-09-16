@@ -28,11 +28,24 @@ interface StaggerContainerProps {
   children: ReactNode;
   className?: string;
   staggerDelay?: number;
+  /**
+   * The element to render. Defaults to a `div`; pass `"dl"`, `"ul"` and so on where the
+   * content has a real semantic shape, so the animation wrapper does not force the
+   * markup to be a stack of anonymous divs.
+   */
+  as?: "div" | "dl" | "ul" | "ol";
 }
 
-export function StaggerContainer({ children, className, staggerDelay = 0.1 }: StaggerContainerProps) {
+export function StaggerContainer({
+  children,
+  className,
+  staggerDelay = 0.1,
+  as = "div",
+}: StaggerContainerProps) {
+  const Tag = motion[as];
+
   return (
-    <motion.div
+    <Tag
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-50px" }}
@@ -47,7 +60,7 @@ export function StaggerContainer({ children, className, staggerDelay = 0.1 }: St
       className={className}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }
 
@@ -55,11 +68,15 @@ interface StaggerItemProps {
   children: ReactNode;
   className?: string;
   yOffset?: number;
+  /** Matches `StaggerContainer`'s `as` — a `dl` needs its children to be valid inside it. */
+  as?: "div" | "li";
 }
 
-export function StaggerItem({ children, className, yOffset = 20 }: StaggerItemProps) {
+export function StaggerItem({ children, className, yOffset = 20, as = "div" }: StaggerItemProps) {
+  const Tag = motion[as];
+
   return (
-    <motion.div
+    <Tag
       variants={{
         hidden: { opacity: 0, y: yOffset },
         show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
@@ -67,6 +84,6 @@ export function StaggerItem({ children, className, yOffset = 20 }: StaggerItemPr
       className={className}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }

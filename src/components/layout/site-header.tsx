@@ -1,96 +1,135 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
+import { Wordmark } from "@/components/common/wordmark";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 
+/** Scroll distance after which the header tightens onto a hairline. */
+const CONDENSE_AT = 20;
+
+/**
+ * Site header.
+ *
+ * Type and hairlines only — the pills, shadows and raw `slate-*` values this used to
+ * carry were the one piece of chrome that contradicted every page under it. The active
+ * route is marked by a rule under the label rather than a filled chip, which is the same
+ * device the configurator and the collections index use for selection.
+ */
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { openQuote } = useQuoteDialog();
+  const pathname = usePathname();
+
+  // Close the overlay when the route changes, during render rather than in an effect:
+  // an effect would paint the menu once over the new page before closing it.
+  const [renderedPath, setRenderedPath] = useState(pathname);
+  if (renderedPath !== pathname) {
+    setRenderedPath(pathname);
+    setMobileOpen(false);
+  }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > CONDENSE_AT);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // The overlay is fixed and full-height, so the page behind it must not scroll under it.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] border-b transition-all duration-300 ease-in-out",
-        scrolled
-          ? "border-slate-200/90 bg-white/95 backdrop-blur-md shadow-sm"
-          : "border-slate-200/60 bg-white backdrop-blur-md shadow-xs",
+        "fixed inset-x-0 top-0 z-[60] border-b transition-colors duration-300",
+        scrolled ? "border-co-border bg-co-bg/92 backdrop-blur-xl" : "border-transparent bg-co-bg",
       )}
     >
       <div
         style={{ height: HEADER_HEIGHT }}
-        className="mx-auto flex max-w-[1320px] items-center justify-between gap-4 px-[18px] sm:gap-8 sm:px-6 lg:px-11"
+        className="co-shell flex items-center justify-between gap-4 sm:gap-8"
       >
-        <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-            <Image
-              src="/logo.png"
-              alt="CoHuman Modularr LLP"
-              width={1780}
-              height={343}
-              className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
-              /*
-                Eager, but not preloaded. The logo is above the fold on every page, so it
-                must not be lazy — a lazy header mark pops in after first paint. It is
-                never the LCP element either: the hero photograph or the headline always
-                outweighs a 32px-tall wordmark, and a `<link rel="preload">` here would
-                queue ahead of the image that actually is the LCP. `fetchPriority="low"`
-                for the same reason, which is also why `preload` is absent — Next
-                documents the two as props not to combine.
-              */
-              loading="eager"
-              fetchPriority="low"
-            />
+        <Link href="/" className="group flex shrink-0 items-center" aria-label="Cohuman — home">
+          <Wordmark className="text-[17px] text-co-ink transition-opacity duration-300 group-hover:opacity-60 sm:text-[19px]" />
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-1 lg:flex">
-          {primaryNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-3.5 py-1.5 text-[14.5px] font-medium text-slate-700 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="ml-auto hidden items-center gap-7 lg:flex">
+          {primaryNav.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative py-1 text-[13.5px] font-medium transition-colors duration-200",
+                  active ? "text-co-ink" : "text-co-muted hover:text-co-ink",
+                )}
+              >
+                {item.label}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                    active ? "scale-x-100" : "scale-x-0",
+                  )}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-5 sm:gap-6">
           <Link
             href="/contact"
-            className="hidden rounded-full px-3.5 py-1.5 text-[14.5px] font-medium text-slate-700 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 lg:inline-block"
+            className="hidden text-[13.5px] font-medium text-co-muted transition-colors hover:text-co-ink lg:inline-block"
           >
             Contact
           </Link>
-          <Button
-            size="sm"
-            onClick={() => openQuote()}
-            className="hidden rounded-md bg-co-ink px-3.5 py-2 text-[13px] font-semibold text-co-bg shadow-sm transition-all hover:bg-co-green-light hover:shadow-md min-[380px]:inline-flex sm:px-4 sm:text-[14px]"
-          >
-            Request a Quote
-          </Button>
           <button
             type="button"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Menu"
-            aria-expanded={mobileOpen}
-            className="relative flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-[4px] rounded-full border border-slate-200/80 bg-white shadow-sm transition-colors hover:bg-slate-50 sm:h-10 sm:w-10 lg:hidden"
+            onClick={() => openQuote()}
+            className="hidden border-b-2 border-co-ink pb-1 text-[13.5px] font-semibold text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted min-[380px]:inline-flex"
           >
-            <span className={cn("block h-[1.5px] w-3.5 bg-slate-800 transition-all duration-300 sm:w-4", mobileOpen ? "absolute rotate-45" : "")} />
-            <span className={cn("block h-[1.5px] w-3.5 bg-slate-800 transition-all duration-300 sm:w-4", mobileOpen ? "absolute -rotate-45" : "")} />
+            Request a Quote
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            className="relative flex h-6 w-6 shrink-0 flex-col items-center justify-center gap-[5px] lg:hidden"
+          >
+            <span
+              className={cn(
+                "block h-px w-5 bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                mobileOpen && "absolute rotate-45",
+              )}
+            />
+            <span
+              className={cn(
+                "block h-px w-5 bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                mobileOpen && "absolute -rotate-45",
+              )}
+            />
           </button>
         </div>
       </div>
@@ -98,60 +137,76 @@ export function SiteHeader() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10, transition: { duration: 0.2, delay: 0 } }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className="absolute inset-x-0 top-full flex flex-col border-t border-slate-200/60 bg-white/95 px-[22px] pb-10 pt-6 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.1)] backdrop-blur-2xl lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ top: HEADER_HEIGHT }}
+            className="fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg lg:hidden"
           >
-            <div className="flex flex-col">
-              {fullNav.map((item, i) => (
+            <nav className="co-shell flex flex-col pt-6">
+              {fullNav.map((item, index) => (
                 <motion.div
                   key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10, transition: { duration: 0.2 } }}
-                  transition={{ duration: 0.4, delay: i * 0.05 + 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.035,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                 >
                   <Link
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="group flex items-center justify-between border-b border-slate-200/50 py-4 font-display text-[24px] font-medium tracking-tight text-slate-900 transition-colors hover:text-co-muted"
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className="group flex items-baseline gap-4 border-b border-co-border py-4"
                   >
-                    {item.label}
-                    <span className="text-slate-300 opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-co-ink group-hover:opacity-100">
-                      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 11L11 1M11 1H1M11 1V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                    <span
+                      aria-hidden
+                      className="font-mono text-[10.5px] tabular-nums text-co-placeholder"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={cn(
+                        "co-h3 transition-colors",
+                        isActive(item.href) ? "text-co-ink" : "text-co-ink group-hover:text-co-muted",
+                      )}
+                    >
+                      {item.label}
                     </span>
                   </Link>
                 </motion.div>
               ))}
-            </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
+            </nav>
+
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.4, delay: fullNav.length * 0.05 + 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 flex flex-col gap-4"
+              transition={{
+                duration: 0.5,
+                delay: fullNav.length * 0.035 + 0.05,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="co-shell mt-auto flex flex-col gap-5 py-10"
             >
-              <Button
-                size="lg"
+              <button
+                type="button"
                 onClick={() => {
                   setMobileOpen(false);
                   openQuote();
                 }}
-                className="w-full rounded-full bg-co-ink py-6 text-[16px] font-semibold text-co-bg shadow-[0_10px_28px_rgba(0,0,0,0.14)] transition-all hover:bg-co-green-light hover:shadow-[0_12px_32px_rgba(0,0,0,0.2)]"
+                className="w-full bg-co-ink py-4 text-[15px] font-semibold text-co-bg transition-colors hover:bg-co-green-light"
               >
                 Request a Quote
-              </Button>
+              </button>
               <Link
                 href="/contact"
                 onClick={() => setMobileOpen(false)}
-                className="flex w-full items-center justify-center rounded-full border border-slate-200 bg-slate-50 py-4 text-[15px] font-semibold text-slate-800 transition-colors hover:bg-slate-100"
+                className="w-full border-b-2 border-co-ink pb-2 text-center text-[15px] font-semibold text-co-ink"
               >
-                Contact Showroom
+                Contact showroom
               </Link>
             </motion.div>
           </motion.div>

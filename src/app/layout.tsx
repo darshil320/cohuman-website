@@ -150,7 +150,6 @@ const jsonLd = {
       legalName: siteConfig.legalName,
       alternateName: "Cohuman Modularr",
       url: siteConfig.url,
-      logo: `${siteConfig.url}/logo.png`,
       image: `${siteConfig.url}/og.jpg`,
       description:
         "Office furniture manufacturer and fit-out contractor in Surat, Gujarat. Desking systems, ergonomic seating, conference tables, storage and reception furniture, supplied on quotation.",

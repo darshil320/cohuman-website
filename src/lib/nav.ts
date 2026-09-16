@@ -16,6 +16,7 @@ export const primaryNav: NavLink[] = [
 export const fullNav: NavLink[] = [
   { label: "Home", href: "/" },
   ...primaryNav,
+  { label: "Configure", href: "/configure" },
   { label: "Services", href: "/services" },
   { label: "Contact & Showroom", href: "/contact" },
 ];
@@ -25,6 +26,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     title: "Explore",
     links: [
       // { label: "Full catalog", href: "/catalog" },
+      { label: "Configure your desking", href: "/configure" },
       { label: "Collections", href: "/collections" },
       { label: "Sectors we serve", href: "/sectors" },
       { label: "Workspace solutions", href: "/solutions" },

@@ -8,6 +8,7 @@ import { SeriesAccessory } from "./series-accessory";
 import { SeriesAnatomy } from "./series-anatomy";
 import { SeriesConfigRail } from "./series-config-rail";
 import { SeriesElements } from "./series-elements";
+import { SeriesAssembly } from "./series-assembly";
 import { SeriesEnquire } from "./series-enquire";
 import { SeriesFinishes } from "./series-finishes";
 import { SeriesGalleryStrip } from "./series-gallery";
@@ -75,6 +76,7 @@ function SeriesPdpBody() {
         </div>
       </section>
 
+      <SeriesAssembly />
       <SeriesElements />
       <SeriesAnatomy />
       <SeriesFinishes />
