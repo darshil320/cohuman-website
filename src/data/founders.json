@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "tushar-shah",
+    "name": "Tushar Shah",
+    "role": "Co-founder & CEO",
+    "bio": "Tushar Shah has spent more than three decades shaping India’s office furniture industry. Since 1989, he has worked at the forefront of the sector and was instrumental in bringing global names such as Herman Miller, Steelcase, Humanscale and Bristol to the Indian market. That work gave him a first-hand view of what world-class workplace furniture demands in design, engineering and delivery. With Cohuman, he is applying those standards to furniture designed and manufactured in India, for the way Indian teams work.",
+    "focus": ["Design", "Engineering", "Delivery"]
+  },
+  {
+    "slug": "jigar-rathod",
+    "name": "Jigar Rathod",
+    "role": "Co-founder & COO",
+    "bio": "Jigar Rathod runs the engine behind every system Cohuman delivers. As Chief Operating Officer, he oversees production planning, the factory floor, supply chain, quality control and installation, turning a design into a finished workspace on schedule. He brings a new generation’s approach to manufacturing, building the processes and systems that let Cohuman scale without losing precision. His focus is simple: commitments clients can plan around.",
+    "focus": ["Production planning", "Factory floor", "Supply chain", "Quality control", "Installation"]
+  }
+]

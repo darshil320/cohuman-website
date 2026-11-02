@@ -1,24 +1,28 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/scroll-reveal";
 import { cn } from "@/lib/utils";
 
-import { Reveal } from "@/components/ui/scroll-reveal";
-
 interface SectionHeadingProps {
+  /** The mono section number and name, e.g. "01 / Systems". */
   eyebrow: string;
   title: string;
-  /** Optional standfirst set beside the title, as the reference sets its section copy. */
+  /** Optional standfirst, set in the right-hand column. */
   blurb?: string;
   linkHref?: string;
   linkLabel?: string;
+  /** `dark` for a section on the ink block. */
+  tone?: "light" | "dark";
   className?: string;
   titleClassName?: string;
 }
 
 /**
- * Section opener used across the site.
+ * Section opener — the moodboard's `.sec-h`.
  *
- * Title left, optional standfirst and link right, on the shared type scale — so every
- * section on every route opens at exactly the same size and tracking.
+ * Three columns on one baseline — mono label, display-caps title, standfirst — closed by
+ * a 1px rule the full width of the shell. Every section on every route opens with it, so
+ * the site reads as one drawing set. On phones the three stack.
  */
 export function SectionHeading({
   eyebrow,
@@ -26,44 +30,44 @@ export function SectionHeading({
   blurb,
   linkHref,
   linkLabel,
+  tone = "light",
   className,
   titleClassName,
 }: SectionHeadingProps) {
+  const dark = tone === "dark";
+
   return (
     <Reveal
       className={cn(
-        "mb-[clamp(34px,4.4vw,64px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-x-[clamp(20px,3vw,48px)] gap-y-6",
+        "mb-[clamp(32px,3.4vw,48px)] grid grid-cols-1 items-end gap-x-[clamp(20px,2.5vw,40px)] gap-y-4 border-b pb-[clamp(20px,2vw,28px)] lg:grid-cols-[200px_minmax(0,1fr)_minmax(0,420px)]",
+        dark ? "border-co-panel-fg" : "border-co-ink",
         className,
       )}
     >
-      <div>
-        <p className="co-eyebrow mb-4">{eyebrow}</p>
-        <h2 className={cn("co-h2 max-w-[20ch]", titleClassName)}>{title}</h2>
-      </div>
+      <p className={cn("co-eyebrow lg:pb-1.5", dark && "text-co-panel-faint")}>{eyebrow}</p>
+      <h2 className={cn("co-h2 max-w-[18ch]", dark && "text-co-panel-fg", titleClassName)}>{title}</h2>
 
       {blurb || (linkHref && linkLabel) ? (
-        <div className="flex flex-col items-start gap-5 lg:items-end">
-          {blurb ? <p className="co-lead max-w-[46ch] lg:text-right">{blurb}</p> : null}
-          {linkHref && linkLabel ? (
-            <Link
-              href={linkHref}
-              className="group inline-flex items-center gap-2.5 border-b-2 border-co-ink pb-1.5 text-[14px] font-semibold text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted"
+        <div className="flex flex-col items-start gap-4 lg:pb-1">
+          {blurb ? (
+            <p
+              className={cn(
+                "max-w-[46ch] text-[15px] leading-[1.55]",
+                dark ? "text-co-panel-muted" : "text-co-ink-soft",
+              )}
             >
-              {linkLabel}
-              <svg
-                aria-hidden
-                width="13"
-                height="9"
-                viewBox="0 0 13 9"
-                fill="none"
-                className="transition-transform duration-300 ease-[var(--ease-co)] group-hover:translate-x-1"
-              >
-                <path d="M0 4.5h11M8 1l3.5 3.5L8 8" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </Link>
+              {blurb}
+            </p>
+          ) : null}
+          {linkHref && linkLabel ? (
+            <Button asChild variant={dark ? "linkOnDark" : "link"} arrow>
+              <Link href={linkHref}>{linkLabel}</Link>
+            </Button>
           ) : null}
         </div>
-      ) : null}
+      ) : (
+        <span aria-hidden className="hidden lg:block" />
+      )}
     </Reveal>
   );
 }

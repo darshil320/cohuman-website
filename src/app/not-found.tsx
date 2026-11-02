@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { SectionHeading } from "@/components/common/section-heading";
+import { Button } from "@/components/ui/button";
+import { DimensionLine } from "@/components/ui/dimension-line";
+import { HairlineGrid } from "@/components/ui/hairline-grid";
+import { KineticHeading } from "@/components/ui/kinetic-heading";
+import { Reveal } from "@/components/ui/scroll-reveal";
 import { siteConfig } from "@/lib/site-config";
 
 /*
@@ -27,42 +32,81 @@ const ROUTES = [
   { href: "/contact", label: "Contact", note: "Ask a specifier, or book a showroom visit." },
 ];
 
+/** The index grid, as `IndexRow` draws it, with the route path in the range column. */
+const ROW_GRID =
+  "grid grid-cols-[40px_minmax(0,1fr)_24px] items-center gap-x-4 md:grid-cols-[64px_minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,0.8fr)_48px] lg:grid-cols-[90px_minmax(0,360px)_minmax(0,1fr)_260px_60px]";
+
 export default function NotFound() {
   return (
-    <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(56px,8vw,110px)] sm:px-6 lg:px-11">
-      <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-faint">
-        404
-      </p>
-      <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(32px,4.6vw,56px)] font-medium leading-[1.04] tracking-tight">
-        That page is not here.
-      </h1>
-      <p className="mb-[clamp(28px,4vw,44px)] max-w-[52ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-        The link may be out of date, or the page may have moved in the rebrand. Everything
-        below still works — or write to{" "}
-        <a href={`mailto:${siteConfig.email}`} className="underline hover:text-co-ink">
-          {siteConfig.email}
-        </a>{" "}
-        and someone will point you at the right place.
-      </p>
-
-      <ul className="grid gap-px border border-co-border bg-co-border sm:grid-cols-2">
-        {ROUTES.map((route) => (
-          <li key={route.href} className="bg-co-bg">
-            <Link
-              href={route.href}
-              className="group flex h-full flex-col justify-between gap-3 p-[clamp(20px,2.4vw,32px)] transition-colors hover:bg-co-bg-alt"
+    <div>
+      <section className="relative overflow-hidden border-b border-co-ink">
+        <HairlineGrid />
+        <div className="co-shell relative pb-[clamp(48px,6vw,96px)] pt-[clamp(48px,7vw,104px)]">
+          <p className="co-data">Error 404</p>
+          <h1 className="co-display mt-[clamp(20px,2.6vw,36px)] max-w-[14ch] text-[clamp(40px,7vw,104px)]">
+            <KineticHeading>That page is not here.</KineticHeading>
+          </h1>
+          <DimensionLine label="0 mm — page not found" className="mt-10 w-full max-w-[560px]" />
+          <p className="co-lead mt-10 max-w-[52ch]">
+            The link may be out of date, or the page may have moved in the rebrand. Everything
+            below still works — or write to{" "}
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="text-co-ink underline decoration-co-border underline-offset-4 hover:decoration-co-ink"
             >
-              <span className="flex items-center gap-2 font-display text-[19px] font-semibold">
-                {route.label}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-              <span className="text-[14.5px] font-light leading-relaxed text-co-muted">
-                {route.note}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+              {siteConfig.email}
+            </a>{" "}
+            and someone will point you at the right place.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button asChild>
+              <Link href="/">Back to the homepage</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/contact">Ask a specifier</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="co-shell co-section">
+        <SectionHeading eyebrow="01 / Routes" title="Everything below still works." className="mb-0" />
+        <Reveal>
+          <div aria-hidden className={`${ROW_GRID} co-eyebrow border-b border-co-border py-3.5`}>
+            <span>No.</span>
+            <span>Page</span>
+            <span className="hidden md:block">What is there</span>
+            <span className="hidden md:block">Route</span>
+            <span />
+          </div>
+          <ul>
+            {ROUTES.map((route, i) => (
+              <li key={route.href}>
+                <Link
+                  href={route.href}
+                  className={`${ROW_GRID} group min-h-[84px] border-b border-co-border py-4 transition-colors duration-150 hover:bg-co-bg-alt focus-visible:bg-co-bg-alt md:min-h-[96px]`}
+                >
+                  <span className="co-data">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="min-w-0">
+                    <span className="block font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+                      {route.label}
+                    </span>
+                    <span className="mt-1.5 block text-[14px] text-co-muted md:hidden">{route.note}</span>
+                  </span>
+                  <span className="hidden min-w-0 text-[16px] text-co-ink-soft md:block">{route.note}</span>
+                  <span className="co-data hidden min-w-0 normal-case md:block">{route.href}</span>
+                  <span
+                    aria-hidden
+                    className="justify-self-end text-[18px] leading-none transition-transform duration-150 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </section>
+    </div>
   );
 }

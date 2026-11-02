@@ -1,4 +1,4 @@
-export const HEADER_HEIGHT = 74;
+export const HEADER_HEIGHT = 72;
 
 /**
  * Height of the series PDP's sticky enquiry bar.

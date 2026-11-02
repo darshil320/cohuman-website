@@ -1,12 +1,12 @@
-// PARTLY CONFIRMED — the two email addresses and the office contacts below are real and
-// supplied by the client. Everything still marked `TODO: confirm` is a placeholder that
+// PARTLY CONFIRMED — the cohuman.in email addresses, the founders and the office contacts
+// below are real and supplied by the client. Everything still marked `TODO: confirm` is a placeholder that
 // must be replaced before launch.
 
 /**
  * Canonical origin, used for `metadataBase`, every `canonical`/`og:url`, the sitemap,
  * robots.txt and llms.txt.
  *
- * `cohuman.in` is the live domain (it matches the confirmed `Jigar@cohuman.in` inbox).
+ * `cohuman.in` is the live domain (it matches the confirmed `@cohuman.in` inboxes).
  * `NEXT_PUBLIC_SITE_URL` overrides it so preview deployments advertise their own origin
  * instead of pointing every crawler and social scraper at production — set it to
  * `https://$VERCEL_URL` on preview environments. Trailing slashes are stripped because
@@ -30,20 +30,37 @@ export const siteConfig = {
   name: "Cohuman",
   legalName: "Cohuman Modularr LLP",
   tagline: "Precision-made modular office furniture",
-  founder: "Tushar Shah",
+  /** Co-founders, in the order the client gave them. Also on /about from founders.json. */
+  founders: ["Tushar Shah", "Jigar Rathod"],
+  /** The founders as prose — "Tushar Shah and Jigar Rathod". */
+  founder: "Tushar Shah and Jigar Rathod",
   url: resolveSiteUrl(),
-  /** General inbox. Every website lead lands here — see `emails` for the full set. */
-  email: "sales.cohuman@gmail.com",
+  /**
+   * Lead inbox. Every website lead (quote, B2B, showroom visit) is emailed here — see
+   * `recordLead` in src/lib/leads/store.ts — and it is the first address shown publicly.
+   */
+  email: "tushar@cohuman.in",
   emails: [
     {
-      address: "sales.cohuman@gmail.com",
+      address: "tushar@cohuman.in",
       label: "Sales & enquiries",
       note: "Quotes, product questions and showroom bookings.",
     },
     {
-      address: "Jigar@cohuman.in",
+      address: "jigar@cohuman.in",
       label: "Jigar",
+      note: "Projects, production and installation.",
+    },
+    {
+      // Forwards to devan@officeideas.in at the mail server; nothing to do here.
+      address: "devan@cohuman.in",
+      label: "Devan",
       note: "Projects and specification.",
+    },
+    {
+      address: "accounts@cohuman.in",
+      label: "Accounts",
+      note: "Invoices and payments.",
     },
   ],
   phoneDisplay: "+91 98251 43360", // TODO: confirm — assumed to be the Surat line
@@ -55,6 +72,16 @@ export const siteConfig = {
     country: "India",
   },
   hours: "Open · Closes 8 pm",
+  /**
+   * Printed beside the hero render and in the footer, the way a drawing set carries a
+   * site datum. TODO: confirm — these are Surat's city-centre coordinates, not the
+   * Ichchhapor showroom's; replace them with the showroom's own once surveyed.
+   */
+  coordinates: {
+    lat: 21.1702,
+    lng: 72.8311,
+    label: "21.1702° N  72.8311° E",
+  },
   mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
   enquiryTurnaround: "two working days",
   /**
@@ -67,7 +94,7 @@ export const siteConfig = {
       city: "Surat",
       state: "Gujarat",
       role: "Showroom & factory",
-      contact: { name: "Tushar Shah", title: "Founder" },
+      contact: { name: "Tushar Shah", title: "Co-founder & CEO" },
       phoneDisplay: "+91 98251 43360", // TODO: confirm this is Tushar's line
       phoneE164: "919825143360",
       address: ["376-378 RJD Integrated Textile Park, Hazira Rd", "Ichchhapor, Surat, Gujarat 394510"],
@@ -95,17 +122,17 @@ export const siteConfig = {
     },
   ],
   /**
-   * Photographs of the Surat showroom. Drop the files into `public/site/` under these
-   * names and they appear; anything missing is simply not rendered, so the page never
-   * ships a broken image.
+   * Photographs of the Surat showroom. Drop the files into `public/site/` and list them
+   * here; anything missing is simply not rendered, so the page never ships a broken image.
+   *
+   * EMPTY ON PURPOSE. The only photo on file, `public/site/surat-storefront.jpg`, shows the
+   * shop sign "FURNITURE CONCEPTS-2.0" — the previous trading name, which the site must
+   * never show (CLAUDE.md, "No heritage claims"). It stays on disk but is not listed. Add
+   * a showroom photo without the old signage — interior, or the façade once re-signed:
+   *
+   *   { src: "/site/<file>.jpg", alt: "…", caption: "Hazira Road, Surat" },
    */
-  suratPhotos: [
-    {
-      src: "/site/surat-storefront.jpg",
-      alt: "The Cohuman showroom on Hazira Road, Surat, seen from the street",
-      caption: "Hazira Road, Surat",
-    },
-  ],
+  suratPhotos: [] as readonly { src: string; alt: string; caption: string }[],
 } as const;
 
 export function whatsappHref(prefilledMessage?: string) {

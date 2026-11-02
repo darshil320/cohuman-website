@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { RegistrationCross } from "@/components/ui/registration-cross";
 import { cn } from "@/lib/utils";
 
 interface ImagePlaceholderProps {
@@ -17,18 +18,25 @@ interface ImagePlaceholderProps {
    */
   preload?: boolean;
   /**
-   * "warm" (default) — the room/lifestyle gradient used for hero and project shots.
-   * "white" — flat, near-white studio background for isolated product shots
-   * (no room context), e.g. a single chair or desk shot clean for a premium hero panel.
+   * "warm" (default) — an interior photograph: cover-cropped and run high-key
+   * (`co-highkey`), the way Signal treats every room shot.
+   * "white" — an isolated studio cut-out on white: contained and composited into the
+   * ground (`co-cutout`). Never put this variant inside a `ClipReveal` or any wrapper with
+   * a clip-path, filter, opacity or transform — that isolates the multiply blend and the
+   * render's white frame shows as a box.
    */
   variant?: "warm" | "white";
 }
 
 /**
- * PLACEHOLDER MEDIA SLOT — every instance renders a labelled placeholder card until
+ * PLACEHOLDER MEDIA SLOT — every instance renders a labelled placeholder frame until
  * a real `src` is passed in. Search the codebase for `ImagePlaceholder` usages
  * without a `src` prop before launch; each one needs real product/project
  * photography from the client.
+ *
+ * The empty state is a flat drawing-sheet frame: fog (or canvas for a cut-out slot), a
+ * hairline border, a registration cross in the corner and a mono note of what belongs
+ * there. It fills its positioned parent, exactly like the `fill` image it stands in for.
  */
 export function ImagePlaceholder({
   hint,
@@ -39,6 +47,8 @@ export function ImagePlaceholder({
   preload = false,
   variant = "warm",
 }: ImagePlaceholderProps) {
+  const cutout = variant === "white";
+
   if (src) {
     return (
       <Image
@@ -47,40 +57,29 @@ export function ImagePlaceholder({
         fill
         sizes={sizes}
         preload={preload}
-        className={cn(variant === "white" ? "object-contain" : "object-cover", className)}
+        className={cn(cutout ? "co-cutout object-contain" : "co-highkey object-cover", className)}
       />
-    );
-  }
-
-  if (variant === "white") {
-    return (
-      <div
-        className={cn(
-          "absolute inset-0 flex items-center justify-center bg-[radial-gradient(80%_70%_at_50%_40%,#FFFFFF_0%,#FAFAF8_70%,#F3F1EC_100%)] p-6",
-          className,
-        )}
-        role="img"
-        aria-label={alt}
-      >
-        <span className="border border-co-border/70 bg-white px-2.5 py-1.5 text-center text-[11px] font-medium leading-snug text-co-faint">
-          PLACEHOLDER — {hint}
-        </span>
-      </div>
     );
   }
 
   return (
     <div
-      className={cn(
-        "absolute inset-0 flex items-end p-4",
-        "bg-[radial-gradient(125%_95%_at_50%_6%,#FFFFFF_0%,#F6F4EE_44%,#E8E4DA_100%)]",
-        className,
-      )}
       role="img"
       aria-label={alt}
+      className={cn(
+        "absolute inset-0 border border-co-border text-co-ink",
+        cutout ? "bg-co-bg" : "bg-co-bg-alt",
+        className,
+      )}
     >
-      <span className="border border-co-border-strong/60 bg-white/70 px-2 py-1 text-[11px] font-medium text-co-faint">
-        PLACEHOLDER — {hint}
+      <RegistrationCross className="left-3 top-3" />
+      <span
+        className={cn(
+          "co-eyebrow absolute max-w-[40ch]",
+          cutout ? "inset-x-4 top-1/2 -translate-y-1/2 text-center mx-auto" : "bottom-3 left-3 right-3",
+        )}
+      >
+        Placeholder — {hint}
       </span>
     </div>
   );

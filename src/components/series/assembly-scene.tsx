@@ -3,6 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { ASSEMBLY_PARTS } from "./assembly-parts";
 
 /**
  * Scroll-driven assembly.
@@ -52,24 +53,7 @@ const POST_OVERHANG = 0.05;
 /** Top overhangs the frame, which is what gives the range its floating look. */
 const OVERHANG = 0.13;
 
-export interface AssemblyPart {
-  key: string;
-  label: string;
-  /** Part number as printed on the specification's anatomy page. */
-  ref: string;
-  from: number;
-  to: number;
-}
-
-/** Build order — the frame goes together from the floor up. */
-export const ASSEMBLY_PARTS: AssemblyPart[] = [
-  { key: "legs", label: "Side legs", ref: "2", from: 0.03, to: 0.30 },
-  { key: "mid", label: "Bench mid leg", ref: "1", from: 0.26, to: 0.44 },
-  { key: "beam", label: "Horizontal bar", ref: "4", from: 0.40, to: 0.56 },
-  { key: "top", label: "Table tops", ref: "7", from: 0.52, to: 0.74 },
-  { key: "modesty", label: "Modesty panel", ref: "8", from: 0.70, to: 0.84 },
-  { key: "screen", label: "Desk screens", ref: "—", from: 0.80, to: 0.96 },
-];
+export { ASSEMBLY_PARTS, type AssemblyPart } from "./assembly-parts";
 
 /** Eased 0 → 1 for one part's slice of the overall scroll. */
 function slice(progress: number, from: number, to: number): number {

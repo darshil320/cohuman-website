@@ -50,12 +50,6 @@ export const PROS_SERIES: SeriesDefinition = {
   swatchesFootnote:
     "Swatches are rendered, not photographed — ask us for physical samples before you sign off a finish.",
 
-  sizeChartSection: {
-    eyebrow: "Size chart",
-    heading: "Fourteen configurations, to the millimetre.",
-    blurb:
-      "Working height is 720mm throughout, so tops sit flush wherever two configurations meet. Select a row to load it into the viewer above.",
-  },
   enquirySection: {
     eyebrow: "Enquire",
     heading: "Send us the floor. We'll send back the layout.",

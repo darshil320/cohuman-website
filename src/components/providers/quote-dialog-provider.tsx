@@ -35,22 +35,24 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
       {children}
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-[70] bg-co-panel/60 backdrop-blur-sm data-[state=open]:animate-co-fade" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(560px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-card-border bg-white">
-            <div className="flex items-start justify-between border-b border-co-border p-6 sm:p-8 sm:pb-0">
-              <div>
-                <Dialog.Title className="font-display text-2xl font-medium tracking-tight">
+          {/* Flat ink veil, no blur: Signal has no glass. */}
+          <Dialog.Overlay className="fixed inset-0 z-[70] bg-co-ink/70" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(600px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-ink bg-co-bg">
+            <div className="flex items-start justify-between gap-6 border-b border-co-ink p-6 sm:px-8 sm:py-7">
+              <div className="min-w-0">
+                <p className="co-eyebrow">Enquiry — get a quote</p>
+                <Dialog.Title className="co-h3 mt-3 max-w-[24ch]">
                   {subject ? `Enquiring about ${subject}` : "Tell us about the space"}
                 </Dialog.Title>
-                <Dialog.Description className="mt-2 max-w-[42ch] pb-6 text-[15px] text-co-muted">
+                <Dialog.Description className="mt-2.5 max-w-[42ch] text-[15px] text-co-muted">
                   A floor plan and a headcount are enough to start.
                 </Dialog.Description>
               </div>
               <Dialog.Close
                 aria-label="Close"
-                className="shrink-0 p-1 text-co-faint hover:text-co-ink"
+                className="flex h-10 w-10 shrink-0 items-center justify-center border border-co-ink text-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" strokeWidth={1.5} />
               </Dialog.Close>
             </div>
             <EnquiryForm defaultInterest={subject} onSuccess={() => undefined} />

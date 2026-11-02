@@ -1,135 +1,208 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand colors — extracted from the Cohuman design (Cohuman.dc.html) */
-  --color-co-bg: #ffffff;
-  --color-co-bg-alt: #f6f6f4;
-  --color-co-surface: #ffffff;
-  --color-co-ink: #1f2328;
-  --color-co-ink-soft: #3a4048;
-  --color-co-muted: #565c64;
-  --color-co-muted-2: #6b7178;
-  --color-co-faint: #8c929a;
-  --color-co-placeholder: #a8adb4;
-  --color-co-border: #dcd8cf;
-  --color-co-border-strong: #c8c3b8;
-  --color-co-card-border: #e4e0d7;
-  /* Accent scale — monochrome. The brand is black/white throughout: the wordmark is
-     type in `--color-co-ink`, not a coloured mark. These keep their historical
-     `green` names so the ~90 call sites stay untouched, but every value is a
-     neutral ink tone. */
-  --color-co-green: #16181b;
-  --color-co-green-dark: #000000;
-  --color-co-green-light: #4a4f56;
-  --color-co-green-pale: #cfcdc7;
-  --color-co-green-paler: #e6e4de;
-  --color-co-panel: #121316;
-  --color-co-panel-border: #2a2c30;
-  --color-co-panel-fg: #f4f3f0;
-  --color-co-panel-muted: #a9abaf;
-  --color-co-panel-faint: #6d7075;
-  --color-co-cta-green: #16181b;
-  --color-co-cta-green-ink: #ffffff;
-  --color-co-placeholder-frame-1: #ffffff;
-  --color-co-placeholder-frame-2: #f6f4ee;
-  --color-co-placeholder-frame-3: #e8e4da;
-  --color-co-hero-bg: #ececea;
+  /*
+    Signal — Ivory paper.
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-figtree), system-ui, sans-serif;
+    Moodboard 01 ("Signal") on the brand palette instead of pure white: an ivory-tinted
+    paper canvas, brand Ink for type and the one solid block per page, and the logo green
+    held back as a status light. Every text/ground pair below is AA or better; the ratios
+    are recorded in design.md, so check there before introducing a new pair.
+
+    The token NAMES are historical — `bg-alt`, `panel`, `green` and the rest are kept so
+    the call sites did not have to move — but the values are the Signal roles:
+
+      canvas  #FBF8EE  --color-co-bg, --color-co-surface
+      fog     #F3EFE1  --color-co-bg-alt, --color-co-hero-bg      panels, sticky bar
+      ink     #231F20  --color-co-ink, --color-co-panel           type, spec block, footer
+      steel   #6B665D  --color-co-muted-2 / faint / placeholder   meta, labels
+      hair    #DCD6C4  --color-co-border                          1px rules
+      signal  #5EB646  --color-co-green                           status only, ~1%
+  */
+  --color-co-bg: #fbf8ee;
+  --color-co-bg-alt: #f3efe1;
+  --color-co-surface: #fbf8ee;
+  --color-co-ink: #231f20;
+  --color-co-ink-soft: #3d3a36;
+  --color-co-muted: #55514a;
+  --color-co-muted-2: #6b665d;
+  --color-co-faint: #6b665d;
+  --color-co-placeholder: #6b665d;
+  --color-co-border: #dcd6c4;
+  /* 3:1 on canvas — the floor for a rule that is the only edge of a control. */
+  --color-co-border-strong: #8f8874;
+  --color-co-card-border: #dcd6c4;
+  /*
+    The signal. #5EB646 is the green in the client's vector logo masters (and the brand
+    guidelines), so a dot on the page and the dots on the mark are the same colour. Rules:
+
+    - It marks state — selected, active, sent, progress. It is never decoration, never a
+      hover fill, never a heading colour.
+    - One green thing per view. If two things are green, one of them is wrong.
+    - It is 2.35:1 on the canvas, so it is never the ONLY thing carrying a state: the ink
+      fill or outline of the selected control says it too. Ink on signal is 6.5:1, which
+      is the only text pairing it is used in.
+  */
+  --color-co-green: #5eb646;
+  --color-co-green-dark: #2f7a24;
+  --color-co-green-light: #5eb646;
+  --color-co-green-pale: #cfe8c6;
+  --color-co-green-paler: #e7f2df;
+  /*
+    The homepage hero's grid lines: the logo green mixed 60/40 with the canvas, so 1px
+    rules still read as a hairline texture rather than thirteen bars of signal. Set it
+    to #5eb646 for full-strength lines.
+  */
+  --color-co-grid-signal: #9dd089;
+  /* Ink block: the spec block on product pages, the footer, the occasional dark band. */
+  --color-co-panel: #231f20;
+  --color-co-panel-border: #3b3637;
+  --color-co-panel-fg: #fbf8ee;
+  --color-co-panel-muted: #b4aea4;
+  --color-co-panel-faint: #9e988d;
+  --color-co-cta-green: #231f20;
+  --color-co-cta-green-ink: #fbf8ee;
+  --color-co-placeholder-frame-1: #f3efe1;
+  --color-co-placeholder-frame-2: #f3efe1;
+  --color-co-placeholder-frame-3: #e9e4d3;
+  --color-co-hero-bg: #f3efe1;
 
   /*
-    Editorial type scale.
-
-    One ramp for the whole site, so a section heading is the same size on /about as on
-    /catalog. Every step is a clamp: the small end is the 360px phone, the large end is
-    reached around 1440px. Tracking tightens as the size grows, which is what keeps a
-    60px headline from reading as a stretched 20px one.
+    One variable family does both display and body: Archivo's `wdth` axis runs 62–125,
+    so Archivo Expanded is the same file at `font-stretch: 125%`. Martian Mono carries
+    every measured value, code and label at `font-stretch: 87.5%`.
   */
-  --text-co-display: clamp(38px, 6.4vw, 92px);
-  --text-co-h1: clamp(34px, 5.2vw, 68px);
-  --text-co-h2: clamp(30px, 4vw, 54px);
-  --text-co-h3: clamp(21px, 2vw, 30px);
-  --text-co-lead: clamp(16px, 1.45vw, 20px);
-  --text-co-body: clamp(14.5px, 1.1vw, 16.5px);
-  --text-co-eyebrow: 10.5px;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Section rhythm — the whitespace is the design, so it is a token, not a guess. */
-  --space-co-section: clamp(58px, 7vw, 116px);
-  --space-co-section-lg: clamp(72px, 9vw, 148px);
+  /*
+    Type scale, read off the moodboard at 1440px and scaled down to a 360px phone.
+    Display is extended caps at 0.9 line-height; everything you could measure is 11px
+    mono. Tracking is fixed at −0.02em for display — the expanded cut is already wide,
+    so it does not want the progressive tightening the old grotesque needed.
+  */
+  --text-co-display: clamp(44px, 8.9vw, 128px);
+  --text-co-h1: clamp(38px, 6vw, 88px);
+  --text-co-h2: clamp(30px, 3.9vw, 56px);
+  --text-co-h3: clamp(20px, 1.7vw, 24px);
+  --text-co-lead: clamp(16px, 1.32vw, 19px);
+  --text-co-body: 15px;
+  --text-co-eyebrow: 11px;
 
-  /* Motion. One easing and two durations across the site. */
+  /* Section rhythm — the white space is the material, so it is a token, not a guess. */
+  --space-co-section: clamp(64px, 8vw, 120px);
+  --space-co-section-lg: clamp(80px, 10vw, 160px);
+
+  /*
+    Motion. "Plotter, not fade": lines draw at a constant speed, so they are linear;
+    the few transitions that move a panel keep the old out-curve.
+  */
   --ease-co: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-plot: linear;
+  --duration-plot: 400ms;
 
-  /*
-    Drawing-sheet hairlines. `--color-co-border` is the structural border; these are the
-    fainter measurement ticks that sit in the margins, and they are deliberately a step
-    back from it so a tick rail never competes with a real rule.
-  */
-  --color-co-tick: #cfcac0;
-  --color-co-tick-dark: #33363b;
-  --co-tick-gap: 12px;
-  --co-tick-len: 5px;
+}
+
+/*
+  Family-level defaults. In the base layer on purpose, so any utility on the element —
+  `normal-case`, a `font-stretch-*` — still overrides them.
+
+  `font-display` is the display role, not just a family: extended, caps. That is what
+  makes the 70-odd existing `font-display` headings read as Signal without each one
+  being rewritten.
+*/
+@layer base {
+  .font-display {
+    font-stretch: 125%;
+    text-transform: uppercase;
+  }
+
+  .font-mono {
+    font-stretch: 87.5%;
+  }
 }
 
 /*
   Shared typographic primitives.
 
-  These exist because the same eyebrow/heading pair appears on thirteen routes, and
-  before this each one carried its own tracking and size. Utilities keep them identical
+  The same eyebrow/heading pair appears on every route; utilities keep them identical
   without a component boundary around every heading.
 */
 @utility co-eyebrow {
+  font-family: var(--font-mono);
+  font-stretch: 87.5%;
   font-size: var(--text-co-eyebrow);
-  font-weight: 600;
+  font-weight: 400;
+  line-height: 1.5;
   text-transform: uppercase;
-  letter-spacing: 0.28em;
-  color: var(--color-co-placeholder);
+  letter-spacing: 0.02em;
+  color: var(--color-co-muted-2);
+}
+
+/* The moodboard's `.m`: a measured value, code or label. Same as the eyebrow, in ink. */
+@utility co-data {
+  font-family: var(--font-mono);
+  font-stretch: 87.5%;
+  font-size: var(--text-co-eyebrow);
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 @utility co-display {
   font-family: var(--font-display);
+  font-stretch: 125%;
   font-size: var(--text-co-display);
-  font-weight: 500;
-  line-height: 0.96;
-  letter-spacing: -0.042em;
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 @utility co-h1 {
   font-family: var(--font-display);
+  font-stretch: 125%;
   font-size: var(--text-co-h1);
-  font-weight: 500;
-  line-height: 0.99;
-  letter-spacing: -0.04em;
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 @utility co-h2 {
   font-family: var(--font-display);
+  font-stretch: 125%;
   font-size: var(--text-co-h2);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.038em;
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 @utility co-h3 {
   font-family: var(--font-display);
+  font-stretch: 125%;
   font-size: var(--text-co-h3);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.028em;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 @utility co-lead {
   font-size: var(--text-co-lead);
-  font-weight: 300;
-  line-height: 1.6;
-  color: var(--color-co-muted);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--color-co-ink-soft);
 }
 
-/* Page gutter + max width, identical on every route. */
+/* Page gutter + max width, identical on every route. 1440 is the moodboard's grid. */
 @utility co-shell {
   margin-inline: auto;
-  max-width: 1320px;
+  max-width: 1440px;
   padding-inline: 18px;
 }
 
@@ -141,7 +214,7 @@
 
 @media (min-width: 1024px) {
   .co-shell {
-    padding-inline: 44px;
+    padding-inline: 48px;
   }
 }
 
@@ -150,12 +223,54 @@
 }
 
 /*
-  The taller rhythm, for the three sections that anchor the page — the ones a visitor
-  should feel they have arrived at rather than scrolled past. Used sparingly on purpose:
-  if every section takes it, the distinction disappears and it is just a bigger page.
+  The taller rhythm, for the sections that anchor a page. Used sparingly on purpose: if
+  every section takes it, the distinction disappears and it is just a bigger page.
 */
 @utility co-section-lg {
   padding-block: var(--space-co-section-lg);
+}
+
+/*
+  Product renders are studio cut-outs shot on white. `multiply` drops the white into the
+  ivory canvas without keying out the white frame legs, and the feather fades the photo's
+  rectangle out at the edges so the soft floor shadow never ends in a hard line. Both are
+  needed now that the canvas is not white — multiply alone leaves a faint frame edge.
+*/
+@utility co-cutout {
+  mix-blend-mode: multiply;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/*
+  Interior photography, run high-key and cool: partly desaturated and lifted, so the
+  furniture rather than the room styling is the subject. Studio cut-outs never take it —
+  they are already neutral, and `co-cutout` handles them.
+*/
+@utility co-highkey {
+  filter: grayscale(0.55) contrast(1.06) brightness(1.06);
+}
+
+/*
+  A canvas plate for a cut-out that must hide what is behind it (the homepage hero's grid
+  lines). Same feather as `co-cutout`, so its edge is never seen; put it and the image in
+  an `isolate` group so the image multiplies with the plate, not with the lines.
+*/
+@utility co-cutout-plate {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-composite: intersect;
 }
 
 :root {
@@ -163,39 +278,34 @@
   --foreground: var(--color-co-ink);
 }
 
-html {
-  /* Removed scroll-behavior: smooth to fix Next.js page transition scroll bugs */
-}
-
 body {
   background: var(--color-co-bg);
   color: var(--color-co-ink);
   font-family: var(--font-body);
+  font-size: var(--text-co-body);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-wrap: pretty;
   /*
-    Nothing may scroll the page sideways. The manifest ticker's track is deliberately
-    wider than the viewport, so this is a standing guard rather than a fix for one
-    element. `clip` rather than `hidden`, because `overflow: hidden` on the body would
-    break `position: sticky` in the sections that rely on it.
+    Nothing may scroll the page sideways. `clip` rather than `hidden`, because
+    `overflow: hidden` on the body would break `position: sticky` in the sections that
+    rely on it.
   */
   overflow-x: clip;
 }
 
+/* Focus is ink, never green — the signal is reserved for state, and focus is not state. */
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--color-co-green-light);
-  outline-offset: 1px;
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-co-ink);
+  outline-offset: 2px;
 }
 
-/*
-  The ink outline is all but invisible against the near-black panel, so dark sections
-  restate it in the panel foreground. Without this, keyboard focus is effectively
-  untrackable on every `bg-co-panel` chapter.
-*/
+/* The ink outline vanishes on the ink block, so dark grounds restate it in canvas. */
 .bg-co-panel :focus-visible {
   outline-color: var(--color-co-panel-fg);
 }
@@ -205,60 +315,44 @@ a:focus-visible {
 }
 
 ::selection {
-  background: var(--color-co-green-paler);
-}
-
-@keyframes co-rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes co-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-co-rise {
-  animation: co-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-co-fade {
-  animation: co-fade 0.6s ease both;
+  background: var(--color-co-ink);
+  color: var(--color-co-bg);
 }
 
 /*
-  JS-free reveal primitives.
+  JS-free reveal primitives — "plotter, not fade".
 
-  Every reveal on this site used to be a `framer-motion` `initial={{opacity:0,…}}`, which
-  serializes into the server HTML as `opacity:0` inline. If hydration is slow — or never
-  happens, because JS is blocked or a chunk 404s — the visitor reads a blank page. These
-  keyframes carry the same easing framer used, and `both` fill-mode applies the `from`
-  state before the animation starts and holds the `to` state after it ends, so content
-  ends up visible with no JavaScript at all.
+  Lines draw, images and blocks wipe left to right, nothing fades. Every one of these
+  rests in its FINISHED state and is held back only while `html.co-js` is present (set
+  by a blocking inline script in the head) and the element has not yet been marked
+  `data-shown` by the reveal observer. No script, no class, nothing hidden — a crawler or
+  a visitor with JS blocked reads the whole page.
 
-  `co-reveal-*` are the scroll-triggered variants: an `IntersectionObserver` (or the
-  `no-js` fallback below) adds `data-shown` when the element enters the viewport. Until
-  then `opacity:0` is set by CSS, not by an inline style, so a crawler reading the raw
-  HTML still sees the text.
+  The wipes use `backwards` fill, not `both`: once a wipe ends the element carries no
+  `clip-path` at all, so focus outlines, dimension labels and anything else that hangs
+  outside the box are not cut off by a leftover `inset(0)`.
 */
-@keyframes co-reveal-up {
+@keyframes co-wipe {
   from {
-    opacity: 0;
-    transform: translateY(var(--co-reveal-y, 30px));
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    opacity: 1;
-    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/*
+  The wipe's leading hairline. It sits one pixel inside the clip edge and moves with it
+  on the same curve, so it reads as the line the image is being drawn behind.
+*/
+@keyframes co-wipe-edge {
+  from {
+    left: -1px;
+    visibility: visible;
+  }
+  to {
+    left: calc(100% - 1px);
+    visibility: visible;
   }
 }
 
@@ -271,18 +365,32 @@ a:focus-visible {
   }
 }
 
-/*
-  Scroll reveal. The element is hidden only while it is both un-shown AND the observer
-  is known to be running (`html.co-js`). The class is set by an inline script in the
-  document head, so if scripting is off the guard never applies and everything paints.
-*/
+@keyframes co-rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes co-rule-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Block reveal: a left-to-right wipe. Text is in the DOM and measurable throughout. */
 .co-reveal {
-  animation: co-reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: co-wipe 0.6s cubic-bezier(0.65, 0, 0.35, 1) backwards;
   animation-play-state: paused;
 }
 
 .co-js .co-reveal:not([data-shown]) {
-  opacity: 0;
+  clip-path: inset(0 100% 0 0);
 }
 
 .co-reveal[data-shown] {
@@ -290,15 +398,21 @@ a:focus-visible {
 }
 
 /*
-  Stagger without JavaScript.
+  Interactive wipe: for content swapped in by a click (a gallery frame), not scrolled
+  into view, so it runs on mount with no observer. Put it on the image itself — on a
+  wrapper, the clip-path would isolate a cut-out's multiply blend mid-wipe.
+*/
+.co-wipe-in {
+  animation: co-wipe 0.5s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+}
 
-  Each item's delay is its index times the container's `--co-stagger`. The index comes
-  from `nth-child` rather than being counted in JS, so a list of any length staggers
-  without its parent enumerating children. Twelve is plenty — past that the delay is long
-  enough that the reader has scrolled anyway, so later items all share the last step.
+/*
+  Stagger without JavaScript. Each item's delay is its index times the container's
+  `--co-stagger`; the index comes from `nth-child`, so a list of any length staggers
+  without its parent enumerating children.
 */
 .co-stagger-item {
-  animation-delay: calc(var(--co-i, 0) * var(--co-stagger, 0.1s));
+  animation-delay: calc(var(--co-i, 0) * var(--co-stagger, 0.08s));
 }
 
 .co-stagger-item:nth-child(1) { --co-i: 0; }
@@ -314,154 +428,88 @@ a:focus-visible {
 .co-stagger-item:nth-child(11) { --co-i: 10; }
 .co-stagger-item:nth-child(n + 12) { --co-i: 11; }
 
-/* Word mask for the typographic headline reveal. */
-.co-word {
-  animation: co-word-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
 /*
-  The manifest ticker. The track carries the list twice, so -50% lands exactly on the
-  seam and the loop is invisible. Slow on purpose: this is a readable manifest, not a
-  news crawl.
-*/
-@keyframes co-ticker {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-co-ticker {
-  animation: co-ticker 90s linear infinite;
-}
-
-/*
-  Kinetic headline, without JavaScript.
-
-  Each word is wrapped in an `overflow-hidden` span and lifted from behind it, staggered
-  by its index. Deliberately animates `transform` ONLY — never opacity — so the words are
-  painted, readable and measurable from the first frame. That is what lets the headline
-  stay the LCP element instead of waiting on hydration, and what a crawler reads.
+  Kinetic headline. Each word lifts from behind an `overflow-hidden` mask. Transform
+  ONLY — never opacity — so the words are painted, readable and measurable from the first
+  frame, which keeps the headline the LCP element.
 */
 .co-kinetic-word {
-  animation: co-word-rise 0.75s var(--ease-co) both;
+  animation: co-word-rise 0.6s var(--ease-co) both;
   animation-delay: calc(var(--co-i, 0) * 40ms);
 }
 
-/*
-  Drawing-sheet primitives.
-
-  `co-tick-rail` is the coordinate margin: one element, one repeating gradient, no SVG
-  and no DOM per tick. `co-rule` is a dimension line that draws itself left to right, and
-  `co-clip` wipes an image up while its contents counter-scale, so the crop never shows
-  an edge. All three rest in their FINISHED state and are only held back while
-  `html.co-js` confirms the observer is running — no script, no hidden content.
-*/
-.co-tick-rail {
-  --tick: var(--color-co-tick);
-}
-
-.co-tick-rail[data-axis="x"] {
-  height: var(--co-tick-len);
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--tick) 0 1px,
-    transparent 1px var(--co-tick-gap)
-  );
-}
-
-.co-tick-rail[data-axis="y"] {
-  width: var(--co-tick-len);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--tick) 0 1px,
-    transparent 1px var(--co-tick-gap)
-  );
-}
-
-.bg-co-panel .co-tick-rail {
-  --tick: var(--color-co-tick-dark);
-}
-
-@keyframes co-rule-draw {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
+/* Dimension lines and rules draw at plotter speed: constant, 400ms. */
 .co-rule {
   transform-origin: left center;
-  animation: co-rule-draw 0.9s var(--ease-co) both;
+  animation: co-rule-draw var(--duration-plot) var(--ease-plot) both;
   animation-play-state: paused;
+}
+
+.co-rule[data-axis="y"] {
+  transform-origin: center top;
+  animation-name: co-rule-draw-y;
 }
 
 .co-js .co-rule:not([data-shown]) {
   transform: scaleX(0);
 }
 
+.co-js .co-rule[data-axis="y"]:not([data-shown]) {
+  transform: scaleY(0);
+}
+
 .co-rule[data-shown] {
   animation-play-state: running;
 }
 
-@keyframes co-clip-in {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes co-clip-scale {
-  from {
-    transform: scale(1.12);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
+/*
+  Image wipe: the frame opens left to right behind a moving ink hairline. The hairline is
+  the frame's `::after`; its resting style is hidden, and the `backwards`-filled
+  animation only shows it while the wipe is running — so with no script, or once the
+  wipe has landed, there is no line.
+*/
 .co-clip {
-  animation: co-clip-in 1.1s var(--ease-co) both;
+  position: relative;
+  animation: co-wipe 0.8s cubic-bezier(0.65, 0, 0.35, 1) backwards;
   animation-play-state: paused;
 }
 
-.co-clip > * {
-  animation: co-clip-scale 1.4s var(--ease-co) both;
+.co-clip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--color-co-ink);
+  visibility: hidden;
+  pointer-events: none;
+  animation: co-wipe-edge 0.8s cubic-bezier(0.65, 0, 0.35, 1) backwards;
   animation-play-state: paused;
 }
 
 .co-js .co-clip:not([data-shown]) {
-  clip-path: inset(0 0 100% 0);
+  clip-path: inset(0 100% 0 0);
 }
 
 .co-clip[data-shown],
-.co-clip[data-shown] > * {
+.co-clip[data-shown]::after {
   animation-play-state: running;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .co-reveal,
-  .co-word,
+  .co-wipe-in,
   .co-kinetic-word,
   .co-rule,
   .co-clip,
-  .co-clip > *,
-  .animate-co-rise,
-  .animate-co-fade {
+  .co-clip::after {
     animation: none !important;
-    opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
   }
 
-  /* The ticker holds still rather than snapping to its start. */
-  .animate-co-ticker {
-    animation: none !important;
+  .co-clip::after {
+    display: none;
   }
 }

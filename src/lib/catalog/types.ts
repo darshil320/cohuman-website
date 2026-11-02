@@ -1,3 +1,6 @@
+import type { z } from "zod";
+import type { founderSchema } from "./founder-schema";
+
 export type PriceBand = "budget" | "value" | "premium";
 
 export const PRICE_BAND_LABEL: Record<PriceBand, string> = {
@@ -108,6 +111,13 @@ export interface Service {
   detail: string;
   deliverables: string[];
 }
+
+/**
+ * A co-founder, as shown on /about. The shape is validated by `founderSchema`
+ * (founder-schema.ts) when `src/data/founders.json` is loaded, so this type and the
+ * schema are one definition.
+ */
+export type Founder = z.infer<typeof founderSchema>;
 
 export interface ProductFilters {
   cat?: string;

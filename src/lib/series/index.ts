@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./derive";
+export * from "./sections";
 
 import { PROS_SERIES } from "./pros";
 import type { SeriesDefinition } from "./types";

@@ -2,43 +2,39 @@
 
 import Link from "next/link";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /**
  * Entry actions on the collections index.
  *
- * Underlined type rather than a bordered pair: the page carries no other boxes, and two
- * outlined buttons per entry were the last thing making an entry read as a card. The
- * primary action keeps the heavier rule so the hierarchy survives losing the fill.
+ * "Configure" is the primary — the series page is a configurator, so that is where the
+ * visitor is going. "Enquire" is the quieter text link beside it, opening the quote
+ * dialog with the collection as its subject. Neither carries the signal dots: the
+ * header's quote button already does, and one green thing per screen is the rule.
  */
-export function CollectionActions({ name, href }: { name: string; href: string }) {
+export function CollectionActions({
+  name,
+  href,
+  className,
+}: {
+  name: string;
+  href: string;
+  className?: string;
+}) {
   const { openQuote } = useQuoteDialog();
 
   return (
-    <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-      <Link
-        href={href}
-        className="group inline-flex items-center gap-2.5 border-b-2 border-co-ink pb-1.5 text-[14.5px] font-semibold text-co-ink transition-colors hover:border-co-muted hover:text-co-muted"
-      >
-        View {name}
-        <svg
-          aria-hidden
-          width="13"
-          height="9"
-          viewBox="0 0 13 9"
-          fill="none"
-          className="transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1"
-        >
-          <path d="M0 4.5h11M8 1l3.5 3.5L8 8" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-      </Link>
+    <div className={cn("flex flex-wrap items-center gap-x-7 gap-y-4", className)}>
+      <Button asChild>
+        <Link href={href}>
+          Configure<span className="sr-only"> {name}</span>
+        </Link>
+      </Button>
 
-      <button
-        type="button"
-        onClick={() => openQuote(`${name} collection`)}
-        className="border-b-2 border-transparent pb-1.5 text-[14.5px] font-semibold text-co-placeholder transition-colors hover:border-co-border-strong hover:text-co-ink"
-      >
-        Enquire
-      </button>
+      <Button type="button" variant="link" onClick={() => openQuote(`${name} collection`)}>
+        Enquire<span className="sr-only"> about {name}</span>
+      </Button>
     </div>
   );
 }

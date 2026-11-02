@@ -1,90 +1,112 @@
 "use client";
 
 import { MobilePeek } from "@/components/common/mobile-peek";
+import { SectionHeading } from "@/components/common/section-heading";
+import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import {
+  INFERRED_CODE_FOOTNOTE,
+  isInferredCode,
+  seriesSectionEyebrow,
+  type SeriesDefinition,
+} from "@/lib/series";
+import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
-import { Reveal } from "./reveal";
+
 
 /** Rows a phone shows before the list asks to be opened. */
 const MOBILE_PEEK = 3;
 
+/** Number · element · type · code — the index-row columns, shared by header and rows. */
+const ROW_GRID =
+  "grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 md:grid-cols-[56px_minmax(0,1.4fr)_minmax(0,0.5fr)_minmax(0,0.8fr)] lg:grid-cols-[90px_minmax(0,1.4fr)_minmax(0,0.5fr)_260px]";
+
+/** A part number, with the steel `°` where the code is pattern-matched, not printed. */
+function ElementCode({ series, code }: { series: SeriesDefinition; code: string }) {
+  return (
+    <>
+      {code}
+      {isInferredCode(series, code) ? (
+        <span className="text-co-muted-2" title={INFERRED_CODE_FOOTNOTE}>
+          °
+        </span>
+      ) : null}
+    </>
+  );
+}
+
 /**
  * Component schedule.
  *
- * Read as an index rather than a card wall: a large ghost ordinal, a hairline rule per
- * row, and no fill anywhere. The reference code keeps the leading position because that
- * is what a specifier quotes from.
+ * Read as a parts list: ordinal, the element's name in display caps with its note, the
+ * kind, and the part number with the PDF's own reference beneath it — the reference is
+ * what a specifier quotes from, so it stays beside the code on every row.
  */
 export function SeriesElements() {
   const { series } = useSeriesConfigurator();
   const { elementsSection: section } = series;
+  const hasInferred = series.elements.some((element) => isInferredCode(series, element.code));
 
   return (
-    <section className="border-b border-co-border bg-co-bg">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
-        <div className="mb-[clamp(38px,5vw,72px)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-end gap-[clamp(20px,3vw,48px)]">
-          <Reveal>
-            <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
-              {section.eyebrow}
-            </p>
-            <h2 className="max-w-[20ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em]">
-              {section.heading}
-            </h2>
-          </Reveal>
-          {section.blurb ? (
-            <Reveal step={1}>
-              <p className="max-w-[46ch] text-[15.5px] font-light leading-relaxed text-co-muted">
-                {section.blurb}
-              </p>
-            </Reveal>
-          ) : null}
+    <section className="co-section">
+      <div className="co-shell">
+        <SectionHeading
+          eyebrow={seriesSectionEyebrow(series, "elements", section.eyebrow)}
+          title={section.heading}
+          blurb={section.blurb}
+        />
+
+        <div aria-hidden className={cn(ROW_GRID, "co-eyebrow hidden border-b border-co-border pb-3.5 md:grid")}>
+          <span>No.</span>
+          <span>Element</span>
+          <span>Type</span>
+          <span>Code / Ref.</span>
         </div>
 
         <MobilePeek peek={MOBILE_PEEK} total={series.elements.length} noun="components">
-          <ul className="grid list-none grid-cols-1 gap-0 p-0 md:grid-cols-2 md:gap-x-[clamp(32px,4vw,72px)]">
+          <StaggerContainer as="ul" className="list-none p-0" staggerDelay={0.06}>
             {series.elements.map((element, index) => (
-              <Reveal
+              <StaggerItem
                 as="li"
                 key={element.code}
-                step={index}
-                className="group grid grid-cols-[auto_1fr] items-start gap-x-4 border-t border-co-border py-[clamp(18px,2.2vw,28px)] sm:gap-x-6"
+                className={cn(ROW_GRID, "items-baseline border-b border-co-border py-5 md:py-6")}
               >
-                {/* Ghost ordinal: the index device, not a badge. */}
-                <span
-                  aria-hidden
-                  className="font-display text-[clamp(26px,3vw,38px)] font-normal leading-none tracking-[-0.04em] text-co-border-strong tabular-nums transition-colors duration-300 group-hover:text-co-ink"
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+                <span className="co-data">{String(index + 1).padStart(2, "0")}</span>
 
                 <div className="min-w-0">
-                  <div className="mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <h3 className="font-display text-[clamp(17px,1.5vw,21px)] font-medium leading-tight tracking-[-0.025em]">
-                      {element.name}
-                    </h3>
-                    <span className="ml-auto shrink-0 text-[9.5px] font-semibold uppercase tracking-[0.18em] text-co-placeholder">
-                      {element.kind}
-                    </span>
-                  </div>
-                  <p className="mb-3 max-w-[48ch] text-[13.5px] font-light leading-relaxed text-co-muted">
+                  <h3 className="font-display text-[clamp(20px,2.2vw,30px)] font-semibold leading-[0.95] tracking-[-0.02em]">
+                    {element.name}
+                  </h3>
+                  <p className="mt-2.5 max-w-[52ch] text-[14px] leading-[1.55] text-co-muted">
                     {element.note}
                   </p>
-                  <div className="flex items-baseline gap-3 font-mono text-[11px] tracking-[0.04em] text-co-placeholder">
-                    <span className="font-semibold text-co-ink-soft">{element.ref}</span>
-                    <span aria-hidden className="h-px flex-1 bg-co-border" />
-                    <span>{element.code}</span>
-                  </div>
+                  {/* Phones fold type and code under the name rather than into columns. */}
+                  <p className="co-data mt-3 md:hidden">
+                    <span className="text-co-muted-2">
+                      {element.kind} · Ref {element.ref} ·{" "}
+                    </span>
+                    <ElementCode series={series} code={element.code} />
+                  </p>
                 </div>
-              </Reveal>
+
+                <span className="hidden text-[15px] text-co-ink-soft md:block">{element.kind}</span>
+
+                <span className="co-data hidden min-w-0 break-words md:block">
+                  <ElementCode series={series} code={element.code} />
+                  <span className="block text-co-muted-2">Ref {element.ref}</span>
+                </span>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerContainer>
         </MobilePeek>
 
+        {hasInferred ? (
+          <p className="co-eyebrow mt-4 normal-case tracking-normal">{INFERRED_CODE_FOOTNOTE}</p>
+        ) : null}
+
         {series.elementsNote ? (
-          <div className="mt-[clamp(26px,3vw,40px)] flex items-start gap-4 border-t border-co-border pt-5">
-            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder">
-              Note
-            </span>
-            <p className="max-w-[60ch] text-[13.5px] font-light leading-relaxed text-co-muted">
+          <div className={cn(ROW_GRID, "mt-[clamp(26px,3vw,40px)] items-baseline gap-y-2")}>
+            <p className="co-eyebrow">Note</p>
+            <p className="max-w-[62ch] text-[15px] leading-[1.55] text-co-ink-soft">
               {series.elementsNote}
             </p>
           </div>

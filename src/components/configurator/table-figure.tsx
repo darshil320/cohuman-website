@@ -1,24 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { FigureCaption } from "@/components/ui/figure-caption";
+import { RegistrationCross } from "@/components/ui/registration-cross";
 import type { FinishOption, LegOption, TopOption } from "@/lib/configurator";
+import { LEG_MARK_SIZE, legLayout, planTable } from "./table-plan";
 
 /**
- * Live specification drawing.
+ * Live specification drawing — Fig. 01 of the configurator.
  *
- * A vector plan of the table being specified: the outline follows the configuration's
- * shape, the fills follow the chosen top and frame finishes, the leg marks follow the
- * selected leg package, and screens appear when a screen accessory is picked. It is a
- * schematic rather than a render — it is drawn from the specification, so it can never
- * show a combination the customer has not actually chosen, which a library of static
- * photographs could not promise.
+ * A plan of the table being specified, drawn the way a drawing set draws it: a fog plate
+ * with a one-pixel ink outline, chain centre lines, the leg package as ink flats, a
+ * screen along the spine when one is on the specification, and dimension lines carrying
+ * the length and depth the specification resolved to. It is drawn from the
+ * specification, so it can never show a combination the customer has not chosen.
  *
- * Every figure is proportional, not to scale: the aspect ratio tracks the selected
- * length and depth so a 4000mm boardroom top reads longer than an 800mm desk, but the
- * drawing is not a dimensioned plan and nothing should be measured off it.
+ * Finishes are not painted onto the plate — a drawing is ink on paper — so they are
+ * keyed in the caption with the data's own swatch fills.
+ *
+ * Motion is the plotter: when the geometry changes the outline and dimensions re-draw,
+ * 400ms linear, via stroke-dashoffset. Nothing fades. The resting state is the finished
+ * drawing, so with scripting off or reduced motion the plan is simply there.
  */
-
-const SPRING = { type: "spring", bounce: 0, duration: 0.7 } as const;
 
 interface TableFigureProps {
   top: TopOption;
@@ -29,15 +32,67 @@ interface TableFigureProps {
   hasScreen: boolean;
   length: number;
   depth: number | null;
+  /** Series wordmark for the caption, e.g. "STRETCHS". */
+  wordmark: string;
+  /** The size as the summary quotes it (`sizeLabel`) — printed, never rebuilt here. */
+  size: string;
 }
 
-/** Leg packages that put a support at the mid-span rather than only at the corners. */
-function legMarks(leg: LegOption | null): "four" | "two" | "bench" | "bench-mid" {
-  const name = leg?.name.toLowerCase() ?? "";
-  if (name.includes("mid")) return "bench-mid";
-  if (name.includes("bench")) return "bench";
-  if (name.startsWith("2") || name.includes("two")) return "two";
-  return "four";
+/** Plotter speed: every Signal motion that moves a measurement takes 400ms, linear. */
+const PLOT_MS = 400;
+
+/** Laid out at this size until the frame has been measured (server render, first paint). */
+const FALLBACK = { width: 640, height: 480 };
+
+/**
+ * The frame's content size in CSS pixels. The SVG's viewBox is set to it so one user
+ * unit is one pixel — which is what makes every stroke exactly 1px and lets the
+ * stroke-dash plot work (`non-scaling-stroke` would break `pathLength` dashing).
+ */
+function useFrameSize(ref: RefObject<HTMLDivElement | null>) {
+  const [size, setSize] = useState(FALLBACK);
+
+  useEffect(() => {
+    const frame = ref.current;
+    if (!frame || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const width = Math.round(entry.contentRect.width);
+      const height = Math.round(entry.contentRect.height);
+      if (!width || !height) return;
+      setSize((prev) => (prev.width === width && prev.height === height ? prev : { width, height }));
+    });
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return size;
+}
+
+/**
+ * Re-plots the group's strokes when `signature` changes — never on mount, so the server
+ * HTML's finished drawing is not wiped and redrawn on hydration. Every stroked path in
+ * the group carries `pathLength={1}`, so one dash of length 1 covers any path and the
+ * offset 1 → 0 draws it end to end. Reduced motion skips straight to the result.
+ */
+function usePlot(ref: RefObject<SVGGElement | null>, signature: string) {
+  const plotted = useRef(signature);
+
+  useEffect(() => {
+    const group = ref.current;
+    if (!group || plotted.current === signature) return;
+    plotted.current = signature;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const plot = group.animate(
+      [
+        { strokeDasharray: "1 1", strokeDashoffset: "1" },
+        { strokeDasharray: "1 1", strokeDashoffset: "0" },
+      ],
+      { duration: PLOT_MS, easing: "linear" },
+    );
+    return () => plot.cancel();
+  }, [ref, signature]);
 }
 
 export function TableFigure({
@@ -48,254 +103,142 @@ export function TableFigure({
   hasScreen,
   length,
   depth,
+  wordmark,
+  size,
 }: TableFigureProps) {
-  const surface = topFinish?.fill ?? "#E6DECC";
-  const edge = topFinish?.edge ?? "#D3C9B3";
-  const frame = frameFinish?.fill ?? "#9BA0A6";
-  const marks = legMarks(leg);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const plotRef = useRef<SVGGElement>(null);
+  const { width, height } = useFrameSize(frameRef);
+  const layout = legLayout(leg);
 
-  /*
-    The viewBox is fixed and the top is centred inside it, so the stroke width stays
-    visually constant instead of scaling with the table.
+  const plan = useMemo(
+    () => planTable({ shape: top.shape, length, depth, legs: layout, hasScreen, width, height }),
+    [top.shape, length, depth, layout, hasScreen, width, height],
+  );
 
-    The box is fitted to the frame rather than pinned to a fixed width: a 4000 × 1200
-    boardroom top is proportionally very wide, and sizing off the width alone pushed the
-    drawing past the bottom of the frame. Whichever dimension hits its limit first sets
-    the scale, and the other follows the real proportion.
-  */
-  const VIEW_W = 360;
-  const VIEW_H = 270;
-  const MAX_W = 290;
-  const MAX_H = 196;
+  usePlot(plotRef, `${top.slug}|${length}|${depth}|${layout}|${hasScreen}`);
 
-  const ratio =
-    top.shape === "round" ? 1 : depth && length ? Math.min(Math.max(depth / length, 0.28), 1) : 0.5;
-
-  const boxW = Math.min(MAX_W, MAX_H / ratio);
-  const boxH = boxW * ratio;
-  const x = (VIEW_W - boxW) / 2;
-  const y = (VIEW_H - boxH) / 2;
+  const half = LEG_MARK_SIZE / 2;
 
   return (
-    <svg
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-      // Uniform scale, centred. Stretching the viewBox to the stage moved the top and the
-      // leg marks by different factors and the legs landed off the board.
-      preserveAspectRatio="xMidYMid meet"
-      className="h-full w-full"
-      role="img"
-      aria-label={`Plan view — ${top.name}, ${topFinish?.name ?? "default"} top`}
-    >
-      <defs>
-        {/* Gradients are supplied as CSS strings on the swatch, which SVG cannot read,
-            so the swatch's flat edge colour backs the surface and the CSS gradient is
-            layered over it with a foreignObject-free approach: a plain rect plus the
-            edge band. Good enough for a schematic, and it never misreports a finish. */}
-        <linearGradient id="co-surface" x1="0" y1="0" x2="0.35" y2="1">
-          <stop offset="0%" stopColor={edge} stopOpacity="0.35" />
-          <stop offset="100%" stopColor={edge} stopOpacity="0.9" />
-        </linearGradient>
-      </defs>
+    <figure>
+      <div
+        ref={frameRef}
+        className="relative aspect-[4/3] w-full border border-co-border bg-co-bg text-co-ink"
+      >
+        <RegistrationCross className="left-2.5 top-2.5" />
+        <RegistrationCross className="right-2.5 top-2.5" />
+        <RegistrationCross className="bottom-2.5 left-2.5" />
+        <RegistrationCross className="bottom-2.5 right-2.5" />
 
-      {/* Frame: drawn under the top so the legs read as supporting it. */}
-      <motion.g animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={SPRING}>
-        {marks !== "bench-mid" ? (
-          <motion.line
-            // Both the attribute and the animated value are set: motion tweens from the
-            // attribute, and without it the first frame has no geometry at all.
-            x1={x + 16}
-            x2={x + boxW - 16}
-            y1={y + boxH + 14}
-            y2={y + boxH + 14}
-            stroke={frame}
-            strokeWidth="3"
-            strokeLinecap="round"
-            initial={false}
-            animate={{ x1: x + 16, x2: x + boxW - 16, y1: y + boxH + 14, y2: y + boxH + 14 }}
-            transition={SPRING}
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="absolute inset-0 h-full w-full"
+          role="img"
+          aria-label={`Plan of the ${top.name} — ${size}`}
+        >
+          <g ref={plotRef} fill="none" stroke="currentColor" strokeWidth={1}>
+            <path d={plan.outline} pathLength={1} className="fill-co-bg-alt" />
+
+            {/* Its own dash pattern, so the plot passes it by. */}
+            {plan.centre ? (
+              <path d={plan.centre} className="stroke-co-muted-2" strokeDasharray="12 3 2 3" />
+            ) : null}
+
+            {plan.screen ? (
+              <rect
+                x={plan.screen.x}
+                y={plan.screen.y}
+                width={plan.screen.w}
+                height={plan.screen.h}
+                stroke="none"
+                className="fill-co-ink"
+              />
+            ) : null}
+
+            {plan.legs.map(([cx, cy], index) => (
+              <rect
+                key={`${layout}-${index}`}
+                x={cx - half}
+                y={cy - half}
+                width={LEG_MARK_SIZE}
+                height={LEG_MARK_SIZE}
+                stroke="none"
+                className="fill-co-ink"
+              />
+            ))}
+
+            {plan.dimensions.map((mark) => (
+              <g key={mark.label.text + mark.label.vertical}>
+                <path d={mark.extension} pathLength={1} className="stroke-co-muted-2" />
+                <path d={mark.line} pathLength={1} />
+              </g>
+            ))}
+          </g>
+
+          {/*
+            Labels sit on their dimension line; a canvas-coloured halo knocks the line out
+            behind the figures, as the moodboard's dimension labels do.
+          */}
+          {plan.dimensions.map(({ label }) => (
+            <text
+              key={label.text + label.vertical}
+              x={label.x}
+              y={label.y}
+              transform={label.vertical ? `rotate(-90 ${label.x} ${label.y})` : undefined}
+              textAnchor="middle"
+              dominantBaseline="central"
+              strokeWidth={8}
+              strokeLinejoin="round"
+              paintOrder="stroke"
+              className="co-data fill-current stroke-co-bg text-[10px]"
+            >
+              {label.text}
+            </text>
+          ))}
+        </svg>
+      </div>
+
+      <figcaption className="mt-3 border-t border-co-border pt-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <FigureCaption as="span" n={1} className="min-w-0">
+            {wordmark} · {top.name}, plan
+          </FigureCaption>
+          <span className="co-data text-co-ink">{size}</span>
+        </div>
+        <FinishKey topFinish={topFinish} frameFinish={frameFinish} />
+      </figcaption>
+    </figure>
+  );
+}
+
+/** The finish key: a small square of each chosen finish's swatch fill, name beside it. */
+function FinishKey({
+  topFinish,
+  frameFinish,
+}: {
+  topFinish: FinishOption | null;
+  frameFinish: FinishOption | null;
+}) {
+  const entries = [
+    { role: "Top", finish: topFinish },
+    { role: "Frame", finish: frameFinish },
+  ].filter((entry): entry is { role: string; finish: FinishOption } => entry.finish !== null);
+
+  return (
+    <ul className="mt-2 flex list-none flex-wrap items-center gap-x-6 gap-y-2 p-0">
+      {entries.map(({ role, finish }) => (
+        <li key={role} className="co-data flex items-center gap-2 text-co-muted-2">
+          <span
+            aria-hidden
+            className="block h-3 w-3 shrink-0 border border-co-border"
+            style={{ background: finish.fill }}
           />
-        ) : null}
-      </motion.g>
-
-      {/* Top */}
-      {top.shape === "round" ? (
-        <circle
-          cx={VIEW_W / 2}
-          cy={VIEW_H / 2}
-          r={boxH / 2}
-          fill={surface.startsWith("linear") ? edge : surface}
-          stroke={edge}
-          strokeWidth="2"
-        />
-      ) : top.shape === "l-shape" ? (
-        <motion.path
-          initial={false}
-          animate={{
-            d: `M${x} ${y} H${x + boxW} V${y + boxH * 0.52} H${x + boxW * 0.52} V${y + boxH} H${x} Z`,
-          }}
-          transition={SPRING}
-          suppressHydrationWarning
-          fill={surface.startsWith("linear") ? edge : surface}
-          stroke={edge}
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-      ) : top.shape === "u-shape" ? (
-        <motion.path
-          initial={false}
-          animate={{
-            d: `M${x} ${y} H${x + boxW} V${y + boxH} H${x + boxW * 0.72} V${y + boxH * 0.4} H${x + boxW * 0.28} V${y + boxH} H${x} Z`,
-          }}
-          transition={SPRING}
-          fill={surface.startsWith("linear") ? edge : surface}
-          stroke={edge}
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-      ) : (
-        <rect
-          x={x}
-          y={y}
-          width={boxW}
-          height={boxH}
-          fill={surface.startsWith("linear") ? edge : surface}
-          stroke={edge}
-          strokeWidth="2"
-        />
-      )}
-
-      {/* Surface shading, so a flat fill still reads as a board rather than a swatch. */}
-      {top.shape === "rect" || top.shape === "square" ? (
-        <rect x={x} y={y} width={boxW} height={boxH} fill="url(#co-surface)" opacity="0.28" />
-      ) : null}
-
-      {/* Screen along the spine — only when a screen accessory is on the specification. */}
-      {hasScreen && (top.shape === "rect" || top.shape === "square") ? (
-        <motion.rect
-          x={x + 10}
-          y={y + boxH / 2 - 3}
-          width={boxW - 20}
-          height={6}
-          rx="3"
-          fill={frame}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.75 }}
-          exit={{ opacity: 0 }}
-          transition={SPRING}
-        />
-      ) : null}
-
-      {/* Leg marks */}
-      {(() => {
-        const inset = Math.min(24, boxH / 2 - 6, boxW / 2 - 6);
-        const corners = [
-          [x + inset, y + inset],
-          [x + boxW - inset, y + inset],
-          [x + inset, y + boxH - inset],
-          [x + boxW - inset, y + boxH - inset],
-        ];
-        const pairs = [
-          [x + inset, y + boxH / 2],
-          [x + boxW - inset, y + boxH / 2],
-        ];
-        const mids = [
-          [x + boxW / 2, y + inset],
-          [x + boxW / 2, y + boxH - inset],
-        ];
-
-        /*
-          A round top has no corners: placing the marks on the bounding box floated them
-          off the board. They go on the circle itself, inset from the edge by the same
-          amount a rectangular top insets from its sides.
-        */
-        if (top.shape === "round") {
-          const r = boxH / 2 - inset * 0.7;
-          const count = marks === "two" ? 2 : 4;
-          const ring = Array.from({ length: count }, (_, i) => {
-            const angle = (Math.PI * 2 * i) / count + Math.PI / 4;
-            return [VIEW_W / 2 + r * Math.cos(angle), VIEW_H / 2 + r * Math.sin(angle)];
-          });
-          return ring.map(([cx, cy], index) => (
-            <motion.circle
-              key={`round-${marks}-${index}`}
-              cx={cx}
-              cy={cy}
-              r="5"
-              fill={frame}
-              style={{ transformBox: "fill-box", transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ ...SPRING, delay: index * 0.03 }}
-            />
-          ));
-        }
-
-        /*
-          L and U tops are not rectangles: the bounding-box corners land in the cut-away,
-          where there is no board to stand a leg on. Both shapes are drawn from the same
-          proportions as the outline above, so the marks follow those instead.
-        */
-        if (top.shape === "l-shape") {
-          const legPoints = [
-            [x + inset, y + inset],
-            [x + boxW - inset, y + inset],
-            [x + inset, y + boxH - inset],
-            [x + boxW * 0.52 - inset, y + boxH - inset],
-          ];
-          return legPoints.map(([cx, cy], index) => (
-            <motion.circle
-              key={`l-${index}`}
-              cx={cx}
-              cy={cy}
-              r="5"
-              fill={frame}
-              style={{ transformBox: "fill-box", transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ ...SPRING, delay: index * 0.03 }}
-            />
-          ));
-        }
-
-        if (top.shape === "u-shape") {
-          const legPoints = [
-            [x + inset, y + inset],
-            [x + boxW - inset, y + inset],
-            [x + inset, y + boxH - inset],
-            [x + boxW - inset, y + boxH - inset],
-          ];
-          return legPoints.map(([cx, cy], index) => (
-            <motion.circle
-              key={`u-${index}`}
-              cx={cx}
-              cy={cy}
-              r="5"
-              fill={frame}
-              style={{ transformBox: "fill-box", transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ ...SPRING, delay: index * 0.03 }}
-            />
-          ));
-        }
-
-        const points =
-          marks === "two" ? pairs : marks === "bench-mid" ? [...corners, ...mids] : corners;
-
-        return points.map(([cx, cy], index) => (
-          <motion.circle
-            key={`${marks}-${index}`}
-            cx={cx}
-            cy={cy}
-            r="5"
-            fill={frame}
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...SPRING, delay: index * 0.03 }}
-          />
-        ));
-      })()}
-    </svg>
+          {role}
+          <span className="text-co-ink">{finish.name}</span>
+        </li>
+      ))}
+      <li className="co-data text-co-muted-2 sm:ml-auto">Schematic · not to scale</li>
+    </ul>
   );
 }

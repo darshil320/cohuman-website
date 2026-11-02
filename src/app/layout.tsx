@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import { Archivo, Martian_Mono } from "next/font/google";
 import { MotionConfig } from "framer-motion";
 import { RevealObserver } from "@/components/ui/reveal-observer";
 import { Analytics } from "@vercel/analytics/next";
@@ -17,23 +17,30 @@ import { collectionPhoto } from "@/lib/photos";
 import type { DrawerSeries } from "@/components/layout/nav-drawer";
 
 /*
-  Both families are variable fonts, so `weight` is deliberately absent: it applies only
-  to a font that is *not* variable, and enumerating weights made Next fetch one static
-  instance per value — eight font files where two variable ones cover every weight the
-  site uses (300/400/500/600/700). Omitted, each resolves to `'variable'`, the default.
+  Two variable families cover the whole site.
 
-  `display` ('swap'), `preload` (true) and `adjustFontFallback` (true) are all left at
-  their defaults, which are already what we want; `subsets: ["latin"]` is what makes
-  Next inject the `<link rel="preload">` for the font file into the head.
+  - Archivo carries both display and body. `axes: ["wdth"]` adds the width axis (62–125)
+    to the default weight axis, so Archivo Expanded — the display face — is this same
+    file at `font-stretch: 125%`, not a second download. Body text sits at the default
+    width of 100.
+  - Martian Mono carries every measured value, code, size and label, at
+    `font-stretch: 87.5%`.
+
+  `weight` is deliberately absent: on a variable font it would make Next fetch one
+  static instance per value instead of the single variable file. `display`, `preload`
+  and `adjustFontFallback` stay at their defaults; `subsets` is what makes Next inject
+  the preload link.
 */
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const martianMono = Martian_Mono({
+  variable: "--font-martian",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -95,23 +102,9 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description:
       "Office furniture designed around the people who use it. Request a quote for your space.",
-    // Site-wide share card. Every page that does not set its own image inherits this one;
-    // without a default, a shared link from /about, /contact or a sector page renders as
-    // a bare text row in WhatsApp, Slack and LinkedIn. `metadataBase` above makes it
-    // absolute, which is why that value must be the real production origin.
-    //
-    // `og.jpg` is a purpose-built 1200×630 crop of the hero, ~80 KB. It is not the hero
-    // file itself: WhatsApp silently drops preview images past a few hundred kilobytes,
-    // and the hero source is 2.36:1, so declaring the conventional 1.91:1 for it made
-    // scrapers letterbox or crop to a ratio the file did not have.
-    images: [
-      {
-        url: "/og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "A completed Cohuman office fit-out — executive desk, credenza and meeting setting",
-      },
-    ],
+    // No `images` here: `src/app/opengraph-image.tsx` is the site-wide share card, and
+    // file-based metadata takes priority over this object anyway. Listing a second image
+    // here would only invite the two to drift apart.
     locale: "en_IN",
   },
   twitter: {
@@ -119,7 +112,6 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description:
       "Office furniture designed around the people who use it. Request a quote for your space.",
-    images: ["/og.jpg"],
   },
 };
 
@@ -173,10 +165,13 @@ const jsonLd = {
       legalName: siteConfig.legalName,
       alternateName: "Cohuman Modularr",
       url: siteConfig.url,
-      image: `${siteConfig.url}/og.jpg`,
+      // The master wordmark, not a photograph: `logo` is what search engines use for the
+      // knowledge panel, and it must be the supplied artwork rather than a crop of a room.
+      logo: `${siteConfig.url}/brand/logo-black.png`,
+      image: `${siteConfig.url}/opengraph-image`,
       description:
         "Office furniture manufacturer and fit-out contractor in Surat, Gujarat. Desking systems, ergonomic seating, conference tables, storage and reception furniture, supplied on quotation.",
-      founder: { "@type": "Person", name: siteConfig.founder },
+      founder: siteConfig.founders.map((name) => ({ "@type": "Person", name })),
       email: siteConfig.email,
       telephone: siteConfig.phoneDisplay,
       address: {
@@ -223,7 +218,9 @@ const jsonLd = {
       name: `${siteConfig.name} — Surat showroom & factory`,
       parentOrganization: { "@id": ORGANIZATION_ID },
       url: `${siteConfig.url}/contact`,
-      image: `${siteConfig.url}${siteConfig.suratPhotos[0].src}`,
+      // The showroom photograph where one is cleared for use (see `suratPhotos`), else the
+      // master logo — never a photo carrying the old trading name.
+      image: `${siteConfig.url}${siteConfig.suratPhotos[0]?.src ?? "/brand/logo-black.png"}`,
       telephone: siteConfig.phoneDisplay,
       email: siteConfig.email,
       priceRange: "Quotation on request",
@@ -261,7 +258,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${figtree.variable} h-full antialiased`}
+      className={`${archivo.variable} ${martianMono.variable} h-full antialiased`}
       /*
         The head script below adds `co-js` before React hydrates, so the client's class
         list legitimately differs from the server's. Without this, React reports a

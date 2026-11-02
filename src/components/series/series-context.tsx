@@ -25,6 +25,11 @@ interface SeriesState {
   partIndex: number;
   dimensionsOn: boolean;
   quantity: string;
+  /**
+   * Which configurator steps the visitor has set themselves this visit. Presentation
+   * only — it drives the progress rail and never reaches the enquiry payload.
+   */
+  touched: { config: boolean; length: boolean; depth: boolean };
 }
 
 type SeriesAction =
@@ -54,6 +59,7 @@ function initialState(series: SeriesDefinition): SeriesState {
     partIndex: defaultPartIndex(series),
     dimensionsOn: true,
     quantity: "12",
+    touched: { config: false, length: false, depth: false },
   };
 }
 
@@ -63,13 +69,19 @@ function reducer(state: SeriesState, action: SeriesAction): SeriesState {
     case "pickConfig":
       // Size indices are per-configuration, so a new configuration starts at its first
       // length/depth rather than carrying over an out-of-range index.
-      return { ...state, configIndex: action.index, lenIndex: 0, depIndex: 0 };
+      return {
+        ...state,
+        configIndex: action.index,
+        lenIndex: 0,
+        depIndex: 0,
+        touched: { config: true, length: false, depth: false },
+      };
     case "setFinish":
       return { ...state, finish: action.finish };
     case "setLength":
-      return { ...state, lenIndex: action.index };
+      return { ...state, lenIndex: action.index, touched: { ...state.touched, length: true } };
     case "setDepth":
-      return { ...state, depIndex: action.index };
+      return { ...state, depIndex: action.index, touched: { ...state.touched, depth: true } };
     case "setPart":
       return { ...state, partIndex: action.index };
     case "toggleDimensions":

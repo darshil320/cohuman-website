@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site-config";
   Web app manifest.
 
   Not a PWA — there is no service worker and nothing here works offline. It exists so
-  that a visitor who adds the site to a phone home screen gets the monogram and the
+  that a visitor who adds the site to a phone home screen gets the compact mark and the
   company name rather than a screenshot and a URL, and so Android's "install" prompt
   has a name and a theme colour to use. `display: "browser"` says so plainly: this is a
   website, and tapping the icon should open it as one.
@@ -18,9 +18,10 @@ export default function manifest(): MetadataRoute.Manifest {
       "Office furniture designed around the people who use it — desking, ergonomic seating, conference tables, storage and reception furniture, designed and manufactured in Surat.",
     start_url: "/",
     display: "browser",
-    // Matches `--color-co-bg` / `--color-co-green` in globals.css.
-    background_color: "#ffffff",
-    theme_color: "#16181b",
+    // Canvas and ink from globals.css (`--color-co-bg` / `--color-co-ink`). The icons are
+    // the compact mark reversed on ink, so the ink theme colour frames them without a seam.
+    background_color: "#fbf8ee",
+    theme_color: "#231f20",
     lang: "en-IN",
     categories: ["business", "shopping"],
     /*

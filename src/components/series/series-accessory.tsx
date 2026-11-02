@@ -1,76 +1,89 @@
 "use client";
 
+import { SectionHeading } from "@/components/common/section-heading";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import { INFERRED_CODE_FOOTNOTE, isInferredCode } from "@/lib/series";
+import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
-import { Reveal } from "./reveal";
+import { seriesSectionEyebrow } from "@/lib/series";
 
 /**
  * Accessory quoted by SKU and travel rather than by configuration — VARIDEX's
  * retractable wire channel. Rendered only where the series defines one.
+ *
+ * Set on the ink block: the parts that make up the channel as an index on the left, the
+ * SKU table in mono on the right, every code and limit read straight off the series data.
  */
 export function SeriesAccessory() {
   const { series } = useSeriesConfigurator();
   const accessory = series.accessory;
   if (!accessory) return null;
 
+  const hasInferred = accessory.rows.some((row) => isInferredCode(series, row.code));
+
   return (
-    <section className="border-b border-co-border bg-co-panel text-co-panel-fg">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
-        <div className="grid items-start gap-[clamp(24px,3.4vw,54px)] lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.9fr)]">
+    <section className="co-section bg-co-panel text-co-panel-fg">
+      <div className="co-shell">
+        <SectionHeading
+          tone="dark"
+          eyebrow={seriesSectionEyebrow(series, "accessory", accessory.eyebrow)}
+          title={accessory.heading}
+          blurb={accessory.blurb}
+        />
+
+        <div className="grid items-start gap-[clamp(36px,4vw,64px)] lg:grid-cols-2">
+          <StaggerContainer as="ul" staggerDelay={0.08} className="list-none border-t border-co-panel-border p-0">
+            {accessory.parts.map((part, index) => (
+              <StaggerItem
+                as="li"
+                key={part.name}
+                className="grid grid-cols-[40px_minmax(0,1fr)] items-baseline gap-x-4 border-b border-co-panel-border py-5"
+              >
+                <span className="co-data text-co-panel-faint">{String(index + 1).padStart(2, "0")}</span>
+                <div className="min-w-0">
+                  <h3 className="co-h3 text-co-panel-fg">{part.name}</h3>
+                  <p className="mt-2 max-w-[46ch] text-[15px] leading-[1.55] text-co-panel-muted">{part.note}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+
           <Reveal>
-            <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-panel-faint">
-              {accessory.eyebrow}
-            </p>
-            <h2 className="mb-5 max-w-[22ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em] text-co-panel-fg">
-              {accessory.heading}
-            </h2>
-            <p className="max-w-[44ch] text-[15.5px] font-light leading-relaxed text-co-panel-muted">
-              {accessory.blurb}
-            </p>
-
-            <dl className="mt-8 grid">
-              {accessory.parts.map((part) => (
-                <div key={part.name} className="border-t border-co-panel-border py-4">
-                  <dt className="mb-1.5 font-display text-[17px] font-medium tracking-[-0.022em] text-co-panel-fg">
-                    {part.name}
-                  </dt>
-                  <dd className="max-w-[46ch] text-[13.5px] font-light leading-relaxed text-co-panel-muted">
-                    {part.note}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          <Reveal step={1}>
-            <div>
-              <div className="grid grid-cols-[1.6fr_1fr_1fr] gap-4 border-b border-co-panel-border pb-3">
-                {accessory.columns.map((column, index) => (
-                  <span
-                    key={column}
-                    className={`text-[10px] font-semibold uppercase tracking-[0.2em] text-co-panel-faint ${
-                      index > 0 ? "text-right" : ""
-                    }`}
-                  >
-                    {column}
-                  </span>
+            <table className="co-data w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b border-co-panel-fg">
+                  {accessory.columns.map((column, index) => (
+                    <th
+                      key={column}
+                      scope="col"
+                      className={cn("pb-3 text-left font-normal text-co-panel-faint", index > 0 && "text-right")}
+                    >
+                      {column}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {accessory.rows.map((row) => (
+                  <tr key={row.code} className="border-b border-co-panel-border">
+                    <th scope="row" className="py-4 pr-4 text-left font-normal text-co-panel-fg">
+                      {row.code}
+                      {isInferredCode(series, row.code) ? (
+                        <span className="text-co-panel-faint" title={INFERRED_CODE_FOOTNOTE}>
+                          °
+                        </span>
+                      ) : null}
+                    </th>
+                    <td className="py-4 text-right text-co-panel-fg">{row.min}</td>
+                    <td className="py-4 pl-4 text-right text-co-panel-fg">{row.max}</td>
+                  </tr>
                 ))}
-              </div>
-              {accessory.rows.map((row) => (
-                <div
-                  key={row.code}
-                  className="grid grid-cols-[1.6fr_1fr_1fr] items-center gap-4 border-b border-co-panel-border/60 py-3.5 last:border-b-0"
-                >
-                  <span className="font-mono text-[12.5px] text-co-panel-fg">{row.code}</span>
-                  <span className="text-right text-sm font-light tabular-nums text-co-panel-muted">
-                    {row.min}
-                  </span>
-                  <span className="text-right text-sm font-light tabular-nums text-co-panel-muted">
-                    {row.max}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <p className="mt-5 text-[12.5px] font-light leading-relaxed text-co-panel-faint">
+              </tbody>
+            </table>
+            {hasInferred ? (
+              <p className="mt-3 text-[12.5px] leading-[1.55] text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
+            ) : null}
+            <p className="mt-5 max-w-[52ch] text-[13px] leading-[1.55] text-co-panel-muted">
               Travel is the span the tray covers, not the length of the top — we size it
               against the beam on the quote.
             </p>

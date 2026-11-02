@@ -77,6 +77,50 @@ export function chartDepths(config: SeriesConfig): string {
   return config.deps.join(" / ");
 }
 
+/*
+  Dimension-line labels.
+
+  Every product image on the site carries a dimension line, and the rule is that no size
+  is ever typed by hand: these read the ranges straight off the series data, so a
+  corrected size in a config file corrects every drawing that shows it. They print only
+  what the data holds — an empty list yields an empty label, never a placeholder number.
+*/
+
+/** `min — max` over a list of millimetre values, or the single value when they agree. */
+export function rangeLabel(values: readonly number[]): string {
+  if (values.length === 0) return "";
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  return min === max ? `${min}` : `${min} — ${max}`;
+}
+
+/** The length range a configuration is offered in; a diameter for round tops. */
+export function configLengthLabel(config: SeriesConfig): string {
+  const range = rangeLabel(config.lens);
+  return config.dia ? `Ø${range}` : range;
+}
+
+/** The depth range, the side range for square tops, and null for round tops. */
+export function configDepthLabel(config: SeriesConfig): string | null {
+  if (config.dia) return null;
+  if (config.sq) return rangeLabel(config.lens);
+  return rangeLabel(config.deps);
+}
+
+/** Length × depth range, as drawn on the name hero's dimension rule. */
+export function configSizeRange(config: SeriesConfig): string {
+  const depth = configDepthLabel(config);
+  const length = configLengthLabel(config);
+  return depth ? `${length} × ${depth}` : length;
+}
+
+/** Shortest to longest length across a set of configurations, e.g. "800 → 4000 mm". */
+export function spanLabel(configs: readonly SeriesConfig[]): string {
+  const lens = configs.flatMap((config) => config.lens);
+  if (lens.length === 0) return "";
+  return `${Math.min(...lens)} → ${Math.max(...lens)} mm`;
+}
+
 /** Human label for the selected configuration's finish, or null where the series has none. */
 export function finishLabel(selection: SeriesSelection): string | null {
   const { series, config } = selection;

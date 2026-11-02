@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent } from "@/components/forms/form-status";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -62,41 +63,32 @@ export function B2bForm() {
 
   if (sent) {
     return (
-      <div className="py-16 text-center sm:py-20">
-        <div className="mx-auto mb-5 flex h-[52px] w-[52px] items-center justify-center bg-co-green text-lg font-semibold text-co-cta-green-ink">
-          ✓
-        </div>
-        <h2 className="mb-2.5 font-display text-2xl font-medium tracking-tight">
-          Thank you — your bulk enquiry is with our B2B desk.
-        </h2>
-        <p className="mx-auto max-w-[42ch] text-[15.5px] leading-relaxed text-co-muted">
-          A specifier will reply within {siteConfig.enquiryTurnaround} with a scoped proposal
-          for the quantity and timeline you gave us.
-        </p>
-      </div>
+      <FormSent label="Bulk enquiry received" title="Thank you — your bulk enquiry is with our B2B desk.">
+        A specifier will reply within {siteConfig.enquiryTurnaround} with a scoped proposal for the quantity and timeline you gave us.
+      </FormSent>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
-        <div className="grid gap-1.5 sm:col-span-2">
+      <div className={FORM_GRID}>
+        <div className={`${FIELD} sm:col-span-2`}>
           <Label htmlFor="companyName">Company name</Label>
           <Input id="companyName" name="companyName" placeholder="Organisation" required />
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="contactName">Contact name</Label>
           <Input id="contactName" name="contactName" placeholder="Your full name" required />
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="email">Email</Label>
           <Input id="email" name="email" type="email" placeholder="name@company.com" required />
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="phone">Phone</Label>
           <Input id="phone" name="phone" type="tel" placeholder="+91" required />
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="estimatedQuantity">Estimated quantity</Label>
           <Input
             id="estimatedQuantity"
@@ -105,7 +97,7 @@ export function B2bForm() {
             required
           />
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="useCase">Use case</Label>
           <Select id="useCase" name="useCase" defaultValue={USE_CASES[0]} required>
             {USE_CASES.map((option) => (
@@ -115,7 +107,7 @@ export function B2bForm() {
             ))}
           </Select>
         </div>
-        <div className="grid gap-1.5">
+        <div className={FIELD}>
           <Label htmlFor="timeline">Timeline</Label>
           <Select id="timeline" name="timeline" defaultValue={TIMELINES[0]} required>
             {TIMELINES.map((option) => (
@@ -125,7 +117,7 @@ export function B2bForm() {
             ))}
           </Select>
         </div>
-        <div className="grid gap-1.5 sm:col-span-2">
+        <div className={`${FIELD} sm:col-span-2`}>
           <Label htmlFor="message">Anything else useful</Label>
           <Textarea
             id="message"
@@ -136,14 +128,14 @@ export function B2bForm() {
         </div>
       </div>
 
-      {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+      <FormError message={error} />
 
-      <Button type="submit" disabled={submitting} className="mt-5 w-full">
+      <Button type="submit" dots disabled={submitting} className="mt-8 w-full">
         {submitting ? "Sending…" : "Send bulk enquiry"}
       </Button>
-      <p className="mt-3 text-center text-xs text-co-faint">
+      <FormFootnote>
         Routed straight to our B2B desk. We reply within {siteConfig.enquiryTurnaround}.
-      </p>
+      </FormFootnote>
     </form>
   );
 }

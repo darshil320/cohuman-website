@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Wordmark } from "@/components/common/wordmark";
+import { Logo } from "@/components/common/logo";
+import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
+import { useHeroChrome } from "@/lib/hero-chrome";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
@@ -21,20 +23,26 @@ const DRAWER_LINKS: DrawerLink[] = [
   { label: "B2B / bulk orders", href: "/b2b", note: "Floor-plate quantities on one schedule." },
 ];
 
-/** Scroll distance after which the header tightens onto a hairline. */
-const CONDENSE_AT = 20;
-
 /**
- * Site header.
+ * Site header — the moodboard's nav bar.
  *
- * Type and hairlines only — the pills, shadows and raw `slate-*` values this used to
- * carry were the one piece of chrome that contradicted every page under it. The active
- * route is marked by a rule under the label rather than a filled chip, which is the same
- * device the configurator and the collections index use for selection.
+ * Logo, mono nav, and the one primary action: "Get a quote" with the signal dots. A solid
+ * canvas bar on a hairline. The active route is marked by a 2px rule under its label plus
+ * `aria-current`; the green stays on the quote button's dots, so the header never puts two
+ * green things on one screen.
+ *
+ * Over the homepage's full-bleed hero the bar goes transparent (`useHeroChrome`), with
+ * light type and the reversed logo on a dark film. It turns solid again once the hero has
+ * scrolled away, or whenever the drawer or the mobile menu is open.
+ *
+ * NEVER give this element `backdrop-filter`, `filter`, `transform` or `will-change`. Any
+ * of them makes the header the containing block for its `position: fixed` children, and
+ * the mobile menu — sized `top: 72px; bottom: 0` against the viewport — collapses to the
+ * header's own box and vanishes. That was the "menu won't open after scrolling" bug: the
+ * old header added `backdrop-blur` once the page scrolled.
  */
 export function SiteHeader({ series }: { series: DrawerSeries[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const { openQuote } = useQuoteDialog();
@@ -48,13 +56,6 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
     setMobileOpen(false);
     setDrawerOpen(false);
   }
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > CONDENSE_AT);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // The overlay is fixed and full-height, so the page behind it must not scroll under it.
   useEffect(() => {
@@ -98,11 +99,17 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const hero = useHeroChrome();
+  const transparent = hero.overHero && !mobileOpen && !drawerOpen;
+  // Light type, for a transparent bar over dark footage.
+  const onDark = transparent && hero.tone === "dark";
+  const ink = onDark ? "bg-co-panel-fg" : "bg-co-ink";
+
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] border-b transition-colors duration-300",
-        scrolled ? "border-co-border bg-co-bg/92 backdrop-blur-xl" : "border-transparent bg-co-bg",
+        "fixed inset-x-0 top-0 z-[60] border-b transition-colors duration-200",
+        transparent ? "border-transparent bg-transparent" : "border-co-border bg-co-bg",
       )}
     >
       <div
@@ -110,15 +117,14 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
         className="co-shell flex items-center justify-between gap-4 sm:gap-8"
       >
         <Link href="/" className="group flex shrink-0 items-center" aria-label="Cohuman — home">
-          <Wordmark className="text-[17px] text-co-ink transition-opacity duration-300 group-hover:opacity-60 sm:text-[19px]" />
+          <Logo
+            eager
+            tone={onDark ? "light" : "dark"}
+            className="w-[140px] transition-opacity duration-150 group-hover:opacity-70 sm:w-[150px]"
+          />
         </Link>
 
-        {/*
-          Nav labels are mono and tracked out, matching the part-code language the pages
-          use. The rule under a label grows from the left on hover as well as on the
-          active route, so the header moves the same way the section links do.
-        */}
-        <nav className="ml-auto hidden items-center gap-[clamp(18px,2vw,30px)] lg:flex">
+        <nav aria-label="Primary" className="ml-auto hidden items-center gap-[clamp(16px,1.9vw,32px)] xl:flex">
           {primaryNav.map((item) => {
             const active = isActive(item.href);
             const isCollections = item.href === "/collections";
@@ -135,20 +141,33 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
                   aria-expanded={isCollections ? drawerOpen : undefined}
                   onFocus={isCollections ? openDrawer : undefined}
                   className={cn(
-                    "group relative block py-2 font-mono text-[11px] font-medium uppercase tracking-[0.18em] transition-colors duration-200",
-                    active || (isCollections && drawerOpen)
-                      ? "text-co-ink"
-                      : "text-co-muted hover:text-co-ink",
+                    "co-data group relative block py-2 transition-colors duration-150",
+                    // Over footage, type runs full strength — a muted grey vanishes on a
+                    // busy frame. The muted rest state is for the solid bar only.
+                    onDark
+                      ? "text-co-panel-fg"
+                      : transparent || active || (isCollections && drawerOpen)
+                        ? "text-co-ink"
+                        : "text-co-muted hover:text-co-ink",
                   )}
                 >
                   {item.label}
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-co-ink transition-transform duration-300 ease-[var(--ease-co)] group-hover:scale-x-100",
-                      active || (isCollections && drawerOpen) ? "scale-x-100" : "scale-x-0",
-                    )}
-                  />
+                  {/*
+                    Ink, not green: the header already carries this screen's one green
+                    thing — the dots on "Get a quote" — and it is on every screen.
+                  */}
+                  {active ? (
+                    <span aria-hidden className={cn("absolute -bottom-px left-0 block h-[2px] w-full", ink)} />
+                  ) : (
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute bottom-0 left-0 block h-px w-full origin-left transition-transform duration-[400ms] ease-linear group-hover:scale-x-100",
+                        ink,
+                        isCollections && drawerOpen ? "scale-x-100" : "scale-x-0",
+                      )}
+                    />
+                  )}
                 </Link>
               </div>
             );
@@ -158,34 +177,48 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
         <div className="flex items-center gap-5 sm:gap-6">
           <Link
             href="/contact"
-            className="hidden font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-co-muted transition-colors hover:text-co-ink lg:inline-block"
+            aria-current={isActive("/contact") ? "page" : undefined}
+            className={cn(
+              "co-data hidden transition-colors xl:inline-block",
+              onDark ? "text-co-panel-fg" : transparent ? "text-co-ink" : "text-co-muted hover:text-co-ink",
+            )}
           >
             Contact
           </Link>
-          <button
+          <Button
             type="button"
+            size="sm"
+            dots
+            variant={onDark ? "onDark" : "primary"}
             onClick={() => openQuote()}
-            className="hidden border-b-2 border-co-ink pb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted min-[380px]:inline-flex"
+            className="gap-2.5 px-3 sm:gap-3.5 sm:px-4"
           >
-            Request a Quote
-          </button>
+            {/* Shortened on phones so the action never drops out of the bar. */}
+            <span className="sm:hidden">Quote</span>
+            <span className="hidden sm:inline">Get a quote</span>
+          </Button>
 
           <button
             type="button"
             onClick={() => setMobileOpen((open) => !open)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            className="relative flex h-6 w-6 shrink-0 flex-col items-center justify-center gap-[5px] lg:hidden"
+            className={cn(
+              "relative flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[6px] border xl:hidden",
+              onDark ? "border-co-panel-fg" : "border-co-ink",
+            )}
           >
             <span
               className={cn(
-                "block h-px w-5 bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                "block h-px w-[18px] transition-transform duration-200",
+                ink,
                 mobileOpen && "absolute rotate-45",
               )}
             />
             <span
               className={cn(
-                "block h-px w-5 bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
+                "block h-px w-[18px] transition-transform duration-200",
+                ink,
                 mobileOpen && "absolute -rotate-45",
               )}
             />
@@ -204,99 +237,65 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
 
       <AnimatePresence>
         {mobileOpen && (
+          /*
+            The overlay wipes down from the bar rather than fading — the same plotter
+            motion as the page. Interactive chrome, mounted on demand, so a framer
+            `initial` here never reaches the server HTML.
+          */
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.3, ease: [0.65, 0, 0.35, 1] }}
             style={{ top: HEADER_HEIGHT }}
-            className="fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg lg:hidden"
+            className="fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg xl:hidden"
           >
-            {/*
-              Flush left against the page gutter, with the index in its own fixed column
-              so every label starts on the same vertical. The rules run the full width of
-              the shell rather than stopping under the text — the overlay reads as a
-              contents page, which is what the numbering implies.
-            */}
-            <nav className="co-shell flex flex-col pt-[clamp(20px,5vh,44px)]">
+            <nav aria-label="Menu" className="co-shell flex w-full flex-col pt-[clamp(16px,4vh,36px)]">
               {fullNav.map((item, index) => {
                 const active = isActive(item.href);
                 return (
-                  <motion.div
+                  <Link
                     key={item.href}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.035,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className="group relative grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-3 border-b border-co-border py-[clamp(12px,2vh,18px)]"
                   >
-                    <Link
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      aria-current={active ? "page" : undefined}
-                      className="group grid grid-cols-[2rem_1fr_auto] items-baseline gap-x-4 border-b border-co-border py-[clamp(12px,2vh,18px)]"
-                    >
-                      <span
-                        aria-hidden
-                        className={cn(
-                          "font-mono text-[10.5px] tabular-nums transition-colors",
-                          active ? "text-co-ink" : "text-co-placeholder",
-                        )}
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span
-                        className={cn(
-                          "font-display text-[clamp(21px,5.6vw,30px)] font-medium leading-tight tracking-[-0.03em] transition-colors",
-                          active ? "text-co-ink" : "text-co-ink group-hover:text-co-muted",
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                      {/* Marks the route you are on without a second colour or a chip. */}
-                      <span
-                        aria-hidden
-                        className={cn(
-                          "block h-px w-6 self-center bg-co-ink transition-transform duration-300 ease-[var(--ease-co)]",
-                          active ? "scale-x-100" : "scale-x-0",
-                        )}
-                      />
-                    </Link>
-                  </motion.div>
+                    <span aria-hidden className="co-data text-co-muted-2">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[0.95] tracking-[-0.02em]">
+                      {item.label}
+                    </span>
+                    <span aria-hidden className="text-[18px] leading-none">
+                      →
+                    </span>
+                    {active ? (
+                      <span aria-hidden className="absolute -bottom-px left-0 block h-[2px] w-16 bg-co-ink" />
+                    ) : null}
+                  </Link>
                 );
               })}
             </nav>
 
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                delay: fullNav.length * 0.035 + 0.05,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="co-shell mt-auto flex flex-col gap-5 py-[clamp(24px,5vh,44px)]"
-            >
-              <button
+            <div className="co-shell mt-auto flex w-full flex-col gap-4 py-[clamp(24px,5vh,44px)]">
+              <Button
                 type="button"
+                dots
                 onClick={() => {
                   setMobileOpen(false);
                   openQuote();
                 }}
-                className="w-full bg-co-ink py-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-bg transition-colors hover:bg-co-green-light"
+                className="w-full"
               >
-                Request a Quote
-              </button>
-              <Link
-                href="/contact"
-                onClick={() => setMobileOpen(false)}
-                className="self-start border-b-2 border-co-ink pb-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink"
-              >
-                Contact showroom
-              </Link>
-            </motion.div>
+                Get a quote
+              </Button>
+              <Button asChild variant="link" arrow className="self-start justify-self-start">
+                <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                  Contact &amp; showroom
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

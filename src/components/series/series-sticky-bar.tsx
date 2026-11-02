@@ -1,57 +1,55 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { finishLabel } from "@/lib/series";
 import { SERIES_BAR_HEIGHT } from "@/lib/layout";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
- * Bottom bar echoing the live selection. Sits at z-40 with right padding so it passes
- * behind the WhatsApp button (z-50, bottom-right) rather than fighting it, and is
- * hidden once the enquiry form is on screen — at that point it is redundant and would
- * overlap the footer.
+ * The sticky quote bar — the last beat of the officemate structure.
+ *
+ * A fog strip on a hairline carrying the live selection in mono — configuration, size,
+ * finish — and the quote action. It slides up from the bottom edge (transform only, no
+ * fade, no blur) once the visitor has scrolled past the spec block, and leaves again when
+ * the enquiry form is on screen. Right padding clears the WhatsApp button (z-50).
+ *
+ * The quote button is plain primary: the header's quote button already carries the
+ * signal dots, and this bar is on screen at the same time.
  */
 export function SeriesStickyBar({ visible }: { visible: boolean }) {
-  const { series, config, size } = useSeriesConfigurator();
+  const { config, size, selection } = useSeriesConfigurator();
+  const finish = finishLabel(selection);
+
+  const toEnquire = () => {
+    document.querySelector("#enquire")?.scrollIntoView({ behavior: "smooth" });
+    history.pushState(null, "", "#enquire");
+  };
 
   return (
     <AnimatePresence>
       {visible ? (
         <motion.div
           style={{ height: SERIES_BAR_HEIGHT }}
-          className="fixed bottom-0 left-0 right-0 z-40 border-t border-co-panel-border bg-co-panel/95 backdrop-blur-md"
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: "100%", opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.2, 0.9, 0.25, 1] }}
+          className="fixed bottom-0 left-0 right-0 z-40 border-t border-co-ink bg-co-bg-alt"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ duration: 0.3, ease: [0.65, 0, 0.35, 1] }}
         >
           {/*
             Fixed height, matching `SERIES_BAR_HEIGHT`, because the assembly section
-            reserves exactly that much room under its pinned stage. A bar that grows with
-            its content would start clipping the 3D model again.
+            reserves exactly that much room under its pinned stage.
           */}
-          <div className="mx-auto flex h-full max-w-[1320px] items-center gap-3 px-[18px] pr-[76px] sm:gap-4 sm:px-6 sm:pr-[86px] lg:px-11 lg:pr-[96px]">
-            <div className="min-w-0 flex-1">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-co-panel-faint">
-                Specifying {series.wordmark}
-              </p>
-              <p className="mt-1 truncate text-[14px] font-medium text-co-panel-fg">
-                {config.name} — {size}
-              </p>
-            </div>
-            <span className="hidden font-mono text-[13px] text-co-panel-faint sm:block">
-              {config.code}
-            </span>
-            <a
-              href="#enquire"
-              onClick={(e) => {
-                e.preventDefault();
-                document.querySelector('#enquire')?.scrollIntoView({ behavior: 'smooth' });
-                history.pushState(null, '', '#enquire');
-              }}
-              className="shrink-0 whitespace-nowrap bg-co-bg px-5 py-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-co-ink transition-colors hover:bg-co-bg-alt"
-            >
-              Enquire
-            </a>
+          <div className="co-shell flex h-full items-center gap-4 pr-[76px] sm:pr-[84px] lg:pr-[96px]">
+            <p className="co-data min-w-0 flex-1 truncate">
+              {config.name} · {size}
+              {finish ? <span className="hidden text-co-muted-2 md:inline"> · {finish} top</span> : null}
+            </p>
+            <span className="co-data hidden text-co-muted-2 lg:block">{config.code}</span>
+            <Button type="button" size="sm" onClick={toEnquire}>
+              Get a quote
+            </Button>
           </div>
         </motion.div>
       ) : null}

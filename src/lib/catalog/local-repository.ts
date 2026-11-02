@@ -1,14 +1,17 @@
 import categoriesData from "@/data/categories.json";
 import collectionsData from "@/data/collections.json";
+import foundersData from "@/data/founders.json";
 import productsData from "@/data/products.json";
 import projectsData from "@/data/projects.json";
 import sectorsData from "@/data/sectors.json";
 import servicesData from "@/data/services.json";
 import spacesData from "@/data/spaces.json";
+import { foundersSchema } from "./founder-schema";
 import type { CatalogRepository } from "./repository";
 import type {
   Category,
   Collection,
+  Founder,
   PriceBand,
   Product,
   ProductFilters,
@@ -25,6 +28,9 @@ const projects = projectsData as Project[];
 const sectors = sectorsData as Sector[];
 const services = servicesData as Service[];
 const spaces = spacesData as Space[];
+// Parsed, not cast: founders.json is hand-edited, and a bad entry should fail the build
+// with a readable message rather than render a broken card.
+const founders: Founder[] = foundersSchema.parse(foundersData);
 
 export class LocalCatalogRepository implements CatalogRepository {
   async getCategories(): Promise<Category[]> {
@@ -79,5 +85,9 @@ export class LocalCatalogRepository implements CatalogRepository {
 
   async getServices(): Promise<Service[]> {
     return services;
+  }
+
+  async getFounders(): Promise<Founder[]> {
+    return founders;
   }
 }

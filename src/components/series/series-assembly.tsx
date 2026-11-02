@@ -8,9 +8,14 @@ import { optionsForSeries } from "@/lib/configurator";
 import { selectedDepth, selectedLength } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT, SERIES_BAR_HEIGHT } from "@/lib/layout";
+import { SectionHeading } from "@/components/common/section-heading";
+import { DimensionLine } from "@/components/ui/dimension-line";
+import { FigureCaption } from "@/components/ui/figure-caption";
+import { ProgressRail } from "@/components/ui/progress-rail";
 import { useSeriesConfigurator } from "./series-context";
+import { seriesSectionEyebrow, seriesSectionNo } from "@/lib/series";
 import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
-import { ASSEMBLY_PARTS } from "./assembly-scene";
+import { ASSEMBLY_PARTS } from "./assembly-parts";
 
 // WebGL only exists in the browser, and three must stay out of the server bundle.
 const AssemblyScene = dynamic(() => import("./assembly-scene"), { ssr: false });
@@ -27,12 +32,12 @@ const SCROLL_LENGTH = 5;
  * and the modesty panel.
  *
  * The geometry is sized from the configurator's live selection, so the table being
- * assembled is the one the viewer above is showing, at the millimetres the size chart
+ * assembled is the one the viewer above is showing, at the millimetres the configuration
  * actually offers.
  */
 export function SeriesAssembly() {
   const { series, config, selection } = useSeriesConfigurator();
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const webglOk = useWebglAvailable();
   const reduceMotion = useReducedMotion();
@@ -95,8 +100,8 @@ export function SeriesAssembly() {
     The specification leads with the 4-seater bench — it is the configuration the PDF
     photographs, details and gives a component schedule for, and the one the section's
     copy describes. So the assembly shows the bench the series defines rather than
-    whatever single table the viewer above happens to be sitting on; picking a row in the
-    size chart still drives the size, which is what the customer is being quoted.
+    whatever single table the viewer above happens to be sitting on; the size selectors in
+    the spec block still drive the size, which is what the customer is being quoted.
   */
   const benchConfig =
     series.configs.find((entry) => /bench|face to face/i.test(entry.name) && entry.seats === "4") ??
@@ -156,146 +161,166 @@ export function SeriesAssembly() {
       (part.key !== "screen" || hasScreen) && (part.key !== "mid" || isBench),
   );
 
+  const sectionNo = seriesSectionNo(series, "assembly");
+  // What the stage is showing decides what its caption names: the series' bench being
+  // assembled, or — with no WebGL or with reduced motion — the studio render of the
+  // configuration selected above.
+  const showsScene = webglOk && !reduceMotion;
+  const percent = Math.round(progress * 100);
+  const fitted = parts.filter((part) => progress >= part.to).length;
+
   return (
-    <section
-      ref={sectionRef}
-      className="relative border-b border-co-border"
-      style={{ height: `${SCROLL_LENGTH * 100}vh` }}
-    >
-      {/*
-        The pinned stage stops short of the sticky enquiry bar. Without the reserved
-        space the bar — which is `fixed`, so it is outside this flow — sat on top of the
-        canvas and clipped the bottom of the model just as it assembled.
-      */}
-      <div
-        className="sticky flex flex-col justify-center overflow-hidden"
-        style={{
-          // Pinned below the fixed header and above the sticky bar, so neither covers the
-          // stage or the part index.
-          top: HEADER_HEIGHT,
-          height: `calc(100svh - ${HEADER_HEIGHT + SERIES_BAR_HEIGHT}px)`,
-        }}
-      >
-        <div className="co-shell grid w-full grid-cols-1 items-center gap-y-5 sm:gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.52fr)] lg:gap-x-[clamp(28px,4vw,72px)]">
-          {/* Stage */}
-          <div className="relative order-1 aspect-[16/10] w-full sm:aspect-[4/3] lg:aspect-[16/11]">
-            {webglOk && !reduceMotion ? (
-              <WebglBoundary
-                fallback={
-                  <Image
-                    src={config.image}
-                    alt={config.imageAlt}
-                    fill
-                    sizes="(min-width: 1024px) 62vw, 100vw"
-                    className="object-contain mix-blend-multiply"
-                  />
-                }
-              >
-                <AssemblyScene
-                  active={inView}
-                  progress={progress}
-                  widthMm={widthMm}
-                  depthMm={depthMm}
-                  heightMm={series.workingHeightMm}
-                  topColor={topColor}
-                  frameColor={frameColor}
-                  hasScreen={hasScreen}
-                  chassis={chassis}
-                  isBench={isBench}
-                  bays={bays}
-                />
-              </WebglBoundary>
-            ) : (
-              /*
-                No WebGL, or the visitor asked for reduced motion: the studio render says
-                the same thing without a scrubbed animation or a canvas.
-              */
-              <Image
-                src={config.image}
-                alt={config.imageAlt}
-                fill
-                sizes="(min-width: 1024px) 62vw, 100vw"
-                className="object-contain mix-blend-multiply"
-              />
-            )}
-          </div>
+    <section>
+      <div className="co-shell pt-[clamp(64px,8vw,120px)]">
+        <SectionHeading
+          eyebrow={seriesSectionEyebrow(series, "assembly", "Assembly")}
+          title={`${series.elements.length} components. ${isBench ? `${benchConfig.seats} desks.` : "One table."}`}
+          blurb={`Scroll to build it. The legs, the bar, the tops and the screens are the numbered components on ${series.wordmark}'s own specification — drawn at the size you are being quoted, not a stand-in model.`}
+          className="mb-0"
+        />
+      </div>
 
-          {/* Part index */}
-          <div className="order-2 min-w-0">
-            <p className="co-eyebrow mb-2.5 lg:mb-4">Assembly</p>
-            <h2 className="co-h2 mb-3 max-w-[16ch] lg:mb-6">
-              {series.elements.length} components.{" "}
-              {isBench ? `${benchConfig.seats} desks.` : "One table."}
-            </h2>
-            <p className="mb-6 hidden max-w-[38ch] text-[14px] font-light leading-relaxed text-co-muted sm:block lg:mb-9">
-              Scroll to build it. The legs, the bar, the tops and the screens are the
-              numbered components on {series.wordmark}&apos;s own specification — drawn at the
-              size you are being quoted, not a stand-in model.
-            </p>
+      <div ref={sectionRef} className="relative" style={{ height: `${SCROLL_LENGTH * 100}vh` }}>
+        {/*
+          The pinned stage stops short of the sticky enquiry bar. Without the reserved
+          space the bar — which is `fixed`, so it is outside this flow — sat on top of the
+          canvas and clipped the bottom of the model just as it assembled.
 
-            <ol className="grid list-none gap-0 p-0">
-              {parts.map((part, position) => {
-                const index = ASSEMBLY_PARTS.indexOf(part);
-                const done = progress >= part.to;
-                const active = index === activeIndex && !done;
-                return (
-                  <li
-                    key={part.key}
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 border-t border-co-border py-2 last:border-b sm:py-3"
-                  >
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "font-mono text-[10.5px] tabular-nums transition-colors duration-300",
-                        done || active ? "text-co-ink" : "text-co-placeholder",
-                      )}
+          `sticky` makes this an isolated group, so it carries the canvas colour itself:
+          the fallback render multiplies its white into that rather than into nothing.
+        */}
+        <div
+          className="sticky flex flex-col justify-center overflow-hidden bg-co-bg"
+          style={{
+            // Pinned below the fixed header and above the sticky bar, so neither covers the
+            // stage or the part index.
+            top: HEADER_HEIGHT,
+            height: `calc(100svh - ${HEADER_HEIGHT + SERIES_BAR_HEIGHT}px)`,
+          }}
+        >
+          <div className="co-shell grid w-full grid-cols-1 items-center gap-y-5 sm:gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.52fr)] lg:gap-x-[clamp(28px,4vw,72px)]">
+            {/* Stage */}
+            <figure className="order-1 min-w-0">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 sm:gap-x-4">
+                <div className="relative aspect-[16/10] w-full sm:aspect-[4/3] lg:aspect-[16/11]">
+                  {showsScene ? (
+                    <WebglBoundary
+                      fallback={
+                        <Image
+                          src={config.image}
+                          alt={config.imageAlt}
+                          fill
+                          sizes="(min-width: 1024px) 62vw, 100vw"
+                          className="co-cutout object-contain"
+                        />
+                      }
                     >
-                      {String(position + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={cn(
-                        "flex min-w-0 flex-wrap items-baseline gap-x-2.5 text-[14px] transition-colors duration-300",
-                        active
-                          ? "font-semibold text-co-ink"
-                          : done
-                            ? "font-medium text-co-ink-soft"
-                            : "font-light text-co-placeholder",
-                      )}
-                    >
-                      {part.label}
-                      {part.ref !== "—" ? (
-                        <span className="font-mono text-[10px] font-normal text-co-placeholder">
-                          ref {part.ref}
-                        </span>
-                      ) : null}
-                    </span>
-                    {/* Per-part progress rule, so the list doubles as the scrubber. */}
-                    <span aria-hidden className="block h-px w-12 bg-co-border">
-                      <span
-                        className="block h-px origin-left bg-co-ink transition-transform duration-200"
-                        style={{
-                          transform: `scaleX(${Math.min(
-                            1,
-                            Math.max(0, (progress - part.from) / (part.to - part.from)),
-                          )})`,
-                        }}
+                      <AssemblyScene
+                        active={inView}
+                        progress={progress}
+                        widthMm={widthMm}
+                        depthMm={depthMm}
+                        heightMm={series.workingHeightMm}
+                        topColor={topColor}
+                        frameColor={frameColor}
+                        hasScreen={hasScreen}
+                        chassis={chassis}
+                        isBench={isBench}
+                        bays={bays}
                       />
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
+                    </WebglBoundary>
+                  ) : (
+                    /*
+                      No WebGL, or the visitor asked for reduced motion: the studio render
+                      says the same thing without a scrubbed animation or a canvas.
+                    */
+                    <Image
+                      src={config.image}
+                      alt={config.imageAlt}
+                      fill
+                      sizes="(min-width: 1024px) 62vw, 100vw"
+                      className="co-cutout object-contain"
+                    />
+                  )}
+                </div>
 
-            <div className="mt-4 flex items-center gap-4 lg:mt-7">
-              <span className="font-mono text-[11px] tabular-nums text-co-placeholder">
-                {String(Math.round(progress * 100)).padStart(3, "0")}%
-              </span>
-              <span aria-hidden className="h-px flex-1 bg-co-border">
-                <span
-                  className="block h-px origin-left bg-co-ink"
-                  style={{ transform: `scaleX(${progress})` }}
-                />
-              </span>
+                {/* Working height is fixed across the range — true of any table drawn here. */}
+                <DimensionLine axis="y" label={`${series.workingHeightMm} H`} />
+              </div>
+
+              <FigureCaption n={sectionNo} className="mt-3">
+                {showsScene ? `${benchConfig.name} · exploded` : config.name}
+              </FigureCaption>
+            </figure>
+
+            {/* Part index */}
+            <div className="order-2 min-w-0">
+              <div
+                aria-hidden
+                className="co-eyebrow grid grid-cols-[28px_minmax(0,1fr)_auto_48px] gap-x-3 border-b border-co-ink px-2 pb-2.5"
+              >
+                <span>No.</span>
+                <span>Part</span>
+                <span>Ref.</span>
+                <span />
+              </div>
+
+              <ol className="grid list-none gap-0 p-0">
+                {parts.map((part, position) => {
+                  const index = ASSEMBLY_PARTS.indexOf(part);
+                  const done = progress >= part.to;
+                  const active = index === activeIndex && !done;
+                  return (
+                    <li
+                      key={part.key}
+                      className={cn(
+                        "grid grid-cols-[28px_minmax(0,1fr)_auto_48px] items-center gap-x-3 border-b border-co-border px-2 py-2 transition-colors duration-150 sm:py-3",
+                        active && "bg-co-bg-alt",
+                      )}
+                    >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "co-data transition-colors duration-150",
+                          done || active ? "text-co-ink" : "text-co-muted-2",
+                        )}
+                      >
+                        {String(position + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className={cn(
+                          "min-w-0 font-display text-[13px] font-semibold leading-[1.1] tracking-[-0.01em] transition-colors duration-150 sm:text-[15px]",
+                          done || active ? "text-co-ink" : "text-co-muted-2",
+                        )}
+                      >
+                        {part.label}
+                      </span>
+                      <span className="co-eyebrow">{part.ref !== "—" ? part.ref : ""}</span>
+                      {/* Per-part rule, drawn in ink as the part lands — the list doubles as
+                          the scrubber. The green is kept for the overall rail below. */}
+                      <span aria-hidden className="block h-px w-12 bg-co-border">
+                        <span
+                          className="block h-px origin-left bg-co-ink transition-transform duration-200 motion-reduce:transition-none"
+                          style={{
+                            transform: `scaleX(${Math.min(
+                              1,
+                              Math.max(0, (progress - part.from) / (part.to - part.from)),
+                            )})`,
+                          }}
+                        />
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              {/* The one green thing in this view: how far the build has got. */}
+              <ProgressRail
+                step={percent}
+                total={100}
+                label={`${percent}% assembled · ${fitted} of ${parts.length} fitted`}
+                className="mt-4 lg:mt-7"
+              />
             </div>
           </div>
         </div>

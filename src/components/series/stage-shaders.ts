@@ -1,5 +1,5 @@
 /**
- * Shaders for the PROS viewer stage.
+ * Shaders for the series viewer stage.
  *
  * Colour handling: both shaders write sRGB-encoded values straight to the
  * framebuffer. Three only appends its output-colour-space conversion to built-in
@@ -17,13 +17,15 @@ export const STAGE_VERTEX_SHADER = /* glsl */ `
 `;
 
 /**
- * Studio sweep behind the product: the design's
- * `radial-gradient(125% 100% at 50% -6%, #FFFFFF, #F8F6F1 46%, #E7E3D9)` plus the
- * hairline horizon at 71% down the stage.
+ * The canvas behind the product, as literal sRGB: `--color-co-bg` (#FBF8EE). The stage is
+ * flat — Signal has no gradients — so the backdrop is one colour, and that is what lets
+ * the plate below multiply against it exactly.
  */
+const CANVAS = "vec3(0.984314, 0.972549, 0.933333)";
+
 export const BACKDROP_FRAGMENT_SHADER = /* glsl */ `
   void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    gl_FragColor = vec4(${CANVAS}, 1.0);
   }
 `;
 
@@ -33,15 +35,17 @@ const PLATE_FEATHER = "0.075";
 /**
  * Product plate.
  *
- * The source renders are opaque product shots on a near-white sweep, so the plate's own
- * background has to disappear into the backdrop. Two approaches were tried and dropped:
- * luminance keying ate the Signal White frame legs (they sit within a few percent of the
- * background), and multiply blending did not composite reliably across renderers — the
- * plate came out opaque white.
+ * The source renders are opaque product shots on white, and the page canvas is ivory, so
+ * the white has to become the canvas without touching the product. Luminance keying was
+ * tried and dropped — it ate the Signal White frame legs, which sit within a few percent
+ * of the background — and hardware multiply blending did not composite reliably across
+ * renderers.
  *
- * What remains is plain alpha blending with a feathered border: the outer 7.5% of the
- * plate fades out, and since the render keeps its product well inside its own margins,
- * only background pixels are touched. `uOpacity` then crossfades whole configurations.
+ * Because the backdrop is a single flat colour, multiply needs no blend mode at all: the
+ * shader writes `texel × canvas` and alpha-blends that over the backdrop. White texels
+ * come out as exactly the canvas, dark ones keep their value — the same result as the
+ * poster's CSS `mix-blend-multiply`, so the canvas and its poster cannot disagree. The
+ * outer 7.5% of the plate still feathers out, and `uOpacity` crossfades configurations.
  */
 export const PLATE_FRAGMENT_SHADER = /* glsl */ `
   uniform sampler2D uMap;
@@ -53,7 +57,7 @@ export const PLATE_FRAGMENT_SHADER = /* glsl */ `
     vec2 rise = smoothstep(vec2(0.0), vec2(${PLATE_FEATHER}), vUv);
     vec2 fall = smoothstep(vec2(0.0), vec2(${PLATE_FEATHER}), vec2(1.0) - vUv);
     float feather = rise.x * rise.y * fall.x * fall.y;
-    gl_FragColor = vec4(texel.rgb, texel.a * feather * uOpacity);
+    gl_FragColor = vec4(texel.rgb * ${CANVAS}, texel.a * feather * uOpacity);
   }
 `;
 
@@ -62,7 +66,8 @@ export const SHADOW_FRAGMENT_SHADER = /* glsl */ `
   uniform float uOpacity;
   varying vec2 vUv;
 
-  const vec3 SHADE = vec3(0.122, 0.137, 0.157);
+  // Brand ink, #231F20.
+  const vec3 SHADE = vec3(0.137255, 0.121569, 0.125490);
 
   void main() {
     float d = length((vUv - 0.5) * 2.0);

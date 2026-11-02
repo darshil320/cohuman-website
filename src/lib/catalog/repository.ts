@@ -1,6 +1,7 @@
 import type {
   Category,
   Collection,
+  Founder,
   Product,
   ProductFilters,
   Project,
@@ -26,4 +27,5 @@ export interface CatalogRepository {
   getSector(slug: string): Promise<Sector | null>;
   getSpaces(): Promise<Space[]>;
   getServices(): Promise<Service[]>;
+  getFounders(): Promise<Founder[]>;
 }

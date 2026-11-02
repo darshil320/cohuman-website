@@ -1,12 +1,19 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useReducedMotion, useSpring } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { SectionHeading } from "@/components/common/section-heading";
+import { Button } from "@/components/ui/button";
+import { DimensionLine } from "@/components/ui/dimension-line";
+import { FigureCaption } from "@/components/ui/figure-caption";
+import { RegistrationCross } from "@/components/ui/registration-cross";
+import { SpecRows } from "@/components/ui/spec-rows";
+import { HEADER_HEIGHT } from "@/lib/layout";
 import type { SeriesPartFocus } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
-import { Reveal } from "./reveal";
+import { seriesSectionEyebrow, seriesSectionNo } from "@/lib/series";
 
 /**
  * Numbered part list beside the reference render.
@@ -19,25 +26,37 @@ import { Reveal } from "./reveal";
  *
  * The camera is a single critically damped spring on scale + translate. It starts from
  * wherever it currently is, so re-selecting mid-flight redirects rather than restarts.
+ *
+ * The render is a cut-out on white, and the camera layer is transformed — which makes it
+ * an isolated group, so `multiply` would only see what is inside it. The layer therefore
+ * carries the canvas colour itself, and the white of the render drops into that.
  */
 
 /** Push-in: critically damped, because the eye is trying to read the thing it lands on. */
 const CAMERA = { type: "spring", bounce: 0, duration: 0.72 } as const;
-const FADE = { duration: 0.3, ease: [0.16, 1, 0.3, 1] } as const;
 /** How far the render drifts under a mouse while pushed in, in pixels. */
 const PARALLAX_PX = 22;
 const PARALLAX_SPRING = { stiffness: 130, damping: 26, mass: 0.7 } as const;
+
+/**
+ * State-driven text (the part's label, its detail) wipes in left to right rather than
+ * fading — the same `co-wipe` keyframes as the scroll reveals. Off under reduced motion.
+ */
+const WIPE_IN = "animate-[co-wipe_320ms_linear] motion-reduce:animate-none";
+
+/** The sticky stage clears the fixed header by this much on wide screens. */
+const STAGE_TOP_GAP = 24;
+
+/** Number → part → group, shared by the list header and its rows. */
+const PART_GRID = "grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-x-4";
 
 interface CameraFrame {
   scale: number;
   x: string;
   y: string;
-  /** Where the focused part ends up on the stage, in percent — the vignette's centre. */
-  spotX: number;
-  spotY: number;
 }
 
-const WIDE: CameraFrame = { scale: 1, x: "0%", y: "0%", spotX: 50, spotY: 50 };
+const WIDE: CameraFrame = { scale: 1, x: "0%", y: "0%" };
 
 function cameraFrame(focus: SeriesPartFocus | undefined, pushed: boolean): CameraFrame {
   if (!focus || !pushed) return WIDE;
@@ -45,18 +64,13 @@ function cameraFrame(focus: SeriesPartFocus | undefined, pushed: boolean): Camer
   // `translate(x) scale(z)` sends a point at f% of the frame to z·(f − 50) + x, so
   // centring it wants x = z·(50 − f). Clamping at ±(z − 1)·50 keeps the render's own
   // edge outside the stage, so no empty gutter can ever slide into view — a part close
-  // to an edge therefore lands off-centre, which is why the vignette tracks the part
-  // rather than assuming it sits in the middle.
+  // to an edge therefore lands off-centre rather than dragging the frame past it.
   const limit = (zoom - 1) * 50;
   const clamp = (value: number) => Math.min(limit, Math.max(-limit, value));
-  const x = clamp(zoom * (50 - focus.x));
-  const y = clamp(zoom * (50 - focus.y));
   return {
     scale: zoom,
-    x: `${x}%`,
-    y: `${y}%`,
-    spotX: 50 + zoom * (focus.x - 50) + x,
-    spotY: 50 + zoom * (focus.y - 50) + y,
+    x: `${clamp(zoom * (50 - focus.x))}%`,
+    y: `${clamp(zoom * (50 - focus.y))}%`,
   };
 }
 
@@ -65,6 +79,7 @@ export function SeriesAnatomy() {
   const part = series.parts[partIndex];
   const section = series.anatomySection;
   const { w, h } = series.anatomyImageSize;
+  const sectionNo = seriesSectionNo(series, "anatomy");
 
   const [pushed, setPushed] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -104,242 +119,189 @@ export function SeriesAnatomy() {
   }, [driftX, driftY]);
 
   return (
-    <section id="anatomy" className="scroll-mt-[82px] border-b border-co-border bg-co-bg">
-      <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(58px,7vw,116px)] sm:px-6 lg:px-11">
-        <Reveal>
-          <p className="mb-4 text-[10.5px] font-semibold uppercase tracking-[0.28em] text-co-placeholder">
-            {section.eyebrow}
-          </p>
-          <h2 className="mb-[clamp(34px,4.4vw,60px)] max-w-[24ch] font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.0] tracking-[-0.038em]">
-            {section.heading}
-          </h2>
-        </Reveal>
+    <section id="anatomy" className="co-section scroll-mt-[72px]">
+      <div className="co-shell">
+        <SectionHeading
+          eyebrow={seriesSectionEyebrow(series, "anatomy", section.eyebrow)}
+          title={section.heading}
+          blurb={section.blurb}
+        />
 
-        <div className="grid items-start gap-[clamp(22px,3vw,46px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)]">
-          <div className="min-w-0">
-          <div
-            className="relative select-none overflow-hidden bg-white"
-            style={{ aspectRatio: `${w} / ${h}` }}
-            onPointerMove={drift}
-            onPointerLeave={settle}
-          >
-            <motion.div className="absolute inset-0" style={{ x: driftX, y: driftY }}>
-              <motion.div
-                className="absolute inset-0"
-                animate={{ scale: frame.scale, x: frame.x, y: frame.y }}
-                transition={CAMERA}
-                style={{ transformOrigin: "50% 50%" }}
+        <div className="grid items-start gap-[clamp(28px,3.4vw,56px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+          <figure className="min-w-0 lg:sticky" style={{ top: HEADER_HEIGHT + STAGE_TOP_GAP }}>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 sm:gap-x-4">
+              <div
+                className="relative select-none overflow-hidden bg-co-bg"
+                style={{ aspectRatio: `${w} / ${h}` }}
+                onPointerMove={drift}
+                onPointerLeave={settle}
               >
-                {/* Asks for the render at its full width rather than at the stage's:
-                    the camera pushes past 3×, and a stage-width source falls apart. */}
-                <Image
-                  src={series.anatomyImage}
-                  alt={series.anatomyCaption}
-                  fill
-                  sizes={`${w}px`}
-                  quality={90}
-                  className="object-cover mix-blend-multiply"
-                />
+                <motion.div className="absolute inset-0" style={{ x: driftX, y: driftY }}>
+                  <motion.div
+                    className="absolute inset-0 bg-co-bg"
+                    animate={{ scale: frame.scale, x: frame.x, y: frame.y }}
+                    transition={CAMERA}
+                    style={{ transformOrigin: "50% 50%" }}
+                  >
+                    {/* Asks for the render at its full width rather than at the stage's:
+                        the camera pushes past 3×, and a stage-width source falls apart.
+                        The wipe's clip-path sits on the image itself, so it never
+                        isolates the multiply blend. */}
+                    <Image
+                      src={series.anatomyImage}
+                      alt={series.anatomyCaption}
+                      fill
+                      sizes={`${w}px`}
+                      quality={90}
+                      data-reveal
+                      className="co-cutout co-reveal object-cover"
+                    />
 
-                {series.parts.map((item, index) => {
-                  if (!item.focus) return null;
-                  const active = index === partIndex;
-                  // Pushed in, the frame belongs to one part: the rest would be numbers
-                  // floating over a crop they no longer describe.
-                  if (pushedIn && !active) return null;
-                  return (
-                    <div
-                      key={item.n}
-                      className="absolute -translate-x-1/2 -translate-y-1/2"
-                      style={{ left: `${item.focus.x}%`, top: `${item.focus.y}%` }}
-                    >
-                      {/* Counter-scaled against the camera so a marker is the same size
-                          on screen at 1× and at 4.6×. */}
-                      <motion.div
-                        animate={{ scale: 1 / frame.scale }}
-                        transition={CAMERA}
-                        className="relative"
-                      >
-                        {active && (
-                          <motion.span
-                            aria-hidden
-                            className="absolute left-1/2 top-1/2 -ml-[26px] -mt-[26px] h-[52px] w-[52px] rounded-full border border-co-ink/25"
-                            animate={{ scale: [1, 1.28, 1], opacity: [0.55, 0, 0.55] }}
-                            transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-                          />
-                        )}
-                        <button
-                          type="button"
-                          title={item.name}
-                          aria-pressed={active}
-                          onClick={() => pickPart(index)}
-                          className={cn(
-                            "flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors sm:h-7 sm:w-7 sm:text-[12.5px]",
-                            active
-                              ? "border-co-ink bg-co-ink text-co-bg shadow-lg"
-                              : "border-co-border bg-co-bg/90 text-co-faint shadow-sm backdrop-blur-sm hover:border-co-ink hover:text-co-ink",
-                          )}
+                    {series.parts.map((item, index) => {
+                      if (!item.focus) return null;
+                      const active = index === partIndex;
+                      // Pushed in, the frame belongs to one part: the rest would be numbers
+                      // floating over a crop they no longer describe.
+                      if (pushedIn && !active) return null;
+                      return (
+                        <div
+                          key={item.n}
+                          className="absolute -translate-x-1/2 -translate-y-1/2"
+                          style={{ left: `${item.focus.x}%`, top: `${item.focus.y}%` }}
                         >
-                          {item.n}
-                        </button>
-                        {active && pushedIn && (
-                          <motion.span
-                            initial={{ opacity: 0, y: -4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={FADE}
-                            className="pointer-events-none absolute left-1/2 top-[32px] w-max max-w-[200px] -translate-x-1/2 truncate bg-co-ink/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-co-bg backdrop-blur-sm sm:top-[38px] sm:px-2.5 sm:text-[11px] sm:tracking-[0.11em]"
+                          {/* Counter-scaled against the camera so a marker is the same size
+                              on screen at 1× and at 4.6×. */}
+                          <motion.div
+                            animate={{ scale: 1 / frame.scale }}
+                            transition={CAMERA}
+                            className="relative"
                           >
-                            {item.name}
-                          </motion.span>
-                        )}
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            </motion.div>
+                            <button
+                              type="button"
+                              title={item.name}
+                              aria-label={`Part ${item.n}: ${item.name}`}
+                              aria-pressed={active}
+                              onClick={() => pickPart(index)}
+                              className={cn(
+                                "co-data flex h-6 w-6 items-center justify-center border border-co-ink transition-colors duration-150 sm:h-7 sm:w-7",
+                                active
+                                  ? "bg-co-ink text-co-bg"
+                                  : "bg-co-bg text-co-ink hover:bg-co-ink hover:text-co-bg",
+                              )}
+                            >
+                              {item.n}
+                            </button>
+                            {active && pushedIn ? (
+                              <span
+                                className={cn(
+                                  "co-data pointer-events-none absolute left-1/2 top-[32px] w-max max-w-[200px] -translate-x-1/2 truncate bg-co-ink px-2 py-1 text-co-bg sm:top-[38px]",
+                                  WIPE_IN,
+                                )}
+                              >
+                                {item.name}
+                              </span>
+                            ) : null}
+                          </motion.div>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                </motion.div>
 
-            {/* Vignette centred on the part, dropping the rest of the frame back. */}
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background: `radial-gradient(circle at ${frame.spotX}% ${frame.spotY}%, rgba(31,35,40,0) 32%, rgba(31,35,40,0.17) 100%)`,
-              }}
-              animate={{ opacity: pushedIn ? 1 : 0 }}
-              transition={FADE}
-            />
+                <RegistrationCross className="left-2 top-2 text-co-ink" />
+                <RegistrationCross className="right-2 top-2 text-co-ink" />
+              </div>
 
-          </div>
+              {/* Working height is fixed across the range, so it is true of this render. */}
+              <DimensionLine axis="y" label={`${series.workingHeightMm} H`} />
+            </div>
 
-          {/*
-            Caption bar. With the frame gone there is no plate to set type against, and
-            laying it over a render shot on white left it unreadable — so the caption,
-            the state line and the pull-back control sit under the stage on a hairline,
-            where they read at any zoom level.
-          */}
-          <div className="mt-3.5 flex items-start gap-4 border-t border-co-border pt-3">
-            <p className="min-w-0 flex-1 text-[10.5px] font-semibold uppercase leading-relaxed tracking-[0.2em] text-co-placeholder">
-              {series.anatomyCaption}
-            </p>
-            <AnimatePresence>
-              {pushedIn && (
-                <motion.button
-                  key="pull-back"
-                  type="button"
-                  onClick={pullBack}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={FADE}
-                  className="shrink-0 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-co-ink underline underline-offset-[5px] transition-colors hover:text-co-muted"
+            <figcaption className="mt-3.5 border-t border-co-border pt-3">
+              <span className="flex items-start gap-4">
+                <FigureCaption as="span" n={sectionNo} className="min-w-0 flex-1">
+                  {series.anatomyCaption}
+                </FigureCaption>
+                {pushedIn ? (
+                  <Button type="button" variant="link" onClick={pullBack} className="shrink-0">
+                    Whole bench
+                  </Button>
+                ) : null}
+              </span>
+
+              {!part.focus ? (
+                <span
+                  key={part.n}
+                  className={cn("mt-2.5 block max-w-[60ch] text-[13px] leading-[1.55] text-co-muted", WIPE_IN)}
                 >
-                  Whole bench
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <AnimatePresence mode="wait">
-            {!part.focus ? (
-              <motion.p
-                key="not-visible"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={FADE}
-                className="mt-2.5 max-w-[60ch] text-[12.5px] font-light leading-relaxed text-co-muted"
-              >
-                <span className="font-medium text-co-ink">{part.name}</span> sits inside the
-                assembly — quoted from the specification sheet, not visible in this render.
-              </motion.p>
-            ) : (
-              !pushedIn && (
-                <motion.p
-                  key="hint"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={FADE}
-                  className="pointer-events-none mt-2.5 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-co-placeholder"
-                >
+                  <span className="text-co-ink">{part.name}</span> sits inside the assembly —
+                  quoted from the specification sheet, not visible in this render.
+                </span>
+              ) : !pushedIn ? (
+                <span className="co-eyebrow pointer-events-none mt-2.5 block">
                   Tap a number to look closer
-                </motion.p>
-              )
-            )}
-          </AnimatePresence>
-          </div>
+                </span>
+              ) : null}
+            </figcaption>
+          </figure>
 
-          <div>
-            <div className="mb-7 grid grid-cols-5 gap-1.5 sm:grid-cols-[repeat(auto-fill,minmax(34px,1fr))]">
+          <div className="min-w-0">
+            <div aria-hidden className={cn(PART_GRID, "co-eyebrow border-b border-co-ink px-3 pb-3")}>
+              <span>No.</span>
+              <span>Part</span>
+              <span>Group</span>
+            </div>
+
+            <ol className="list-none p-0">
               {series.parts.map((item, index) => {
                 const active = index === partIndex;
                 return (
-                  <button
+                  <li
                     key={item.n}
-                    type="button"
-                    title={item.name}
-                    aria-pressed={active}
-                    onClick={() => pickPart(index)}
-                    className={cn(
-                      "flex h-10 w-full items-center justify-center rounded-full p-0 text-[12.5px] font-semibold tabular-nums transition-colors sm:aspect-square sm:h-auto",
-                      active
-                        ? "bg-co-ink text-co-bg"
-                        : "bg-transparent text-co-placeholder hover:bg-co-bg-alt hover:text-co-ink",
-                    )}
+                    className={cn("relative border-b border-co-border", active && "bg-co-bg-alt")}
                   >
-                    {item.n}
-                  </button>
+                    {/* The selected part is the one thing switched on in this view. */}
+                    {active ? (
+                      <span aria-hidden className="absolute inset-y-0 left-0 block w-[3px] bg-co-green" />
+                    ) : null}
+
+                    <button
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => pickPart(index)}
+                      className={cn(
+                        PART_GRID,
+                        "w-full px-3 py-3.5 text-left transition-colors duration-150",
+                        !active && "hover:bg-co-bg-alt",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "co-data flex h-6 w-6 items-center justify-center border border-co-ink",
+                          active ? "bg-co-ink text-co-bg" : "text-co-ink",
+                        )}
+                      >
+                        {item.n}
+                      </span>
+                      <span className="min-w-0 font-display text-[clamp(15px,1.3vw,18px)] font-semibold leading-[1.05] tracking-[-0.01em]">
+                        {item.name}
+                      </span>
+                      <span className="co-eyebrow text-right">{item.group}</span>
+                    </button>
+
+                    {active ? (
+                      <div className={cn("px-3 pb-6 sm:pl-[56px]", WIPE_IN)}>
+                        <SpecRows rows={item.rows} />
+                        <p className="mt-4 max-w-[52ch] text-[15px] leading-[1.55] text-co-ink-soft">
+                          {item.why}
+                        </p>
+                      </div>
+                    ) : null}
+                  </li>
                 );
               })}
-            </div>
+            </ol>
 
-            <div className="border-t border-co-ink">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={part.n}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.22 }}
-                >
-                  <div className="flex items-start gap-4 pb-5 pt-5">
-                    <span
-                      aria-hidden
-                      className="font-display text-[clamp(26px,3vw,38px)] font-normal leading-none tracking-[-0.04em] tabular-nums text-co-border-strong"
-                    >
-                      {String(part.n).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="mb-1.5 font-display text-[clamp(19px,1.8vw,24px)] font-medium leading-tight tracking-[-0.028em]">
-                        {part.name}
-                      </h3>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-co-placeholder">
-                        {part.group}
-                      </p>
-                    </div>
-                  </div>
-                  <dl className="grid">
-                    {part.rows.map((row) => (
-                      <div
-                        key={row.k}
-                        className="grid grid-cols-[minmax(88px,0.42fr)_1fr] gap-4 border-t border-co-border py-3.5"
-                      >
-                        <dt className="pt-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-co-placeholder">
-                          {row.k}
-                        </dt>
-                        <dd className="text-[14.5px] leading-normal text-co-ink-soft">{row.v}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                  <p className="border-t border-co-border pt-4 text-[13.5px] font-light leading-relaxed text-co-muted">
-                    {part.why}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <p className="mt-5 text-[12.5px] font-light leading-relaxed text-co-placeholder">
+            <p className="mt-5 max-w-[52ch] text-[13px] leading-[1.55] text-co-muted">
               Pick a number to read that part&apos;s gauge and finish. Materials are quoted from
               the manufacturer&apos;s specification sheet.
             </p>

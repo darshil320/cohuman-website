@@ -100,12 +100,6 @@ export const VARIDEX_SERIES: SeriesDefinition = {
     ],
   },
 
-  sizeChartSection: {
-    eyebrow: "Size chart",
-    heading: "Ten configurations, quoted as ranges.",
-    blurb:
-      "Working height is 720mm throughout. The specification quotes each top between two limits rather than as fixed sizes — pick the nearest limit here and we confirm the exact top on the quote. Select a row to load it into the viewer above.",
-  },
   enquirySection: {
     eyebrow: "Enquire",
     heading: "Tell us the span. We'll set the beam.",

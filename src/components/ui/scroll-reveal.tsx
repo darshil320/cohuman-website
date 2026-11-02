@@ -10,8 +10,9 @@ import { cn } from "@/lib/utils";
  * and then the visitor reads a blank page. Before this change roughly thirty elements per
  * page were in that state.
  *
- * The replacement is the `co-reveal` CSS already sitting in `globals.css`: the hidden
- * state is a rule that matches only while `html.co-js` is present, and that class is set
+ * The replacement is the `co-reveal` CSS in `globals.css` — a left-to-right wipe, the
+ * "plotter, not fade" motion — whose hidden state is a rule that matches only while
+ * `html.co-js` is present, and that class is set
  * by a blocking inline script in the head. No script, no class, no hiding — everything
  * paints. `data-reveal` is what the app-level `RevealObserver` looks for to flip
  * `data-shown` and start the (paused) animation.
@@ -25,21 +26,16 @@ interface RevealProps {
   className?: string;
   /** Seconds, matching the old framer prop. */
   delay?: number;
-  /** Travel distance in px. */
+  /** @deprecated Reveals wipe now; nothing travels. Accepted and ignored. */
   yOffset?: number;
 }
 
-export function Reveal({ children, className, delay = 0, yOffset = 30 }: RevealProps) {
+export function Reveal({ children, className, delay = 0 }: RevealProps) {
   return (
     <div
       data-reveal
       className={cn("co-reveal", className)}
-      style={
-        {
-          "--co-reveal-y": `${yOffset}px`,
-          animationDelay: delay ? `${delay}s` : undefined,
-        } as CSSProperties
-      }
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       {children}
     </div>
@@ -79,6 +75,7 @@ export function StaggerContainer({
 interface StaggerItemProps {
   children: ReactNode;
   className?: string;
+  /** @deprecated Reveals wipe now; nothing travels. Accepted and ignored. */
   yOffset?: number;
   /** Matches `StaggerContainer`'s `as` — an `ol` needs `li` children to be valid. */
   as?: "div" | "li";
@@ -91,13 +88,9 @@ interface StaggerItemProps {
  * `--co-i` is set by `nth-child` in `globals.css` rather than counted in JavaScript, so
  * a list of any length staggers without the parent having to enumerate its children.
  */
-export function StaggerItem({ children, className, yOffset = 20, as: Tag = "div" }: StaggerItemProps) {
+export function StaggerItem({ children, className, as: Tag = "div" }: StaggerItemProps) {
   return (
-    <Tag
-      data-reveal
-      className={cn("co-reveal co-stagger-item", className)}
-      style={{ "--co-reveal-y": `${yOffset}px` } as CSSProperties}
-    >
+    <Tag data-reveal className={cn("co-reveal co-stagger-item", className)}>
       {children}
     </Tag>
   );

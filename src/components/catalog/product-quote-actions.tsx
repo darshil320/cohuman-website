@@ -1,20 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export function ProductQuoteActions({ productName }: { productName: string }) {
+/**
+ * The product page's two actions: the quote (dialog, prefilled with the product) and a
+ * sample visit. `dark` is for the ink spec block, where the product page carries them.
+ */
+export function ProductQuoteActions({
+  productName,
+  tone = "light",
+  className,
+}: {
+  productName: string;
+  tone?: "light" | "dark";
+  className?: string;
+}) {
   const { openQuote } = useQuoteDialog();
+  const dark = tone === "dark";
+
   return (
-    <div className="mb-7 flex flex-wrap gap-2.5">
-      <Button onClick={() => openQuote(productName)}>Request a Quote</Button>
-      <Link
-        href="/contact"
-        className="border border-co-border-strong px-[26px] py-[15px] text-[15.5px] font-semibold text-co-ink hover:border-co-ink hover:bg-co-bg-alt"
-      >
-        See a sample
-      </Link>
+    <div className={cn("flex flex-wrap gap-3", className)}>
+      <Button type="button" variant={dark ? "onDark" : "primary"} onClick={() => openQuote(productName)}>
+        Request a quote
+      </Button>
+      <Button asChild variant={dark ? "secondaryOnDark" : "secondary"}>
+        <Link href="/contact">See a sample</Link>
+      </Button>
     </div>
   );
 }

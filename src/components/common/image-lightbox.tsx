@@ -55,6 +55,9 @@ const DISMISS_PX = 140;
 const PAGE_FRACTION = 0.28;
 
 const SPRING = { type: "spring", bounce: 0, duration: 0.42 } as const;
+
+/** Frame-to-frame wipe: the same curve and pace as the page's image reveals. */
+const WIPE = { duration: 0.45, ease: [0.65, 0, 0.35, 1] } as const;
 const SETTLE = { type: "spring", bounce: 0.12, duration: 0.5 } as const;
 
 /**
@@ -452,7 +455,7 @@ export function ImageLightbox({
       <Dialog.Portal>
         <Dialog.Overlay asChild>
           <motion.div
-            className="fixed inset-0 z-[70] bg-co-ink/94 backdrop-blur-md"
+            className="fixed inset-0 z-[70] bg-co-ink"
             style={{ opacity: backdrop }}
           />
         </Dialog.Overlay>
@@ -465,7 +468,7 @@ export function ImageLightbox({
 
           <header className="relative z-10 flex shrink-0 items-center gap-3 px-3 py-3 sm:px-5">
             {items.length > 1 ? (
-              <span className="font-mono text-[12px] font-semibold tracking-[0.1em] text-co-bg/70">
+              <span className="co-data text-co-panel-muted">
                 {index + 1} / {items.length}
               </span>
             ) : null}
@@ -508,13 +511,15 @@ export function ImageLightbox({
               <motion.div
                 key={item.src}
                 className="absolute inset-0"
+                // A wipe in the direction of travel, never a crossfade: Signal images
+                // wipe, they do not fade. Reduced motion swaps the frame instantly.
                 initial={
                   reduceMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, x: enterFrom * 64, scale: enterFrom ? 1 : 1.02 }
+                    ? false
+                    : { clipPath: enterFrom < 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)" }
                 }
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                transition={SPRING}
+                animate={{ clipPath: "inset(0 0% 0 0%)" }}
+                transition={WIPE}
               >
                 <Image
                   src={item.src}
@@ -564,11 +569,11 @@ export function ImageLightbox({
 
           <footer className="relative z-10 shrink-0 px-4 pb-4 pt-3 text-center sm:pb-6">
             {item.caption ? (
-              <p className="mx-auto max-w-[54ch] text-[13px] font-light leading-snug text-co-bg/80">
+              <p className="co-data mx-auto max-w-[64ch] text-co-panel-fg">
                 {item.caption}
               </p>
             ) : null}
-            <p className="mt-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-co-bg/40">
+            <p className="co-eyebrow mt-1.5 text-co-panel-faint">
               {zoomed ? "Drag to move · double-tap to fit" : "Double-tap or pinch to zoom"}
             </p>
           </footer>
@@ -590,7 +595,7 @@ const RoundButton = forwardRef<
       aria-label={label}
       title={label}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-full border border-co-bg/20 bg-co-bg/10 text-co-bg transition-colors hover:bg-co-bg/20 disabled:opacity-30 disabled:hover:bg-co-bg/10",
+        "flex h-10 w-10 items-center justify-center border border-co-panel-fg text-co-panel-fg transition-colors hover:bg-co-panel-fg hover:text-co-ink disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-co-panel-fg",
         className,
       )}
       {...rest}
@@ -619,7 +624,7 @@ function EdgeButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "absolute top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-co-bg/20 bg-co-bg/10 text-co-bg transition-colors hover:bg-co-bg/20 disabled:opacity-25 sm:flex",
+        "absolute top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-co-panel-fg text-co-panel-fg transition-colors hover:bg-co-panel-fg hover:text-co-ink disabled:pointer-events-none disabled:opacity-30 sm:flex",
         side === "left" ? "left-4" : "right-4",
       )}
     >

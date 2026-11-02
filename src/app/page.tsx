@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SectionHeading } from "@/components/common/section-heading";
 import { CtaBand } from "@/components/common/cta-band";
-import { MobileRail } from "@/components/common/mobile-rail";
-import { HeroSlider, type HeroSlide } from "@/components/home/hero-slider";
-import { ManifestTicker } from "@/components/home/manifest-ticker";
-import { Specimen } from "@/components/home/specimen";
-import { ConfigureTeaser } from "@/components/home/configure-teaser";
+import { SectionHeading } from "@/components/common/section-heading";
+import { HeroCarousel } from "@/components/home/hero-carousel";
+import { SignalHeroPanel } from "@/components/home/signal-hero";
 import { SpaceTiles } from "@/components/home/space-tiles";
-import { CollectionCard } from "@/components/catalog/collection-card";
-import { ParallaxImage } from "@/components/ui/parallax-image";
-import { SpecLabel } from "@/components/ui/spec-label";
-import { KineticHeading } from "@/components/ui/kinetic-heading";
-import { catalog } from "@/lib/catalog";
-import { siteConfig } from "@/lib/site-config";
+import { SystemsIndex, type SystemRow } from "@/components/home/systems-index";
+import { Button } from "@/components/ui/button";
+import { ClipReveal } from "@/components/ui/clip-reveal";
+import { FigureCaption } from "@/components/ui/figure-caption";
+import { IndexRow } from "@/components/ui/index-row";
+import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import { catalog } from "@/lib/catalog";
+import { HERO_FILMS, type HeroFilm } from "@/lib/hero-films";
+import { publicFileExists } from "@/lib/public-assets";
+import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesDefinition } from "@/lib/series";
+import { siteConfig } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 
 /*
   The homepage declares its own canonical rather than leaning on the root layout, which
@@ -26,246 +29,245 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/** The hero's measured object: STRETCH's four-seat face-to-face bench. */
+const HERO_CONFIG_SLUG = "face-to-face-short";
+
+/** Meeting tables across both chassis — the rows the "Meeting" system spans. */
+const isMeetingConfig = (slug: string) => slug.startsWith("meet") || slug === "square";
+
+function defaultImage(series: SeriesDefinition): string | undefined {
+  return series.configs.find((c) => c.slug === series.defaultConfigSlug)?.image;
+}
+
 /**
- * Hero slides.
- *
- * Each photograph gets its own headline describing what is actually in that frame, and
- * its own `objectPosition`: the three shots put their furniture in three different
- * places, so one crop meant the words landed on top of the product in at least one.
- * Panning toward the subject clears the left column, which is where the copy sits.
+ * The systems index, built from data rather than written as copy: the STRETCHS, STRETCH
+ * and Meeting ranges are `spanLabel` over the real configurations, so the homepage can
+ * never quote a size the configurator does not offer. Systems without a measured range
+ * say what they are instead of inventing one.
  */
-const HERO_SLIDES: HeroSlide[] = [
-  {
-    src: "/hero-3.jpg",
-    blurDataURL:
-      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAgT/xAAfEAEAAwABBAMAAAAAAAAAAAABAAIRBQMhMVEykcH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABYRAQEBAAAAAAAAAAAAAAAAAAABEf/aAAwDAQACEQMRAD8AfnK9Fc76+yc5zBbwVdc+X5Jxs4937mDyQKPqcjVvWqVBc01hEtbPthLtTI//2Q==",
-    alt: "Open-plan bench desking with task chairs and a city skyline beyond",
-    objectPosition: "24% center",
-    tag: "01 / Bench",
-    headline: "Workspaces, engineered to the millimetre.",
-    sub: "Modular desking drawn, made and installed by us. Every part carries a number.",
-    linkLabel: "Height-adjustable desking",
-    // STRETCH (`varidex`) is the adjustable-beam series. The route is keyed on the series
-    // slug, not the wordmark — the wordmarks changed in the rebrand and the slugs did not.
-    linkHref: "/collections/varidex",
-  },
-  {
-    src: "/hero-2.jpg",
-    blurDataURL:
-      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAANABgDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAEDBP/EACAQAAICAgICAwAAAAAAAAAAAAECAxEAIQQSEzFBYXH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANc8Uar2Xv1Hu1+sSvAIqBYvRHv5rWCzuW3v9xTcKCc95F3VaoZaV45+KZmUo1KQbIu7GGUh8ddfEp1W94YH/9k=",
-    alt: "Executive desk and credenza in a corner office overlooking the city",
-    objectPosition: "58% center",
-    tag: "02 / Cabin",
-    headline: "The cabin, quoted as one room.",
-    sub: "Desk, credenza, storage and seating on a single schedule, in one finish, installed in one visit.",
-    linkLabel: "Executive suites",
-    linkHref: "/sectors/executive",
-  },
-  {
-    src: "/hero-1.jpg",
-    blurDataURL:
-      "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAQCAwX/xAAgEAACAQQCAwEAAAAAAAAAAAABAgADBBEhEjEFFUFC/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8AftWy6F1LYde9/RJ+ytXu0pLxBDFSvHZMpsCcHf6EXrqB5CkQACX3qUbL3lC3ZFqUwpbGDw13CK3ozasTvAhIR//Z",
-    alt: "Executive office with desk, credenza and a meeting setting along the glazed wall",
-    objectPosition: "28% center",
-    tag: "03 / Floor",
-    headline: "A floor that still works in year seven.",
-    sub: "Made in our own workshop in Surat, so finishes can be matched and spares still exist a decade later.",
-    linkLabel: "Open-plan benching",
-    linkHref: "/collections",
-  },
-];
+function systemRows(): SystemRow[] {
+  const meeting = [...PROS_SERIES.configs, ...VARIDEX_SERIES.configs].filter((c) =>
+    isMeetingConfig(c.slug),
+  );
+
+  return [
+    {
+      n: "01",
+      title: PROS_SERIES.wordmark,
+      type: PROS_SERIES.eyebrow,
+      range: spanLabel(PROS_SERIES.configs),
+      href: `/collections/${PROS_SERIES.slug}`,
+      image: defaultImage(PROS_SERIES),
+    },
+    {
+      n: "02",
+      title: VARIDEX_SERIES.wordmark,
+      type: VARIDEX_SERIES.eyebrow,
+      range: spanLabel(VARIDEX_SERIES.configs),
+      href: `/collections/${VARIDEX_SERIES.slug}`,
+      image: defaultImage(VARIDEX_SERIES),
+    },
+    {
+      n: "03",
+      title: "Cabins",
+      type: "Manager and director rooms",
+      range: "Desk + storage + seating",
+      href: "/sectors/executive",
+      image: "/pros/manager-cabinet.jpg",
+    },
+    {
+      n: "04",
+      title: "Meeting",
+      type: "Square, round and boardroom tables",
+      range: spanLabel(meeting),
+      href: "/solutions",
+      image: "/pros/meet-long.jpg",
+    },
+    {
+      n: "05",
+      title: "Seating",
+      type: "Task, executive, visitor",
+      range: "Price on request",
+      quoteSubject: "Seating",
+    },
+    {
+      n: "06",
+      title: "Storage",
+      type: "Pedestals, side cabinets, credenzas",
+      range: "Price on request",
+      quoteSubject: "Storage",
+    },
+  ];
+}
+
+/**
+ * The hero's film panels that can actually play: a missing poster drops the panel, a
+ * missing video file leaves the poster as a still. Checked on the server, so the client
+ * never requests a file that is not there.
+ */
+function availableFilms(): HeroFilm[] {
+  return HERO_FILMS.filter((film) => publicFileExists(film.poster)).map((film) => {
+    if (!film.video || !publicFileExists(film.video.mp4)) return { ...film, video: undefined };
+    const webm = film.video.webm && publicFileExists(film.video.webm) ? film.video.webm : undefined;
+    return { ...film, video: { mp4: film.video.mp4, webm } };
+  });
+}
 
 export default async function HomePage() {
-  const [collections, spaces, services, projects] = await Promise.all([
-    catalog.getCollections(),
+  const [spaces, services, projects] = await Promise.all([
     catalog.getSpaces(),
     catalog.getServices(),
     catalog.getProjects(),
   ]);
 
+  const heroConfig =
+    VARIDEX_SERIES.configs.find((c) => c.slug === HERO_CONFIG_SLUG) ?? VARIDEX_SERIES.configs[0];
+  const featured = projects.slice(0, 3);
+  const showroom = siteConfig.suratPhotos.find((photo) => publicFileExists(photo.src));
+
+  // Figure numbers run down the page like a drawing set: hero 01, spaces 02–05, …
+  const firstProjectFigure = 2 + spaces.length;
+  const showroomFigure = firstProjectFigure + featured.length;
+
   return (
     <div>
-      <HeroSlider slides={HERO_SLIDES} />
+      <HeroCarousel
+        intro={<SignalHeroPanel series={VARIDEX_SERIES} config={heroConfig} />}
+        films={availableFilms()}
+      />
 
-      <ManifestTicker />
-
-      {/* 01 — Systems */}
-      <section className="co-shell co-section-lg">
+      {/* 01 — Systems: every system as a row you can scan like a parts list. */}
+      <section className="co-shell co-section">
         <SectionHeading
           eyebrow="01 / Systems"
-          title="Two chassis. Every table you need."
-          blurb="Both run at 720mm, so tops sit flush wherever two configurations meet."
+          title="Two chassis. Every table."
+          blurb="Both desking systems run at 720mm, so tops sit flush wherever two configurations meet. Pick a system, then a configuration, a length and a depth."
           linkHref="/collections"
           linkLabel="All collections"
+          className="mb-0 border-b-0"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-x-[clamp(22px,3vw,56px)] gap-y-[clamp(34px,4vw,64px)] sm:grid-cols-2">
-          {collections.map((c, i) => (
-            <StaggerItem key={c.slug}>
-              <CollectionCard collection={c} index={i} />
+        <Reveal>
+          <SystemsIndex rows={systemRows()} />
+        </Reveal>
+      </section>
+
+      <SpaceTiles spaces={spaces} firstFigure={2} />
+
+      {/* 03 — Projects */}
+      <section className="co-shell co-section">
+        <SectionHeading
+          eyebrow="03 / Projects"
+          title="Floors we've finished."
+          blurb="Drawn, made and installed by us — photographed on site after handover."
+          linkHref="/projects"
+          linkLabel="All projects"
+        />
+        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto]">
+          {featured.map((pr, i) => (
+            <StaggerItem key={pr.slug} className={cn(i === 0 && "md:row-span-2")}>
+              <Link href="/projects" className="group flex h-full flex-col">
+                <figure className="flex h-full flex-col">
+                  <ClipReveal
+                    className={cn(
+                      "border border-co-border bg-co-bg-alt",
+                      i === 0 ? "aspect-[4/3] md:aspect-auto md:min-h-[520px] md:flex-1" : "aspect-[4/3]",
+                    )}
+                  >
+                    <Image
+                      src={pr.images[0]}
+                      alt={`${pr.name} — completed fit-out`}
+                      fill
+                      sizes={i === 0 ? "(min-width: 768px) 62vw, 100vw" : "(min-width: 768px) 31vw, 100vw"}
+                      className="co-highkey object-cover"
+                    />
+                  </ClipReveal>
+                  <FigureCaption n={firstProjectFigure + i} className="mt-3">
+                    {pr.name}
+                    {pr.city ? `, ${pr.city}` : ""}
+                  </FigureCaption>
+                </figure>
+                <p className="mt-2 line-clamp-2 max-w-[56ch] text-[14px] leading-relaxed text-co-muted">
+                  {pr.delivered}
+                </p>
+              </Link>
             </StaggerItem>
           ))}
         </StaggerContainer>
       </section>
 
-      <Specimen />
-
-      <SpaceTiles spaces={spaces} />
-
-      <ConfigureTeaser />
-
-      {/*
-        05 — Work. The full-bleed band and the project grid used to be two consecutive
-        sections both about projects, with a white gap between them. Merged onto one dark
-        ground the photography carries far more weight, and the page loses a flicker.
-      */}
-      <section className="bg-co-panel text-co-panel-fg">
-        {/*
-          The band sets its own height and the picture fills it absolutely, so the copy
-          layer is a normal in-flow child that can actually be bottom-aligned. Giving the
-          height to the image instead left this wrapper at zero height, and the headline
-          dropped straight out of the bottom of its own scrim.
-        */}
-        <div className="relative isolate flex min-h-[clamp(380px,58vh,620px)] flex-col justify-end overflow-hidden">
-          <ParallaxImage
-            src="/projects/narola/01.jpg"
-            alt="An open-plan Cohuman floor: bench desking, acoustic screens and task seating"
-            fill
-            sizes="100vw"
-            className="absolute inset-0"
-          />
-          {/* Bottom-weighted, so the copy sits on the darkest part and the ceiling of the
-              photograph stays readable. */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15"
-          />
-          <div className="co-shell relative pb-[clamp(32px,4.5vw,64px)] pt-[clamp(80px,14vh,160px)]">
-            <SpecLabel tone="dark" rule className="mb-6 text-white/70">
-              05 / Work
-            </SpecLabel>
-            <h2 className="co-h1 max-w-[16ch] text-white">
-              <KineticHeading>Every floor here was drawn, made and installed by us.</KineticHeading>
-            </h2>
-          </div>
-        </div>
-
-        <div className="co-shell co-section-lg">
-          <SectionHeading
-            eyebrow="Selected projects"
-            title="Floors we've finished."
-            linkHref="/projects"
-            linkLabel="All projects"
-            titleClassName="text-co-panel-fg"
-            className="[&_a]:border-co-panel-fg [&_a]:text-co-panel-fg [&_a:hover]:border-co-panel-faint [&_a:hover]:text-co-panel-muted"
-          />
-          <MobileRail total={Math.min(projects.length, 3)} label="Recent work">
-            <StaggerContainer className="flex gap-5 [&>*]:w-[78vw] [&>*]:shrink-0 [&>*]:snap-start sm:grid sm:grid-cols-2 sm:gap-x-[clamp(20px,2.6vw,48px)] sm:gap-y-[clamp(34px,4vw,60px)] sm:[&>*]:w-auto lg:grid-cols-3">
-              {projects.slice(0, 3).map((pr, i) => (
-                <StaggerItem key={pr.slug}>
-                  <Link href="/projects" className="group block text-co-panel-fg">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-co-panel-border">
-                      <Image
-                        src={pr.images[0]}
-                        alt={`${pr.name} — completed fit-out`}
-                        fill
-                        sizes="(min-width: 1024px) 30vw, 100vw"
-                        className="object-cover transition-transform duration-[900ms] ease-[var(--ease-co)] group-hover:scale-[1.05]"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute left-3 top-3 font-mono text-[10.5px] tabular-nums text-white/70"
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <span
-                      aria-hidden
-                      className="mt-[clamp(12px,1.4vw,18px)] block h-px w-full bg-co-panel-border transition-colors duration-500 group-hover:bg-co-panel-fg"
-                    />
-                    {pr.city ? (
-                      <SpecLabel tone="dark" className="mb-2.5 mt-4">
-                        {pr.city}
-                      </SpecLabel>
-                    ) : (
-                      <div className="mt-4" />
-                    )}
-                    <h3 className="mb-2 font-display text-[clamp(17px,1.5vw,20px)] font-medium leading-tight tracking-[-0.026em]">
-                      {pr.name}
-                    </h3>
-                    <p className="line-clamp-2 text-[13.5px] font-light leading-relaxed text-co-panel-muted">
-                      {pr.delivered}
-                    </p>
-                  </Link>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </MobileRail>
-        </div>
+      {/* 04 — Scope: the services as index rows. */}
+      <section className="co-shell co-section">
+        <SectionHeading
+          eyebrow="04 / Scope"
+          title="The whole fit-out."
+          blurb="Most clients come to us with a floor plate and a headcount. We take it from there — layout, specification, manufacture, install, and a service contract that keeps it all working."
+          linkHref="/services"
+          linkLabel="Our services"
+          className="mb-0"
+        />
+        <Reveal>
+          {services.map((sv) => (
+            <IndexRow
+              key={sv.num}
+              n={sv.num}
+              title={sv.name}
+              type={sv.blurb}
+              range={sv.deliverables[0]}
+              href="/services"
+            />
+          ))}
+        </Reveal>
       </section>
 
-      {/* What we do */}
-      <section className="border-t border-co-border">
-        <div className="co-shell co-section grid grid-cols-1 gap-x-[clamp(28px,4vw,88px)] gap-y-12 lg:grid-cols-[1fr_1.1fr]">
-          <Reveal className="lg:sticky lg:top-[clamp(110px,12vw,160px)] lg:self-start">
-            <SpecLabel rule className="mb-6">
-              06 / Scope
-            </SpecLabel>
-            <h2 className="co-h2 mb-6 max-w-[18ch]">
-              <KineticHeading>Not just the furniture. The whole fit-out.</KineticHeading>
-            </h2>
-            <p className="co-lead mb-9 max-w-[42ch]">
-              Most clients come to us with a floor plate and a headcount. We take it from there
-              — layout, specification, manufacture, install, and a service contract that keeps
-              it all working.
-            </p>
-            <Link
-              href="/services"
-              className="group inline-flex items-center gap-2.5 border-b-2 border-co-ink pb-1.5 text-[14px] font-semibold text-co-ink transition-colors hover:border-co-placeholder hover:text-co-muted"
-            >
-              Our services
-              <svg
-                aria-hidden
-                width="13"
-                height="9"
-                viewBox="0 0 13 9"
-                fill="none"
-                className="transition-transform duration-300 ease-[var(--ease-co)] group-hover:translate-x-1"
-              >
-                <path d="M0 4.5h11M8 1l3.5 3.5L8 8" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </Link>
-          </Reveal>
+      {/* 05 — Showroom visit */}
+      <section className="border-t border-co-ink bg-co-bg-alt">
+        <div
+          className={cn(
+            "co-shell co-section grid grid-cols-1 items-center gap-x-[clamp(28px,5vw,96px)] gap-y-10",
+            showroom && "lg:grid-cols-[1.1fr_1fr]",
+          )}
+        >
+          {showroom ? (
+            <figure className="relative">
+              <RegistrationCross className="-left-2 -top-2 z-10" />
+              <ClipReveal className="aspect-[16/10] border border-co-border">
+                <Image
+                  src={showroom.src}
+                  alt={showroom.alt}
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="co-highkey object-cover"
+                />
+              </ClipReveal>
+              <div className="mt-3 flex flex-wrap justify-between gap-x-6 gap-y-1">
+                <FigureCaption n={showroomFigure} as="span">
+                  {showroom.caption}
+                </FigureCaption>
+                <span className="co-data text-co-muted-2">{siteConfig.coordinates.label}</span>
+              </div>
+            </figure>
+          ) : null}
 
-          <StaggerContainer className="grid">
-            {services.map((sv) => (
-              <StaggerItem
-                key={sv.num}
-                className="group grid grid-cols-[auto_1fr] items-start gap-x-5 border-t border-co-border py-[clamp(18px,2.2vw,30px)]"
-              >
-                <span
-                  aria-hidden
-                  className="mt-1.5 font-mono text-[10.5px] tracking-[0.16em] tabular-nums text-co-placeholder transition-colors duration-300 group-hover:text-co-ink"
-                >
-                  {sv.num}
-                </span>
-                <div className="min-w-0">
-                  <h3 className="mb-2 font-display text-[clamp(17px,1.5vw,21px)] font-medium leading-tight tracking-[-0.026em]">
-                    {sv.name}
-                  </h3>
-                  <p className="max-w-[46ch] text-[13.5px] font-light leading-relaxed text-co-muted">
-                    {sv.blurb}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <Reveal>
+            <p className="co-eyebrow">05 / Showroom</p>
+            <h2 className="co-h2 mt-5 max-w-[14ch]">Sit on it before you specify it.</h2>
+            <p className="co-lead mt-6 max-w-[40ch]">
+              Both desking systems are set up on Hazira Road, in Surat. Bring the floor plan —
+              we will lay the configurations out at the sizes you are considering.
+            </p>
+            <p className="co-data mt-6 text-co-ink">{siteConfig.address.line1}</p>
+            <p className="co-data text-co-muted-2">{siteConfig.address.line2}</p>
+            <Button asChild variant="secondary" className="mt-8">
+              <Link href="/contact">Book a showroom visit</Link>
+            </Button>
+          </Reveal>
         </div>
       </section>
 
       <CtaBand
         tone="dark"
-        heading="Send us your floor plan. Get a costed proposal."
-        body={`No obligation, no cart, no checkout — a real specification from a real person, usually inside ${siteConfig.enquiryTurnaround}.`}
+        heading="Send us your floor plan."
+        body={`Get a costed proposal back — no cart, no checkout, a real specification from a real person, usually inside ${siteConfig.enquiryTurnaround}.`}
       />
     </div>
   );

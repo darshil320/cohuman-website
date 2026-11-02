@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { CtaBand } from "@/components/common/cta-band";
+import { SectionHeading } from "@/components/common/section-heading";
+import { ClipReveal } from "@/components/ui/clip-reveal";
+import { FigureCaption } from "@/components/ui/figure-caption";
+import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { catalog } from "@/lib/catalog";
 import { publicFileExists } from "@/lib/public-assets";
-import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
-import { TextReveal } from "@/components/ui/text-reveal";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { itemListJsonLd } from "@/lib/seo/structured-data";
+import { ALL_SERIES, spanLabel } from "@/lib/series";
+import { PageHero } from "@/components/common/page-hero";
 
 export const metadata: Metadata = {
   title: "Sectors",
@@ -19,6 +24,7 @@ export const metadata: Metadata = {
     description:
       "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
     url: "/sectors",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Sectors",
@@ -26,6 +32,56 @@ export const metadata: Metadata = {
       "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
   },
 };
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/*
+  The sector index's own grid. Close to `IndexRow`'s, minus the range column: a sector is
+  described, not measured, so the brief (kicker + blurb) takes that width instead. On
+  phones the brief drops under the name and the arrow stays on the first line.
+*/
+const ROW_GRID =
+  "grid grid-cols-[40px_minmax(0,1fr)_24px] gap-x-4 md:grid-cols-[64px_minmax(0,1fr)_minmax(0,1.3fr)_48px] lg:grid-cols-[90px_minmax(0,360px)_minmax(0,1fr)_60px]";
+
+function SectorRow({
+  n,
+  name,
+  kicker,
+  blurb,
+  href,
+  detail,
+}: {
+  n: string;
+  name: string;
+  kicker: string;
+  blurb: string;
+  href: string;
+  /** A measured line under the brief, where the row has one. */
+  detail?: ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`${ROW_GRID} group items-start gap-y-3 border-b border-co-border py-[clamp(22px,2.6vw,34px)] transition-colors duration-150 hover:bg-co-bg-alt focus-visible:bg-co-bg-alt md:items-center`}
+    >
+      <span className="co-data pt-1.5 md:pt-0">{n}</span>
+      <span className="font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+        {name}
+      </span>
+      <span className="col-start-2 col-end-4 row-start-2 min-w-0 md:col-auto md:row-auto">
+        <span className="block text-[16px] leading-[1.45] text-co-ink">{kicker}</span>
+        <span className="mt-2 block max-w-[60ch] text-[14px] leading-[1.55] text-co-muted">{blurb}</span>
+        {detail ? <span className="co-data mt-3 block text-co-ink">{detail}</span> : null}
+      </span>
+      <span
+        aria-hidden
+        className="col-start-3 row-start-1 justify-self-end text-[18px] leading-none transition-transform duration-150 group-hover:translate-x-1 md:col-auto md:row-auto"
+      >
+        →
+      </span>
+    </Link>
+  );
+}
 
 export default async function SectorsPage() {
   const sectors = await catalog.getSectors();
@@ -40,6 +96,14 @@ export default async function SectorsPage() {
     })),
   );
 
+  // A sector's lead photograph appears the moment its file lands in `public/`.
+  const figures = sectors.flatMap((sector) => {
+    const lead = sector.photos.find((photo) => publicFileExists(photo.src));
+    return lead ? [{ sector, lead }] : [];
+  });
+
+  const deskingRange = spanLabel(ALL_SERIES.flatMap((series) => series.configs));
+
   return (
     <div>
       <script
@@ -47,92 +111,84 @@ export default async function SectorsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
       />
 
-      <section className="border-b border-co-border bg-co-bg-alt">
-        <Reveal className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
-          <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
-            Sectors
-          </p>
-          <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            <TextReveal>One workshop. Four kinds of building.</TextReveal>
-          </h1>
-          <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-            The desking systems are what most people come for, but the same machines, the
-            same finishes and the same installation crews serve three other briefs — a
+      <PageHero
+        eyebrow="Sectors"
+        title="One workshop. Four kinds of building."
+        lead={
+          <>
+            The desking systems are what most people come for, but the same machines, the same
+            finishes and the same installation crews serve three other briefs — a
             director&apos;s cabin, a hospital floor, and a house. Each is quoted by the room.
-          </p>
+          </>
+        }
+      />
+
+      <section className="co-shell co-section">
+        <SectionHeading
+          eyebrow="01 / Sectors"
+          title="Same workshop, different brief."
+          className="mb-0"
+        />
+        <Reveal>
+          <div aria-hidden className={`${ROW_GRID} co-eyebrow border-b border-co-border py-3.5`}>
+            <span>No.</span>
+            <span>Sector</span>
+            <span className="hidden md:block">Brief</span>
+            <span />
+          </div>
+          {sectors.map((sector, i) => (
+            <SectorRow
+              key={sector.slug}
+              n={pad(i + 1)}
+              name={sector.name}
+              kicker={sector.kicker}
+              blurb={sector.blurb}
+              href={`/sectors/${sector.slug}`}
+            />
+          ))}
+          {/* The desking systems are a sector too — this is where most enquiries start. */}
+          <SectorRow
+            n={pad(sectors.length + 1)}
+            name="Desking systems"
+            kicker="Office"
+            blurb="STRETCHS and STRETCH — configurable beam chassis, specified to the millimetre and quoted off a component schedule."
+            href="/collections"
+            detail={deskingRange}
+          />
         </Reveal>
       </section>
 
-      <StaggerContainer className="mx-auto grid max-w-[1320px] gap-px border-b border-co-border bg-co-border px-0 sm:grid-cols-2 lg:grid-cols-3">
-        {sectors.map((sector) => {
-          // The lead photograph appears the moment the file lands in `public/`.
-          const lead = sector.photos.find((photo) => publicFileExists(photo.src));
-          return (
-            <StaggerItem key={sector.slug} className="bg-co-bg">
-              <Link
-                href={`/sectors/${sector.slug}`}
-                className="group flex h-full flex-col p-[clamp(24px,3vw,36px)] transition-colors hover:bg-co-bg-alt"
-              >
-                <div className="relative mb-6 aspect-[4/3] overflow-hidden bg-co-bg-alt">
-                  {lead ? (
-                    <Image
-                      src={lead.src}
-                      alt={lead.alt}
-                      fill
-                      sizes="(min-width: 1024px) 30vw, 100vw"
-                      className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
-                    />
-                  ) : (
-                    <span className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold uppercase tracking-[0.14em] text-co-placeholder">
-                      Photography to come
-                    </span>
-                  )}
-                </div>
-                <h2 className="mb-1.5 font-display text-[clamp(22px,2.4vw,30px)] font-medium leading-tight tracking-tight">
-                  {sector.name}
-                </h2>
-                <p className="mb-3.5 text-[13px] font-semibold uppercase tracking-[0.11em] text-co-faint">
-                  {sector.kicker}
-                </p>
-                <p className="mb-6 text-[15px] font-light leading-relaxed text-co-muted">
-                  {sector.blurb}
-                </p>
-                <span className="mt-auto inline-flex items-center gap-2 text-[14px] font-semibold text-co-ink">
-                  What we make for it
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
-              </Link>
-            </StaggerItem>
-          );
-        })}
-
-        {/* The desking systems are a sector too — this is where most enquiries start. */}
-        <StaggerItem className="bg-co-bg">
-          <Link
-            href="/collections"
-            className="group flex h-full flex-col justify-between p-[clamp(24px,3vw,36px)] transition-colors hover:bg-co-bg-alt"
-          >
-            <div>
-              <p className="mb-3.5 text-[13px] font-semibold uppercase tracking-[0.11em] text-co-green">
-                Office
-              </p>
-              <h2 className="mb-3 font-display text-[clamp(22px,2.4vw,30px)] font-medium leading-tight tracking-tight">
-                Desking systems
-              </h2>
-              <p className="text-[15px] font-light leading-relaxed text-co-muted">
-                STRETCHS and STRETCH — configurable beam chassis, specified to the
-                millimetre and quoted off a component schedule.
-              </p>
-            </div>
-            <span className="mt-6 inline-flex items-center gap-2 text-[14px] font-semibold text-co-ink">
-              Featured collections
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </Link>
-        </StaggerItem>
-      </StaggerContainer>
+      {figures.length ? (
+        <section className="co-shell pb-[clamp(64px,8vw,120px)]">
+          <SectionHeading eyebrow="02 / Photographs" title="On site." />
+          <StaggerContainer className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {figures.map(({ sector, lead }, i) => (
+              <StaggerItem key={sector.slug}>
+                <Link href={`/sectors/${sector.slug}`} className="block">
+                  <figure>
+                    <ClipReveal className="aspect-[4/3] border border-co-border bg-co-bg-alt">
+                      <Image
+                        src={lead.src}
+                        alt={lead.alt}
+                        fill
+                        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+                        className="co-highkey object-cover"
+                      />
+                    </ClipReveal>
+                    <FigureCaption n={i + 1} className="mt-3">
+                      {sector.name}
+                      {lead.caption ? `, ${lead.caption}` : ""}
+                    </FigureCaption>
+                  </figure>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+      ) : null}
 
       <CtaBand
+        tone="dark"
         heading="Different building, same question."
         body="Send the floor plan, the ward list or the room sizes. You get back a schedule and a drawing, not a price list."
         subject="Sector enquiry"

@@ -7,7 +7,7 @@ export const primaryNav: NavLink[] = [
   { label: "Collections", href: "/collections" },
   { label: "Sectors", href: "/sectors" },
   // { label: "Catalog", href: "/catalog" },
-  { label: "B2B / Bulk Orders", href: "/b2b" },
+  // B2B is reached from the Collections drawer and the footer, not the bar.
   { label: "Solutions", href: "/solutions" },
   { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },

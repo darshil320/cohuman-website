@@ -94,7 +94,7 @@ export async function buildLlmsTxt(): Promise<string> {
 
     "## Desking series",
     "",
-    "Each series is a configurable system with its own size chart and component schedule.",
+    "Each series is a configurable system with its own sizes and component schedule.",
     "",
     ...collections.map((collection) => {
       const series = ALL_SERIES.find((s) => s.slug === collection.slug);

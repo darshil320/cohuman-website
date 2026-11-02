@@ -179,7 +179,6 @@ export interface SeriesDefinition {
   /** Optional strip of photographed-but-unquoted products. */
   gallery?: SeriesGallery;
 
-  sizeChartSection: SeriesSection;
   enquirySection: SeriesSection & { blurb: string };
 
   /**

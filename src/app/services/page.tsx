@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import { CtaBand } from "@/components/common/cta-band";
 import { EnquireButton } from "@/components/common/enquire-button";
+import { SectionHeading } from "@/components/common/section-heading";
+import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { catalog } from "@/lib/catalog";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { servicesJsonLd } from "@/lib/seo/structured-data";
+import { PageHero } from "@/components/common/page-hero";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -13,6 +18,7 @@ export const metadata: Metadata = {
     description:
       "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
     url: "/services",
+    images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Services",
@@ -21,6 +27,11 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Services as index rows: number, name in display caps with its one-line blurb, the
+ * detail, and what is included as a mono parts list. Two columns of reading on wide
+ * screens; on phones everything stacks under the number.
+ */
 export default async function ServicesPage() {
   const services = await catalog.getServices();
 
@@ -38,62 +49,73 @@ export default async function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesLd) }}
       />
 
-      <section className="border-b border-co-border bg-co-bg-alt">
-        <div className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,78px)] sm:px-6 lg:px-11">
-          <p className="mb-3 text-[11.5px] font-semibold uppercase tracking-[0.2em] text-co-green">
-            Services
-          </p>
-          <h1 className="mb-4 max-w-[20ch] font-display text-[clamp(34px,5vw,62px)] font-medium leading-[1.02] tracking-tight">
-            We do the drawings, the making and the aftercare.
-          </h1>
-          <p className="max-w-[58ch] text-[clamp(16px,1.4vw,19px)] font-light leading-relaxed text-co-muted">
-            Furniture is the easy part. The value is in getting the layout right first and
-            keeping it working for a decade afterwards.
-          </p>
+      <PageHero
+        eyebrow="Services"
+        title="We do the drawings, the making and the aftercare."
+        titleClassName="max-w-[18ch]"
+        lead="Furniture is the easy part. The value is in getting the layout right first and keeping it working for a decade afterwards."
+      />
+
+      <section className="co-shell co-section">
+        <SectionHeading eyebrow="01 / Scope" title="Plan, fit out, install, look after." className="mb-0" />
+
+        <div
+          aria-hidden
+          className="co-eyebrow hidden border-b border-co-border py-3.5 md:grid md:grid-cols-[64px_minmax(0,1fr)_minmax(0,1.3fr)] md:gap-x-4 lg:grid-cols-[90px_minmax(0,360px)_minmax(0,1fr)_260px]"
+        >
+          <span>No.</span>
+          <span>Service</span>
+          <span>Scope</span>
+          <span className="hidden lg:block">Included</span>
         </div>
+
+        <StaggerContainer>
+          {services.map((sv) => (
+            <StaggerItem
+              key={sv.num}
+              className="grid grid-cols-[40px_minmax(0,1fr)] gap-x-4 gap-y-6 border-b border-co-border py-[clamp(28px,3.4vw,48px)] md:grid-cols-[64px_minmax(0,1fr)_minmax(0,1.3fr)] lg:grid-cols-[90px_minmax(0,360px)_minmax(0,1fr)_260px]"
+            >
+              <span className="co-data pt-1">{sv.num}</span>
+
+              <div className="min-w-0">
+                <h3 className="font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+                  {sv.name}
+                </h3>
+                <p className="mt-4 max-w-[34ch] text-[14px] leading-[1.55] text-co-muted">
+                  {sv.blurb}
+                </p>
+              </div>
+
+              <div className="col-start-2 min-w-0 md:col-start-auto">
+                <p className="max-w-[56ch] text-[15px] leading-[1.55] text-co-ink-soft">
+                  {sv.detail}
+                </p>
+                <EnquireButton variant="link" arrow subject={sv.name} className="mt-6">
+                  Enquire about {sv.name}
+                </EnquireButton>
+              </div>
+
+              <div className="col-start-2 min-w-0 md:col-start-3 lg:col-start-auto">
+                <p className="co-eyebrow lg:sr-only">What is included</p>
+                <ul className="co-data mt-3 border-t border-co-border lg:mt-0">
+                  {sv.deliverables.map((d) => (
+                    <li key={d} className="border-b border-co-border py-2.5">
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </section>
 
-      <section className="mx-auto max-w-[1320px] px-[18px] py-[clamp(44px,6vw,84px)] pb-[clamp(64px,8vw,100px)] sm:px-6 lg:px-11">
-        {services.map((sv) => (
-          <div
-            key={sv.num}
-            className="grid grid-cols-1 items-start gap-6 border-b border-co-border py-[clamp(30px,4vw,48px)] first:pt-0 last:border-b-0 lg:grid-cols-[280px_1fr] lg:gap-14"
-          >
-            <div>
-              <p className="mb-3.5 font-display text-[13px] font-semibold tracking-wide text-co-green">
-                {sv.num}
-              </p>
-              <h2 className="mb-3 max-w-[16ch] font-display text-[clamp(26px,3vw,38px)] font-medium leading-[1.05] tracking-tight">
-                {sv.name}
-              </h2>
-              <p className="max-w-[36ch] text-base font-light leading-relaxed text-co-muted-2">
-                {sv.blurb}
-              </p>
-            </div>
-            <div>
-              <p className="mb-[22px] max-w-none text-[clamp(16px,1.4vw,18px)] font-light leading-[1.6] text-co-ink-soft">
-                {sv.detail}
-              </p>
-              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-co-faint">
-                What is included
-              </p>
-              <div className="mb-6 grid gap-2">
-                {sv.deliverables.map((d) => (
-                  <div key={d} className="flex items-baseline gap-3">
-                    <span className="mt-[-2px] h-[5px] w-[5px] shrink-0 bg-co-green" />
-                    <span className="text-[15px] font-light leading-relaxed text-co-ink-soft">
-                      {d}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <EnquireButton variant="outline" subject={sv.name}>
-                Enquire about {sv.name}
-              </EnquireButton>
-            </div>
-          </div>
-        ))}
-      </section>
+      <CtaBand
+        tone="dark"
+        heading="Start with the floor plan."
+        body="Send a CAD or PDF plan and a headcount. We will come back with test-fits and a costed schedule."
+        subject="Fit-out services"
+      />
     </div>
   );
 }

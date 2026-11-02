@@ -1,81 +1,75 @@
 "use client";
 
+import Link from "next/link";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
-import { cn } from "@/lib/utils";
-
+import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/scroll-reveal";
+import { cn } from "@/lib/utils";
 
 interface CtaBandProps {
   heading: string;
   body: string;
   buttonLabel?: string;
   subject?: string;
-  /** `light` is the page ground; `dark` is the near-black panel. */
+  /** A second, quieter route — e.g. the showroom visit beside the quote. */
+  secondary?: { label: string; href: string };
+  /** `light` is the page ground; `dark` is the ink block. */
   tone?: "light" | "dark";
+  /** Mono label over the heading. */
+  eyebrow?: string;
 }
 
 /**
- * Closing call to action.
+ * Closing call to action — the enquiry band every page ends on.
  *
- * The heading runs at display size against a lot of air, and the action is an underlined
- * link rather than a filled rectangle — on a page built from hairlines, a button-shaped
- * block was the one element that still read as chrome.
+ * Display-caps claim on the left, the quote action on the right. The button is the plain
+ * primary: the header's quote button already carries the dots, and two lit quote buttons
+ * on one screen would break the one-green-thing rule.
  */
 export function CtaBand({
   heading,
   body,
-  buttonLabel = "Request a Quote",
+  buttonLabel = "Get a quote",
   subject,
+  secondary,
   tone = "light",
+  eyebrow = "Enquiry",
 }: CtaBandProps) {
   const { openQuote } = useQuoteDialog();
   const isLight = tone === "light";
 
   return (
-    <section className={cn("border-t", isLight ? "border-co-border bg-co-bg" : "border-co-panel bg-co-panel")}>
-      <Reveal className="co-shell grid grid-cols-1 items-end gap-x-[clamp(28px,4vw,80px)] gap-y-10 py-[clamp(72px,9vw,148px)] lg:grid-cols-[1.35fr_1fr]">
+    <section className={cn("border-t", isLight ? "border-co-ink bg-co-bg" : "border-co-panel bg-co-panel")}>
+      <Reveal className="co-shell grid grid-cols-1 items-end gap-x-[clamp(28px,4vw,80px)] gap-y-10 py-[clamp(72px,9vw,140px)] lg:grid-cols-[1.4fr_1fr]">
         <div>
-          <h2
-            className={cn(
-              "co-h1 mb-6 max-w-[18ch]",
-              isLight ? "text-co-ink" : "text-co-panel-fg",
-            )}
-          >
+          <p className={cn("co-eyebrow mb-6", !isLight && "text-co-panel-faint")}>{eyebrow}</p>
+          <h2 className={cn("co-h1 mb-6 max-w-[16ch]", isLight ? "text-co-ink" : "text-co-panel-fg")}>
             {heading}
           </h2>
           <p
             className={cn(
-              "max-w-[48ch] text-[clamp(15px,1.3vw,18px)] font-light leading-relaxed",
-              isLight ? "text-co-muted" : "text-co-panel-muted",
+              "max-w-[48ch] text-[clamp(15px,1.3vw,18px)] leading-[1.55]",
+              isLight ? "text-co-ink-soft" : "text-co-panel-muted",
             )}
           >
             {body}
           </p>
         </div>
 
-        <div className="lg:justify-self-end">
-          <button
+        <div className="flex flex-wrap items-center gap-4 lg:justify-self-end">
+          <Button
             type="button"
+            size="lg"
+            variant={isLight ? "primary" : "onDark"}
             onClick={() => openQuote(subject)}
-            className={cn(
-              "group inline-flex items-center gap-3 border-b-2 pb-2 text-[clamp(16px,1.5vw,21px)] font-semibold transition-colors",
-              isLight
-                ? "border-co-ink text-co-ink hover:border-co-placeholder hover:text-co-muted"
-                : "border-co-panel-fg text-co-panel-fg hover:border-co-panel-faint hover:text-co-panel-muted",
-            )}
           >
             {buttonLabel}
-            <svg
-              aria-hidden
-              width="16"
-              height="11"
-              viewBox="0 0 13 9"
-              fill="none"
-              className="transition-transform duration-300 ease-[var(--ease-co)] group-hover:translate-x-1.5"
-            >
-              <path d="M0 4.5h11M8 1l3.5 3.5L8 8" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          </button>
+          </Button>
+          {secondary ? (
+            <Button asChild size="lg" variant={isLight ? "secondary" : "secondaryOnDark"}>
+              <Link href={secondary.href}>{secondary.label}</Link>
+            </Button>
+          ) : null}
         </div>
       </Reveal>
     </section>

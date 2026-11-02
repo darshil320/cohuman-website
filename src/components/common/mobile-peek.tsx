@@ -62,8 +62,8 @@ export function MobilePeek({
           ? Array.from(node.querySelectorAll<HTMLElement>(rowSelector))
           : (Array.from(root.children) as HTMLElement[]);
         if (!rows.length) return;
-        // Offsets, not bounding rects: rows enter on a `translateY`, and a rect read
-        // mid-reveal cuts the list low and leaves a sliver of the next row showing.
+        // Offsets, not bounding rects: a rect read while a row is mid-animation can land
+        // the cut low and leave a sliver of the next row showing.
         const cut = rows[Math.min(peek, rows.length) - 1];
         setHeights({
           peek: cut.offsetTop + cut.offsetHeight - root.offsetTop,
@@ -106,11 +106,13 @@ export function MobilePeek({
         aria-expanded={expanded}
         aria-controls={`peek-${noun}`}
         onClick={() => setExpanded((open) => !open)}
+        // Signal's secondary button: square, 1px rule, mono label. The fill swaps on
+        // press rather than fading.
         className={cn(
-          "mt-3 flex w-full items-center justify-center gap-2 border px-4 py-3 text-[12.5px] font-semibold uppercase tracking-[0.12em] transition-colors sm:hidden",
+          "co-data mt-4 flex h-[46px] w-full items-center justify-center gap-2.5 border bg-transparent px-4 transition-colors duration-150 sm:hidden",
           tone === "dark"
-            ? "border-co-panel-fg/25 bg-transparent text-co-panel-fg active:bg-co-panel-fg/10"
-            : "border-co-border-strong bg-co-bg text-co-ink active:bg-co-bg-alt",
+            ? "border-co-panel-fg text-co-panel-fg active:bg-co-panel-fg active:text-co-ink"
+            : "border-co-ink text-co-ink active:bg-co-ink active:text-co-bg",
         )}
       >
         {expanded ? "Show fewer" : `All ${total} ${noun}`}
@@ -120,7 +122,7 @@ export function MobilePeek({
           viewBox="0 0 12 12"
           fill="none"
           aria-hidden
-          className={cn("transition-transform duration-300", expanded && "rotate-180")}
+          className={cn("transition-transform duration-150 motion-reduce:transition-none", expanded && "rotate-180")}
         >
           <path d="M1.5 4L6 8.5 10.5 4" stroke="currentColor" strokeWidth="1.5" />
         </svg>
