@@ -40,7 +40,7 @@ export function SiteFooter() {
                   <li key={link.href} className="border-b border-co-panel-border">
                     <Link
                       href={link.href}
-                      className="co-data block py-2.5 text-co-panel-muted transition-colors hover:text-co-panel-fg"
+                      className="co-data flex min-h-11 items-center text-co-panel-muted transition-colors hover:text-co-panel-fg"
                     >
                       {link.label}
                     </Link>
@@ -60,7 +60,7 @@ export function SiteFooter() {
                 <a
                   key={inbox.address}
                   href={`mailto:${inbox.address}`}
-                  className="co-data break-all normal-case text-co-panel-muted transition-colors hover:text-co-panel-fg"
+                  className="co-data flex min-h-11 items-center break-all normal-case text-co-panel-muted transition-colors hover:text-co-panel-fg"
                 >
                   {inbox.address}
                 </a>

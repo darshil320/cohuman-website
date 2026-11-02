@@ -13,8 +13,8 @@ import { VARIDEX_PARTS } from "./parts";
  */
 export const VARIDEX_SERIES: SeriesDefinition = {
   slug: "varidex",
-  name: "STRETCH Series",
-  wordmark: "STRETCH",
+  name: "STRETCH V Series",
+  wordmark: "STRETCH V",
   eyebrow: "Adjustable-beam desking system",
   promise: "Eight components. Every top quoted as a range.",
   intro:
@@ -102,7 +102,7 @@ export const VARIDEX_SERIES: SeriesDefinition = {
 
   enquirySection: {
     eyebrow: "Enquire",
-    heading: "Tell us the span. We'll set the beam.",
+    heading: "Tell us the span. We’ll set the beam.",
     blurb:
       "Send the floor plate and the headcount and you get back a component schedule and a drawing — with the beam and channel lengths already worked out.",
   },

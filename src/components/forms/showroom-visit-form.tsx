@@ -85,14 +85,14 @@ export function ShowroomVisitForm() {
             id="visit-notes"
             name="notes"
             rows={3}
-            placeholder="A collection, a category, or a specific piece you'd like set up for the visit…"
+            placeholder="A collection, a category, or a specific piece you’d like set up for the visit…"
           />
         </div>
       </div>
 
       <FormError message={error} />
 
-      <Button type="submit" dots disabled={submitting} className="mt-8 w-full">
+      <Button type="submit" disabled={submitting} className="mt-8 w-full">
         {submitting ? "Sending…" : "Book showroom visit"}
       </Button>
       <FormFootnote>

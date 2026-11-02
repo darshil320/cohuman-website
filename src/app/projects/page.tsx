@@ -102,7 +102,7 @@ export default async function ProjectsPage() {
 
                 <Reveal className={cn(lead ? "lg:col-span-4 lg:pb-9" : "lg:col-span-12")}>
                   <p className="co-eyebrow">Project {pad(index + 1)}</p>
-                  <h3 className="mt-4 font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+                  <h3 className="co-index mt-4">
                     {project.name}
                   </h3>
                   {project.city ? <p className="co-data mt-3">{project.city}</p> : null}
@@ -143,7 +143,7 @@ export default async function ProjectsPage() {
       </section>
 
       <CtaBand
-        tone="dark"
+        tone="light"
         heading="Your floor could be the next one."
         body="Send the plan and the headcount. We will come back with test-fits and a costed schedule."
         buttonLabel="Start an enquiry"

@@ -65,7 +65,7 @@ function SectorRow({
       className={`${ROW_GRID} group items-start gap-y-3 border-b border-co-border py-[clamp(22px,2.6vw,34px)] transition-colors duration-150 hover:bg-co-bg-alt focus-visible:bg-co-bg-alt md:items-center`}
     >
       <span className="co-data pt-1.5 md:pt-0">{n}</span>
-      <span className="font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+      <span className="co-index">
         {name}
       </span>
       <span className="col-start-2 col-end-4 row-start-2 min-w-0 md:col-auto md:row-auto">
@@ -118,7 +118,7 @@ export default async function SectorsPage() {
           <>
             The desking systems are what most people come for, but the same machines, the same
             finishes and the same installation crews serve three other briefs — a
-            director&apos;s cabin, a hospital floor, and a house. Each is quoted by the room.
+            director’s cabin, a hospital floor, and a house. Each is quoted by the room.
           </>
         }
       />
@@ -151,7 +151,7 @@ export default async function SectorsPage() {
             n={pad(sectors.length + 1)}
             name="Desking systems"
             kicker="Office"
-            blurb="STRETCHS and STRETCH — configurable beam chassis, specified to the millimetre and quoted off a component schedule."
+            blurb="STRETCH S and STRETCH V — configurable beam chassis, specified to the millimetre and quoted off a component schedule."
             href="/collections"
             detail={deskingRange}
           />
@@ -188,7 +188,7 @@ export default async function SectorsPage() {
       ) : null}
 
       <CtaBand
-        tone="dark"
+        tone="light"
         heading="Different building, same question."
         body="Send the floor plan, the ward list or the room sizes. You get back a schedule and a drawing, not a price list."
         subject="Sector enquiry"

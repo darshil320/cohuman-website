@@ -1,13 +1,16 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** "Fig. 01", "Fig. 12" — the figure number as a drawing set prints it. */
+/**
+ * "Fig. 01", "Fig. 12" — the figure number as a drawing set prints it. The space is a
+ * no-break space (U+00A0), so "Fig." never ends a line without its number.
+ */
 export function figureNumber(n: number): string {
-  return `Fig. ${String(n).padStart(2, "0")}`;
+  return `Fig.\u00A0${String(n).padStart(2, "0")}`;
 }
 
 /**
- * A figure caption: "Fig. 01 — STRETCH bench, two-seat".
+ * A figure caption: "Fig. 01 — STRETCH V bench, two-seat".
  *
  * Renders a real `<figcaption>` by default, so it must sit inside a `<figure>`; pass
  * `as="p"` where the caption is laid out away from its image.
@@ -25,7 +28,9 @@ export function FigureCaption({
 }) {
   return (
     <Tag className={cn("co-data text-co-muted-2", className)}>
-      {figureNumber(n)} — {children}
+      {/* No-break space before the dash: a wrap may follow it, never precede it. */}
+      {figureNumber(n)}{"\u00A0— "}
+      {children}
     </Tag>
   );
 }

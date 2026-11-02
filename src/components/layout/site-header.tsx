@@ -120,7 +120,7 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
           <Logo
             eager
             tone={onDark ? "light" : "dark"}
-            className="w-[140px] transition-opacity duration-150 group-hover:opacity-70 sm:w-[150px]"
+            className="w-[140px] sm:w-[150px]"
           />
         </Link>
 
@@ -281,7 +281,6 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
             <div className="co-shell mt-auto flex w-full flex-col gap-4 py-[clamp(24px,5vh,44px)]">
               <Button
                 type="button"
-                dots
                 onClick={() => {
                   setMobileOpen(false);
                   openQuote();

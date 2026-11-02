@@ -69,7 +69,8 @@ export function SeriesGalleryStrip() {
 
                   <figcaption className="mt-3">
                     <span className="co-data block text-co-muted-2">
-                      {figure}.{index + 1} — <span className="text-co-ink">{item.name}</span>
+                      {figure}.{index + 1}{"\u00A0— "}
+                      <span className="text-co-ink">{item.name}</span>
                     </span>
                     <span className="mt-2 block text-[14px] leading-[1.55] text-co-muted">{item.note}</span>
                     <span className="co-eyebrow mt-3 block">Photographed — sizes on request</span>

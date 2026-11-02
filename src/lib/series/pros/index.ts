@@ -10,8 +10,8 @@ import { PROS_FINISH_FILTERS, PROS_SWATCHES } from "./swatches";
  */
 export const PROS_SERIES: SeriesDefinition = {
   slug: "pros",
-  name: "STRETCHS Series",
-  wordmark: "STRETCHS",
+  name: "STRETCH S Series",
+  wordmark: "STRETCH S",
   eyebrow: "Beam desking system",
   promise: "Seven components. Fourteen configurations. One office.",
   intro:
@@ -52,7 +52,7 @@ export const PROS_SERIES: SeriesDefinition = {
 
   enquirySection: {
     eyebrow: "Enquire",
-    heading: "Send us the floor. We'll send back the layout.",
+    heading: "Send us the floor. We’ll send back the layout.",
     blurb:
       "Our team quotes PROS with the beam schedule worked out — so what you receive is a component list and a drawing, not a line item.",
   },

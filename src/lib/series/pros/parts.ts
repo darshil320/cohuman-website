@@ -18,7 +18,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "Takes the span load on benches so the beam stays flat under four workstations.",
     rows: [
       { k: "Material", v: "2.0mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 54.8, y: 56, zoom: 2.4 },
   },
@@ -29,7 +29,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "The signature A-frame. Splayed to clear knees and keep the footprint off the walkway.",
     rows: [
       { k: "Material", v: "1.5mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 14.6, y: 58, zoom: 2.5 },
   },
@@ -51,7 +51,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "Ties the leg pairs together and stops the frame racking when the desk is pushed.",
     rows: [
       { k: "Material", v: "T=1.5mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -61,7 +61,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "Drops power from the desktop tray to the floor box inside the leg line — nothing visible.",
     rows: [
       { k: "Material", v: "T=1.5mm aluminium profile" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -71,7 +71,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "Spreads the top fixing across the middle leg so the joint never telegraphs through the melamine.",
     rows: [
       { k: "Material", v: "T=3.0mm metal sheet & T=2.0mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 54.8, y: 43.4, zoom: 2.9 },
   },
@@ -94,7 +94,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "Runs the full length under the top. Holds a power rail and data without a retrofit tray.",
     rows: [
       { k: "Material", v: "T=1.2mm aluminium profile" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 33.4, y: 33.4, zoom: 2.8 },
   },
@@ -105,7 +105,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "The rail the top sits on. Also where screens and CPU holders bracket in.",
     rows: [
       { k: "Material", v: "60×25×T1.5mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -115,7 +115,7 @@ export const PROS_PARTS: SeriesPart[] = [
     why: "A hinged box under the top for adaptors, so bricks never sit on the floor.",
     rows: [
       { k: "Material", v: "0.7mm metal sheet" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
 ];

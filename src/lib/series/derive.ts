@@ -32,11 +32,18 @@ export function selectedDepth(selection: SeriesSelection): number | null {
   return config.deps[clampIndex(depIndex, config.deps.length)];
 }
 
+/**
+ * A no-break space (U+00A0). Binds a value to its unit ("720 mm") and the two ends of a
+ * range to their dash, so a label can only wrap at the spaces around a ×, never between
+ * a number and what it measures.
+ */
+const NBSP = "\u00A0";
+
 /** The one string quoted everywhere a size is shown. */
 export function sizeLabel(selection: SeriesSelection): string {
   const length = selectedLength(selection);
-  if (selection.config.dia) return `Ø${length} mm`;
-  return `${length} × ${selectedDepth(selection)} × ${selection.series.workingHeightMm} mm`;
+  if (selection.config.dia) return `Ø${length}${NBSP}mm`;
+  return `${length} × ${selectedDepth(selection)} × ${selection.series.workingHeightMm}${NBSP}mm`;
 }
 
 export function lengthFieldLabel(config: SeriesConfig): string {
@@ -86,12 +93,19 @@ export function chartDepths(config: SeriesConfig): string {
   what the data holds — an empty list yields an empty label, never a placeholder number.
 */
 
-/** `min — max` over a list of millimetre values, or the single value when they agree. */
+/**
+ * `min — max` over a list of millimetre values, or the single value when they agree.
+ *
+ * The spaced em dash is the moodboard's drawing-label convention, kept on purpose: these
+ * are set in Martian Mono, where an en and an em dash fill the same one-character cell,
+ * so the en dash's usual job — a visibly shorter range dash — does not apply. The spaces
+ * either side are no-break, so a range never splits across two lines.
+ */
 export function rangeLabel(values: readonly number[]): string {
   if (values.length === 0) return "";
   const min = Math.min(...values);
   const max = Math.max(...values);
-  return min === max ? `${min}` : `${min} — ${max}`;
+  return min === max ? `${min}` : `${min}${NBSP}—${NBSP}${max}`;
 }
 
 /** The length range a configuration is offered in; a diameter for round tops. */
@@ -114,11 +128,14 @@ export function configSizeRange(config: SeriesConfig): string {
   return depth ? `${length} × ${depth}` : length;
 }
 
-/** Shortest to longest length across a set of configurations, e.g. "800 → 4000 mm". */
+/**
+ * Shortest to longest length across a set of configurations, e.g. "800 → 4000 mm", set
+ * with no-break spaces so the span reads as one unbreakable value.
+ */
 export function spanLabel(configs: readonly SeriesConfig[]): string {
   const lens = configs.flatMap((config) => config.lens);
   if (lens.length === 0) return "";
-  return `${Math.min(...lens)} → ${Math.max(...lens)} mm`;
+  return `${Math.min(...lens)}${NBSP}→${NBSP}${Math.max(...lens)}${NBSP}mm`;
 }
 
 /** Human label for the selected configuration's finish, or null where the series has none. */

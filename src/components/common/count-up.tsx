@@ -22,7 +22,8 @@ export function CountUp({ value, suffix = "" }: CountUpProps) {
   const { ref, count } = useCountUp<HTMLSpanElement>(value);
 
   return (
-    <span ref={ref}>
+    // Tabular figures, so the number holds its width while it counts.
+    <span ref={ref} className="tabular-nums">
       {count}
       {suffix}
     </span>

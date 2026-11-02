@@ -60,20 +60,28 @@ export function FinishChip({
           <span aria-hidden className="absolute right-1.5 top-1.5 block h-[7px] w-[7px] rounded-full bg-co-green" />
         ) : null}
       </span>
-      <span className="co-data mt-2.5 block text-left text-[10px] leading-snug">
+      <span className="co-data mt-2.5 block w-full text-left text-[10px] leading-snug">
         {name}
-        {code ? <span className="block text-co-muted-2">{code}</span> : null}
+        {/* Codes never break at their hyphens ("PROS-TOP-NOK"); a long one may overrun. */}
+        {code ? <span className="block whitespace-nowrap text-co-muted-2">{code}</span> : null}
       </span>
     </>
   );
 
   if (onSelect) {
     return (
-      <button type="button" aria-pressed={selected} onClick={onSelect} className={cn("block w-[76px]", className)}>
+      // A column, top-aligned: a button centres its content by default, which dropped a chip
+      // with a one-line name a few pixels below its neighbours.
+      <button
+        type="button"
+        aria-pressed={selected}
+        onClick={onSelect}
+        className={cn("flex w-[76px] flex-col items-start justify-start", className)}
+      >
         {body}
       </button>
     );
   }
 
-  return <div className={cn("block w-[76px]", className)}>{body}</div>;
+  return <div className={cn("flex w-[76px] flex-col items-start", className)}>{body}</div>;
 }

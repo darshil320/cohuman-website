@@ -1,3 +1,6 @@
+/* Hallmark · v2.0.0 · system: locked (design.md — Signal) · advised: homepage hero lead film (src/components/home/film-intro.tsx, hero-carousel.tsx) · genre editorial · signature: the studio film under a transparent header, the claim on a ruled canvas title block over the four-shot edit */
+/* Hallmark · pre-emit critique: P4 H5 E4 S3 R5 V3 · weakest: S, a studio desk film could open many furniture sites; carried by Signal's own devices instead (ink control block, green progress bar, mono timecode) */
+/* Hallmark · waive 26b · no control in the hero is ever disabled or a form field · the carousel buttons only change panels and pause the film, with hover and focus-visible states */
 @import "tailwindcss";
 
 @theme inline {
@@ -77,18 +80,38 @@
   --font-mono: var(--font-martian), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /*
-    Type scale, read off the moodboard at 1440px and scaled down to a 360px phone.
+    Type scale, read off the moodboard at 1440px and scaled down to a 320px phone.
     Display is extended caps at 0.9 line-height; everything you could measure is 11px
     mono. Tracking is fixed at −0.02em for display — the expanded cut is already wide,
     so it does not want the progressive tightening the old grotesque needed.
+
+    Sizes are in rem (16px root), so a reader's browser font-size setting still applies;
+    the px each step resolves to at the default root is noted beside it.
+
+    The display steps' floors are `min(<px floor>, <vw>)`, not a bare px floor. Archivo
+    Expanded caps run ~0.8em a letter, so a ten-letter word ("HEALTHCARE", "ENGINEERED")
+    is 8.4–8.7em wide: at a fixed 38–44px it is wider than a 360px phone's 324px column
+    and clipped by the word masks. The vw cap only bites below ~390px, where it shrinks
+    the step just enough for a ~9em word to fit; at 390px and up every step is unchanged.
   */
-  --text-co-display: clamp(44px, 8.9vw, 128px);
-  --text-co-h1: clamp(38px, 6vw, 88px);
-  --text-co-h2: clamp(30px, 3.9vw, 56px);
-  --text-co-h3: clamp(20px, 1.7vw, 24px);
-  --text-co-lead: clamp(16px, 1.32vw, 19px);
-  --text-co-body: 15px;
-  --text-co-eyebrow: 11px;
+  --text-co-display: clamp(min(2.75rem, 11.3vw), 8.9vw, 8rem); /* 44 → 128 */
+  --text-co-h1: clamp(min(2.375rem, 9.75vw), 6vw, 5.5rem); /* 38 → 88 */
+  --text-co-h2: clamp(min(1.875rem, 9vw), 3.9vw, 3.5rem); /* 30 → 56 */
+  /* Index-row names — the parts-list step between h2 and h3 (moodboard: 40px). */
+  --text-co-index: clamp(min(1.5rem, 6.4vw), 2.8vw, 2.5rem); /* 24 → 40 */
+  --text-co-h3: clamp(1.25rem, 1.7vw, 1.5rem); /* 20 → 24 */
+  --text-co-lead: clamp(1rem, 1.32vw, 1.1875rem); /* 16 → 19 */
+  /*
+    15px, one step under the 16px default, on purpose: it is the approved moodboard body
+    (15 / 1.55) and every paragraph it sets is a capped standfirst (≤ 65ch), not a page of
+    long-form reading.
+  */
+  --text-co-body: 0.9375rem; /* 15 */
+  /*
+    11px mono, under the usual 12px floor: Martian Mono's caps stand 0.8em tall, so 11px
+    caps are as tall as ~12.5px caps in a typical sans.
+  */
+  --text-co-eyebrow: 0.6875rem; /* 11 */
 
   /* Section rhythm — the white space is the material, so it is a token, not a guess. */
   --space-co-section: clamp(64px, 8vw, 120px);
@@ -113,9 +136,16 @@
   being rewritten.
 */
 @layer base {
+  /*
+    `balance` evens the lines of a wrapping caps name so it never ends on one stranded
+    word; `break-word` lets a word wider than its column break at the edge instead of
+    escaping it. Both are inert on a line that fits.
+  */
   .font-display {
     font-stretch: 125%;
     text-transform: uppercase;
+    text-wrap: balance;
+    overflow-wrap: break-word;
   }
 
   .font-mono {
@@ -140,7 +170,14 @@
   color: var(--color-co-muted-2);
 }
 
-/* The moodboard's `.m`: a measured value, code or label. Same as the eyebrow, in ink. */
+/*
+  The moodboard's `.m`: a measured value, code or label. Same as the eyebrow, in ink.
+
+  Ligatures are deliberately left on. Martian Mono ships no `liga`; its only contextual
+  feature is `calt`, which swaps - – — × : + = for raised `.case` forms when they sit
+  between digits or capitals — the case-sensitive punctuation a caps label wants
+  ("PROS-TOP-NOK", "1600×750"). `font-variant-ligatures: none` would switch that off.
+*/
 @utility co-data {
   font-family: var(--font-mono);
   font-stretch: 87.5%;
@@ -152,6 +189,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+/*
+  Display steps. Each heading balances its lines, so a claim never ends on one stranded
+  word, and may break a word too wide for its column at the edge rather than overflow it.
+  (Inside `KineticHeading` the words are flex items, so balance cannot reach them there —
+  `.co-kinetic-word` below carries their overflow guard instead.)
+*/
 @utility co-display {
   font-family: var(--font-display);
   font-stretch: 125%;
@@ -160,6 +203,8 @@
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 @utility co-h1 {
@@ -170,6 +215,8 @@
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 @utility co-h2 {
@@ -180,6 +227,25 @@
   line-height: 0.92;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/*
+  The index-row name: number / NAME / type / range. One step for every parts-list row
+  (systems, services, sectors, projects, the 404 routes) instead of the same five
+  arbitrary classes repeated in each.
+*/
+@utility co-index {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-size: var(--text-co-index);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 @utility co-h3 {
@@ -190,6 +256,8 @@
   line-height: 1;
   letter-spacing: -0.01em;
   text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 @utility co-lead {
@@ -259,17 +327,18 @@
 
 /*
   A canvas plate for a cut-out that must hide what is behind it (the homepage hero's grid
-  lines). Same feather as `co-cutout`, so its edge is never seen; put it and the image in
+  lines). Exactly the same 5% feather as `co-cutout` — a wider one left a faint lighter
+  halo where the image was opaque but the plate was not; put it and the image in
   an `isolate` group so the image multiplies with the plate, not with the lines.
 */
 @utility co-cutout-plate {
   -webkit-mask-image:
-    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%),
-    linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
   mask-composite: intersect;
 }
 
@@ -278,13 +347,16 @@
   --foreground: var(--color-co-ink);
 }
 
+/*
+  Font smoothing is set once, on the root, by the `antialiased` class in layout.tsx (it
+  covers WebKit and Firefox on macOS), so the body does not restate it.
+*/
 body {
   background: var(--color-co-bg);
   color: var(--color-co-ink);
   font-family: var(--font-body);
   font-size: var(--text-co-body);
   line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
   text-wrap: pretty;
   /*
     Nothing may scroll the page sideways. `clip` rather than `hidden`, because
@@ -347,11 +419,11 @@ a:focus-visible,
 */
 @keyframes co-wipe-edge {
   from {
-    left: -1px;
+    transform: translateX(-1px);
     visibility: visible;
   }
   to {
-    left: calc(100% - 1px);
+    transform: translateX(calc(100% - 1px));
     visibility: visible;
   }
 }
@@ -436,6 +508,13 @@ a:focus-visible,
 .co-kinetic-word {
   animation: co-word-rise 0.6s var(--ease-co) both;
   animation-delay: calc(var(--co-i, 0) * 40ms);
+  /*
+    Last-resort guard only. `break-word`, deliberately not `anywhere`: `anywhere` lowers
+    each word's min-content width, so a flex item a few pixels too wide for its line
+    shrank and split mid-word ("ENGINEERE / D"). Headline sizes are set so the longest
+    word fits its column; this only stops a pathological word from running off-screen.
+  */
+  overflow-wrap: break-word;
 }
 
 /* Dimension lines and rules draw at plotter speed: constant, 400ms. */
@@ -474,14 +553,16 @@ a:focus-visible,
   animation-play-state: paused;
 }
 
+/*
+  The hairline is the left border of a full-size layer, moved with `transform` — never
+  by animating `left`, which re-lays-out every frame. translateX(100%) of a layer as wide
+  as the frame carries the line exactly to the right edge.
+*/
 .co-clip::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  background: var(--color-co-ink);
+  inset: 0;
+  border-left: 1px solid var(--color-co-ink);
   visibility: hidden;
   pointer-events: none;
   animation: co-wipe-edge 0.8s cubic-bezier(0.65, 0, 0.35, 1) backwards;

@@ -1,0 +1,338 @@
+# Signal: the Cohuman website design language, as built.
+# Single source of truth for this skill. Every value below was read from source:
+#   src/app/globals.css (authoritative), design.md, CLAUDE.md, src/components/ui/*,
+#   src/components/common/*, moodboards/01-signal.html.
+# Where the moodboard and the code disagree, the code wins (the moodboard is pure white;
+# the site is ivory paper).
+
+name: "Signal"
+philosophy: "A spec sheet you can walk into. Cohuman is presented as an engineering brand: ivory drawing paper, ink type, 1px rules, and the logo green held back to a status light. Everything measured, nothing decorated."
+primary_mode: "light"
+brand_domain: "office furniture: configurable desking systems, cabins and meeting tables, sold through a lead-generation site (Surat, IN)"
+brand_type: "content-rich"
+brand_type_note: "Content-rich leaning engineering brand. Identity lives in extended caps, mono data, hairlines and studio cut-outs on paper, not in decorated UI. A small set of instrument-panel components (segmented size selector, finish chip, spec rows, index row, dimension line) carry the rest."
+mono_for_code: false
+mono_for_metrics: true
+mono_rule: "Anything you could measure is mono: sizes, part codes, quantities, steps, counts, coordinates, figure numbers, prices bands. Claims in caps, reading in Archivo."
+source_of_truth: "src/app/globals.css"
+live_references:
+  landing: "/ (homepage: SignalHeroPanel + films, SystemsIndex, CtaBand)"
+  product_screen: "/configure (configurator) and /collections/[slug] (series PDP)"
+
+# ── PRIMITIVES ─────────────────────────────────────────────
+primitives:
+  colors:
+    neutral:              # warm ivory paper to brand ink. Every step is a real token value.
+      50: "#FBF8EE"       # canvas            --color-co-bg, --color-co-surface
+      100: "#F3EFE1"      # fog               --color-co-bg-alt, --color-co-hero-bg
+      200: "#E9E4D3"      # fog deep          --color-co-placeholder-frame-3
+      300: "#DCD6C4"      # hair              --color-co-border, --color-co-card-border
+      400: "#B4AEA4"      # on-ink muted      --color-co-panel-muted
+      500: "#9E988D"      # on-ink faint      --color-co-panel-faint
+      550: "#8F8874"      # rule strong       --color-co-border-strong
+      600: "#6B665D"      # steel             --color-co-muted-2, --color-co-faint, --color-co-placeholder
+      700: "#55514A"      # muted             --color-co-muted
+      800: "#3D3A36"      # ink soft          --color-co-ink-soft
+      850: "#3B3637"      # ink rule          --color-co-panel-border
+      900: "#231F20"      # ink               --color-co-ink, --color-co-panel
+    signal:               # the logo green. Two used steps, on purpose.
+      300: "#9DD089"      # grid signal       --color-co-grid-signal (logo green mixed 60/40 with canvas)
+      500: "#5EB646"      # signal            --color-co-green, --color-co-green-light
+    defined_but_banned:   # present in globals.css, used nowhere in src, not in design.md
+      green_dark: "#2F7A24"     # --color-co-green-dark
+      green_pale: "#CFE8C6"     # --color-co-green-pale
+      green_paler: "#E7F2DF"    # --color-co-green-paler
+    no_alarm_colours: "Signal has no red and no amber. Errors and warnings are ink plus words (FormError: 2px ink left rule, 'Not sent' prefix)."
+  spacing: [0, 1, 2, 3, 4, 6, 8, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 40, 48, 64, 72, 96, 120, 160]
+  spacing_note: "Tailwind v4 default 4px scale, halves up to 3.5 then whole steps. Odd values (11, 18, 22) are real: spec-row padding, phone gutter, button padding. Fractional utilities such as p-4.5 produce no CSS."
+  radii: [0, "50%"]
+  radii_note: "0 everywhere. 50% only on the two 7px signal dots (and the 22px large pair)."
+
+# ── SEMANTIC TOKENS ────────────────────────────────────────
+tokens:
+  colors:
+    light:
+      background: "{neutral.50}"
+      surface1: "{neutral.100}"
+      surface2: "{neutral.200}"
+      surface3: "{neutral.50}"
+      border: "{neutral.300}"
+      border_visible: "{neutral.900}"
+      text1: "{neutral.900}"
+      text2: "{neutral.800}"
+      text3: "{neutral.700}"
+      text4: "{neutral.600}"
+      accent: "{neutral.900}"
+      accent_hover: "{neutral.800}"
+      accent_subtle: "{neutral.100}"
+      on_accent: "{neutral.50}"
+      signal: "{signal.500}"
+      signal_grid: "{signal.300}"
+      success: "{signal.500}"
+      warning: "{neutral.900}"
+      error: "{neutral.900}"
+      success_bg: "{neutral.50}"
+      warning_bg: "{neutral.50}"
+      error_bg: "{neutral.50}"
+      overlay: "rgba(35, 31, 32, 0.70)"
+      focus_ring: "{neutral.900}"
+    dark:                 # derived from the ink block (footer, PDP spec block, dark CtaBand, hero pagination)
+      background: "{neutral.900}"
+      surface1: "{neutral.850}"
+      surface2: "{neutral.800}"
+      surface3: "{neutral.900}"
+      border: "{neutral.850}"
+      border_visible: "{neutral.50}"
+      text1: "{neutral.50}"
+      text2: "{neutral.400}"
+      text3: "{neutral.400}"
+      text4: "{neutral.500}"
+      accent: "{neutral.50}"
+      accent_hover: "{neutral.100}"
+      accent_subtle: "{neutral.850}"
+      on_accent: "{neutral.900}"
+      signal: "{signal.500}"
+      signal_grid: "{signal.300}"
+      success: "{signal.500}"
+      warning: "{neutral.50}"
+      error: "{neutral.50}"
+      success_bg: "{neutral.900}"
+      warning_bg: "{neutral.900}"
+      error_bg: "{neutral.900}"
+      overlay: "rgba(35, 31, 32, 0.70)"
+      focus_ring: "{neutral.50}"
+    role_notes:
+      accent: "Ink, not green. The primary action is an ink fill. Green is never the accent."
+      signal: "State only: selected, active, progress, sent. About 1% of a screen, never text (2.39:1 on canvas), never the only carrier of a state."
+      text4: "Steel is meta (eyebrows, labels, captions, placeholders) and passes AA. It is not a disabled grey: disabled is opacity 0.5 on the control."
+      status_bg: "Status never tints a surface. The *_bg tokens equal the background on purpose."
+      dark_mode: "Dark mode is the ink block generalised. The ink block has three text tones, so text2 and text3 share #B4AEA4."
+    contrast:             # WCAG 2.x, computed
+      ink_on_canvas: 15.34
+      ink_on_fog: 14.16
+      ink_soft_on_canvas: 10.64
+      muted_on_canvas: 7.42
+      steel_on_canvas: 5.36
+      steel_on_fog: 4.95
+      steel_on_fog_deep: 4.48       # fails AA small text: never put steel text on surface2
+      canvas_on_ink: 15.34
+      panel_muted_on_ink: 7.40
+      panel_faint_on_ink: 5.69
+      ink_on_signal: 6.41
+      signal_on_canvas: 2.39        # non-text only
+      rule_strong_on_canvas: 3.33   # UI component 3:1
+
+  spacing:
+    2xs: 2
+    xs: 4
+    sm: 8
+    md: 16
+    lg: 24
+    xl: 32
+    2xl: 48
+    3xl: 64
+    4xl: 96
+    section: "clamp(64px, 8vw, 120px)"
+    section_lg: "clamp(80px, 10vw, 160px)"
+    shell_max: 1440
+    shell_gutter: { phone: 18, sm: 24, lg: 48 }
+
+  radii:
+    element: 0
+    control: 0
+    component: 0
+    container: 0
+    pill: 0
+    dot: "50%"
+
+  typography:
+    display: { family: "Archivo", stretch: "125%", size: "clamp(44px, 8.9vw, 128px)", weight: 600, line_height: 0.9, letter_spacing: "-0.02em", transform: "uppercase", utility: "co-display" }
+    title: { family: "Archivo", stretch: "125%", size: "clamp(38px, 6vw, 88px)", weight: 600, line_height: 0.9, letter_spacing: "-0.02em", transform: "uppercase", utility: "co-h1" }
+    heading: { family: "Archivo", stretch: "125%", size: "clamp(30px, 3.9vw, 56px)", weight: 600, line_height: 0.92, letter_spacing: "-0.02em", transform: "uppercase", utility: "co-h2" }
+    subheading: { family: "Archivo", stretch: "125%", size: "clamp(20px, 1.7vw, 24px)", weight: 600, line_height: 1, letter_spacing: "-0.01em", transform: "uppercase", utility: "co-h3" }
+    lead: { family: "Archivo", stretch: "100%", size: "clamp(16px, 1.32vw, 19px)", weight: 400, line_height: 1.55, color: "{neutral.800}", utility: "co-lead" }
+    body: { family: "Archivo", stretch: "100%", size: "15px", weight: 400, line_height: 1.55 }
+    body_sm: { family: "Archivo", stretch: "100%", size: "14px", weight: 400, line_height: 1.55 }
+    caption: { family: "Archivo", stretch: "100%", size: "12.5px", weight: 400, line_height: 1.625 }
+    label: { family: "Martian Mono", stretch: "87.5%", size: "11px", weight: 400, line_height: 1.5, letter_spacing: "0.02em", transform: "uppercase", color: "{neutral.600}", utility: "co-eyebrow" }
+    data: { family: "Martian Mono", stretch: "87.5%", size: "11px", weight: 400, line_height: 1.5, letter_spacing: "0.02em", transform: "uppercase", numeric: "tabular-nums", utility: "co-data" }
+    mono: { family: "Martian Mono", stretch: "87.5%", size: "11px", weight: 400 }
+    field_value: { family: "Archivo", size: "17px", weight: 400 }
+    button_label: { family: "Martian Mono", stretch: "87.5%", size: "12px", weight: 400, letter_spacing: "0.02em", transform: "uppercase" }
+    weights_used: { archivo: [400, 500, 600], martian_mono: [400] }
+    google_fonts: "family=Archivo:wdth,wght@62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap"
+    project_loading: "next/font/google with axes: ['wdth'] in src/app/layout.tsx, variables --font-archivo and --font-martian"
+
+  elevation:
+    strategy: "flat"
+    levels: { 0: "none", 1: "none", 2: "none", 3: "none" }
+    depth_by: "1px rules (hair for structure, ink to close a section or frame a control) and the fog / ink surface change"
+    overlay: "flat ink veil rgba(35,31,32,0.70), no blur"
+
+  motion:
+    personality: "plotter"
+    summary: "Plotter, not fade. Lines draw at constant speed, images and blocks wipe left to right, numbers tick. Nothing fades, nothing bounces."
+    duration_fast: "150ms"
+    duration_normal: "400ms"
+    duration_slow: "600ms"
+    easing_fast: "cubic-bezier(0.4, 0, 0.2, 1)"
+    easing_plot: "linear"
+    easing_wipe: "cubic-bezier(0.65, 0, 0.35, 1)"
+    easing_out: "cubic-bezier(0.16, 1, 0.3, 1)"
+    tokens: { duration_plot: "--duration-plot 400ms", ease_plot: "--ease-plot linear", ease_co: "--ease-co cubic-bezier(0.16, 1, 0.3, 1)" }
+    catalogue:
+      rule_draw: "co-rule: scaleX/scaleY 0 to 1, 400ms linear (dimension lines, measure rules, hero grid lines with 30ms stagger per line)"
+      block_reveal: "co-reveal: clip-path inset(0 100% 0 0) to inset(0), 600ms cubic-bezier(0.65,0,0.35,1)"
+      image_wipe: "co-clip: same wipe, 800ms, with a 1px ink hairline riding the edge"
+      swap_wipe: "co-wipe-in: 500ms wipe on click-swapped frames, on the image itself"
+      headline: "co-word-rise: translateY(110%) to 0, 600ms --ease-co, 40ms per word, transform only"
+      stagger: "--co-stagger default 0.08s in CSS; StaggerContainer prop default 0.1s; catalog uses 0.06s"
+      number_tick: "useTick / TickNumber: 400ms linear count on change, first render is the real value"
+      hover_colour: "transition-colors 150ms"
+      nav_underline: "1px ink rule scaleX 0 to 1, 400ms linear on hover; active = static 2px ink rule"
+      sticky_bar: "slide up translateY(100%) to 0, 300ms cubic-bezier(0.65,0,0.35,1)"
+      nav_drawer: "clip-path top to bottom, 280ms cubic-bezier(0.65,0,0.35,1)"
+      config_pick: "card grows / neighbours shrink 450ms, render flies to viewer 750ms easeInOutCubic"
+    reduced_motion: "Every keyframe off in CSS under prefers-reduced-motion; framer runs under MotionConfig reducedMotion='user'."
+    js_gate: "All reveals rest in the finished state and are held back only while html.co-js is present and the element lacks data-shown."
+
+  hero_stage:
+    preset: null
+    preset_note: "Closest preset is grid-on-dark, but Signal is light, the pattern is a line grid on the content columns, and the subject is a photographed product cut-out. Filled manually."
+    observed_style:
+      description: "Homepage panel 1: ivory canvas, a 12-column hairline grid drawn in pale signal green (#9DD089) on the same column edges as the content, extended-caps claim on the left, and a studio cut-out of a desk on the right that multiplies into the paper. The render sits above the grid on a feathered canvas plate. Registration crosses pin the figure corners, a vertical dimension line gives the 720 working height, a horizontal one gives the length per seat, and a mono caption reads Fig. 01 plus the coordinates. Further panels are full-bleed films with no text; pagination is a solid ink corner block with a 3px green bar on the active panel."
+      where_used: ["homepage hero (green grid, panel 1)", "every PageHero (same grid in hair #DCD6C4, text only)"]
+      notes: "Grid lines draw down at 400ms linear with a 30ms stagger per line; on phones only every third line is drawn (four columns)."
+    background:
+      medium: "pattern"
+      pattern_recipe: "line-grid"
+      pattern_params: { columns: 12, line: "1px", colour_home: "#9DD089", colour_secondary: "#DCD6C4", align: "co-shell content columns", phone: "every third line" }
+      color_mode: "monochrome"
+      saturation: "flat"
+      light_source: "none"
+      falloff: "hard"
+      vignette: "off"
+      texture: "clean"
+      motion: "static"
+      intensity: "subtle"
+      safe_zone: "full-bleed"
+      color_palette: ["#FBF8EE", "#9DD089", "#DCD6C4", "#231F20", "#5EB646"]
+    hero:
+      subject: "photo-cutout"
+      placement: "off-center-right"
+      scale: "balanced"
+      tint: "neutral"
+      asset_rule: "Studio render on white, class co-cutout (multiply + 5% feather). Never inside clip-path / filter / opacity / isolating transform."
+    relation:
+      type: "flat"
+      bleed: 0
+      note: "No shadow, no glow. The photo carries its own soft floor shadow; the feather hides the rectangle."
+    secondary_panels: "Full-bleed autoplay films (src/lib/hero-films.ts), muted, no text, no gradient scrim; header tone set per film."
+    disclaimer: "Documentation only: this skill renders no landing page. Use the real SignalHeroPanel / PageHero components and the manufacturer renders in public/pros and public/varidex."
+
+  iconography:
+    observed_style:
+      description: "Signal uses type, not icons. Direction is a text glyph (→ ← ↑ ↓) in the running font, open/close is + and − in a 28px ink square, drawing marks (registration cross, dimension ticks, hamburger) are built from 1px spans. Only two pictograms exist: lucide X (16px, strokeWidth 1.5) on the dialog close, and lucide MessageCircle (24px, filled, strokeWidth 0) on the floating WhatsApp button. No phone icon."
+      stroke_weight: "thin (1px to 1.5px)"
+      corner_treatment: "sharp"
+      fill_style: "outline"
+      form_language: "geometric"
+      visual_density: "minimal"
+    fallback_kit:
+      name: "Lucide"
+      weight: "default 2px font; the codebase sets strokeWidth 1.5 on lucide-react"
+      match_score: "medium"
+      match_reasoning: "Lucide is the kit the codebase already ships (lucide-react), so any new pictogram stays consistent with the dialog close and the WhatsApp button. It is geometric and minimal like the drawing marks, but its round caps are softer than Signal's butt-ended 1px rules, which is why the score is medium. Material Symbols Sharp would match the corners better, but adding a second icon system for a site that has two icons is worse than a slightly softer cap."
+      cdn: "https://unpkg.com/lucide-static@1.8.0/font/lucide.css"
+      icon_class_prefix: "icon-"
+    sizes: { inline: "16px", button: "16px", nav: "24px" }
+    disclaimer: "Lucide is the codebase's own dependency, used here as the fallback for any new pictogram. Signal's identity glyphs are typographic arrows and 1px drawing marks, not an icon set."
+
+# ── COMPONENTS (tear-downs; source = observed unless marked) ─────
+components:
+  button_primary:      { source: "observed", file: "src/components/ui/button.tsx", background: "{neutral.900}", color: "{neutral.50}", height: { sm: 42, default: 52, lg: 60 }, padding_x: { sm: 16, default: 22, lg: 28 }, gap: 14, radius: 0, font: "Martian Mono 12px 400 caps 0.02em wdth 87.5", hover: { background: "{neutral.800}" }, transition: "colors 150ms", disabled: "opacity 0.5" }
+  button_secondary:    { source: "observed", file: "src/components/ui/button.tsx", background: "transparent", color: "{neutral.900}", border: "1px solid {neutral.900}", hover: { background: "{neutral.900}", color: "{neutral.50}" } }
+  button_link:         { source: "observed", file: "src/components/ui/button.tsx", border_bottom: "1px solid {neutral.900}", padding: "0 0 4px", arrow: "→ nudges 4px right on hover, 150ms", hover: { border: "{neutral.600}", color: "{neutral.700}" } }
+  button_on_dark:      { source: "observed", variants: { onDark: "canvas fill, ink text, hover fog", secondaryOnDark: "1px canvas outline, hover canvas fill", linkOnDark: "canvas underline, hover #9E988D rule and #B4AEA4 text" } }
+  button_ghost:        { source: "observed", color: "{neutral.700}", hover: { color: "{neutral.900}" } }
+  button_destructive:  { source: "absent", note: "No destructive variant and no alarm colour. A destructive action is a secondary button with an explicit verb." }
+  button_dots:         { source: "observed", note: "dots prop renders SignalDots after the label. Header quote button only." }
+  icon_button:         { source: "observed", size: 40, border: "1px solid {neutral.900}", hover: "ink fill, canvas glyph", where: ["dialog close", "config rail arrows", "hamburger"] }
+  segmented_control:   { source: "observed", file: "src/components/ui/segmented-control.tsx", cell: "min-w 64px, padding 12px 16px, co-data", frame: "1px ink, cells overlap -1px", selected: "ink fill, canvas text, aria-pressed", hover: "fog", dark: "1px canvas frame, selected canvas fill, hover #3B3637", internals: "Sizing at time of writing; a 44px minimum touch height is being introduced. Read the file for current values." }
+  finish_chip:         { source: "observed", file: "src/components/ui/finish-chip.tsx", width: 76, swatch: "square, 1px hair border, material fill (gradient allowed here only)", edge_band: "6px strip", selected: "1px ink outline offset 3px + 7px signal dot top-right (6px inset)", label: "co-data 10px, code in steel", internals: "Label alignment may change. Read the file for current values." }
+  progress_rail:       { source: "observed", file: "src/components/ui/progress-rail.tsx", track: "2px hair (dark: #3B3637)", fill: "{signal.500}, width transition 400ms linear", caption: "co-data steel, Step n of m" }
+  spec_rows:           { source: "observed", file: "src/components/ui/spec-rows.tsx", grid: "minmax(96px,130px) 1fr, gap-x 16px", row: "padding 11px 0, 1px hair bottom rule, top rule on the dl", key: "steel", value: "ink", font: "co-data", dark: "#3B3637 rules, #9E988D keys, canvas values", columns: "1 or 2 (md:columns-2 gap-x 40px)" }
+  index_row:           { source: "observed", file: "src/components/ui/index-row.tsx", min_height: "84px / 96px md", columns_lg: "90px | minmax(0,360px) | 1fr | 260px | 60px", title: "Archivo wdth125 600 clamp(24px,2.8vw,40px) caps", hover: "fog row, cut-out thumbnail wipes in 300ms linear, arrow swaps to signal dots" }
+  dimension_line:      { source: "observed", file: "src/components/ui/dimension-line.tsx", rule: "1px currentColor", ticks: "1px x 11px at both ends", label: "co-data 10px in a knocked-out gap, padding 0 8px, ground = canvas | fog | ink", axis: "x | y (label rotated -90deg)", draw: "co-rule 400ms linear" }
+  registration_cross:  { source: "observed", file: "src/components/ui/registration-cross.tsx", size: 17, strokes: "two 1px currentColor" }
+  figure_caption:      { source: "observed", file: "src/components/ui/figure-caption.tsx", format: "Fig. NN + spaced em dash + caption", font: "co-data steel" }
+  hairline_grid:       { source: "observed", file: "src/components/ui/hairline-grid.tsx", columns: 12, tone: "hair | signal (homepage only)" }
+  measure_rule:        { source: "observed", file: "src/components/ui/measure-rule.tsx" }
+  signal_dots:         { source: "observed", file: "src/components/ui/signal-dots.tsx", size: { sm: "7px, gap 4px", lg: "22px, gap 12px" }, colour: "{signal.500}", radius: "50%" }
+  input:               { source: "observed", file: "src/components/ui/input.tsx", box: "none", rule: "1px ink bottom", padding: "10px 0", font: "Archivo 17px ink", placeholder: "steel", invalid: "2px ink bottom rule", focus: "global 2px ink outline, offset 2px", disabled: "opacity 0.5, not-allowed" }
+  select:              { source: "observed", file: "src/components/ui/select.tsx", native: true, chevron: "11x7 1px ink stroke, right 2px", padding_right: 28 }
+  textarea:            { source: "observed", file: "src/components/ui/textarea.tsx", min_height: 96, resize: "vertical" }
+  label:               { source: "observed", file: "src/components/ui/label.tsx", font: "co-eyebrow", gap_to_field: 4 }
+  tabs:                { source: "observed", file: "src/components/forms/contact-form-tabs.tsx", frame: "1px ink", tab: "co-data, padding 16px 24px, 01/02 prefix in steel", active: "fog fill + 3px signal bar on the bottom edge + aria-selected", inactive: "steel, hover ink" }
+  nav_link:            { source: "observed", file: "src/components/layout/site-header.tsx", font: "co-data", default: "{neutral.700}", hover: "ink + 1px ink underline drawing 400ms linear", active: "ink + static 2px ink rule + aria-current" }
+  header:              { source: "observed", height: 72, background: "canvas, 1px hair bottom (transparent over the homepage hero)", rule: "never backdrop-filter, filter, transform or will-change" }
+  modal:               { source: "observed", file: "src/components/providers/quote-dialog-provider.tsx", width: "min(600px, 92vw)", frame: "1px ink, canvas fill, radius 0, no shadow", head: "padding 24px (sm 28px 32px), ink rule below", overlay: "ink at 70%, no blur", close: "40px ink-outlined square, lucide X 16px stroke 1.5" }
+  sticky_bar:          { source: "observed", file: "src/components/series/series-sticky-bar.tsx", height: 68, background: "fog", rule: "1px ink top", content: "co-data summary + code in steel + sm primary" }
+  accordion:           { source: "observed", file: "src/components/common/faq-section.tsx", element: "details/summary", row: "padding 20px 0, hair bottom rule, hover fog", toggle: "28px ink-outlined square, + / − text glyph, open = ink fill", number: "co-data steel, ink when open" }
+  card:                { source: "observed", file: "src/components/catalog/product-card.tsx", frame: "image well 4:3, 1px hair, fog fill, hover ink border", body: "ink rule on top, eyebrow + band, co-h3 title, 14px muted tagline, co-data sizes" }
+  form_sent:           { source: "observed", file: "src/components/forms/form-status.tsx", mark: "SignalDots + co-data label", role: "status" }
+  form_error:          { source: "observed", file: "src/components/forms/form-status.tsx", mark: "2px ink left rule, padding-left 12px, co-data ink, 'Not sent' prefix", role: "alert" }
+  empty_state:         { source: "observed", file: "src/components/catalog/catalog-browser.tsx", layout: "hair rules top and bottom, co-data count line, 15px ink-soft body, secondary + primary buttons" }
+  image_placeholder:   { source: "observed", file: "src/components/common/image-placeholder.tsx", frame: "fog (canvas for cut-out slots), 1px hair, registration cross top-left, co-eyebrow note" }
+  pagination_bar:      { source: "observed", where: ["hero carousel corner block", "config gallery"], mark: "3px x 20 to 40px bar, signal when active, hair or #3B3637 otherwise" }
+  badge:               { source: "absent", note: "No badges or pills. Status is a co-data line, optionally with SignalDots." }
+  tooltip:             { source: "absent", note: "No hover tooltips. Labels are printed next to the thing. The one floating label is the anatomy hotspot tag (series-anatomy.tsx): an ink co-data tag that wipes in on selection." }
+  toast:               { source: "absent", note: "No toasts. A form replaces itself with FormSent in place." }
+  toggle_switch:       { source: "derived", note: "Not in Signal. Use a two-cell SegmentedControl (Off / On) with aria-pressed." }
+  checkbox_radio:      { source: "derived", note: "Not in Signal. Use SegmentedControl for single choice; a square 16px ink-outlined box with an ink fill for multi-choice if ever needed." }
+  slider:              { source: "derived", note: "Not in Signal. Sizes are discrete (read from src/lib/series), so they are SegmentedControl cells, never a slider." }
+  date_picker:         { source: "observed", note: "Native input type=date / type=time in the underline field (showroom-visit-form). No custom calendar." }
+  skeleton_spinner:    { source: "absent", note: "No skeletons, no spinners. Content is server-rendered in its finished state; a submitting button is disabled at opacity 0.5." }
+
+project_mapping:
+  rule: "Write code with the existing co-* tokens, utilities and components. The hue semantic names below are aliases for reasoning only; never add a parallel token set to globals.css."
+  colors:
+    background: "--color-co-bg / bg-co-bg"
+    surface1: "--color-co-bg-alt / bg-co-bg-alt"
+    surface2: "--color-co-placeholder-frame-3 (no utility in use)"
+    surface3: "--color-co-bg / bg-co-bg (the canvas sheet laid on fog)"
+    border: "--color-co-border / border-co-border"
+    border_visible: "--color-co-ink / border-co-ink"
+    text1: "--color-co-ink / text-co-ink"
+    text2: "--color-co-ink-soft / text-co-ink-soft"
+    text3: "--color-co-muted / text-co-muted"
+    text4: "--color-co-muted-2 / text-co-muted-2"
+    accent: "--color-co-ink / bg-co-ink"
+    accent_hover: "--color-co-ink-soft / hover:bg-co-ink-soft"
+    accent_subtle: "--color-co-bg-alt / bg-co-bg-alt"
+    signal: "--color-co-green / bg-co-green"
+    signal_grid: "--color-co-grid-signal / bg-co-grid-signal"
+    dark_background: "--color-co-panel / bg-co-panel"
+    dark_border: "--color-co-panel-border / border-co-panel-border"
+    dark_text1: "--color-co-panel-fg / text-co-panel-fg"
+    dark_text2: "--color-co-panel-muted / text-co-panel-muted"
+    dark_text4: "--color-co-panel-faint / text-co-panel-faint"
+  type:
+    display: "co-display"
+    title: "co-h1"
+    heading: "co-h2"
+    subheading: "co-h3"
+    lead: "co-lead"
+    body: "default body (15px / 1.55)"
+    body_sm: "text-[14px] leading-[1.55]"
+    caption: "text-[12.5px] leading-relaxed"
+    label: "co-eyebrow"
+    data: "co-data"
+
+app_screen:
+  status: "not generated"
+  reason: "The live /configure configurator and the /collections/[slug] series PDP are the product screens; a mock would be a second, drifting copy."
+  archetype: "editor"
+  frame: "browser"
+  frame_params: { url: "cohuman.in/configure", title: "Configure a desk | Cohuman" }
+  content_seed: "STRETCH S single table, medium beam: length 1200 / 1400 / 1500 / 1600, depth 600 / 700 / 750 / 900, code CHSS-ST-SB160"

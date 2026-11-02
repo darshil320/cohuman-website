@@ -11,7 +11,10 @@ export function TickNumber({ value }: { value: number }) {
   const shown = useTick(value);
   return (
     <>
-      <span aria-hidden>{shown}</span>
+      {/* Tabular figures: every digit one width, so the label does not jitter mid-tick. */}
+      <span aria-hidden className="tabular-nums">
+        {shown}
+      </span>
       <span className="sr-only">{value}</span>
     </>
   );

@@ -125,7 +125,7 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
 
       <FormError message={error} />
 
-      <Button type="submit" dots disabled={submitting} className="mt-8 w-full">
+      <Button type="submit" disabled={submitting} className="mt-8 w-full">
         {submitting ? "Sending…" : "Send enquiry"}
       </Button>
       <FormFootnote>

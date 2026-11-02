@@ -72,7 +72,7 @@ export function NavDrawer({
                     <span className="co-data text-co-muted-2">{s.configs} configs</span>
                   </span>
                   <span className="co-data mt-1.5 block text-co-ink">{s.span}</span>
-                  <span className="mt-2 block max-w-[38ch] text-[13.5px] leading-relaxed text-co-muted">
+                  <span className="mt-2 block max-w-[38ch] text-[14px] leading-relaxed text-co-muted">
                     {s.blurb}
                   </span>
                 </Link>

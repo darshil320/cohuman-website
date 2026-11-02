@@ -55,7 +55,7 @@ export function IndexRow({ n, title, type, range, href, onClick, image, classNam
     <>
       <span className="co-data self-center">{n}</span>
       <span className="min-w-0">
-        <span className="block font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+        <span className="co-index block">
           {title}
         </span>
         {type ? <span className="mt-1.5 block text-[14px] text-co-muted md:hidden">{type}</span> : null}

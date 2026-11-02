@@ -47,8 +47,8 @@ Every text pair in use, checked:
 | Canvas on ink | 15.3 | AAA |
 | Panel-muted on ink | 7.4 | AAA |
 | Panel-faint on ink | 5.7 | AA |
-| Ink on signal | 6.5 | AA |
-| Signal on canvas | 2.35 | **non-text only, never alone** |
+| Ink on signal | 6.4 | AA |
+| Signal on canvas | 2.39 | **non-text only, never alone** |
 | Rule strong on canvas | 3.3 | UI component (3:1) |
 
 The green is never text, and never the only carrier of a state: the selected control also
@@ -85,7 +85,7 @@ the website, so they are not copied in.
 | Device | Meaning on the site | Where |
 |---|---|---|
 | **Two dots** (above the M) | Status — something is switched on | "Get a quote" in the header; form sent states; selected finish chip |
-| **One bar** (inside the O) | Active underline / progress | Configurator progress rail; active tab; selected size-chart / anatomy row; gallery pagination |
+| **One bar** (inside the O) | Active underline / progress | Configurator progress rail; active tab; selected anatomy row; gallery and hero pagination |
 | Drawing marks | — | Registration crosses, dimension lines, figure numbers |
 
 Green is never decoration, never a heading colour, never a hover fill.
@@ -111,13 +111,27 @@ measure — a size, a code, a quantity, a step — is mono.
 
 | Step | Value | Moodboard at 1440 |
 |---|---|---|
-| display | `clamp(44px, 8.9vw, 128px)` | 128 / 0.90 |
-| h1 | `clamp(38px, 6vw, 88px)` | — |
-| h2 | `clamp(30px, 3.9vw, 56px)` | 56 / 0.90 |
-| h3 | `clamp(20px, 1.7vw, 24px)` | 24 |
-| lead | `clamp(16px, 1.32vw, 19px)` | 19 / 1.55 |
-| body | `15px` | 15 / 1.55 |
-| data / eyebrow | `11px` | 11 / 1.50 |
+| display | `clamp(min(2.75rem, 11.3vw), 8.9vw, 8rem)` | 128 / 0.90 |
+| h1 | `clamp(min(2.375rem, 9.75vw), 6vw, 5.5rem)` | — |
+| h2 | `clamp(min(1.875rem, 9vw), 3.9vw, 3.5rem)` | 56 / 0.90 |
+| index (`co-index`, list-row names) | `clamp(min(1.5rem, 6.4vw), 2.8vw, 2.5rem)` | 40 |
+| h3 | `clamp(1.25rem, 1.7vw, 1.5rem)` | 24 |
+| lead | `clamp(1rem, 1.32vw, 1.1875rem)` | 19 / 1.55 |
+| body | `0.9375rem` (15px) | 15 / 1.55 |
+| data / eyebrow | `0.6875rem` (11px) | 11 / 1.50 |
+
+Sizes are in rem so a reader's browser font-size applies. Each heading's floor is
+`min(<rem>, <vw>)`, so the longest words in the expanded caps ("HEALTHCARE",
+"ENGINEERED") still fit a 320–360px phone. Headings take `text-wrap: balance`, paragraphs
+`pretty`. Keep a headline's longest word narrower than its column at every breakpoint —
+the overflow guard (`overflow-wrap: break-word`) is a last resort, not a layout tool.
+
+**Typesetting rules.** Values bind to their units and range ends with no-break spaces
+(`720 mm`, `1200 — 1600`, `Fig. 01 —`) — the labels in `src/lib/series/derive.ts` already
+do this, and `npm test` checks it. Use ’ for apostrophes (never a straight quote in copy),
+× in sizes, tabular figures for anything that ticks. Part codes (`PROS-TOP-NOK`) never
+break at their hyphens. A sentence longer than about seven words is set in Archivo, not
+in display capitals.
 
 ## Visual system
 
@@ -126,10 +140,12 @@ measure — a size, a code, a quantity, a step — is mono.
   section opener and frames strong controls.
 - **Hairline 12-column grid** behind hero sections (`HairlineGrid`), on the same column
   edges as the content. On the homepage hero only it is drawn in green
-  (`tone="signal"`, `--color-co-grid-signal` #9CD289 — the logo green mixed 60/40 with
-  the canvas), and the render sits **above** it: an `isolate` group holding a feathered
-  canvas plate (`co-cutout-plate`) and the multiplied image, so the lines pass behind the
-  product instead of across it.
+  (`tone="signal"`, `--color-co-grid-signal` #9DD089 — the logo green mixed 60/40 with
+  the canvas), and the render sits **above** it: an `isolate` group holding a canvas plate
+  and the multiplied image, so the lines pass behind the product instead of across it. A
+  render with a silhouette matte (`RENDER_MATTES` in `signal-hero.tsx`) has the whole group
+  cut to the product, so the lines also run through the sweep around it; without one the
+  plate is the feathered rectangle `co-cutout-plate` and hides the lines across the box.
 - **Drawing marks:** registration crosses (`RegistrationCross`), figure captions
   ("Fig. 01 — …", `FigureCaption`) numbered down each page, and a **dimension line on every
   product render** (`DimensionLine`). Sizes are always read from `src/lib/series` — the
@@ -156,21 +172,23 @@ measure — a size, a code, a quantity, a step — is mono.
 
 | Component | What it is |
 |---|---|
-| `Button` | `primary` (ink fill, mono label; `dots` adds the green pair — header only), `secondary` (1px outline), `link` (underline + `arrow`), and `onDark` / `secondaryOnDark` / `linkOnDark` |
-| `SegmentedControl` | Square segmented size selector; selected = ink fill + `aria-pressed` |
-| `FinishChip` | Square swatch chip with name and part code; selected = offset ink outline + dot |
+| `Button` | `primary` (ink fill, mono label), `secondary` (1px outline), `link` (underline + `arrow`; may wrap), and `onDark` / `secondaryOnDark` / `linkOnDark`. The `dots` prop (green pair) is for the header's quote button only — never a form submit or a menu button |
+| `SegmentedControl` | Square segmented size selector, 44px cells; selected = ink fill + `aria-pressed`; a `locked` (fixed) value is dashed and unfilled; `describedBy` links its helper text |
+| `FinishChip` | Square swatch chip with name and unbreakable part code; selected = offset ink outline + dot (`dot={false}` where the progress rail is already lit) |
 | `ProgressRail` | 2px track, green fill, "Step n of m" caption |
 | `SpecRows` | `<dl>` of mono key/value rows on hairlines; `tone="dark"` for the ink block |
 | `IndexRow` / `IndexHeader` | The parts-list row: number, name in caps, type, mono range, arrow; hover = fog + cut-out thumbnail + dots |
 | `DimensionLine` | 1px rule with end ticks and a mono value, `axis="x" \| "y"` |
-| `RegistrationCross`, `FigureCaption`, `HairlineGrid`, `MeasureRule`, `SignalDots`, `TickNumber` | Drawing marks and state |
+| `RegistrationCross`, `FigureCaption`, `HairlineGrid`, `SignalDots`, `TickNumber` | Drawing marks and state |
 | `Input` / `Textarea` / `Select` / `Label` | Underline fields: no box, one ink rule, mono label |
 | `Reveal`, `StaggerItem`, `ClipReveal`, `KineticHeading` | Server-safe CSS motion (below) |
 
 Secondary routes open with `PageHero` (`src/components/common`: hairline grid, mono
 label, extended-caps claim, lead, optional spec-rows aside). Section openers are
 `SectionHeading`: mono label · display-caps title · standfirst, on one baseline, closed by
-an ink rule. Every page ends on `CtaBand` (or, on /contact and /b2b, on the form).
+an ink rule. With no standfirst or link the title spans both remaining columns at a 24ch
+measure. Keep titles to six words or fewer, and don't open a section with a heading that
+repeats the hero above it. Every page ends on `CtaBand` (or, on /contact and /b2b, on the form).
 
 ## Motion — "plotter, not fade"
 
@@ -208,13 +226,24 @@ cues · stock lifestyle people · bento grids of rounded cards.
 
 ## Homepage hero
 
-Full screen, under a transparent header. Panel 1 is the measured bench on the green grid;
-further panels are films (`src/lib/hero-films.ts`) — full bleed, no text, autoplaying
-muted only while on screen, poster-only under reduced motion. Panels wipe left → right.
-Pagination is a solid ink corner block (`01 Index · 02 Floor …`, the active one marked by
-the green bar), so it reads on any footage without a scrim. The header goes transparent
-while the hero is under it — ink type on light footage, canvas type and the reversed logo
-on dark (`tone` per film) — and solid again once the hero has scrolled away.
+Full screen, under a transparent header, opening on a **film**: the studio footage edge to
+edge with a canvas multiply over it (the grey sweep lands on Signal's paper), and the
+page's claim set on a small drawing's title block high in the top left: a 360px canvas
+panel in a 1px ink frame, ruled into a mono line, the tagline in extended caps, one
+sentence and a full-width action. The film cuts to close-ups that fill the frame, so the
+claim gets its own paper rather than a scrim, kept small so the footage stays the hero.
+The full four-shot edit plays. Panel 2 is, for now, the previous design for the client to
+compare: a wide-shot loop with the claim in ink straight on the empty sweep.
+Panel 3 is the measured bench on the green grid. Panels wipe left → right.
+
+Every control sits in one solid ink corner block (bottom left): pause / play, arrows, a
+bar per panel, a mono timecode. The active bar is the logo's green bar used as progress —
+it fills with playback. Nothing else floats over the footage. Control glyphs are drawn
+SVGs (neither font carries arrows or media symbols). Films autoplay muted only while on
+screen, never under reduced motion; with scripting off the poster is the hero. Phone
+framing is per film (`mobileFocus`). The header goes transparent over the hero — ink type
+on light footage, canvas type and the reversed logo on dark (`tone` per film) — and solid
+once the hero scrolls away.
 
 ## Founders
 

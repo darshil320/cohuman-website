@@ -2,7 +2,7 @@ import { buildLlmsFullTxt } from "@/lib/llms/build";
 
 /*
   llms-full.txt — the conventional companion to llms.txt: the same site with its content
-  inlined rather than linked, so a model answering "what depths does STRETCH come in" or
+  inlined rather than linked, so a model answering "what depths does STRETCH V come in" or
   "what is the lead time on a task chair" has the answer without fetching a page per
   question. Both files come out of one builder module, so the index and the full text
   always describe the same catalog.

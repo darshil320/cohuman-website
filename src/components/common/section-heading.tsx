@@ -35,6 +35,7 @@ export function SectionHeading({
   titleClassName,
 }: SectionHeadingProps) {
   const dark = tone === "dark";
+  const hasAside = Boolean(blurb || (linkHref && linkLabel));
 
   return (
     <Reveal
@@ -45,9 +46,23 @@ export function SectionHeading({
       )}
     >
       <p className={cn("co-eyebrow lg:pb-1.5", dark && "text-co-panel-faint")}>{eyebrow}</p>
-      <h2 className={cn("co-h2 max-w-[18ch]", dark && "text-co-panel-fg", titleClassName)}>{title}</h2>
+      {/*
+        With no standfirst or link, the title takes both remaining columns and a 24ch
+        measure; capped at 18ch beside a standfirst. Short titles (six words or fewer)
+        keep either from stacking into four lines of capitals.
+      */}
+      <h2
+        className={cn(
+          "co-h2",
+          hasAside ? "max-w-[18ch]" : "max-w-[24ch] lg:col-span-2",
+          dark && "text-co-panel-fg",
+          titleClassName,
+        )}
+      >
+        {title}
+      </h2>
 
-      {blurb || (linkHref && linkLabel) ? (
+      {hasAside ? (
         <div className="flex flex-col items-start gap-4 lg:pb-1">
           {blurb ? (
             <p
@@ -65,9 +80,7 @@ export function SectionHeading({
             </Button>
           ) : null}
         </div>
-      ) : (
-        <span aria-hidden className="hidden lg:block" />
-      )}
+      ) : null}
     </Reveal>
   );
 }

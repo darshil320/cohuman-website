@@ -279,7 +279,7 @@ export default async function SectorPage({ params }: Props) {
       ) : null}
 
       <CtaBand
-        tone="dark"
+        tone="light"
         heading={`Tell us about the ${sector.name.toLowerCase()} brief.`}
         body="Room sizes, a floor plan or a ward list — whatever you have. You get back a schedule and a drawing."
         subject={sector.enquirySubject}

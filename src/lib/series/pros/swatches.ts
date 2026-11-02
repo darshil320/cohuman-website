@@ -22,14 +22,14 @@ export const PROS_SWATCHES: SeriesSwatch[] = [
   },
   {
     name: "Signal White frame",
-    spec: "Powder coating, 80–120μ, on 1.5–2.0mm pipe",
+    spec: "Powder coating, 80–120 microns, on 1.5–2.0mm pipe",
     code: "PROS-FRM-SWH",
     fill: "linear-gradient(168deg, #F6F5F2 0%, #E9E7E1 100%)",
     edge: "#DCD9D1",
   },
   {
     name: "Graphite frame",
-    spec: "Powder coating, 80–120μ, on 1.5–2.0mm pipe",
+    spec: "Powder coating, 80–120 microns, on 1.5–2.0mm pipe",
     code: "PROS-FRM-GRA",
     fill: "linear-gradient(168deg, #4A4D50 0%, #33373A 100%)",
     edge: "#2A2D30",

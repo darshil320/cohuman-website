@@ -1,5 +1,8 @@
 "use client";
 
+import type { MouseEvent } from "react";
+import { Field } from "@/components/configurator/configurator-controls";
+import { lengthNoun, sizeHint } from "@/components/configurator/labels";
 import { Button } from "@/components/ui/button";
 import { ProgressRail } from "@/components/ui/progress-rail";
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -15,14 +18,38 @@ import {
   selectedDepth,
   selectedLength,
 } from "@/lib/series";
+import { prefersReducedMotion } from "./series-config-flight";
 import { useSeriesConfigurator } from "./series-context";
 import { SeriesConfigRail } from "./series-config-rail";
 import { SeriesStage } from "./series-stage";
 
-/** Smooth-scroll to an in-page section and record it in the URL, as the old panel did. */
-function scrollToSection(id: string) {
-  document.querySelector(`#${id}`)?.scrollIntoView({ behavior: "smooth" });
+/** The first thing a keyboard user can act on inside a section. */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Scroll to an in-page section and record it in the URL, as the old panel did. A
+ * keyboard activation (`detail === 0`) also moves focus into the section — otherwise
+ * the page would move and focus would stay behind on a button now off screen.
+ */
+function goToSection(id: string, event: MouseEvent<HTMLButtonElement>) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
   history.pushState(null, "", `#${id}`);
+  if (event.detail === 0) target.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true });
+}
+
+/** A provisional part number: the ° for the eye, the word for a screen reader. */
+function Provisional() {
+  return (
+    <>
+      <span aria-hidden title={INFERRED_CODE_FOOTNOTE}>
+        °
+      </span>
+      <span className="sr-only"> (provisional)</span>
+    </>
+  );
 }
 
 /**
@@ -31,10 +58,12 @@ function scrollToSection(id: string) {
  * viewer — poster plus WebGL stage, with its dimension lines — on the canvas beside it.
  * The configuration picker runs full width underneath.
  *
- * The progress rail is this view's one green thing. A configuration is always selected,
- * so step 1 is complete on arrival; length and depth count once the visitor sets them,
- * or immediately where there is nothing to choose (one option, or a depth locked to the
- * top's shape).
+ * The progress rail is this view's one green thing. It counts what is set, not where
+ * you are: a configuration is always selected, so one of three is set on arrival; length
+ * and depth count once the visitor sets them, or immediately where there is nothing to
+ * choose (one option, or a depth locked to the top's shape). The size fields share
+ * `Field` and `sizeHint` with /configure, so a fixed size is explained in the same words
+ * on both configurators.
  */
 export function SeriesSpecBlock() {
   const { series, config, selection, setLength, setDepth, touched } =
@@ -49,8 +78,12 @@ export function SeriesSpecBlock() {
 
   const lengthDone = touched.length || config.lens.length === 1;
   const depthDone = touched.depth || depths.locked || depths.values.length === 1;
-  const step = 1 + (lengthDone ? 1 : 0) + (depthDone ? 1 : 0);
-  const nextStep = !lengthDone ? "choose a length" : !depthDone ? "choose a depth" : "ready to quote";
+  const set = 1 + (lengthDone ? 1 : 0) + (depthDone ? 1 : 0);
+  const nextStep = !lengthDone
+    ? `next: ${lengthNoun(config)}`
+    : !depthDone
+      ? "next: depth"
+      : "ready to quote";
 
   const rows: SpecRow[] = [
     { k: "Model", v: config.name },
@@ -59,7 +92,7 @@ export function SeriesSpecBlock() {
       v: (
         <>
           {config.code}
-          {inferred ? <span title={INFERRED_CODE_FOOTNOTE}>°</span> : null}
+          {inferred ? <Provisional /> : null}
         </>
       ),
     },
@@ -68,7 +101,7 @@ export function SeriesSpecBlock() {
       v: (
         <>
           {config.dia ? "Ø" : ""}
-          <TickNumber value={length} /> mm
+          <TickNumber value={length} />{"\u00A0"}mm
         </>
       ),
     },
@@ -79,7 +112,7 @@ export function SeriesSpecBlock() {
           "—"
         ) : (
           <>
-            <TickNumber value={depth} /> mm
+            <TickNumber value={depth} />{"\u00A0"}mm
           </>
         ),
     },
@@ -96,72 +129,103 @@ export function SeriesSpecBlock() {
           <p className="co-eyebrow mb-5 text-co-panel-faint">01 / Specification</p>
           <SpecRows rows={rows} tone="dark" />
 
+          {/* The controls and the rail they fill are one group: tight inside, air around. */}
           <div className="mt-8 grid gap-6">
-            <div>
-              <p className="co-eyebrow mb-2.5 text-co-panel-faint">{lengthFieldLabel(config)}</p>
+            <Field
+              tone="dark"
+              label={lengthFieldLabel(config)}
+              hint={sizeHint({ axis: "length", config, count: config.lens.length })}
+              hintId="spec-length-hint"
+            >
               <SegmentedControl
                 label={lengthFieldLabel(config)}
+                describedBy="spec-length-hint"
                 tone="dark"
                 value={length}
                 options={config.lens.map((value) => ({ value, label: value }))}
                 onChange={(value) => setLength(config.lens.indexOf(value))}
               />
-            </div>
-            <div>
-              <p className="co-eyebrow mb-2.5 text-co-panel-faint">{depthFieldLabel(config)}</p>
+            </Field>
+            <Field
+              tone="dark"
+              label={depthFieldLabel(config)}
+              hint={sizeHint({
+                axis: "depth",
+                config,
+                count: depths.values.length,
+                locked: depths.locked,
+              })}
+              hintId="spec-depth-hint"
+            >
               <SegmentedControl
                 label={depthFieldLabel(config)}
+                describedBy="spec-depth-hint"
                 tone="dark"
                 locked={depths.locked}
                 value={depth ?? depths.values[0]}
                 options={depths.values.map((value) => ({ value, label: value }))}
                 onChange={(value) => setDepth(depths.values.indexOf(value))}
               />
-            </div>
+            </Field>
           </div>
 
           <ProgressRail
             tone="dark"
-            step={step}
+            step={set}
             total={3}
-            label={`Step ${step} of 3 — ${nextStep}`}
-            className="mt-8"
+            label={`${set} of 3 set — ${nextStep}`}
+            className="mt-6"
           />
 
-          <div className="mt-9">
-            <p className="co-eyebrow mb-3 text-co-panel-faint">Bill of components</p>
-            <ul className="co-data grid list-none border-t border-co-panel-border p-0">
+          {/* A drawing set's parts list: a header row, then one hairline per component. */}
+          <table className="co-data mt-10 w-full border-collapse">
+            <caption className="co-eyebrow mb-3 text-left text-co-panel-faint">Bill of components</caption>
+            <thead>
+              <tr className="border-y border-co-panel-border text-co-panel-faint">
+                <th scope="col" className="py-2 pr-3 text-left font-normal">
+                  Component
+                </th>
+                <th scope="col" className="py-2 pr-3 text-left font-normal">
+                  Code
+                </th>
+                <th scope="col" className="w-[52px] py-2 text-right font-normal">
+                  Qty
+                </th>
+              </tr>
+            </thead>
+            <tbody>
               {config.bom.map((line) => (
-                <li
-                  key={line.code}
-                  className="grid grid-cols-[minmax(0,1fr)_auto_44px] items-baseline gap-x-3 border-b border-co-panel-border py-2.5"
-                >
-                  <span className="min-w-0 normal-case text-co-panel-fg">{line.name}</span>
-                  <span className="text-co-panel-muted">
+                <tr key={line.code} className="border-b border-co-panel-border align-baseline">
+                  <td className="py-2.5 pr-3 normal-case text-co-panel-fg">{line.name}</td>
+                  <td className="whitespace-nowrap py-2.5 pr-3 text-co-panel-muted">
                     {line.code}
-                    {isInferredCode(series, line.code) ? <span title={INFERRED_CODE_FOOTNOTE}>°</span> : null}
-                  </span>
-                  <span className="text-right text-co-panel-fg">{line.qty}</span>
-                </li>
+                    {isInferredCode(series, line.code) ? <Provisional /> : null}
+                  </td>
+                  <td className="whitespace-nowrap py-2.5 text-right text-co-panel-fg">{line.qty}</td>
+                </tr>
               ))}
-            </ul>
-            {config.bomNote ? (
-              <p className="mt-3 text-[13px] leading-relaxed text-co-panel-muted">{config.bomNote}</p>
-            ) : null}
-            {inferred || hasInferredBom ? (
-              <p className="mt-3 text-[12.5px] leading-relaxed text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
-            ) : null}
-          </div>
+            </tbody>
+          </table>
+          {config.bomNote ? (
+            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-muted">{config.bomNote}</p>
+          ) : null}
+          {inferred || hasInferredBom ? (
+            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
+          ) : null}
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Button type="button" variant="onDark" onClick={() => scrollToSection("enquire")}>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button type="button" variant="onDark" onClick={(event) => goToSection("enquire", event)}>
               Get a quote
             </Button>
-            <Button type="button" variant="secondaryOnDark" onClick={() => scrollToSection("anatomy")}>
-              Anatomy ↓
+            <Button
+              type="button"
+              variant="secondaryOnDark"
+              onClick={(event) => goToSection("anatomy", event)}
+            >
+              Anatomy <span aria-hidden>↓</span>
             </Button>
           </div>
-          <p className="mt-5 max-w-[40ch] text-[12.5px] leading-relaxed text-co-panel-faint">
+          <p className="mt-5 max-w-[40ch] text-[13px] leading-relaxed text-co-panel-faint">
             Price on request. Quantity, finish and installation move the number, so we quote
             rather than list.
           </p>

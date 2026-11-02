@@ -14,12 +14,17 @@ function groupRows(rows: readonly SummaryRow[]): SpecRow[] {
     groups.set(row.label, [...(groups.get(row.label) ?? []), row]);
   }
 
+  // Name left, part code right — the bill of components' column order — so codes line up
+  // down the block on wide screens and drop under their name on a phone.
   return [...groups].map(([label, items]) => ({
     k: label,
     v: items.map((item) => (
-      <span key={`${item.value}-${item.code ?? ""}`} className="block">
-        {item.value}
-        {item.code ? <span className="ml-3 text-co-panel-faint">{item.code}</span> : null}
+      <span
+        key={`${item.value}-${item.code ?? ""}`}
+        className="flex flex-wrap items-baseline justify-between gap-x-4"
+      >
+        <span className="min-w-0">{item.value}</span>
+        {item.code ? <span className="text-co-panel-faint">{item.code}</span> : null}
       </span>
     )),
   }));

@@ -28,7 +28,10 @@ The short version:
   historical, *values* are the Signal roles): canvas `#FBF8EE` (never pure white), fog
   `#F3EFE1`, brand ink `#231F20`, steel `#6B665D` for meta, hair `#DCD6C4`, and the
   logo green `#5EB646` (`co-green`) as a **status light only** — selected, active,
-  progress, sent. One green thing per screen; the header's quote dots already are one.
+  progress, sent. The header's quote dots are on every screen, so content adds at most
+  one genuine state in green (the progress rail, an active tab, a selected row). Two
+  deliberate exceptions, both client requests: the homepage hero's green grid lines and
+  the systems index's hover dots.
 - **Type:** Archivo Expanded (Archivo at `wdth` 125, 600, caps, −0.02em, 0.9) for
   claims; Archivo for reading; Martian Mono (`wdth` 87.5, 11px caps) for anything you
   could measure. Utilities `co-display`/`co-h1`–`co-h3`, `co-data`, `co-eyebrow`; tokens
@@ -46,6 +49,54 @@ The short version:
 - **Cut-outs:** product renders take `co-cutout` (multiply + feathered edge). Never wrap
   one in an element with `clip-path`/`filter`/`opacity`/an isolating transform — the
   white box comes back. Interiors take `co-highkey`.
+
+## Design workflow — which skill, when
+
+Four design skills are wired to this repo. Signal is approved and fixed: every skill
+below works *inside* it — none of them may change the palette, the type families, the
+square-corner rule, the green-as-state rule or the "plotter, not fade" motion. Load the
+skill by name with the Skill tool (or `/name`), then give it the prompt in the table.
+
+| Task | Skill | Scope |
+|---|---|---|
+| Any new UI, section or page on this site | **`signal-design`** (project skill, `.claude/skills/signal-design/`) | Always first. It is Signal captured as a design-language skill: tokens, components, craft rules, anti-patterns, mapped onto the real `co-*` utilities and `src/components/ui` primitives. |
+| Changing text styles, the type scale, long-form copy, labels | **`better-typography`** | Site-wide type craft: scale, measure, wrapping, numerals, punctuation. |
+| The configurators (`/configure`, the collection-page spec block and picker) | **`interface-design`** | Product UI only — states, density, focus, keyboard, 390px. Never marketing pages. |
+| A design review / "does this look designed?" | **`hallmark`** | Critique only on this site. Never `/hallmark redesign`. |
+| Signal's tokens or rules change | **`hue`** | Remix `.claude/skills/signal-design` so the skill matches the code again. |
+
+**Prompts** (copy, adjust the bracketed part):
+
+- *New UI* — "Use `signal-design`. Build [section/page] for Cohuman. Read `design.md`
+  and reuse `src/components/ui` primitives and `co-*` utilities; no new tokens. Sizes come
+  from `src/lib/series`; every product render gets a `DimensionLine` and a `FigureCaption`;
+  the page ends on `CtaBand`. Check 1440 and 390 before finishing."
+- *Typography* — "Use `better-typography` on [files/route]. Signal is fixed: Archivo
+  Expanded 600 caps for claims, Archivo for reading, Martian Mono 11px caps for data. Fix
+  craft only — scale steps, measure, wrapping, tabular figures, punctuation, unit spacing —
+  and keep `npm test` green (range labels are tested)."
+- *Configurator* — "Use `interface-design` on [`src/components/configurator/**` |
+  `series-spec-block.tsx` / `series-config-rail.tsx`]. Keep data, options, the enquiry
+  payload and `series-context.tsx` unchanged. The progress rail is the one green thing;
+  selected = ink fill + `aria-pressed`. Check every state and 390px; targets ≥ 44px."
+- *Review* — "Run a hallmark audit of the Cohuman site. Load `hallmark` (critique only:
+  its redesign audit path and gates — never a redesign) and `signal-design`. Read
+  `design.md`, CLAUDE.md and `moodboards/01-signal.html` first. Signal is locked and
+  overrides hallmark wherever the moodboard itself uses mono caps labels, 'Fig.' captions
+  and figure numbers. Don't build; capture [https://www.cohuman.in or a local `next
+  start`] at 1440×900 and 390×844 with `[data-reveal]` forced shown. Check: dimension
+  lines measure what they span, empty grids/frames, repeated openers, product above the
+  fold, green leaks, mono on non-data, client-facing placeholder copy. Report
+  severity-ranked findings with file paths; edit nothing."
+- *System change* — "Use `hue` to remix `.claude/skills/signal-design`: [the change].
+  Edit `design-model.yaml` first, regenerate only the affected files, run
+  `node ~/.claude/skills/hue/scripts/validate.mjs .claude/skills/signal-design` to exit 0.
+  Then make the same change in `src/app/globals.css` and `design.md`."
+
+**Order of authority when they disagree:** the code (`src/app/globals.css`,
+`src/components/ui`) → `design.md` → `.claude/skills/signal-design` → the moodboard. If a
+skill and the code disagree, fix whichever is wrong in the same change — never leave them
+drifting.
 
 ## Stack
 
@@ -176,17 +227,36 @@ filters by category and price band only.
 
 ## Homepage hero
 
-`src/components/home/hero-carousel.tsx`: a full-screen carousel that runs under the
-header. Panel 1 is `SignalHeroPanel` (`signal-hero.tsx` — the measured bench on the
-hairline grid, drawn in green on this panel only, with the render layered above the
-lines). Further panels are full-bleed films with no text, configured in
-**`src/lib/hero-films.ts`**: drop an MP4 (and optional WebM) in `public/video/` and set
-`video`; until then each panel shows its poster still. Set each film's `tone`
-(`light`/`dark` — how bright the top of the frame is) so the header picks readable type.
-While the hero is under it the header is transparent (`src/lib/hero-chrome.ts`, a tiny
-store the carousel publishes to). The header must never get `backdrop-filter`, `filter`
-or `transform` — see the comment in `site-header.tsx` for the mobile-menu bug that
-caused.
+`src/components/home/hero-carousel.tsx` takes an ordered list of panels (`HeroPanel`:
+`film` or `content`) built in `src/app/page.tsx` (`heroPanels`). Today:
+
+1. **The lead film** — `LEAD_FILM` in **`src/lib/hero-films.ts`**: full screen under the
+   transparent header, with the page's **H1** set over it by `FilmIntro`
+   (`src/components/home/film-intro.tsx`): a mono line, the tagline, one sentence and
+   one action, on a compact canvas title block (1px ink frame, 360px wide) high in the top
+   left — the film's close-ups leave no empty part of the frame for type to sit on
+   directly, and that corner is the calmest part of all four shots.
+2. **The comparison film** — `COMPARE_FILM` + `FilmBand`: the previous hero (the
+   `Video 1.MOV` wide-shot loop with the claim in ink straight on the sweep, as an H2),
+   kept **temporarily** so the client can compare the two. When they pick, delete the
+   loser's film entry, overlay and `public/video/` files, and update this list.
+3. **The measured panel** — `SignalHeroPanel` (`signal-hero.tsx`): the bench on the green
+   grid, with real dimensions. It is an H2 behind a lead film and takes the H1 back if the
+   lead film's poster is ever missing.
+
+The film files live in `public/video/` (MP4 + WebM + a poster). The current one is a
+client-supplied 1280×720, 10-second, four-shot studio film, encoded with ffmpeg: audio
+stripped and cropped 12% off the right edge to frame out a corner watermark (client's
+instruction); the edit itself is the client's. Its close-ups fill the frame, so the claim
+sits on its own title block, not on the footage. Set each film's `tone` (header type colour
+over it) and `mobileFocus` (the part of the frame a phone keeps).
+
+The ink corner block holds every hero control: pause / play (required for looping video,
+WCAG 2.2.2), the arrows, one bar per panel — the active bar fills with the film's
+playback — and a mono timecode. Reduced motion never autoplays (the poster stays, Play is
+offered). While the hero is under it the header is transparent (`src/lib/hero-chrome.ts`).
+The header must never get `backdrop-filter`, `filter` or `transform` — see the comment in
+`site-header.tsx` for the mobile-menu bug that caused.
 
 ## Lead capture
 
@@ -232,8 +302,8 @@ space type).
 
 - **`siteConfig.coordinates`** (hero, footer, showroom) are Surat city-centre, marked
   `TODO: confirm` — replace with the showroom's own.
-- **`src/data/founders.json`** is empty until the client sends names, roles, bios,
-  focus areas and photos.
+- **Founder photos and LinkedIn** are still to come — `src/data/founders.json` has both
+  founders' text; the cards show a labelled empty frame until photos are added.
 - **`siteConfig.suratPhotos` is empty on purpose.** The only showroom photo on file,
   `public/site/surat-storefront.jpg`, shows the shop sign "FURNITURE CONCEPTS-2.0" (the
   previous trading name). It is kept on disk but not listed; the showroom sections on
@@ -289,8 +359,8 @@ npm test             # vitest — series size labels, founders data
 expands dynamic segments against `src/data/*.json` slugs, and fails the build on any
 hard-coded `href`/`*Href` string that resolves to nothing. It exists because
 `/collections/stretchs` shipped as the homepage's primary hero CTA and 404'd — the
-series **wordmarks** became STRETCH/STRETCHS in the rebrand while the route **slugs**
-stayed `varidex`/`pros`. Slugs are the URL contract; renaming a wordmark never renames
+series **wordmarks** became STRETCH/STRETCHS in the rebrand (since renamed again, to
+STRETCH V/STRETCH S) while the route **slugs** stayed `varidex`/`pros`. Slugs are the URL contract; renaming a wordmark never renames
 a route. Template-literal and variable hrefs are out of the checker's reach.
 
 ## Conventions
@@ -332,7 +402,7 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   heading colour or a hover fill; the selected control must also say so with ink and
   `aria-pressed`/`aria-selected`/`aria-current`.
 - The drawing-sheet primitives (`DimensionLine`, `RegistrationCross`, `FigureCaption`,
-  `HairlineGrid`, `MeasureRule`, `SpecRows`, `IndexRow`, `SegmentedControl`,
+  `HairlineGrid`, `SpecRows`, `IndexRow`, `SegmentedControl`,
   `FinishChip` (`dot={false}` where the progress rail is already lit), `ProgressRail`,
   `SignalDots`) live in `src/components/ui/`. Secondary routes open with `PageHero`
   (`src/components/common/page-hero.tsx`); sections open

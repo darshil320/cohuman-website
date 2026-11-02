@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ALL_OPTIONS,
   resolveSpecification,
@@ -13,7 +13,8 @@ import {
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { Button } from "@/components/ui/button";
 import { ProgressRail } from "@/components/ui/progress-rail";
-import { StepNav, pad } from "./configurator-controls";
+import { HEADER_HEIGHT } from "@/lib/layout";
+import { EmptyNote, StepNav, pad } from "./configurator-controls";
 import { StepBody, type StepKey } from "./configurator-steps";
 import { SpecificationBlock } from "./configurator-summary";
 import { TableFigure } from "./table-figure";
@@ -32,6 +33,11 @@ import { TableFigure } from "./table-figure";
  *
  * Signal layout: the drawing on the left, the step strip, progress rail and the current
  * step on the right. The progress rail is the one green thing; every selection is ink.
+ *
+ * Keyboard flow: the strip keeps focus where it is (the next step follows it in reading
+ * order). The pager hands focus to the new step, because the button pressed may no
+ * longer exist — "Next" is gone on the last step, "Back" is disabled on the first — and
+ * because the step it opened starts far above the pager on a long list.
  */
 
 const STEPS: readonly { key: StepKey; label: string }[] = [
@@ -41,6 +47,9 @@ const STEPS: readonly { key: StepKey; label: string }[] = [
   { key: "legs", label: "Legs" },
   { key: "extras", label: "Extras" },
 ];
+
+/** Breathing room between the sticky header and a step scrolled up to meet it. */
+const SCROLL_GAP_PX = 24;
 
 function defaultSpec(): Specification {
   const first = ALL_OPTIONS[0];
@@ -64,15 +73,55 @@ function railCaption(step: number): string {
   return next ? `${position} — next: ${next.label}` : `${position} — ready to send`;
 }
 
+/**
+ * Moves focus to the step that just opened and, if its top has gone above the sticky
+ * header, scrolls it back into view. Runs only when `pending` is set — the pager sets it,
+ * the strip does not — and never on first render.
+ */
+function useStepHandoff(step: number) {
+  const regionRef = useRef<HTMLElement>(null);
+  const pendingRef = useRef(false);
+
+  useEffect(() => {
+    const node = regionRef.current;
+    if (!pendingRef.current || !node) return;
+    pendingRef.current = false;
+    node.focus({ preventScroll: true });
+
+    const top = node.getBoundingClientRect().top;
+    if (top >= HEADER_HEIGHT) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({
+      top: top + window.scrollY - HEADER_HEIGHT - SCROLL_GAP_PX,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [step]);
+
+  /** Call before a pager move: the step it opens takes focus once it has rendered. */
+  const armHandoff = useCallback(() => {
+    pendingRef.current = true;
+  }, []);
+
+  return { regionRef, armHandoff };
+}
+
 export function Configurator() {
   const [spec, setSpec] = useState<Specification>(defaultSpec);
   const [step, setStep] = useState(0);
   const { openQuote } = useQuoteDialog();
+  const { regionRef, armHandoff } = useStepHandoff(step);
 
   const resolved = useMemo(() => resolveSpecification(spec), [spec]);
   const price = useMemo(() => (resolved ? estimate(resolved) : null), [resolved]);
 
-  if (!resolved) return null;
+  if (!resolved) {
+    return (
+      <EmptyNote>
+        The configurator could not load a series to specify. Send us the floor plan and a
+        headcount below and we will specify it with you.
+      </EmptyNote>
+    );
+  }
   const { options, top, leg, topFinish, frameFinish, accessories } = resolved;
   const hasScreen = accessories.some((a) => /screen|felt/i.test(`${a.name} ${a.note}`));
 
@@ -99,8 +148,16 @@ export function Configurator() {
     openQuote(`${summarySubject(resolved)}\n\n${summaryText(resolved)}`);
   }
 
+  /** Pager moves hand focus to the new step; strip moves leave it on the strip. */
+  function page(delta: 1 | -1) {
+    const target = Math.min(STEPS.length - 1, Math.max(0, step + delta));
+    if (target === step) return;
+    armHandoff();
+    setStep(target);
+  }
+
   const current = STEPS[step];
-  const atLast = step === STEPS.length - 1;
+  const next = STEPS[step + 1];
 
   return (
     <div className="grid grid-cols-1 gap-x-[clamp(28px,4vw,80px)] gap-y-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
@@ -125,9 +182,16 @@ export function Configurator() {
 
         {/*
           Keyed by step, so each step mounts fresh: its top rule is a new `data-reveal`
-          node and draws in at plotter speed. Nothing fades.
+          node and draws in at plotter speed. Nothing fades. The region is the pager's
+          focus target — programmatic only (tabIndex -1), so it carries no focus ring.
         */}
-        <div key={current.key} className="mt-10">
+        <section
+          key={current.key}
+          ref={regionRef}
+          tabIndex={-1}
+          aria-label={`Step ${step + 1} of ${STEPS.length}: ${current.label}`}
+          className="mt-10 scroll-mt-[96px] outline-none!"
+        >
           <span aria-hidden data-reveal className="co-rule block h-px bg-co-ink" />
           <p className="co-eyebrow mt-5">
             Step {pad(step + 1)} / {current.label}
@@ -142,33 +206,26 @@ export function Configurator() {
             />
           </div>
 
-          {atLast ? (
+          {next ? null : (
             <SpecificationBlock rows={summaryRows(resolved)} price={price} onSend={sendSpecification} />
-          ) : null}
-        </div>
+          )}
+        </section>
 
-        {/* Pager */}
-        <div className="mt-10 flex items-center gap-4 border-t border-co-border pt-5">
+        {/* Pager — Next names the step it opens, so the bottom of a long list still says where it goes. */}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-co-border pt-5">
           <Button
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => setStep((s) => Math.max(0, s - 1))}
+            className="h-11"
+            onClick={() => page(-1)}
             disabled={step === 0}
           >
-            ← Back
+            <span aria-hidden>←</span> Back
           </Button>
-          <span className="co-data text-co-muted-2">
-            {pad(step + 1)} / {pad(STEPS.length)}
-          </span>
-          {!atLast ? (
-            <Button
-              type="button"
-              size="sm"
-              className="ml-auto"
-              onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}
-            >
-              Next →
+          {next ? (
+            <Button type="button" size="sm" className="h-11" onClick={() => page(1)}>
+              Next: {next.label} <span aria-hidden>→</span>
             </Button>
           ) : null}
         </div>

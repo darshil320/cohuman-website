@@ -42,7 +42,13 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
             reserves exactly that much room under its pinned stage.
           */}
           <div className="co-shell flex h-full items-center gap-4 pr-[76px] sm:pr-[84px] lg:pr-[96px]">
-            <p className="co-data min-w-0 flex-1 truncate">
+            {/*
+              Two lines, then clipped. On a phone one truncated line held ~24 characters,
+              so every configuration name ate the size after it; the 68px bar fits two
+              lines of 11px mono, which shows the full name and size for most
+              configurations. The full selection is always in the spec block above.
+            */}
+            <p className="co-data line-clamp-2 min-w-0 flex-1">
               {config.name} · {size}
               {finish ? <span className="hidden text-co-muted-2 md:inline"> · {finish} top</span> : null}
             </p>

@@ -32,7 +32,7 @@ interface TableFigureProps {
   hasScreen: boolean;
   length: number;
   depth: number | null;
-  /** Series wordmark for the caption, e.g. "STRETCHS". */
+  /** Series wordmark for the caption, e.g. "STRETCH S". */
   wordmark: string;
   /** The size as the summary quotes it (`sizeLabel`) — printed, never rebuilt here. */
   size: string;

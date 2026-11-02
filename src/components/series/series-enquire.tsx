@@ -121,7 +121,7 @@ export function SeriesEnquire() {
             <p className="co-eyebrow mb-3">Your selection</p>
             <SpecRows rows={selectionRows} />
             {inferredCode ? (
-              <p className="mt-3 text-[12.5px] leading-[1.55] text-co-muted">{INFERRED_CODE_FOOTNOTE}</p>
+              <p className="mt-3 text-[13px] leading-[1.55] text-co-muted">{INFERRED_CODE_FOOTNOTE}</p>
             ) : null}
           </Reveal>
 

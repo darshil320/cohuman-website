@@ -25,14 +25,14 @@ const FAQ_ITEMS = [
       "No — Cohuman is a request-a-quote business, not a checkout. Catalog pages show a qualitative price band (Value, Mid or Premium) instead of a fixed number, since final pricing depends on quantity, finish and site conditions.",
   },
   {
-    question: "What's the lead time once an order is confirmed?",
+    question: "What’s the lead time once an order is confirmed?",
     answer:
-      "It varies by product — most items ship 2 to 4 weeks from order confirmation. The exact lead time is listed on each product's specification table.",
+      "It varies by product — most items ship 2 to 4 weeks from order confirmation. The exact lead time is listed on each product’s specification table.",
   },
   {
     question: "What warranty comes with the furniture?",
     answer:
-      "Warranty terms vary by product, typically 3 to 5 years, and are listed on each product's specification table. An AMC (annual maintenance contract) is also available for ongoing servicing and spares.",
+      "Warranty terms vary by product, typically 3 to 5 years, and are listed on each product’s specification table. An AMC (annual maintenance contract) is also available for ongoing servicing and spares.",
   },
   {
     question: "Do you take bulk or multi-site orders?",
@@ -103,12 +103,12 @@ export default async function ContactPage({ searchParams }: Props) {
             <p className="co-eyebrow">{isOrgatec ? "ORGATEC 2026" : "Contact"}</p>
             <h1 className="co-h1 mt-[clamp(20px,2.6vw,36px)] max-w-[14ch] lg:text-[clamp(40px,4.6vw,68px)]">
               <KineticHeading>
-                {isOrgatec ? "Let's meet at the event." : "Tell us about the space."}
+                {isOrgatec ? "Let’s meet at the event." : "Tell us about the space."}
               </KineticHeading>
             </h1>
             <p className="co-lead mt-[clamp(20px,2.6vw,32px)] max-w-[42ch]">
               {isOrgatec
-                ? "Attending ORGATEC? Reach out to schedule a consultation with our design team. We'd love to connect."
+                ? "Attending ORGATEC? Reach out to schedule a consultation with our design team. We’d love to connect."
                 : `A floor plan and a headcount are enough to start. You will hear back from a specifier, not a chatbot, within ${siteConfig.enquiryTurnaround}.`}
             </p>
 
@@ -165,20 +165,11 @@ export default async function ContactPage({ searchParams }: Props) {
                       <a href={telHref(office.phoneE164)} className={`${MONO_LINK} mt-1.5 inline-block`}>
                         {office.phoneDisplay}
                       </a>
-                    ) : (
-                      <p className="mt-1.5 text-[13px] leading-[1.5] text-co-muted-2">
-                        Direct line to follow — reach {office.contact?.name.split(" ")[0]} on the
-                        sales inbox meanwhile.
-                      </p>
-                    )}
+                    ) : null}
                   </div>
                 ))}
             </div>
 
-            <p className="mt-4 text-[13px] leading-[1.5] text-co-muted-2">
-              Showroom address, phone and hours above are placeholders pending confirmation —
-              send over the current details and they will drop straight in.
-            </p>
           </Reveal>
 
           {showroom ? (
@@ -202,6 +193,7 @@ export default async function ContactPage({ searchParams }: Props) {
             </figure>
           ) : null}
 
+          {/* The map appears only once a confirmed embed URL exists — no "pending" box. */}
           {siteConfig.mapEmbedUrl ? (
             <iframe
               title="Cohuman showroom location"
@@ -209,11 +201,7 @@ export default async function ContactPage({ searchParams }: Props) {
               className="mt-10 h-[280px] w-full border border-co-border"
               loading="lazy"
             />
-          ) : (
-            <p className="co-eyebrow mt-10 border border-co-border bg-co-bg-alt px-5 py-4">
-              Map embed pending confirmed showroom address
-            </p>
-          )}
+          ) : null}
         </div>
 
         <Reveal delay={0.15}>

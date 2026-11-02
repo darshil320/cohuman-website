@@ -28,7 +28,7 @@ export default function ConfigurePage() {
     <div>
       <PageHero
         eyebrow="Configurator"
-        title="Specify the table. We'll quote the floor."
+        title="Specify the table. We’ll quote the floor."
         titleClassName="max-w-[18ch]"
         lead={
           <>

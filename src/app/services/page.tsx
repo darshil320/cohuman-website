@@ -78,7 +78,7 @@ export default async function ServicesPage() {
               <span className="co-data pt-1">{sv.num}</span>
 
               <div className="min-w-0">
-                <h3 className="font-display text-[clamp(24px,2.8vw,40px)] font-semibold leading-[0.9] tracking-[-0.02em]">
+                <h3 className="co-index">
                   {sv.name}
                 </h3>
                 <p className="mt-4 max-w-[34ch] text-[14px] leading-[1.55] text-co-muted">
@@ -111,7 +111,7 @@ export default async function ServicesPage() {
       </section>
 
       <CtaBand
-        tone="dark"
+        tone="light"
         heading="Start with the floor plan."
         body="Send a CAD or PDF plan and a headcount. We will come back with test-fits and a costed schedule."
         subject="Fit-out services"

@@ -42,7 +42,7 @@ export function SeriesNameHero() {
             <span className="sr-only">, {series.name}</span>
           </h1>
           <DimensionLine
-            label={`${configSizeRange(config)} mm`}
+            label={`${configSizeRange(config)}\u00A0mm`}
             className="mt-[clamp(20px,2.4vw,32px)] w-full max-w-[820px]"
           />
           <p className="co-lead mt-6 max-w-[46ch]">{series.promise}</p>

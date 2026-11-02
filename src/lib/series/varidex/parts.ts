@@ -29,7 +29,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "The end support every configuration stands on, at 720mm working height.",
     rows: [
       { k: "Material", v: "2.0mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 12.4, y: 64, zoom: 2.5 },
   },
@@ -40,7 +40,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Carries the span on meeting tables and benches so the top stays flat across the run.",
     rows: [
       { k: "Material", v: "40×25×T2mm rectangular metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
     focus: { x: 60.3, y: 55, zoom: 2.5 },
   },
@@ -51,7 +51,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Lets two desks run in line off one shared support instead of four legs each.",
     rows: [
       { k: "Material", v: "T=2mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -61,7 +61,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "The rail the top sits on, and where screens and CPU holders bracket in.",
     rows: [
       { k: "Material", v: "40×25×T1.5mm rectangular metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -71,7 +71,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Sets the depth of the frame, so one chassis takes a 600mm or an 800mm top.",
     rows: [
       { k: "Material", v: "36×21×T1.5mm rectangular metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -81,7 +81,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Takes up the length between leg pairs, which is what lets a top be quoted as a range.",
     rows: [
       { k: "Material", v: "36×21mm rectangular pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -91,7 +91,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Joins two frames in line, so a bench run extends without a second set of end legs.",
     rows: [
       { k: "Material", v: "T=3mm metal sheet" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -124,7 +124,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Drops power from the desktop channel to the floor box inside the leg line.",
     rows: [
       { k: "Material", v: "T=1mm metal sheet" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -134,7 +134,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Holds the power rail down the spine of a bench, between the two rows of tops.",
     rows: [
       { k: "Material", v: "1mm metal sheet" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
   {
@@ -144,7 +144,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     why: "Carries data separately from power, so the two are not sharing one tray.",
     rows: [
       { k: "Material", v: "1mm metal sheet" },
-      { k: "Finishing", v: "Powder coating, 80–120μ" },
+      { k: "Finishing", v: "Powder coating, 80–120 microns" },
     ],
   },
 ];

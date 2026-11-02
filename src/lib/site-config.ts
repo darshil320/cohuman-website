@@ -76,11 +76,15 @@ export const siteConfig = {
    * Printed beside the hero render and in the footer, the way a drawing set carries a
    * site datum. TODO: confirm — these are Surat's city-centre coordinates, not the
    * Ichchhapor showroom's; replace them with the showroom's own once surveyed.
+   *
+   * The label's spaces are no-break (U+00A0): HTML collapses an ordinary double space to
+   * one, so the gap between the two coordinates never rendered, and a plain space let
+   * "N" or "E" wrap away from its figure.
    */
   coordinates: {
     lat: 21.1702,
     lng: 72.8311,
-    label: "21.1702° N  72.8311° E",
+    label: "21.1702° N  72.8311° E",
   },
   mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
   enquiryTurnaround: "two working days",

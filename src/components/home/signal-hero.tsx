@@ -18,16 +18,49 @@ import { siteConfig } from "@/lib/site-config";
  * drawing set. Both dimensions are read off the series data passed in, so the drawing
  * cannot claim a size the product is not offered in.
  *
- * The render sits ABOVE the grid. It still multiplies its white into the canvas, but
- * inside an isolated group with a feathered canvas plate behind it — so it blends with
- * the plate, not with the lines, and the lines pass behind the product and fade out under
- * it instead of being drawn across it.
+ * The render sits ABOVE the grid, and the grid shows through it. The render multiplies
+ * its studio white away inside an isolated group over a canvas plate, and the whole group
+ * is cut to the product's silhouette (`RENDER_MATTES`): on the product it is solid and
+ * hides the lines; everywhere else — the sweep, the floor between the legs — the green
+ * lines run on behind it. A render without a matte falls back to a feathered rectangle,
+ * which hides the lines across the whole image box.
  *
  * The panel fills the screen and runs under the transparent header, so its own top
  * padding clears the header. The headline is the LCP element: `KineticHeading` animates
  * transform only, so the words paint on the first frame.
  */
-export function SignalHeroPanel({ series, config }: { series: SeriesDefinition; config: SeriesConfig }) {
+/**
+ * Silhouette mattes for hero renders: an alpha PNG the same size as the render, opaque on
+ * the product (desk, screens, chairs, with a 3px grown and softened edge) and clear on the
+ * studio sweep. Made from the render itself by flood-filling the near-white background in
+ * from the frame edge (so the light desktop, ringed by its own darker edge, stays solid).
+ * Regenerate if a render changes; a render with no entry hides the grid behind its box.
+ */
+const RENDER_MATTES: Record<string, string> = {
+  "/varidex/bench-4.jpg": "/varidex/bench-4-matte.png",
+};
+
+/**
+ * Desks along the hero bench's length. The hero shows a four-seat face-to-face bench:
+ * two seats a side, so two desk lengths end to end.
+ */
+const DESKS_ALONG = 2;
+
+export function SignalHeroPanel({
+  series,
+  config,
+  lead = true,
+}: {
+  series: SeriesDefinition;
+  config: SeriesConfig;
+  /**
+   * The opening panel owns the page's H1 and loads its render eagerly. Behind a lead
+   * film it is a second panel: an H2, and a render that can wait.
+   */
+  lead?: boolean;
+}) {
+  const Heading = lead ? "h1" : "h2";
+  const matte = RENDER_MATTES[config.image];
   return (
     <div className="relative flex min-h-[100svh] flex-col justify-center bg-co-bg">
       <HairlineGrid tone="signal" />
@@ -37,17 +70,21 @@ export function SignalHeroPanel({ series, config }: { series: SeriesDefinition; 
         style={{ paddingTop: `calc(${HEADER_HEIGHT}px + clamp(32px, 6vh, 72px))` }}
       >
         <div className="flex flex-col lg:col-span-6 lg:pr-10">
-          <p className="co-eyebrow">Office systems — Surat, IN</p>
+          <p className="co-eyebrow">Office systems / Surat, IN</p>
 
-          <h1 className="co-display mt-[clamp(20px,3vw,40px)] text-[clamp(40px,5.3vw,76px)]">
+          {/*
+            The 40px floor gives way to 10.4vw under ~385px, so "ENGINEERED" (8.4em wide in
+            the expanded caps) still fits a 320–360px phone instead of being cut by its mask.
+          */}
+          <Heading className="co-display mt-[clamp(20px,3vw,40px)] text-[clamp(min(40px,10.4vw),5vw,72px)]">
             <KineticHeading>Engineered for two.</KineticHeading>
             <span className="block text-co-muted-2">
               <KineticHeading>Scaled for the floor.</KineticHeading>
             </span>
-          </h1>
+          </Heading>
 
           <p className="co-lead mt-[clamp(24px,3vw,40px)] max-w-[34ch] text-co-ink">
-            Configurable desking, cabins and meeting tables — specified to the millimetre and
+            Configurable desking, cabins and meeting tables, specified to the millimetre and
             quoted to your floor plan.
           </p>
 
@@ -66,30 +103,67 @@ export function SignalHeroPanel({ series, config }: { series: SeriesDefinition; 
           <RegistrationCross className="-right-1 -top-6" />
 
           <div className="relative pr-8 sm:pr-12">
-            {/* Isolated: the render multiplies with the plate below it, never with the grid. */}
-            <div className="relative isolate">
-              <span aria-hidden className="co-cutout-plate absolute inset-0 bg-co-bg" />
-              <Image
-                src={config.image}
-                alt={config.imageAlt}
-                width={1400}
-                height={637}
-                sizes="(min-width: 1024px) 46vw, 100vw"
-                loading="eager"
-                fetchPriority="high"
-                quality={90}
-                className="co-cutout relative h-auto w-full"
+            <div className="relative">
+              {/*
+                Isolated: the render multiplies with the plate below it, never with the grid.
+                The matte cuts the whole group, plate and render together: an isolated
+                multiply over nothing is the render's own white, so masking the plate alone
+                leaves the white box standing over the lines.
+              */}
+              <div
+                className="relative isolate"
+                style={
+                  matte
+                    ? {
+                        maskImage: `url(${matte})`,
+                        WebkitMaskImage: `url(${matte})`,
+                        maskSize: "100% 100%",
+                        WebkitMaskSize: "100% 100%",
+                        maskRepeat: "no-repeat",
+                        WebkitMaskRepeat: "no-repeat",
+                      }
+                    : undefined
+                }
+              >
+                <span
+                  aria-hidden
+                  className={
+                    matte ? "absolute inset-0 bg-co-bg" : "co-cutout-plate absolute inset-0 bg-co-bg"
+                  }
+                />
+                <Image
+                  src={config.image}
+                  alt={config.imageAlt}
+                  width={1400}
+                  height={637}
+                  sizes="(min-width: 1024px) 46vw, 100vw"
+                  loading={lead ? "eager" : "lazy"}
+                  fetchPriority={lead ? "high" : "auto"}
+                  quality={90}
+                  className="co-cutout relative h-auto w-full"
+                />
+              </div>
+              {/*
+                Working height, drawn on the near-left leg from the floor (82% down the
+                render) to the worktop (37%) — the span "720 H" actually measures. The
+                positions are read off this render; move them if the hero image changes.
+              */}
+              <DimensionLine
+                axis="y"
+                label={`${series.workingHeightMm} H`}
+                className="absolute bottom-[18%] left-[20.5%] top-[37%]"
               />
             </div>
-            {/* Working height: the one dimension every configuration in the series shares. */}
-            <DimensionLine
-              axis="y"
-              label={`${series.workingHeightMm} H`}
-              className="absolute bottom-[12%] right-0 top-[18%] sm:right-2"
-            />
           </div>
 
-          <DimensionLine label={`${configLengthLabel(config)} per seat`} className="mt-3 w-[86%]" />
+          {/*
+            The bench's full length: this face-to-face bench is two desks long, so the rule
+            spans the top from end to end (12%–89% of the render) and reads "2 × <desk>".
+          */}
+          <DimensionLine
+            label={`${DESKS_ALONG} × ${configLengthLabel(config)}`}
+            className="ml-[11.5%] mt-3 w-[70.5%]"
+          />
 
           <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <FigureCaption n={1}>

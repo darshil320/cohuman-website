@@ -11,7 +11,7 @@ import { siteConfig } from "@/lib/site-config";
   `llms.txt` is the index: what the company is, what it sells, and where each page
   lives. `llms-full.txt` is the same site with the content inlined — every product's
   materials and lead time, every desking configuration with its size range and bill of
-  components — so a model answering "what depths does STRETCH come in" has the answer
+  components — so a model answering "what depths does STRETCH V come in" has the answer
   without fetching fifteen pages.
 
   Both are generated from `catalog` and `ALL_SERIES`, the same sources the pages and

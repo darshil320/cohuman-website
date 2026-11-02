@@ -302,8 +302,8 @@ export function SeriesAnatomy() {
             </ol>
 
             <p className="mt-5 max-w-[52ch] text-[13px] leading-[1.55] text-co-muted">
-              Pick a number to read that part&apos;s gauge and finish. Materials are quoted from
-              the manufacturer&apos;s specification sheet.
+              Pick a number to read that part’s gauge and finish. Materials are quoted from
+              the manufacturer’s specification sheet.
             </p>
           </div>
         </div>

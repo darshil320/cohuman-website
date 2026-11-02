@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CtaBand } from "@/components/common/cta-band";
 import { SectionHeading } from "@/components/common/section-heading";
-import { HeroCarousel } from "@/components/home/hero-carousel";
+import { FilmBand, FilmIntro } from "@/components/home/film-intro";
+import { HeroCarousel, type HeroPanel } from "@/components/home/hero-carousel";
 import { SignalHeroPanel } from "@/components/home/signal-hero";
 import { SpaceTiles } from "@/components/home/space-tiles";
 import { SystemsIndex, type SystemRow } from "@/components/home/systems-index";
@@ -14,9 +15,9 @@ import { IndexRow } from "@/components/ui/index-row";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { catalog } from "@/lib/catalog";
-import { HERO_FILMS, type HeroFilm } from "@/lib/hero-films";
+import { COMPARE_FILM, HERO_FILMS, LEAD_FILM, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
-import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesDefinition } from "@/lib/series";
+import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesConfig, type SeriesDefinition } from "@/lib/series";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-/** The hero's measured object: STRETCH's four-seat face-to-face bench. */
+/** The hero's measured object: STRETCH V's four-seat face-to-face bench. */
 const HERO_CONFIG_SLUG = "face-to-face-short";
 
 /** Meeting tables across both chassis — the rows the "Meeting" system spans. */
@@ -40,7 +41,7 @@ function defaultImage(series: SeriesDefinition): string | undefined {
 }
 
 /**
- * The systems index, built from data rather than written as copy: the STRETCHS, STRETCH
+ * The systems index, built from data rather than written as copy: the STRETCH S, STRETCH V
  * and Meeting ranges are `spanLabel` over the real configurations, so the homepage can
  * never quote a size the configurator does not offer. Systems without a measured range
  * say what they are instead of inventing one.
@@ -69,7 +70,9 @@ function systemRows(): SystemRow[] {
     },
     {
       n: "03",
-      title: "Cabins",
+      // The client's name for the cabin system; it has no series data yet, so it links to
+      // the executive sector and states what it is rather than a measured range.
+      title: "STRETCH F",
       type: "Manager and director rooms",
       range: "Desk + storage + seating",
       href: "/sectors/executive",
@@ -101,16 +104,35 @@ function systemRows(): SystemRow[] {
 }
 
 /**
- * The hero's film panels that can actually play: a missing poster drops the panel, a
- * missing video file leaves the poster as a still. Checked on the server, so the client
- * never requests a file that is not there.
+ * A film as it can actually play: a missing video file leaves the poster as a still.
+ * Checked on the server, so the client never requests a file that is not there.
  */
-function availableFilms(): HeroFilm[] {
-  return HERO_FILMS.filter((film) => publicFileExists(film.poster)).map((film) => {
-    if (!film.video || !publicFileExists(film.video.mp4)) return { ...film, video: undefined };
-    const webm = film.video.webm && publicFileExists(film.video.webm) ? film.video.webm : undefined;
-    return { ...film, video: { mp4: film.video.mp4, webm } };
-  });
+function playable(film: HeroFilm): HeroFilm {
+  if (!film.video || !publicFileExists(film.video.mp4)) return { ...film, video: undefined };
+  const webm = film.video.webm && publicFileExists(film.video.webm) ? film.video.webm : undefined;
+  return { ...film, video: { mp4: film.video.mp4, webm } };
+}
+
+/**
+ * The hero's panels, in order: the lead film carrying the page's claim (when its poster
+ * exists), the previous film design for the client to compare against it, then the
+ * measured bench, then any further films. Without the lead film the
+ * measured panel opens the hero and keeps the H1.
+ */
+function heroPanels(config: SeriesConfig): HeroPanel[] {
+  const lead = publicFileExists(LEAD_FILM.poster) ? playable(LEAD_FILM) : null;
+  const compare = lead && publicFileExists(COMPARE_FILM.poster) ? playable(COMPARE_FILM) : null;
+  const films = HERO_FILMS.filter((film) => publicFileExists(film.poster)).map(playable);
+  return [
+    ...(lead ? [{ kind: "film" as const, film: lead, overlay: <FilmIntro /> }] : []),
+    ...(compare ? [{ kind: "film" as const, film: compare, overlay: <FilmBand /> }] : []),
+    {
+      kind: "content" as const,
+      label: "Index",
+      node: <SignalHeroPanel series={VARIDEX_SERIES} config={config} lead={!lead} />,
+    },
+    ...films.map((film) => ({ kind: "film" as const, film })),
+  ];
 }
 
 export default async function HomePage() {
@@ -131,10 +153,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <HeroCarousel
-        intro={<SignalHeroPanel series={VARIDEX_SERIES} config={heroConfig} />}
-        films={availableFilms()}
-      />
+      <HeroCarousel panels={heroPanels(heroConfig)} />
 
       {/* 01 — Systems: every system as a row you can scan like a parts list. */}
       <section className="co-shell co-section">
@@ -157,7 +176,7 @@ export default async function HomePage() {
       <section className="co-shell co-section">
         <SectionHeading
           eyebrow="03 / Projects"
-          title="Floors we've finished."
+          title="Floors we’ve finished."
           blurb="Drawn, made and installed by us — photographed on site after handover."
           linkHref="/projects"
           linkLabel="All projects"
@@ -265,7 +284,7 @@ export default async function HomePage() {
       </section>
 
       <CtaBand
-        tone="dark"
+        tone="light"
         heading="Send us your floor plan."
         body={`Get a costed proposal back — no cart, no checkout, a real specification from a real person, usually inside ${siteConfig.enquiryTurnaround}.`}
       />

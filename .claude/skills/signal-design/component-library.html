@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal: Component Library (Cohuman)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@1.8.0/font/lucide.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Primitives: every value is a src/app/globals.css token value */
+  :root {
+    --n50: #FBF8EE;  --n100: #F3EFE1; --n200: #E9E4D3; --n300: #DCD6C4;
+    --n400: #B4AEA4; --n500: #9E988D; --n550: #8F8874; --n600: #6B665D;
+    --n700: #55514A; --n800: #3D3A36; --n850: #3B3637; --n900: #231F20;
+    --sig300: #9DD089; --sig500: #5EB646;
+    --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --ease-fast: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-plot: linear;
+    --ease-wipe: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-co: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 150ms;
+    --duration-plot: 400ms;
+    --duration-wipe: 600ms;
+    --overlay: rgba(35, 31, 32, 0.70);
+  }
+
+  /* Canvas (primary) */
+  [data-theme="light"], .paper {
+    --background: var(--n50); --bg: var(--background);
+    --surface1: var(--n100); --surface2: var(--n200); --surface3: var(--n50);
+    --border: var(--n300); --border-visible: var(--n900); --border-strong: var(--n550);
+    --text1: var(--n900); --text2: var(--n800); --text3: var(--n700); --text4: var(--n600);
+    --accent: var(--n900); --accent-hover: var(--n800); --accent-subtle: var(--n100); --on-accent: var(--n50);
+    --signal: var(--sig500); --signal-grid: var(--sig300);
+    --success: var(--sig500); --warning: var(--n900); --error: var(--n900);
+    --success-bg: var(--n50); --warning-bg: var(--n50); --error-bg: var(--n50);
+    --focus: var(--n900);
+  }
+  /* The ink block (derived dark) */
+  [data-theme="dark"], .ink {
+    --background: var(--n900); --bg: var(--background);
+    --surface1: var(--n850); --surface2: var(--n800); --surface3: var(--n900);
+    --border: var(--n850); --border-visible: var(--n50); --border-strong: var(--n500);
+    --text1: var(--n50); --text2: var(--n400); --text3: var(--n400); --text4: var(--n500);
+    --accent: var(--n50); --accent-hover: var(--n100); --accent-subtle: var(--n850); --on-accent: var(--n900);
+    --signal: var(--sig500); --signal-grid: var(--sig300);
+    --success: var(--sig500); --warning: var(--n50); --error: var(--n50);
+    --success-bg: var(--n900); --warning-bg: var(--n900); --error-bg: var(--n900);
+    --focus: var(--n50);
+  }
+  .paper, .ink { background: var(--background); color: var(--text1); }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+    background: var(--background); color: var(--text1);
+    -webkit-font-smoothing: antialiased; text-wrap: pretty;
+  }
+  ::selection { background: var(--n900); color: var(--n50); }
+
+  /* ── Signal type utilities (mirror co-*) ── */
+  .t-display, .t-h1, .t-h2, .t-h3, .t-name {
+    font-family: var(--font-display); font-stretch: 125%; font-weight: 600;
+    text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9;
+  }
+  .t-display { font-size: clamp(44px, 8.9vw, 128px); }
+  .t-h1 { font-size: clamp(38px, 6vw, 88px); }
+  .t-h2 { font-size: clamp(30px, 3.9vw, 56px); line-height: 0.92; }
+  .t-h3 { font-size: clamp(20px, 1.7vw, 24px); line-height: 1; letter-spacing: -0.01em; }
+  .t-name { font-size: clamp(24px, 2.8vw, 40px); }
+  .t-lead { font-size: clamp(16px, 1.32vw, 19px); line-height: 1.55; color: var(--text2); }
+  .t-body { font-size: 15px; line-height: 1.55; }
+  .t-body-sm { font-size: 14px; line-height: 1.55; }
+  .t-caption { font-size: 12.5px; line-height: 1.625; }
+  .t-data, .t-eyebrow {
+    font-family: var(--font-mono); font-stretch: 87.5%; font-size: 11px; font-weight: 400;
+    line-height: 1.5; text-transform: uppercase; letter-spacing: 0.02em; font-variant-numeric: tabular-nums;
+  }
+  .t-eyebrow { color: var(--text4); }
+  .t-steel { color: var(--text4); }
+  .t-muted { color: var(--text3); }
+  .emd::before { content: "\2014"; }
+
+  /* ── Library chrome ── */
+  .cl-shell { display: flex; height: 100vh; }
+  .cl-toc {
+    width: 240px; flex-shrink: 0; height: 100vh; overflow-y: auto;
+    padding: 28px 24px 96px; border-right: 1px solid var(--border);
+  }
+  .cl-brand { display: block; width: 140px; height: auto; }
+  .cl-toc h1 { font-family: var(--font-display); font-stretch: 125%; font-weight: 600; text-transform: uppercase; letter-spacing: -0.01em; font-size: 22px; line-height: 1; margin: 22px 0 6px; }
+  .cl-toc-meta { margin-bottom: 18px; }
+  .cl-toc nav { display: flex; flex-direction: column; }
+  .cl-toc-category {
+    font-family: var(--font-mono); font-stretch: 87.5%; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--text4); border-top: 1px solid var(--border); padding: 12px 0 6px; margin-top: 8px; cursor: pointer; user-select: none;
+  }
+  .cl-toc-category.active { color: var(--text1); border-top-color: var(--border-visible); }
+  .cl-toc-sub {
+    display: block; font-size: 13px; color: var(--text3); text-decoration: none;
+    padding: 3px 0 3px 12px; border-left: 2px solid transparent; transition: color var(--duration-fast) var(--ease-fast);
+  }
+  .cl-toc-sub:hover, .cl-toc-sub.active { color: var(--text1); }
+  .cl-toc-sub.active { border-left-color: var(--border-visible); }
+
+  .cl-main { flex: 1; min-width: 0; height: 100vh; overflow-y: auto; padding: 40px 40px 140px; }
+  .cl-inner { max-width: 1120px; }
+  .cl-category-panel { display: none; }
+  .cl-category-panel.active { display: block; }
+  .cl-panel-head {
+    display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 420px); align-items: end; gap: 16px 36px;
+    border-bottom: 1px solid var(--border-visible); padding-bottom: 24px; margin-bottom: 48px;
+  }
+  .cl-panel-head p:last-child { font-size: 15px; color: var(--text2); max-width: 46ch; }
+  .cl-component-group { margin-bottom: 72px; scroll-margin-top: 40px; }
+  .cl-component-group h3 { font-family: var(--font-display); font-stretch: 125%; font-weight: 600; text-transform: uppercase; letter-spacing: -0.01em; font-size: 28px; line-height: 1; margin-bottom: 8px; }
+  .cl-component-group > p { font-size: 14px; color: var(--text2); max-width: 78ch; margin-bottom: 20px; }
+  .cl-component-group > .cl-file { font-size: 11px; text-transform: none; color: var(--text4); margin-bottom: 12px; }
+  .cl-canvas {
+    background: var(--background); border: 1px solid var(--border); padding: 40px; margin-bottom: 20px;
+    display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start;
+  }
+  .cl-canvas--fog { background: var(--surface1); }
+  .cl-canvas--col { flex-direction: column; align-items: stretch; }
+  .cl-canvas--flush { padding: 0; display: block; }
+  .cl-variant { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .cl-variant--grow { flex: 1 1 320px; }
+  .cl-variant-label { font-family: var(--font-mono); font-stretch: 87.5%; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text4); }
+  .cl-spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .cl-spec-table th, .cl-spec-table td { text-align: left; padding: 9px 16px 9px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .cl-spec-table th { font-family: var(--font-mono); font-stretch: 87.5%; font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text4); border-bottom-color: var(--border-visible); }
+  .cl-spec-table td { color: var(--text2); }
+  .cl-spec-table .col-value { font-family: var(--font-mono); font-stretch: 87.5%; font-size: 11px; color: var(--text1); }
+
+  /* ── Foundations ── */
+  .sw-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; background: var(--n300); border: 1px solid var(--n300); width: 100%; }
+  .sw { min-height: 112px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; color: var(--n900); }
+  .sw--on-ink { color: var(--n50); }
+  .sw b { font-family: var(--font-display); font-stretch: 125%; font-weight: 600; text-transform: uppercase; font-size: 13px; letter-spacing: -0.01em; }
+  .share { display: flex; height: 14px; width: 100%; border: 1px solid var(--n300); }
+  .share span { display: block; height: 100%; }
+  .type-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 230px; gap: 24px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--border); width: 100%; }
+  .type-row:first-child { border-top: 1px solid var(--border-visible); }
+  .rule-demo { width: 100%; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 12px 24px; align-items: center; }
+  .rule { display: block; width: 100%; }
+  .rule--hair { height: 1px; background: var(--border); }
+  .rule--ink { height: 1px; background: var(--border-visible); }
+  .rule--ink2 { height: 2px; background: var(--border-visible); }
+  .rule--sig2 { height: 2px; background: var(--signal); width: 40%; }
+  .rule--sig3 { height: 3px; background: var(--signal); width: 40px; }
+  .rule--strong { height: 1px; background: var(--border-strong); }
+  .sq { width: 72px; height: 72px; border: 1px solid var(--border-visible); }
+  .lvl { width: 220px; min-height: 120px; padding: 16px; position: relative; }
+  .lvl--0 { border-top: 1px solid var(--border-visible); }
+  .lvl--1 { border: 1px solid var(--border); }
+  .lvl--2 { background: var(--surface1); }
+  .lvl--3 { background: var(--overlay); padding: 18px; }
+  .lvl-sheet { background: var(--n50); color: var(--n900); border: 1px solid var(--n900); padding: 12px; }
+  .space-row { display: grid; grid-template-columns: 110px 70px minmax(0, 1fr); gap: 16px; align-items: center; width: 100%; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .space-bar { display: block; height: 8px; background: var(--border-visible); }
+  .glyphs { display: flex; gap: 28px; align-items: center; font-size: 22px; }
+  .glyphs .t-data { font-size: 22px; }
+  .icon-row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); width: 100%; }
+  .icon-cell { background: var(--background); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 14px 4px; font-size: 24px; min-height: 92px; }
+  .icon-cell .t-data { font-size: 9px; color: var(--text4); }
+  .icon-16 { font-size: 16px; }
+
+  /* Motion demos (rest finished; replay plays them) */
+  .anim.is-playing.anim--rule { transform-origin: left center; animation: rule-draw var(--duration-plot) var(--ease-plot) both; }
+  .anim.is-playing.anim--wipe { animation: wipe var(--duration-wipe) var(--ease-wipe) backwards; }
+  .anim.is-playing.anim--clip { animation: wipe 800ms var(--ease-wipe) backwards; }
+  .anim.is-playing.anim--clip .clip-edge { animation: wipe-edge 800ms var(--ease-wipe) backwards; }
+  .anim.is-playing .word-in { animation: word-rise 600ms var(--ease-co) both; }
+  .motion-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 40px; width: 100%; }
+  .wipe-box { background: var(--surface1); border: 1px solid var(--border); padding: 18px; }
+  .clip-frame { position: relative; height: 120px; background: var(--n100); }
+  .clip-frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.55) contrast(1.06) brightness(1.06); }
+  .clip-edge { position: absolute; top: 0; bottom: 0; left: 0; width: 1px; background: var(--n900); visibility: hidden; }
+  .word-mask { display: inline-flex; overflow: hidden; padding: 4px 0; margin: -4px 0; }
+  .word-in { display: inline-block; }
+  .replay { margin-top: 4px; }
+  @keyframes rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes wipe-edge { from { left: -1px; visibility: visible; } to { left: calc(100% - 1px); visibility: visible; } }
+  @keyframes word-rise { from { transform: translateY(110%); } to { transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .anim.is-playing.anim--rule, .anim.is-playing.anim--wipe, .anim.is-playing.anim--clip,
+    .anim.is-playing.anim--clip .clip-edge, .anim.is-playing .word-in { animation: none; }
+  }
+
+  /* ── Button ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+    height: 52px; padding: 0 22px; border: 0; border-radius: 0; background: transparent; color: var(--text1);
+    font-family: var(--font-mono); font-stretch: 87.5%; font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.02em;
+    white-space: nowrap; cursor: pointer; text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-fast), color var(--duration-fast) var(--ease-fast), border-color var(--duration-fast) var(--ease-fast);
+  }
+  .btn--sm { height: 42px; padding: 0 16px; }
+  .btn--lg { height: 60px; padding: 0 28px; }
+  .btn--primary { background: var(--accent); color: var(--on-accent); }
+  .btn--primary:hover, .btn--primary.is-hover { background: var(--accent-hover); }
+  .btn--secondary { border: 1px solid var(--border-visible); }
+  .btn--secondary:hover, .btn--secondary.is-hover { background: var(--accent); color: var(--on-accent); }
+  .btn--link { height: auto; padding: 0 0 4px; border-bottom: 1px solid var(--border-visible); white-space: normal; text-align: left; }
+  .btn--link:hover, .btn--link.is-hover { border-color: var(--text4); color: var(--text3); }
+  .btn--ghost { color: var(--text3); }
+  .btn--ghost:hover, .btn--ghost.is-hover { color: var(--text1); }
+  .btn--block { width: 100%; }
+  .arrow { display: inline-block; margin-left: -6px; transition: transform var(--duration-fast) var(--ease-fast); }
+  .btn:hover .arrow, .btn.is-hover .arrow { transform: translateX(4px); }
+  .is-focus { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .is-disabled { opacity: 0.5; pointer-events: none; }
+
+  /* Signal dots */
+  .dots { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+  .dots--lg { gap: 12px; }
+  .dots--lg .dot { width: 22px; height: 22px; }
+
+  /* Icon button */
+  .ibtn { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-visible); background: transparent; color: var(--text1); font-size: 16px; cursor: pointer; transition: background-color var(--duration-fast) var(--ease-fast), color var(--duration-fast) var(--ease-fast); }
+  .ibtn:hover, .ibtn.is-hover { background: var(--accent); color: var(--on-accent); }
+  .ibtn--wa { width: 48px; height: 48px; background: var(--n900); color: var(--n50); border-color: var(--n50); font-size: 24px; }
+  .burger { flex-direction: column; gap: 6px; }
+  .burger-line { display: block; width: 18px; height: 1px; background: currentColor; }
+
+  /* Segmented control */
+  .seg { display: flex; flex-wrap: wrap; padding: 1px 0 0 1px; }
+  .seg-cell {
+    position: relative; min-width: 64px; padding: 12px 16px; margin: -1px 0 0 -1px; text-align: center;
+    border: 1px solid var(--border-visible); background: transparent; color: var(--text1); cursor: pointer;
+    font-family: var(--font-mono); font-stretch: 87.5%; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.5;
+    transition: background-color var(--duration-fast) var(--ease-fast);
+  }
+  .seg-cell:not(.is-on):hover, .seg-cell.is-hover { background: var(--surface1); }
+  .seg-cell.is-on { background: var(--accent); color: var(--on-accent); z-index: 1; }
+
+  /* Finish chip */
+  .chips { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+  .chip { display: block; width: 76px; padding: 0; border: 0; background: none; text-align: left; color: var(--text1); cursor: pointer; }
+  .chip-swatch { position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; border: 1px solid var(--border); background: var(--surface1); }
+  .chip.is-on .chip-swatch { outline: 1px solid var(--border-visible); outline-offset: 3px; }
+  .chip-edge { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; }
+  .chip-dot { position: absolute; right: 6px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+  .chip-name { display: block; margin-top: 10px; font-family: var(--font-mono); font-stretch: 87.5%; font-size: 10px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.375; }
+  .chip-code { display: block; color: var(--text4); }
+
+  /* Fields */
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 32px; width: 100%; }
+  .field { display: grid; gap: 4px; }
+  .input {
+    width: 100%; border: 0; border-bottom: 1px solid var(--border-visible); border-radius: 0; background: transparent;
+    padding: 10px 0; font-family: var(--font-body); font-size: 17px; color: var(--text1);
+  }
+  .input::placeholder { color: var(--text4); opacity: 1; }
+  .input--invalid { border-bottom-width: 2px; }
+  .input--area { min-height: 96px; resize: vertical; }
+  .input--select {
+    appearance: none; -webkit-appearance: none; padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M.5.5l5 5 5-5' stroke='%23231F20'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-size: 11px 7px; background-position: right 2px center;
+  }
+  .check { display: inline-flex; align-items: center; gap: 12px; }
+  .check-box { position: relative; width: 16px; height: 16px; border: 1px solid var(--border-visible); display: block; }
+  .check-box.is-on { background: var(--accent); }
+  .check-box.is-on::after { content: ""; position: absolute; left: 4px; top: 2px; width: 5px; height: 8px; border-right: 1.5px solid var(--on-accent); border-bottom: 1.5px solid var(--on-accent); transform: rotate(45deg); }
+
+  /* Spec rows */
+  .spec { border-top: 1px solid var(--border); width: 100%; }
+  .spec--two { columns: 2; column-gap: 40px; }
+  .spec-row { display: grid; grid-template-columns: minmax(96px, 130px) 1fr; column-gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border); break-inside: avoid; }
+  .spec-row dt { color: var(--text4); }
+  .spec-row dd { color: var(--text1); min-width: 0; overflow-wrap: anywhere; }
+  .bom { list-style: none; border-top: 1px solid var(--border); width: 100%; }
+  .bom li { display: grid; grid-template-columns: minmax(0, 1fr) auto 44px; column-gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .bom-name { text-transform: none; }
+  .bom-qty { text-align: right; }
+
+  /* Index row (md grid) */
+  .idx { width: 100%; border-top: 1px solid var(--border-visible); }
+  .idx-grid { display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.8fr) 48px; column-gap: 16px; align-items: center; }
+  .idx-head { padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .idx-row { min-height: 96px; padding: 16px 0; border-bottom: 1px solid var(--border); color: var(--text1); text-decoration: none; }
+  .idx-row.is-hover { background: var(--surface1); }
+  .idx-type { font-size: 16px; color: var(--text2); }
+  .idx-end { display: flex; justify-content: flex-end; align-items: center; height: 24px; font-size: 18px; line-height: 1; }
+
+  /* Product card */
+  .pcard { display: flex; flex-direction: column; width: 280px; }
+  .pcard-well { position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--border); background: var(--surface1); overflow: hidden; }
+  .pcard-well img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.55) contrast(1.06) brightness(1.06); display: block; }
+  .pcard.is-hover .pcard-well { border-color: var(--border-visible); }
+  .pcard-meta { margin-top: 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 1px solid var(--border-visible); padding-top: 12px; }
+  .pcard-title { margin-top: 16px; }
+  .pcard-tag { margin-top: 10px; font-size: 14px; line-height: 1.55; color: var(--text3); max-width: 40ch; }
+  .pcard-size { margin-top: 12px; }
+  .pcard-foot { margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+
+  /* Drawing marks */
+  .dim { position: relative; display: flex; align-items: center; justify-content: center; height: 11px; color: var(--text1); }
+  .dim-rule { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: currentColor; }
+  .dim-tick { position: absolute; top: 0; width: 1px; height: 100%; background: currentColor; }
+  .dim-tick--l { left: 0; }
+  .dim-tick--r { right: 0; }
+  .dim-label { position: relative; padding: 0 8px; background: var(--background); white-space: nowrap; font-family: var(--font-mono); font-stretch: 87.5%; font-size: 10px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.5; }
+  .dim--fog .dim-label { background: var(--surface1); }
+  .dimy { position: relative; display: block; width: 11px; color: var(--text1); }
+  .dimy-rule { position: absolute; top: 0; bottom: 0; left: 5px; width: 1px; background: currentColor; }
+  .dimy-tick { position: absolute; left: 0; right: 0; height: 1px; background: currentColor; }
+  .dimy-tick--t { top: 0; }
+  .dimy-tick--b { bottom: 0; }
+  .dimy-label { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); padding: 0 8px; background: var(--background); white-space: nowrap; font-family: var(--font-mono); font-stretch: 87.5%; font-size: 10px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.5; }
+  .reg { position: absolute; width: 17px; height: 17px; pointer-events: none; color: var(--text1); }
+  .reg::before, .reg::after { content: ""; position: absolute; background: currentColor; }
+  .reg::before { left: 8px; top: 0; width: 1px; height: 17px; }
+  .reg::after { top: 8px; left: 0; height: 1px; width: 17px; }
+  .reg-box { position: relative; width: 220px; height: 140px; border: 1px solid var(--border); }
+  .rail { position: relative; height: 2px; background: var(--border); width: 100%; }
+  .rail-fill { position: absolute; top: 0; bottom: 0; left: 0; background: var(--signal); }
+  .pg { display: flex; gap: 8px; }
+  .pg-bar { display: block; width: 28px; height: 3px; background: var(--border); }
+  .pg-bar.is-on { background: var(--signal); }
+
+  /* Cut-out figure + hairline grid (paper only) */
+  .hero-mini { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 40px; padding: 64px 32px 56px; }
+  .hgrid { position: absolute; top: 0; bottom: 0; left: 32px; right: 32px; pointer-events: none; }
+  .hgrid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--signal-grid); }
+  .hgrid--hair .hgrid-line { background: var(--border); }
+  .hero-copy { position: relative; }
+  .hero-claim { margin-top: 28px; font-size: 48px; }
+  .hero-lead { margin-top: 28px; max-width: 34ch; color: var(--text1); }
+  .hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 16px; }
+  .fig { position: relative; }
+  .fig-art { position: relative; padding-right: 40px; }
+  .iso { position: relative; isolation: isolate; }
+  .plate {
+    position: absolute; inset: 0; background: var(--background);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .cutout {
+    position: relative; display: block; width: 100%; height: auto; mix-blend-mode: multiply;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .fig-dimy { position: absolute; right: 8px; top: 18%; bottom: 12%; }
+  .fig-dimx { margin-top: 12px; width: 86%; }
+  .fig-cap { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+  .reg--tl { left: 8px; top: -24px; }
+  .reg--tr { right: -4px; top: -24px; }
+  .reg--corner { left: 12px; top: 12px; }
+
+  /* Header + nav */
+  .hdr { width: 100%; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--background); }
+  .hdr-logo { width: 140px; height: auto; display: block; }
+  .hdr-nav { display: flex; gap: 28px; margin-left: auto; }
+  .hdr-actions { display: flex; align-items: center; gap: 24px; }
+  .nav-link { position: relative; display: block; padding: 8px 0; color: var(--text3); text-decoration: none; }
+  .nav-link.is-active, .nav-link.is-hover, .nav-link:hover { color: var(--text1); }
+  .nav-rule { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; background: var(--border-visible); }
+  .nav-under { position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--border-visible); }
+  .logo-on-dark { display: none; }
+  [data-theme="dark"] .logo-on-light, .ink .logo-on-light { display: none; }
+  [data-theme="dark"] .logo-on-dark, .ink .logo-on-dark { display: block; }
+  [data-theme="dark"] .paper .logo-on-light { display: block; }
+  [data-theme="dark"] .paper .logo-on-dark { display: none; }
+
+  /* Tabs */
+  .tabs { width: 100%; max-width: 560px; border: 1px solid var(--border-visible); background: var(--background); }
+  .tablist { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border-visible); }
+  .tab { position: relative; padding: 16px 24px; text-align: left; border: 0; background: transparent; color: var(--text4); cursor: pointer; }
+  .tab + .tab { border-left: 1px solid var(--border-visible); }
+  .tab.is-on { background: var(--surface1); color: var(--text1); }
+  .tab.is-hover { color: var(--text1); }
+  .tab-num { margin-right: 8px; color: var(--text4); }
+  .tab-bar { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--signal); }
+  .tab-panel { padding: 24px 32px 32px; }
+
+  /* Pager + sticky bar */
+  .pager { width: 100%; display: grid; grid-template-columns: 1fr minmax(240px, 300px) 1fr; border-top: 1px solid var(--border-visible); border-bottom: 1px solid var(--border-visible); }
+  .pager-cell { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 24px; border-right: 1px solid var(--border); }
+  .pager-cell:last-child { border-right: 0; }
+  .pager-cell.is-hover { background: var(--surface1); }
+  .pager-mid { flex-direction: column; justify-content: center; align-items: stretch; gap: 12px; padding: 20px 24px; }
+  .pager-name { font-size: clamp(16px, 1.7vw, 24px); line-height: 1; }
+  .pager-all { text-align: center; color: var(--text4); }
+  .sticky { width: 100%; height: 68px; display: flex; align-items: center; gap: 16px; padding: 0 24px; background: var(--surface1); border-top: 1px solid var(--border-visible); }
+  .sticky-sum { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .corner { display: inline-flex; align-items: stretch; }
+  .corner-arrow { width: 48px; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--border); }
+  .corner-arrow--r { border-right: 0; border-left: 1px solid var(--border); }
+  .corner-panels { display: flex; align-items: center; gap: 4px; padding: 0 16px; }
+  .corner-item { display: flex; flex-direction: column; gap: 6px; padding: 12px 8px; }
+  .corner-item .pg-bar { width: 40px; }
+
+  /* Feedback */
+  .sent { padding: 40px 24px; border: 1px solid var(--border); width: 100%; max-width: 520px; }
+  .sent-line { display: flex; align-items: center; gap: 12px; }
+  .sent-title { margin-top: 24px; max-width: 22ch; }
+  .sent-body { margin-top: 12px; font-size: 15px; color: var(--text3); max-width: 44ch; }
+  .err { border-left: 2px solid var(--error); padding-left: 12px; color: var(--error); }
+  .foot-note { text-transform: none; letter-spacing: 0; }
+  .empty { width: 100%; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 0; }
+  .empty-body { margin-top: 16px; max-width: 48ch; color: var(--text2); }
+  .empty-actions { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .ph { position: relative; width: 360px; aspect-ratio: 16 / 10; border: 1px solid var(--border); background: var(--surface1); }
+  .ph--cut { background: var(--background); }
+  .ph-note { position: absolute; left: 12px; right: 12px; bottom: 12px; }
+  .ph--cut .ph-note { top: 50%; bottom: auto; transform: translateY(-50%); text-align: center; }
+
+  /* Overlays */
+  .dlg-stage { position: relative; padding: 48px; background: var(--n50); overflow: hidden; }
+  .dlg-veil { position: absolute; inset: 0; background: var(--overlay); }
+  .dlg-ghost { position: relative; color: var(--n900); }
+  .dlg { position: relative; margin: 0 auto; width: min(600px, 92%); border: 1px solid var(--n900); background: var(--n50); color: var(--n900); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 28px 32px; border-bottom: 1px solid var(--n900); }
+  .dlg-title { margin-top: 12px; max-width: 24ch; }
+  .dlg-desc { margin-top: 10px; max-width: 42ch; font-size: 15px; color: var(--n700); }
+  .dlg-body { padding: 24px 32px 32px; }
+  .faq { border-bottom: 1px solid var(--border); width: 100%; }
+  .faq-sum { display: grid; grid-template-columns: 64px minmax(0, 1fr) 28px; column-gap: 16px; align-items: center; padding: 20px 0; cursor: pointer; list-style: none; transition: background-color var(--duration-fast) var(--ease-fast); }
+  .faq-sum::-webkit-details-marker { display: none; }
+  .faq-sum:hover, .faq-sum.is-hover { background: var(--surface1); }
+  .faq-n { color: var(--text4); }
+  .faq[open] .faq-n { color: var(--text1); }
+  .faq-q { font-size: 17px; font-weight: 500; line-height: 1.4; }
+  .faq-toggle { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-visible); font-size: 13px; }
+  .faq[open] .faq-toggle { background: var(--accent); color: var(--on-accent); }
+  .faq-minus { display: none; }
+  .faq[open] .faq-minus { display: inline; }
+  .faq[open] .faq-plus { display: none; }
+  .faq-a { display: grid; grid-template-columns: 64px minmax(0, 1fr) 28px; column-gap: 16px; padding-bottom: 24px; }
+  .faq-a p { grid-column: 2; max-width: 65ch; color: var(--text2); }
+
+  /* Openers */
+  .sh { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 420px); align-items: end; gap: 16px 36px; padding-bottom: 28px; border-bottom: 1px solid var(--border-visible); width: 100%; }
+  .sh-title { max-width: 18ch; }
+  .sh-side { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .sh-blurb { font-size: 15px; color: var(--text2); max-width: 46ch; }
+  .phero { position: relative; border-bottom: 1px solid var(--border-visible); padding: 64px 32px 80px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end; row-gap: 40px; }
+  .phero-copy { position: relative; grid-column: 1 / span 7; padding-right: 40px; }
+  .phero-aside { position: relative; grid-column: 9 / span 4; background: var(--background); }
+  .phero-title { margin-top: 32px; max-width: 14ch; }
+  .phero-lead { margin-top: 32px; max-width: 58ch; }
+  .cta { display: grid; grid-template-columns: 1.4fr 1fr; align-items: end; gap: 40px 64px; padding: 96px 40px; }
+  .cta-head { margin: 24px 0; max-width: 16ch; }
+  .cta-body { max-width: 48ch; font-size: 18px; color: var(--text2); }
+  .cta-actions { justify-self: end; display: flex; gap: 16px; flex-wrap: wrap; }
+  .logo-tile { position: relative; flex: 1 1 300px; height: 220px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+  .logo-tile img { width: 220px; height: auto; }
+  .logo-tile .t-eyebrow { position: absolute; left: 16px; bottom: 12px; }
+  .logo-min { width: 140px !important; outline: 1px dashed var(--border-strong); outline-offset: 10px; }
+
+  /* Floating mode bar */
+  .floating-bar { position: fixed; bottom: 24px; left: calc(240px + (100vw - 240px) / 2); transform: translateX(-50%); z-index: 100; display: flex; background: var(--background); border: 1px solid var(--border-visible); }
+  .mode-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 0; background: transparent; color: var(--text3); cursor: pointer; font-family: var(--font-mono); font-stretch: 87.5%; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .mode-btn + .mode-btn { border-left: 1px solid var(--border-visible); }
+  .mode-btn.active { background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<div class="cl-shell">
+
+  <!-- TOC -->
+  <aside class="cl-toc">
+    <img class="cl-brand logo-on-light" src="../../../public/brand/logo-primary.svg" alt="Cohuman">
+    <img class="cl-brand logo-on-dark" src="../../../public/brand/logo-reverse.svg" alt="Cohuman">
+    <h1>Signal</h1>
+    <p class="t-eyebrow cl-toc-meta">Component library · as built</p>
+    <nav>
+      <div class="cl-toc-category active" data-cat="foundations">01 Foundations</div>
+      <a class="cl-toc-sub" href="#colors" data-cat="foundations">Colour</a>
+      <a class="cl-toc-sub" href="#typography" data-cat="foundations">Typography</a>
+      <a class="cl-toc-sub" href="#rules" data-cat="foundations">Rules and radii</a>
+      <a class="cl-toc-sub" href="#elevation" data-cat="foundations">Elevation</a>
+      <a class="cl-toc-sub" href="#spacing" data-cat="foundations">Spacing</a>
+      <a class="cl-toc-sub" href="#motion" data-cat="foundations">Motion</a>
+      <a class="cl-toc-sub" href="#iconography" data-cat="foundations">Iconography</a>
+
+      <div class="cl-toc-category" data-cat="actions">02 Actions</div>
+      <a class="cl-toc-sub" href="#button" data-cat="actions">Button</a>
+      <a class="cl-toc-sub" href="#icon-button" data-cat="actions">Icon button</a>
+      <a class="cl-toc-sub" href="#segmented-control" data-cat="actions">Segmented control</a>
+      <a class="cl-toc-sub" href="#finish-chip" data-cat="actions">Finish chip</a>
+
+      <div class="cl-toc-category" data-cat="inputs">03 Inputs</div>
+      <a class="cl-toc-sub" href="#text-input" data-cat="inputs">Text field</a>
+      <a class="cl-toc-sub" href="#select" data-cat="inputs">Select and textarea</a>
+      <a class="cl-toc-sub" href="#date-time" data-cat="inputs">Date and time</a>
+      <a class="cl-toc-sub" href="#checkbox" data-cat="inputs">Checkbox (derived)</a>
+
+      <div class="cl-toc-category" data-cat="data">04 Data display</div>
+      <a class="cl-toc-sub" href="#spec-rows" data-cat="data">Spec rows</a>
+      <a class="cl-toc-sub" href="#bill" data-cat="data">Bill of components</a>
+      <a class="cl-toc-sub" href="#index-row" data-cat="data">Index row</a>
+      <a class="cl-toc-sub" href="#product-card" data-cat="data">Product card</a>
+
+      <div class="cl-toc-category" data-cat="drawing">05 Drawing set</div>
+      <a class="cl-toc-sub" href="#dimension-line" data-cat="drawing">Dimension line</a>
+      <a class="cl-toc-sub" href="#registration" data-cat="drawing">Registration cross</a>
+      <a class="cl-toc-sub" href="#figure" data-cat="drawing">Grid and cut-out figure</a>
+      <a class="cl-toc-sub" href="#signal-dots" data-cat="drawing">Signal dots</a>
+      <a class="cl-toc-sub" href="#progress-rail" data-cat="drawing">Progress rail</a>
+
+      <div class="cl-toc-category" data-cat="navigation">06 Navigation</div>
+      <a class="cl-toc-sub" href="#header" data-cat="navigation">Header and nav</a>
+      <a class="cl-toc-sub" href="#tabs" data-cat="navigation">Tabs</a>
+      <a class="cl-toc-sub" href="#pager" data-cat="navigation">Pager</a>
+      <a class="cl-toc-sub" href="#pagination" data-cat="navigation">Pagination</a>
+
+      <div class="cl-toc-category" data-cat="feedback">07 Feedback</div>
+      <a class="cl-toc-sub" href="#form-sent" data-cat="feedback">Sent</a>
+      <a class="cl-toc-sub" href="#form-error" data-cat="feedback">Not sent</a>
+      <a class="cl-toc-sub" href="#empty-state" data-cat="feedback">Empty state</a>
+      <a class="cl-toc-sub" href="#placeholder" data-cat="feedback">Placeholder frame</a>
+      <a class="cl-toc-sub" href="#absent" data-cat="feedback">Absent on purpose</a>
+
+      <div class="cl-toc-category" data-cat="overlays">08 Overlays</div>
+      <a class="cl-toc-sub" href="#dialog" data-cat="overlays">Quote dialog</a>
+      <a class="cl-toc-sub" href="#sticky-bar" data-cat="overlays">Sticky quote bar</a>
+      <a class="cl-toc-sub" href="#accordion" data-cat="overlays">Accordion</a>
+
+      <div class="cl-toc-category" data-cat="openers">09 Openers</div>
+      <a class="cl-toc-sub" href="#section-heading" data-cat="openers">Section heading</a>
+      <a class="cl-toc-sub" href="#page-hero" data-cat="openers">Page hero</a>
+      <a class="cl-toc-sub" href="#cta-band" data-cat="openers">CTA band</a>
+      <a class="cl-toc-sub" href="#logo" data-cat="openers">Logo</a>
+    </nav>
+  </aside>
+
+  <main class="cl-main">
+  <div class="cl-inner">
+
+  <!-- ═══════════ 01 FOUNDATIONS ═══════════ -->
+  <section id="cat-foundations" class="cl-category-panel active">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">01 / Foundations</p>
+      <h2 class="t-h2">Ivory paper</h2>
+      <p>Values from src/app/globals.css. Ink mode (bottom bar) shows the ink block, the derived dark: footer, PDP spec block, dark CTA band.</p>
+    </header>
+
+    <div id="colors" class="cl-component-group">
+      <h3>Colour</h3>
+      <p>Neutral ramp from canvas to ink, every step a real token. Signal green is two steps and state only, about one percent of a screen.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="sw-grid">
+          <div class="sw" style="background:var(--n50)"><b>Canvas</b><span class="t-data">#FBF8EE<br>50 · co-bg</span></div>
+          <div class="sw" style="background:var(--n100)"><b>Fog</b><span class="t-data">#F3EFE1<br>100 · co-bg-alt</span></div>
+          <div class="sw" style="background:var(--n200)"><b>Fog deep</b><span class="t-data">#E9E4D3<br>200 · reserved</span></div>
+          <div class="sw" style="background:var(--n300)"><b>Hair</b><span class="t-data">#DCD6C4<br>300 · co-border</span></div>
+          <div class="sw" style="background:var(--n400)"><b>On-ink muted</b><span class="t-data">#B4AEA4<br>400 · panel-muted</span></div>
+          <div class="sw" style="background:var(--n500)"><b>On-ink faint</b><span class="t-data">#9E988D<br>500 · panel-faint</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n550)"><b>Rule strong</b><span class="t-data">#8F8874<br>550 · border-strong</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n600)"><b>Steel</b><span class="t-data">#6B665D<br>600 · co-muted-2</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n700)"><b>Muted</b><span class="t-data">#55514A<br>700 · co-muted</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n800)"><b>Ink soft</b><span class="t-data">#3D3A36<br>800 · co-ink-soft</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n850)"><b>Ink rule</b><span class="t-data">#3B3637<br>850 · panel-border</span></div>
+          <div class="sw sw--on-ink" style="background:var(--n900)"><b>Ink</b><span class="t-data">#231F20<br>900 · co-ink</span></div>
+          <div class="sw" style="background:var(--sig500)"><b>Signal</b><span class="t-data">#5EB646<br>state only</span></div>
+          <div class="sw" style="background:var(--sig300)"><b>Grid signal</b><span class="t-data">#9DD089<br>home grid only</span></div>
+        </div>
+        <div class="cl-variant">
+          <span class="cl-variant-label">Share of any screen: canvas 62 · fog 18 · ink 14 · steel 3 · hair 2 · signal 1</span>
+          <div class="share">
+            <span style="flex:62;background:var(--n50)"></span><span style="flex:18;background:var(--n100)"></span><span style="flex:14;background:var(--n900)"></span><span style="flex:3;background:var(--n600)"></span><span style="flex:2;background:var(--n300)"></span><span style="flex:1;background:var(--sig500)"></span>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Token</th><th>Canvas</th><th>Ink block</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>--background</td><td class="col-value">co-bg #FBF8EE</td><td class="col-value">co-panel #231F20</td><td>Page ground</td></tr>
+          <tr><td>--surface1</td><td class="col-value">co-bg-alt #F3EFE1</td><td class="col-value">co-panel-border #3B3637</td><td>Panels, hover rows, active tab, sticky bar</td></tr>
+          <tr><td>--surface2</td><td class="col-value">#E9E4D3</td><td class="col-value">co-ink-soft #3D3A36</td><td>Reserved; steel text fails AA on it (4.48)</td></tr>
+          <tr><td>--surface3</td><td class="col-value">co-bg #FBF8EE</td><td class="col-value">co-panel #231F20</td><td>The sheet laid on fog</td></tr>
+          <tr><td>--border</td><td class="col-value">co-border #DCD6C4</td><td class="col-value">co-panel-border #3B3637</td><td>Structural 1px rules</td></tr>
+          <tr><td>--border-visible</td><td class="col-value">co-ink #231F20</td><td class="col-value">co-panel-fg #FBF8EE</td><td>Closing rules, control frames, field underline</td></tr>
+          <tr><td>--text1</td><td class="col-value">co-ink #231F20 · 15.34:1</td><td class="col-value">co-panel-fg #FBF8EE · 15.34:1</td><td>Headings, data, field values</td></tr>
+          <tr><td>--text2</td><td class="col-value">co-ink-soft #3D3A36 · 10.64:1</td><td class="col-value">co-panel-muted #B4AEA4 · 7.40:1</td><td>Body, leads</td></tr>
+          <tr><td>--text3</td><td class="col-value">co-muted #55514A · 7.42:1</td><td class="col-value">co-panel-muted #B4AEA4</td><td>Secondary copy, inactive nav</td></tr>
+          <tr><td>--text4</td><td class="col-value">co-muted-2 #6B665D · 5.36:1</td><td class="col-value">co-panel-faint #9E988D · 5.69:1</td><td>Meta: eyebrows, labels, placeholders</td></tr>
+          <tr><td>--accent</td><td class="col-value">co-ink #231F20</td><td class="col-value">co-panel-fg #FBF8EE</td><td>Primary action fill. Never green</td></tr>
+          <tr><td>--accent-subtle</td><td class="col-value">co-bg-alt #F3EFE1</td><td class="col-value">#3B3637</td><td>Selected / hover ground</td></tr>
+          <tr><td>--signal / --success</td><td class="col-value">co-green #5EB646 · 2.39:1</td><td class="col-value">co-green #5EB646</td><td>State only, never text, always paired with ink + ARIA</td></tr>
+          <tr><td>--warning / --error</td><td class="col-value">co-ink #231F20</td><td class="col-value">co-panel-fg #FBF8EE</td><td>No alarm colour: ink plus words</td></tr>
+          <tr><td>--*-bg</td><td class="col-value">= background</td><td class="col-value">= background</td><td>Status never tints a surface</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="typography" class="cl-component-group">
+      <h3>Typography</h3>
+      <p>One variable family at two widths plus a narrow mono. Data in mono, claims in caps, reading in Archivo. Sizes below are live at this window width.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="type-row"><span class="t-eyebrow">Display · co-display</span><span class="t-display">Desk</span><span class="t-data t-steel">clamp(44, 8.9vw, 128) / 0.9</span></div>
+        <div class="type-row"><span class="t-eyebrow">Title · co-h1</span><span class="t-h1">Every table.</span><span class="t-data t-steel">clamp(38, 6vw, 88) / 0.9</span></div>
+        <div class="type-row"><span class="t-eyebrow">Heading · co-h2</span><span class="t-h2">Two chassis.</span><span class="t-data t-steel">clamp(30, 3.9vw, 56) / 0.92</span></div>
+        <div class="type-row"><span class="t-eyebrow">Subheading · co-h3</span><span class="t-h3">Single table · medium beam</span><span class="t-data t-steel">clamp(20, 1.7vw, 24) / 1</span></div>
+        <div class="type-row"><span class="t-eyebrow">Lead · co-lead</span><span class="t-lead">Configurable desking, cabins and meeting tables, specified to the millimetre and quoted to your floor plan.</span><span class="t-data t-steel">clamp(16, 1.32vw, 19) / 1.55</span></div>
+        <div class="type-row"><span class="t-eyebrow">Body</span><span class="t-body">Both desking systems run at 720mm, so tops sit flush wherever two configurations meet.</span><span class="t-data t-steel">15 / 1.55 · 400</span></div>
+        <div class="type-row"><span class="t-eyebrow">Body small</span><span class="t-body-sm t-muted">A mesh task chair light enough to forget you are sitting in it.</span><span class="t-data t-steel">14 / 1.55 · 400</span></div>
+        <div class="type-row"><span class="t-eyebrow">Caption</span><span class="t-caption t-muted">Codes marked ° are provisional: the part is confirmed, the number is not yet.</span><span class="t-data t-steel">12.5 / 1.625 · 400</span></div>
+        <div class="type-row"><span class="t-eyebrow">Label · co-eyebrow</span><span class="t-eyebrow">Office systems · Surat, IN</span><span class="t-data t-steel">11 / 1.5 · caps · +0.02em · steel</span></div>
+        <div class="type-row"><span class="t-eyebrow">Data · co-data</span><span class="t-data">CHSS-ST-SB160 · 1600 × 750 × 720 mm</span><span class="t-data t-steel">11 / 1.5 · caps · tabular</span></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Voice</th><th>Setting</th><th>Utility</th></tr></thead>
+        <tbody>
+          <tr><td>Claim</td><td class="col-value">Archivo · font-stretch 125% · 600 · uppercase · -0.02em (h3 -0.01em)</td><td class="col-value">co-display, co-h1, co-h2, co-h3, font-display</td></tr>
+          <tr><td>Reading</td><td class="col-value">Archivo · font-stretch 100% · 400 (500 for FAQ questions)</td><td class="col-value">body default, co-lead</td></tr>
+          <tr><td>Data</td><td class="col-value">Martian Mono · font-stretch 87.5% · 400 · 11px · uppercase · +0.02em</td><td class="col-value">co-data (ink), co-eyebrow (steel)</td></tr>
+          <tr><td>Buttons</td><td class="col-value">Martian Mono 12px · 400 · uppercase · +0.02em</td><td class="col-value">Button</td></tr>
+          <tr><td>Field value</td><td class="col-value">Archivo 17px · 400 · ink</td><td class="col-value">Input, Select, Textarea</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="rules" class="cl-component-group">
+      <h3>Rules and radii</h3>
+      <p>Rules are the structure. Corners are square everywhere; the two signal dots are the only round shape on the site.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="rule-demo">
+          <span class="t-eyebrow">1px hair · co-border</span><span class="rule rule--hair"></span>
+          <span class="t-eyebrow">1px ink · co-ink</span><span class="rule rule--ink"></span>
+          <span class="t-eyebrow">2px ink · active, invalid</span><span class="rule rule--ink2"></span>
+          <span class="t-eyebrow">1px rule strong · 3.33:1</span><span class="rule rule--strong"></span>
+          <span class="t-eyebrow">2px signal · progress</span><span class="rule rule--sig2"></span>
+          <span class="t-eyebrow">3px signal · active bar</span><span class="rule rule--sig3"></span>
+        </div>
+        <div class="chips">
+          <div class="cl-variant"><span class="cl-variant-label">Radius 0</span><span class="sq"></span></div>
+          <div class="cl-variant"><span class="cl-variant-label">Dots 7px · 50%</span><span class="dots"><span class="dot"></span><span class="dot"></span></span></div>
+          <div class="cl-variant"><span class="cl-variant-label">Dots 22px · 50%</span><span class="dots dots--lg"><span class="dot"></span><span class="dot"></span></span></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Rule</th><th>Value</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Hair</td><td class="col-value">1px #DCD6C4 · border-co-border</td><td>Row dividers, spec rows, image frames, header bottom</td></tr>
+          <tr><td>Ink</td><td class="col-value">1px #231F20 · border-co-ink</td><td>Closes SectionHeading, tops card bodies, frames controls, underlines fields</td></tr>
+          <tr><td>Ink 2px</td><td class="col-value">2px #231F20</td><td>Active nav item, invalid field, FormError rule, focus outline</td></tr>
+          <tr><td>Signal</td><td class="col-value">2px progress · 3px active bar</td><td>ProgressRail, active tab, gallery and hero pagination</td></tr>
+          <tr><td>Radius</td><td class="col-value">0 · dots 50%</td><td>No rounded-* anywhere else</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="elevation" class="cl-component-group">
+      <h3>Elevation</h3>
+      <p>Flat. Depth is a rule or a surface change; nothing casts a shadow. A floating layer gets an ink edge on a flat veil.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">0 · ink rule on top</span><div class="lvl lvl--0"><span class="t-data">Card body</span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">1 · hair frame</span><div class="lvl lvl--1"><span class="t-data">Image well</span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">2 · fog surface</span><div class="lvl lvl--2"><span class="t-data">Hover row, sticky bar</span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">3 · ink frame on 70% veil</span><div class="lvl lvl--3"><div class="lvl-sheet"><span class="t-data">Dialog</span></div></div></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Level</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>Shadow, all levels</td><td class="col-value">none</td><td>No shadow-*, drop-shadow-*, blur-*, backdrop-*</td></tr>
+          <tr><td>Overlay veil</td><td class="col-value">bg-co-ink/70 · rgba(35, 31, 32, 0.70)</td><td>Quote dialog, flat, no blur</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="spacing" class="cl-component-group">
+      <h3>Spacing</h3>
+      <p>Tailwind v4 default 4px scale. Halves up to 3.5, then whole steps; odd real values (11, 18, 22) are arbitrary utilities. p-4.5 produces no CSS.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="space-row"><span class="t-data">2xs</span><span class="t-data t-steel">2px</span><span class="space-bar" style="width:2px"></span></div>
+        <div class="space-row"><span class="t-data">xs</span><span class="t-data t-steel">4px</span><span class="space-bar" style="width:4px"></span></div>
+        <div class="space-row"><span class="t-data">sm</span><span class="t-data t-steel">8px</span><span class="space-bar" style="width:8px"></span></div>
+        <div class="space-row"><span class="t-data">spec row</span><span class="t-data t-steel">11px</span><span class="space-bar" style="width:11px"></span></div>
+        <div class="space-row"><span class="t-data">button gap</span><span class="t-data t-steel">14px</span><span class="space-bar" style="width:14px"></span></div>
+        <div class="space-row"><span class="t-data">md</span><span class="t-data t-steel">16px</span><span class="space-bar" style="width:16px"></span></div>
+        <div class="space-row"><span class="t-data">phone gutter</span><span class="t-data t-steel">18px</span><span class="space-bar" style="width:18px"></span></div>
+        <div class="space-row"><span class="t-data">button pad</span><span class="t-data t-steel">22px</span><span class="space-bar" style="width:22px"></span></div>
+        <div class="space-row"><span class="t-data">lg</span><span class="t-data t-steel">24px</span><span class="space-bar" style="width:24px"></span></div>
+        <div class="space-row"><span class="t-data">xl</span><span class="t-data t-steel">32px</span><span class="space-bar" style="width:32px"></span></div>
+        <div class="space-row"><span class="t-data">2xl · gutter lg</span><span class="t-data t-steel">48px</span><span class="space-bar" style="width:48px"></span></div>
+        <div class="space-row"><span class="t-data">3xl</span><span class="t-data t-steel">64px</span><span class="space-bar" style="width:64px"></span></div>
+        <div class="space-row"><span class="t-data">4xl</span><span class="t-data t-steel">96px</span><span class="space-bar" style="width:96px"></span></div>
+        <div class="space-row"><span class="t-data">co-section</span><span class="t-data t-steel">64 to 120</span><span class="space-bar" style="width:clamp(64px, 8vw, 120px)"></span></div>
+        <div class="space-row"><span class="t-data">co-section-lg</span><span class="t-data t-steel">80 to 160</span><span class="space-bar" style="width:clamp(80px, 10vw, 160px)"></span></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>co-shell</td><td class="col-value">max 1440 · padding-inline 18 / 24 (640+) / 48 (1024+)</td><td>Every route</td></tr>
+          <tr><td>--space-co-section</td><td class="col-value">clamp(64px, 8vw, 120px)</td><td>co-section</td></tr>
+          <tr><td>--space-co-section-lg</td><td class="col-value">clamp(80px, 10vw, 160px)</td><td>co-section-lg, sparingly</td></tr>
+          <tr><td>Form grid</td><td class="col-value">gap 28px rows · 32px columns</td><td>FORM_GRID</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="motion" class="cl-component-group">
+      <h3>Motion</h3>
+      <p>Plotter, not fade. Everything rests finished; with scripts blocked nothing is hidden. Replay to watch each one; reduced motion turns them off.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="motion-grid">
+          <div class="cl-variant"><span class="cl-variant-label">co-rule · 400ms linear</span>
+            <span class="dim"><span class="dim-rule anim anim--rule"></span><span class="dim-tick dim-tick--l"></span><span class="dim-tick dim-tick--r"></span><span class="dim-label">1200 <span class="emd"></span> 1600</span></span>
+          </div>
+          <div class="cl-variant"><span class="cl-variant-label">TickNumber · 400ms linear</span>
+            <span class="t-data">Length <span data-tick="1600" data-from="1200">1200</span> mm</span>
+          </div>
+          <div class="cl-variant"><span class="cl-variant-label">co-reveal · 600ms wipe</span>
+            <div class="wipe-box anim anim--wipe"><span class="t-data">01 / Systems</span></div>
+          </div>
+          <div class="cl-variant"><span class="cl-variant-label">co-clip · 800ms wipe + ink hairline</span>
+            <div class="clip-frame anim anim--clip"><img src="../../../public/site/about-meeting.jpg" alt="Meeting room interior, high-key"><span class="clip-edge"></span></div>
+          </div>
+          <div class="cl-variant"><span class="cl-variant-label">co-word-rise · 600ms · 40ms per word</span>
+            <span class="t-h3 anim"><span class="word-mask"><span class="word-in">Engineered</span></span> <span class="word-mask"><span class="word-in" style="animation-delay:40ms">for</span></span> <span class="word-mask"><span class="word-in" style="animation-delay:80ms">two.</span></span></span>
+          </div>
+          <div class="cl-variant"><span class="cl-variant-label">Replay</span>
+            <button class="btn btn--secondary btn--sm replay" type="button">Replay motion <span class="arrow">→</span></button>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Motion</th><th>Value</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Hover colour</td><td class="col-value">150ms cubic-bezier(0.4, 0, 0.2, 1)</td><td>Buttons, rows, links</td></tr>
+          <tr><td>Line draw</td><td class="col-value">--duration-plot 400ms · --ease-plot linear</td><td>Dimension lines, measure rules, hero grid (30ms per line), nav underline</td></tr>
+          <tr><td>Block wipe</td><td class="col-value">600ms cubic-bezier(0.65, 0, 0.35, 1)</td><td>Reveal, StaggerItem (0.08s CSS / 0.1s prop stagger)</td></tr>
+          <tr><td>Image wipe</td><td class="col-value">800ms · co-wipe-in 500ms</td><td>ClipReveal; click-swapped frames</td></tr>
+          <tr><td>Headline</td><td class="col-value">600ms --ease-co cubic-bezier(0.16, 1, 0.3, 1) · 40ms per word</td><td>KineticHeading, transform only</td></tr>
+          <tr><td>Panels</td><td class="col-value">sticky bar 300ms · drawer 280ms · config pick 450 / 750ms</td><td>Transform or clip, never opacity</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="iconography" class="cl-component-group">
+      <h3>Iconography</h3>
+      <p>Signal uses type, not icons: arrows are text glyphs, open and close are plus and minus. Fallback kit is Lucide, the codebase's own lucide-react, for the rare pictogram.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="cl-variant"><span class="cl-variant-label">The real glyphs · Martian Mono and Archivo</span>
+          <div class="glyphs"><span class="t-data">→ ← ↑ ↓ + −</span><span>→ ← ↑ ↓</span><span class="t-data">° × ·</span></div>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">Lucide fallback · 24px (in use: X, message-circle)</span>
+          <div class="icon-row">
+            <div class="icon-cell"><i class="icon-x"></i><span class="t-data">x · in use</span></div>
+            <div class="icon-cell"><i class="icon-message-circle"></i><span class="t-data">message · in use</span></div>
+            <div class="icon-cell"><i class="icon-arrow-right"></i><span class="t-data">arrow-right</span></div>
+            <div class="icon-cell"><i class="icon-arrow-left"></i><span class="t-data">arrow-left</span></div>
+            <div class="icon-cell"><i class="icon-arrow-up"></i><span class="t-data">arrow-up</span></div>
+            <div class="icon-cell"><i class="icon-arrow-down"></i><span class="t-data">arrow-down</span></div>
+            <div class="icon-cell"><i class="icon-plus"></i><span class="t-data">plus</span></div>
+            <div class="icon-cell"><i class="icon-minus"></i><span class="t-data">minus</span></div>
+            <div class="icon-cell"><i class="icon-chevron-down"></i><span class="t-data">chevron</span></div>
+            <div class="icon-cell"><i class="icon-download"></i><span class="t-data">download</span></div>
+            <div class="icon-cell"><i class="icon-map-pin"></i><span class="t-data">map-pin</span></div>
+            <div class="icon-cell"><i class="icon-ruler"></i><span class="t-data">ruler</span></div>
+          </div>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">16px inline</span><span class="icon-16"><i class="icon-x"></i> <i class="icon-arrow-right"></i> <i class="icon-download"></i></span></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Observed</td><td class="col-value">Text arrows · + / − · 1px drawing marks · lucide X 16px stroke 1.5 · lucide MessageCircle 24px filled · no phone icon</td></tr>
+          <tr><td>Fallback kit</td><td class="col-value">Lucide · match medium · round caps softer than Signal's butt-ended rules</td></tr>
+          <tr><td>CDN</td><td class="col-value">unpkg.com/lucide-static@1.8.0/font/lucide.css</td></tr>
+          <tr><td>Colour</td><td class="col-value">currentColor · ink on canvas, canvas on ink · never green</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 02 ACTIONS ═══════════ -->
+  <section id="cat-actions" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">02 / Actions</p>
+      <h2 class="t-h2">Instrument panel</h2>
+      <p>Square, no shadow, mono labels. Selection is an ink fill plus aria-pressed. Hover is never green.</p>
+    </header>
+
+    <div id="button" class="cl-component-group">
+      <h3>Button</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/button.tsx</p>
+      <p>Primary is ink; secondary is a 1px ink outline; link is an underline with an arrow. The dots belong to the header quote button only.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="chips">
+          <div class="cl-variant"><span class="cl-variant-label">Primary</span><button class="btn btn--primary" type="button">Configure a desk</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Hover</span><button class="btn btn--primary is-hover" type="button">Configure a desk</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Focus</span><button class="btn btn--primary is-focus" type="button">Configure a desk</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Disabled (submitting)</span><button class="btn btn--primary is-disabled" type="button">Sending…</button></div>
+        </div>
+        <div class="chips">
+          <div class="cl-variant"><span class="cl-variant-label">Secondary</span><button class="btn btn--secondary" type="button">Book a showroom visit</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Hover</span><button class="btn btn--secondary is-hover" type="button">Book a showroom visit</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Ghost</span><button class="btn btn--ghost" type="button">Skip</button></div>
+          <div class="cl-variant"><span class="cl-variant-label">Ghost hover</span><button class="btn btn--ghost is-hover" type="button">Skip</button></div>
+        </div>
+        <div class="chips">
+          <div class="cl-variant"><span class="cl-variant-label">Link + arrow</span><a class="btn btn--link" href="#">All collections <span class="arrow">→</span></a></div>
+          <div class="cl-variant"><span class="cl-variant-label">Link hover</span><a class="btn btn--link is-hover" href="#">All collections <span class="arrow">→</span></a></div>
+          <div class="cl-variant"><span class="cl-variant-label">sm · header quote · dots</span><button class="btn btn--primary btn--sm" type="button">Get a quote <span class="dots"><span class="dot"></span><span class="dot"></span></span></button></div>
+          <div class="cl-variant"><span class="cl-variant-label">lg · CtaBand (no dots)</span><button class="btn btn--primary btn--lg" type="button">Get a quote</button></div>
+        </div>
+      </div>
+      <div class="cl-canvas ink">
+        <div class="cl-variant"><span class="cl-variant-label">onDark</span><button class="btn btn--primary" type="button">Get a quote</button></div>
+        <div class="cl-variant"><span class="cl-variant-label">onDark hover</span><button class="btn btn--primary is-hover" type="button">Get a quote</button></div>
+        <div class="cl-variant"><span class="cl-variant-label">secondaryOnDark</span><button class="btn btn--secondary" type="button">Spec PDF ↓</button></div>
+        <div class="cl-variant"><span class="cl-variant-label">linkOnDark</span><a class="btn btn--link" href="#">Write to us <span class="arrow">→</span></a></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Height · padding-x</td><td class="col-value">sm 42 · 16 / default 52 · 22 / lg 60 · 28</td></tr>
+          <tr><td>Label</td><td class="col-value">Martian Mono 12px · 400 · uppercase · +0.02em · wdth 87.5 · gap 14px</td></tr>
+          <tr><td>primary</td><td class="col-value">bg-co-ink text-co-bg · hover bg-co-ink-soft #3D3A36</td></tr>
+          <tr><td>secondary</td><td class="col-value">1px border-co-ink · hover ink fill, canvas text</td></tr>
+          <tr><td>link</td><td class="col-value">1px ink bottom · pb 4px · hover rule steel, text muted · arrow +4px</td></tr>
+          <tr><td>onDark / secondaryOnDark / linkOnDark</td><td class="col-value">canvas fill (hover fog) / canvas outline / canvas underline</td></tr>
+          <tr><td>Focus · disabled</td><td class="col-value">2px ink outline offset 2px · opacity 0.5</td></tr>
+          <tr><td>Radius · shadow</td><td class="col-value">0 · none</td></tr>
+          <tr><td>Destructive</td><td class="col-value">absent: secondary + explicit verb</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="icon-button" class="cl-component-group">
+      <h3>Icon button</h3>
+      <p>An inline pattern, not a component: a 40px ink-outlined square. Dialog close, rail arrows, hamburger. WhatsApp is the 48px ink square.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">Close</span><button class="ibtn" type="button" aria-label="Close"><i class="icon-x"></i></button></div>
+        <div class="cl-variant"><span class="cl-variant-label">Close hover</span><button class="ibtn is-hover" type="button" aria-label="Close"><i class="icon-x"></i></button></div>
+        <div class="cl-variant"><span class="cl-variant-label">Rail arrows</span><span class="chips"><button class="ibtn" type="button" aria-label="Previous">←</button></span></div>
+        <div class="cl-variant"><span class="cl-variant-label">Hamburger</span><button class="ibtn burger" type="button" aria-label="Open menu"><span class="burger-line"></span><span class="burger-line"></span></button></div>
+        <div class="cl-variant"><span class="cl-variant-label">Focus</span><button class="ibtn is-focus" type="button" aria-label="Next">→</button></div>
+        <div class="cl-variant"><span class="cl-variant-label">WhatsApp · 48px</span><a class="ibtn ibtn--wa" href="#" aria-label="WhatsApp"><i class="icon-message-circle"></i></a></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Size · frame</td><td class="col-value">40 × 40 · 1px border-co-ink · radius 0</td></tr>
+          <tr><td>Hover</td><td class="col-value">bg-co-ink text-co-bg · 150ms</td></tr>
+          <tr><td>Glyph</td><td class="col-value">lucide X 16px stroke 1.5 · or text arrow · hamburger two 1px × 18px lines, 6px apart</td></tr>
+          <tr><td>WhatsApp</td><td class="col-value">48px · bg-co-ink · 1px canvas border · MessageCircle 24px filled · no shadow</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="segmented-control" class="cl-component-group">
+      <h3>Segmented control</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/segmented-control.tsx</p>
+      <p>The size selector and the catalog filters; also the answer to toggle, radio and slider. Options come from src/lib/series, never typed. Sizing internals may change (a 44px minimum touch height is coming); the contract below does not.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="cl-variant"><span class="cl-variant-label">Length, mm · STRETCH S single table, medium beam</span>
+          <div class="seg" role="group" aria-label="Length in millimetres"><button class="seg-cell t-data" type="button" aria-pressed="false">1200</button><button class="seg-cell t-data is-hover" type="button" aria-pressed="false">1400</button><button class="seg-cell t-data" type="button" aria-pressed="false">1500</button><button class="seg-cell t-data is-on" type="button" aria-pressed="true">1600</button></div>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">Depth, mm</span>
+          <div class="seg" role="group" aria-label="Depth in millimetres"><button class="seg-cell t-data" type="button" aria-pressed="false">600</button><button class="seg-cell t-data" type="button" aria-pressed="false">700</button><button class="seg-cell t-data is-on" type="button" aria-pressed="true">750</button><button class="seg-cell t-data" type="button" aria-pressed="false">900</button></div>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">Budget band filter</span>
+          <div class="seg" role="group" aria-label="Budget band"><button class="seg-cell t-data is-on" type="button" aria-pressed="true">Any budget</button><button class="seg-cell t-data" type="button" aria-pressed="false">Value</button><button class="seg-cell t-data" type="button" aria-pressed="false">Mid</button><button class="seg-cell t-data" type="button" aria-pressed="false">Premium</button></div>
+        </div>
+      </div>
+      <div class="cl-canvas ink">
+        <div class="cl-variant"><span class="cl-variant-label">tone="dark" · spec block</span>
+          <div class="seg" role="group" aria-label="Length in millimetres"><button class="seg-cell t-data" type="button" aria-pressed="false">1200</button><button class="seg-cell t-data is-hover" type="button" aria-pressed="false">1400</button><button class="seg-cell t-data" type="button" aria-pressed="false">1500</button><button class="seg-cell t-data is-on" type="button" aria-pressed="true">1600</button></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Contract</td><td class="col-value">square cells sharing 1px ink rules · selected = ink fill + aria-pressed · hover fog · never green</td></tr>
+          <tr><td>Cell (at time of writing)</td><td class="col-value">co-data · min-w 64px · padding 12px 16px · overlap -1px</td></tr>
+          <tr><td>Dark</td><td class="col-value">1px canvas frame · selected canvas fill, ink text · hover #3B3637</td></tr>
+          <tr><td>Group</td><td class="col-value">role="group" + aria-label naming the unit</td></tr>
+          <tr><td>Data</td><td class="col-value">config.lens / config.deps / depthOptions() · CHSS-ST-SB160</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="finish-chip" class="cl-component-group">
+      <h3>Finish chip</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/finish-chip.tsx</p>
+      <p>A square material sample. The swatch fill is series data and is the one place a gradient is allowed: it describes a material. Selected = ink outline (the state) plus one dot (the confirmation). Label alignment may shift; read the file.</p>
+      <div class="cl-canvas">
+        <div class="chips" role="group" aria-label="Top finish">
+          <button class="chip is-on" type="button" aria-pressed="true"><span class="chip-swatch" style="background:linear-gradient(168deg, #E6DECC 0%, #DBD2BE 46%, #E9E2D2 100%)"><span class="chip-edge" style="background:#D3C9B3"></span><span class="chip-dot"></span></span><span class="chip-name">Nordic Oak<span class="chip-code">PROS-TOP-NOK</span></span></button>
+          <button class="chip" type="button" aria-pressed="false"><span class="chip-swatch" style="background:linear-gradient(168deg, #4E4340 0%, #3D3431 48%, #554A46 100%)"><span class="chip-edge" style="background:#332B29"></span></span><span class="chip-name">Espresso Walnut<span class="chip-code">PROS-TOP-EWL</span></span></button>
+          <button class="chip" type="button" aria-pressed="false"><span class="chip-swatch" style="background:linear-gradient(168deg, #F6F5F2 0%, #E9E7E1 100%)"><span class="chip-edge" style="background:#DCD9D1"></span></span><span class="chip-name">Signal White frame<span class="chip-code">PROS-FRM-SWH</span></span></button>
+          <button class="chip" type="button" aria-pressed="false"><span class="chip-swatch" style="background:linear-gradient(168deg, #4A4D50 0%, #33373A 100%)"><span class="chip-edge" style="background:#2A2D30"></span></span><span class="chip-name">Graphite frame<span class="chip-code">PROS-FRM-GRA</span></span></button>
+          <div class="chip"><span class="chip-swatch"></span><span class="chip-name">No fill<span class="chip-code">Fog fallback</span></span></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Contract</td><td class="col-value">square swatch · name + code in mono beneath · picker with onSelect, board entry without</td></tr>
+          <tr><td>Swatch</td><td class="col-value">76px (64px in the rail filter) · 1px hair · fill + 6px edge band from src/lib/series/pros/swatches.ts</td></tr>
+          <tr><td>Selected</td><td class="col-value">1px ink outline offset 3px · 7px signal dot 6px from top-right · aria-pressed</td></tr>
+          <tr><td>dot={false}</td><td class="col-value">where the progress rail is already lit; outline still carries the state</td></tr>
+          <tr><td>Name · code</td><td class="col-value">co-data 10px · code in steel</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 03 INPUTS ═══════════ -->
+  <section id="cat-inputs" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">03 / Inputs</p>
+      <h2 class="t-h2">A line on a form</h2>
+      <p>No boxes. One ink rule under the value, a mono label above. Errors are ink, never red.</p>
+    </header>
+
+    <div id="text-input" class="cl-component-group">
+      <h3>Text field</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/input.tsx · label.tsx</p>
+      <p>Archivo 17px on a 1px ink underline. Focus is the global 2px ink outline. Invalid thickens the rule to 2px.</p>
+      <div class="cl-canvas">
+        <div class="field-grid">
+          <div class="field"><span class="t-eyebrow">Name</span><input class="input" placeholder="Your full name"><span class="cl-variant-label">Default</span></div>
+          <div class="field"><span class="t-eyebrow">Company</span><input class="input" value="Acme Textiles Pvt Ltd"><span class="cl-variant-label">Filled</span></div>
+          <div class="field"><span class="t-eyebrow">Email</span><input class="input is-focus" placeholder="name@company.com"><span class="cl-variant-label">Focus</span></div>
+          <div class="field"><span class="t-eyebrow">Phone</span><input class="input input--invalid" value="+91" aria-invalid="true"><span class="cl-variant-label">Invalid · 2px rule</span></div>
+          <div class="field"><span class="t-eyebrow">Seats / quantity</span><input class="input is-disabled" placeholder="e.g. 60 seats" disabled><span class="cl-variant-label">Disabled · 0.5</span></div>
+          <div class="field"><span class="t-eyebrow">City / location</span><input class="input" placeholder="Where is the office?"><span class="cl-variant-label">Placeholder · steel</span></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Box</td><td class="col-value">border-0 border-b · 1px border-co-ink · transparent · rounded-none</td></tr>
+          <tr><td>Padding · font</td><td class="col-value">10px 0 · Archivo 17px · ink</td></tr>
+          <tr><td>Placeholder</td><td class="col-value">co-placeholder #6B665D</td></tr>
+          <tr><td>Invalid</td><td class="col-value">aria-[invalid=true]:border-b-2</td></tr>
+          <tr><td>Label</td><td class="col-value">co-eyebrow · gap 4px (FIELD = grid gap-1)</td></tr>
+          <tr><td>Grid</td><td class="col-value">FORM_GRID · 2 columns from sm · gap-x 32 · gap-y 28</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="select" class="cl-component-group">
+      <h3>Select and textarea</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/select.tsx · textarea.tsx</p>
+      <p>The select is native (the platform's accessible list) with a 1px ink chevron drawn back in. The textarea is the same field, 96px tall, resizing vertically.</p>
+      <div class="cl-canvas">
+        <div class="field-grid">
+          <div class="field"><span class="t-eyebrow">Product or collection of interest</span><select class="input input--select"><option>STRETCH S Series</option><option>STRETCH V Series</option></select></div>
+          <div class="field"><span class="t-eyebrow">What would you like to see</span><textarea class="input input--area" placeholder="A collection, a category, or a specific piece you would like set up for the visit…"></textarea></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Select</td><td class="col-value">native · appearance-none · chevron 11 × 7 · 1px #231F20 · right 2px · pr 28px</td></tr>
+          <tr><td>Textarea</td><td class="col-value">min-h 96px · resize-y · no character count</td></tr>
+          <tr><td>Combobox</td><td class="col-value">absent: native select</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="date-time" class="cl-component-group">
+      <h3>Date and time</h3>
+      <p>Native date and time inputs in the same underline field, as the showroom visit form uses them. No custom calendar.</p>
+      <div class="cl-canvas">
+        <div class="field-grid">
+          <div class="field"><span class="t-eyebrow">Preferred date</span><input class="input" type="date"></div>
+          <div class="field"><span class="t-eyebrow">Preferred time</span><input class="input" type="time"></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Element</td><td class="col-value">Input type="date" / type="time" · fieldClass</td></tr></tbody>
+      </table>
+    </div>
+
+    <div id="checkbox" class="cl-component-group">
+      <h3>Checkbox (derived)</h3>
+      <p>Not on the site. Single choice is a segmented control. If multi-select is ever needed: a 16px square, ink frame, ink fill with a canvas tick. Never round, never green.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">Off</span><span class="check"><span class="check-box"></span><span class="t-data">Bring samples</span></span></div>
+        <div class="cl-variant"><span class="cl-variant-label">On</span><span class="check"><span class="check-box is-on"></span><span class="t-data">Bring samples</span></span></div>
+        <div class="cl-variant"><span class="cl-variant-label">Focus</span><span class="check"><span class="check-box is-focus"></span><span class="t-data">Bring samples</span></span></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Derived from</td><td class="col-value">Principles 2 (green is state) and 3 (square) · segmented control frame</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 04 DATA ═══════════ -->
+  <section id="cat-data" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">04 / Data display</p>
+      <h2 class="t-h2">Parts list</h2>
+      <p>Product data reads like a drawing's title block: mono keys in steel, values in ink, on hairlines.</p>
+    </header>
+
+    <div id="spec-rows" class="cl-component-group">
+      <h3>Spec rows</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/spec-rows.tsx</p>
+      <p>A real dl. One or two columns; tone="dark" inside the ink spec block. Values from the series definition.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant cl-variant--grow"><span class="cl-variant-label">columns={2}</span>
+          <dl class="spec spec--two t-data">
+            <div class="spec-row"><dt>Model</dt><dd>Single Table · Medium Beam</dd></div>
+            <div class="spec-row"><dt>Code</dt><dd>CHSS-ST-SB160</dd></div>
+            <div class="spec-row"><dt>Length</dt><dd>1200 <span class="emd"></span> 1600</dd></div>
+            <div class="spec-row"><dt>Depth</dt><dd>600 <span class="emd"></span> 900</dd></div>
+            <div class="spec-row"><dt>Seats</dt><dd>1</dd></div>
+            <div class="spec-row"><dt>Height</dt><dd>720</dd></div>
+          </dl>
+        </div>
+      </div>
+      <div class="cl-canvas ink">
+        <div class="cl-variant cl-variant--grow"><span class="cl-variant-label">tone="dark"</span>
+          <dl class="spec t-data">
+            <div class="spec-row"><dt>Top</dt><dd>Melamine paper on E1 particle board, 25mm</dd></div>
+            <div class="spec-row"><dt>Beam</dt><dd>PRO-SB160-PC</dd></div>
+            <div class="spec-row"><dt>Size</dt><dd>1600 × 750 × 720 mm</dd></div>
+          </dl>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">minmax(96px, 130px) 1fr · gap-x 16px</td></tr>
+          <tr><td>Row</td><td class="col-value">py 11px · 1px hair bottom · hair top on the list</td></tr>
+          <tr><td>Key · value</td><td class="col-value">co-data steel · co-data ink</td></tr>
+          <tr><td>Dark</td><td class="col-value">rules #3B3637 · keys #9E988D · values #FBF8EE</td></tr>
+          <tr><td>Two columns</td><td class="col-value">md:columns-2 md:gap-x-10 · break-inside-avoid</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="bill" class="cl-component-group">
+      <h3>Bill of components</h3>
+      <p>Signal's data table: no table chrome, mono rows on rules, quantities right-aligned. Shown on the ink spec block where it lives.</p>
+      <div class="cl-canvas ink">
+        <div class="cl-variant cl-variant--grow"><span class="t-eyebrow">Bill of components</span>
+          <ul class="bom t-data">
+            <li><span class="bom-name">Medium beam</span><span class="t-muted">PRO-SB160-PC</span><span class="bom-qty">1 pc</span></li>
+            <li><span class="bom-name">Four-leg package</span><span class="t-muted">CHSS-4FLEG072-PC</span><span class="bom-qty">1 pc</span></li>
+          </ul>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">minmax(0, 1fr) auto 44px · gap-x 12px · py 10px</td></tr>
+          <tr><td>Name</td><td class="col-value">co-data normal-case · canvas</td></tr>
+          <tr><td>Code · qty</td><td class="col-value">on-ink muted · right-aligned qty · ° marks an inferred code</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="index-row" class="cl-component-group">
+      <h3>Index row</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/index-row.tsx</p>
+      <p>The list pattern: systems scanned like a parts list. Shown at the md grid. Hover or focus takes fog, a cut-out thumbnail wipes in (lg only) and the arrow becomes the dots.</p>
+      <div class="cl-canvas">
+        <div class="idx">
+          <div class="idx-grid idx-head t-eyebrow"><span>No.</span><span>System</span><span>Type</span><span>Range</span><span></span></div>
+          <a class="idx-grid idx-row is-hover" href="#"><span class="t-data">01</span><span class="t-name">Stretchs</span><span class="idx-type">Beam desking system</span><span class="t-data">800 → 4000 mm</span><span class="idx-end"><span class="dots"><span class="dot"></span><span class="dot"></span></span></span></a>
+          <a class="idx-grid idx-row" href="#"><span class="t-data">02</span><span class="t-name">Stretch</span><span class="idx-type">Adjustable-beam desking system</span><span class="t-data">900 → 3600 mm</span><span class="idx-end">→</span></a>
+          <a class="idx-grid idx-row" href="#"><span class="t-data">03</span><span class="t-name">Cabins</span><span class="idx-type">Manager and director rooms</span><span class="t-data">Desk + storage + seating</span><span class="idx-end">→</span></a>
+          <a class="idx-grid idx-row" href="#"><span class="t-data">05</span><span class="t-name">Seating</span><span class="idx-type">Task, executive, visitor</span><span class="t-data">Price on request</span><span class="idx-end">→</span></a>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">lg 90 · minmax(0,360) · 1fr · 260 · 60 / md 64 · 1.1fr · 1fr · 0.8fr · 48 / phone 40 · 1fr · auto</td></tr>
+          <tr><td>Row</td><td class="col-value">min-h 84 (96 md) · py 16 · 1px hair bottom</td></tr>
+          <tr><td>Name</td><td class="col-value">Archivo wdth 125 · 600 · caps · clamp(24px, 2.8vw, 40px) · 0.9</td></tr>
+          <tr><td>Range</td><td class="col-value">co-data from spanLabel() · never typed</td></tr>
+          <tr><td>Hover</td><td class="col-value">fog · 170px co-cutout thumbnail wipes 300ms linear (lg) · arrow swaps to SignalDots</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="product-card" class="cl-component-group">
+      <h3>Product card</h3>
+      <p class="t-data t-steel cl-file">src/components/catalog/product-card.tsx</p>
+      <p>No box: an image well on a hair frame, then a body opened by an ink rule. Catalog data is still the illustrative demo set; the frame and type are real.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">Default</span>
+          <article class="pcard">
+            <div class="pcard-well"><img src="../../../public/categories/task.jpg" alt="Category photograph, high-key"></div>
+            <div class="pcard-meta"><span class="t-eyebrow">Ergonomic Seating</span><span class="t-data">Mid</span></div>
+            <h4 class="t-h3 pcard-title">Aria Task</h4>
+            <p class="pcard-tag">A mesh task chair light enough to forget you are sitting in it.</p>
+            <p class="t-data t-steel pcard-size">Seat 480×470mm · Height 430–540mm</p>
+            <div class="pcard-foot"><a class="btn btn--link" href="#">Enquire</a><span class="t-eyebrow">Price on request</span></div>
+          </article>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">Hover · ink frame</span>
+          <article class="pcard is-hover">
+            <div class="pcard-well"><img src="../../../public/categories/task.jpg" alt="Category photograph, high-key"></div>
+            <div class="pcard-meta"><span class="t-eyebrow">Ergonomic Seating</span><span class="t-data">Mid</span></div>
+            <h4 class="t-h3 pcard-title">Aria Task</h4>
+            <p class="pcard-tag">A mesh task chair light enough to forget you are sitting in it.</p>
+            <p class="t-data t-steel pcard-size">Seat 480×470mm · Height 430–540mm</p>
+            <div class="pcard-foot"><a class="btn btn--link" href="#">Enquire</a><span class="t-eyebrow">Price on request</span></div>
+          </article>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Well</td><td class="col-value">aspect 4:3 · 1px hair · fog · co-highkey · ClipReveal · hover border ink</td></tr>
+          <tr><td>Body</td><td class="col-value">1px ink rule on top · pt 12 · eyebrow + band · co-h3 · 14px muted tagline · co-data sizes</td></tr>
+          <tr><td>Foot</td><td class="col-value">link "Enquire" + "Price on request" · mt-auto pt 24</td></tr>
+          <tr><td>Radius · shadow</td><td class="col-value">0 · none</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 05 DRAWING SET ═══════════ -->
+  <section id="cat-drawing" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">05 / Drawing set</p>
+      <h2 class="t-h2">Measured</h2>
+      <p>Every product render carries a real dimension read from src/lib/series. Drawing marks are 1px spans, not icons.</p>
+    </header>
+
+    <div id="dimension-line" class="cl-component-group">
+      <h3>Dimension line</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/dimension-line.tsx</p>
+      <p>A 1px rule with end ticks and a mono value knocked out of its centre. The label ground must match the surface behind it.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="cl-variant"><span class="cl-variant-label">axis="x" · surface="canvas" · configLengthLabel(config)</span>
+          <span class="dim"><span class="dim-rule"></span><span class="dim-tick dim-tick--l"></span><span class="dim-tick dim-tick--r"></span><span class="dim-label">1200 <span class="emd"></span> 1600 per seat</span></span>
+        </div>
+        <div class="cl-variant"><span class="cl-variant-label">axis="y" · workingHeightMm</span>
+          <span class="dimy" style="height:140px"><span class="dimy-rule"></span><span class="dimy-tick dimy-tick--t"></span><span class="dimy-tick dimy-tick--b"></span><span class="dimy-label">720 H</span></span>
+        </div>
+      </div>
+      <div class="cl-canvas cl-canvas--fog">
+        <div class="cl-variant cl-variant--grow"><span class="cl-variant-label">surface="fog"</span>
+          <span class="dim dim--fog"><span class="dim-rule"></span><span class="dim-tick dim-tick--l"></span><span class="dim-tick dim-tick--r"></span><span class="dim-label">1600 × 750 × 720 mm</span></span>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Rule · ticks</td><td class="col-value">1px currentColor · 1 × 11px ticks at both ends</td></tr>
+          <tr><td>Label</td><td class="col-value">co-data 10px · px 8 · bg = canvas / fog / ink</td></tr>
+          <tr><td>Draw</td><td class="col-value">co-rule · 400ms linear · ticks and label static</td></tr>
+          <tr><td>Value</td><td class="col-value">derive.ts: rangeLabel (spaced U+2014), configLengthLabel, sizeLabel (×), spanLabel (→)</td></tr>
+          <tr><td>ARIA</td><td class="col-value">aria-hidden · the size is also in spec rows or caption</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="registration" class="cl-component-group">
+      <h3>Registration cross and caption</h3>
+      <p class="t-data t-steel cl-file">registration-cross.tsx · figure-caption.tsx · image-placeholder.tsx</p>
+      <p>A 17px cross pins figure corners the way a drawing set does. Captions number figures down the page.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">17px · two 1px strokes</span><div class="reg-box"><span class="reg reg--corner"></span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">FigureCaption</span><p class="t-data t-steel">Fig. 02 <span class="emd"></span> Cut-out, with dimension</p></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Cross</td><td class="col-value">17 × 17 · strokes cross at 8px · currentColor · absolute</td></tr>
+          <tr><td>Caption</td><td class="col-value">co-data steel · figureNumber(n) "Fig. 01" + spaced U+2014 + text</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="figure" class="cl-component-group">
+      <h3>Grid and cut-out figure</h3>
+      <p class="t-data t-steel cl-file">hairline-grid.tsx · signal-hero.tsx · globals.css co-cutout, co-cutout-plate</p>
+      <p>The homepage hero composition, on paper in both modes (cut-outs never sit on ink). The render multiplies into a feathered canvas plate in an isolated group, so the green grid passes behind it. Claim scaled to fit this sheet; live size clamp(40px, 5.3vw, 76px).</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="hero-mini paper">
+          <div class="hgrid" aria-hidden="true">
+            <span class="hgrid-line" style="left:0"></span><span class="hgrid-line" style="left:8.333%"></span><span class="hgrid-line" style="left:16.667%"></span><span class="hgrid-line" style="left:25%"></span><span class="hgrid-line" style="left:33.333%"></span><span class="hgrid-line" style="left:41.667%"></span><span class="hgrid-line" style="left:50%"></span><span class="hgrid-line" style="left:58.333%"></span><span class="hgrid-line" style="left:66.667%"></span><span class="hgrid-line" style="left:75%"></span><span class="hgrid-line" style="left:83.333%"></span><span class="hgrid-line" style="left:91.667%"></span><span class="hgrid-line" style="left:calc(100% - 1px)"></span>
+          </div>
+          <div class="hero-copy">
+            <p class="t-eyebrow">Office systems <span class="emd"></span> Surat, IN</p>
+            <h4 class="t-display hero-claim">Engineered for two.<br><span class="t-steel">Scaled for the floor.</span></h4>
+            <p class="t-lead hero-lead">Configurable desking, cabins and meeting tables, specified to the millimetre and quoted to your floor plan.</p>
+            <div class="hero-actions"><a class="btn btn--primary" href="#">Configure a desk</a><a class="btn btn--secondary" href="#">Book a showroom visit</a></div>
+          </div>
+          <figure class="fig">
+            <span class="reg reg--tl"></span><span class="reg reg--tr"></span>
+            <div class="fig-art">
+              <div class="iso"><span class="plate"></span><img class="cutout" src="../../../public/pros/single-desk.jpg" alt="STRETCH S single table with modesty panel"></div>
+              <span class="dimy fig-dimy"><span class="dimy-rule"></span><span class="dimy-tick dimy-tick--t"></span><span class="dimy-tick dimy-tick--b"></span><span class="dimy-label">720 H</span></span>
+            </div>
+            <span class="dim fig-dimx"><span class="dim-rule"></span><span class="dim-tick dim-tick--l"></span><span class="dim-tick dim-tick--r"></span><span class="dim-label">1200 <span class="emd"></span> 1600 per seat</span></span>
+            <figcaption class="fig-cap"><span class="t-data t-steel">Fig. 01 <span class="emd"></span> STRETCH S single table · medium beam · 1 seats</span><span class="t-data t-steel">21.1702° N  72.8311° E</span></figcaption>
+          </figure>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">12 columns, 13 × 1px lines inside co-shell · tone="signal" #9DD089 home only · tone="hair" elsewhere · phones every third line</td></tr>
+          <tr><td>Grid draw</td><td class="col-value">co-rule data-axis="y" · 400ms linear · 30ms per line</td></tr>
+          <tr><td>Cut-out</td><td class="col-value">co-cutout: mix-blend-mode multiply + 5% feather mask</td></tr>
+          <tr><td>Over grid lines</td><td class="col-value">isolate group: co-cutout-plate (bg-co-bg, 8% feather) + co-cutout image</td></tr>
+          <tr><td>Never</td><td class="col-value">cut-out inside clip-path / filter / opacity / isolating transform</td></tr>
+          <tr><td>Coordinates</td><td class="col-value">siteConfig.coordinates.label (city centre, pending confirmation)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="signal-dots" class="cl-component-group">
+      <h3>Signal dots</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/signal-dots.tsx</p>
+      <p>The two dots above the M in the wordmark. They mean on. Before adding a pair, check nothing else on the screen is lit.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">sm · 7px · gap 4</span><span class="dots"><span class="dot"></span><span class="dot"></span></span></div>
+        <div class="cl-variant"><span class="cl-variant-label">lg · 22px · gap 12</span><span class="dots dots--lg"><span class="dot"></span><span class="dot"></span></span></div>
+        <div class="cl-variant"><span class="cl-variant-label">With a status line</span><p class="t-data sent-line"><span class="dots"><span class="dot"></span><span class="dot"></span></span>Enquiry received</p></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Fill · radius</td><td class="col-value">bg-co-green #5EB646 · rounded-full</td></tr>
+          <tr><td>Where</td><td class="col-value">header quote button · sent forms · selected finish chip (one dot) · index row hover</td></tr>
+          <tr><td>ARIA</td><td class="col-value">aria-hidden; the state is also in markup (aria-pressed, role="status")</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="progress-rail" class="cl-component-group">
+      <h3>Progress rail</h3>
+      <p class="t-data t-steel cl-file">src/components/ui/progress-rail.tsx</p>
+      <p>The bar from inside the logo's O, under the thing you chose. The step is always written out, so green is never the only carrier.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <div class="cl-variant"><span class="cl-variant-label">Step 2 of 3</span><div class="rail" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2"><span class="rail-fill" style="width:66.667%"></span></div><p class="t-data t-steel">Step 2 of 3</p></div>
+      </div>
+      <div class="cl-canvas ink cl-canvas--col">
+        <div class="cl-variant"><span class="cl-variant-label">tone="dark"</span><div class="rail" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1"><span class="rail-fill" style="width:33.333%"></span></div><p class="t-data t-steel">Step 1 of 3</p></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Track</td><td class="col-value">2px · hair (#3B3637 on ink) · square ends</td></tr>
+          <tr><td>Fill</td><td class="col-value">bg-co-green · width = step / total · 400ms linear</td></tr>
+          <tr><td>Caption</td><td class="col-value">co-data steel · mt 8 · "Step n of m"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 06 NAVIGATION ═══════════ -->
+  <section id="cat-navigation" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">06 / Navigation</p>
+      <h2 class="t-h2">Ink, not green</h2>
+      <p>Active is a 2px ink rule plus aria-current. The header's quote dots are this screen's green; nav never adds more.</p>
+    </header>
+
+    <div id="header" class="cl-component-group">
+      <h3>Header and nav</h3>
+      <p class="t-data t-steel cl-file">src/components/layout/site-header.tsx</p>
+      <p>72px canvas bar on a hairline; transparent over the homepage hero. Never give it backdrop-filter, filter, transform or will-change: the fixed mobile menu collapses into it.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="hdr">
+          <img class="hdr-logo logo-on-light" src="../../../public/brand/logo-primary.svg" alt="Cohuman">
+          <img class="hdr-logo logo-on-dark" src="../../../public/brand/logo-reverse.svg" alt="Cohuman">
+          <nav class="hdr-nav">
+            <a class="nav-link t-data is-active" href="#" aria-current="page">Collections<span class="nav-rule"></span></a>
+            <a class="nav-link t-data is-hover" href="#">Solutions<span class="nav-under"></span></a>
+            <a class="nav-link t-data" href="#">Sectors</a>
+            <a class="nav-link t-data" href="#">Projects</a>
+          </nav>
+          <div class="hdr-actions">
+            <a class="nav-link t-data" href="#">Contact</a>
+            <button class="btn btn--primary btn--sm" type="button">Get a quote <span class="dots"><span class="dot"></span><span class="dot"></span></span></button>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>State</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Bar</td><td class="col-value">72px · bg-co-bg · 1px border-co-border · logo 140 (150 sm)</td></tr>
+          <tr><td>Inactive</td><td class="col-value">co-data · text-co-muted #55514A</td></tr>
+          <tr><td>Hover</td><td class="col-value">ink · 1px ink underline draws scaleX 0 to 1, 400ms linear</td></tr>
+          <tr><td>Active</td><td class="col-value">ink · static 2px ink rule · aria-current="page"</td></tr>
+          <tr><td>Quote</td><td class="col-value">Button size="sm" dots · the only button with dots</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tabs" class="cl-component-group">
+      <h3>Tabs</h3>
+      <p class="t-data t-steel cl-file">src/components/forms/contact-form-tabs.tsx</p>
+      <p>Ink-framed, numbered tabs. The active tab takes fog and the 3px signal bar: that bar is this form's one content green.</p>
+      <div class="cl-canvas">
+        <div class="tabs">
+          <div class="tablist" role="tablist">
+            <button class="tab t-data is-on" type="button" role="tab" aria-selected="true"><span class="tab-num">01</span>Enquiry<span class="tab-bar"></span></button>
+            <button class="tab t-data is-hover" type="button" role="tab" aria-selected="false"><span class="tab-num">02</span>Showroom visit</button>
+          </div>
+          <div class="tab-panel" role="tabpanel"><div class="field"><span class="t-eyebrow">Name</span><input class="input" placeholder="Your full name"></div></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Frame</td><td class="col-value">1px ink around · ink rule under tabs · 1px ink between</td></tr>
+          <tr><td>Tab</td><td class="col-value">co-data · p 16px 24px · left · 01 / 02 prefix steel</td></tr>
+          <tr><td>Active</td><td class="col-value">bg-co-bg-alt · ink · 3px bg-co-green bar at -bottom-px · aria-selected</td></tr>
+          <tr><td>Inactive · hover</td><td class="col-value">steel · ink</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="pager" class="cl-component-group">
+      <h3>Pager</h3>
+      <p class="t-data t-steel cl-file">src/components/series/series-pager.tsx</p>
+      <p>Prev, all, next between ink rules, in the page flow (never fixed). The quote button here is plain ink.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <nav class="pager" aria-label="Configurations">
+          <a class="pager-cell is-hover" href="#"><span class="t-data">← Prev</span><span class="t-name pager-name">Single 800</span></a>
+          <div class="pager-cell pager-mid"><button class="btn btn--primary btn--block" type="button">Get a quote</button><span class="t-data pager-all">All configurations</span></div>
+          <a class="pager-cell" href="#"><span class="t-name pager-name">Return</span><span class="t-data t-steel">Next →</span></a>
+        </nav>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">1fr · minmax(260px, 340px) · 1fr · border-y ink · hair dividers</td></tr>
+          <tr><td>Cell</td><td class="col-value">py 32 (md) · hover fog · label steel to ink</td></tr>
+          <tr><td>Name</td><td class="col-value">display caps clamp(16px, 1.7vw, 24px)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="pagination" class="cl-component-group">
+      <h3>Pagination</h3>
+      <p>The logo's bar as a pager: 3px, signal when active. The hero version sits in a solid ink corner block, so it reads on any film without a scrim.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">Gallery</span><div class="pg"><span class="pg-bar is-on"></span><span class="pg-bar"></span><span class="pg-bar"></span><span class="pg-bar"></span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">Hero corner block</span>
+          <div class="corner ink">
+            <span class="corner-arrow t-data">←</span>
+            <div class="corner-panels">
+              <div class="corner-item"><span class="t-data">01 Index</span><span class="pg-bar is-on"></span></div>
+              <div class="corner-item"><span class="t-data t-steel">02 Floor</span><span class="pg-bar"></span></div>
+            </div>
+            <span class="corner-arrow corner-arrow--r t-data">→</span>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Bar</td><td class="col-value">3px × 20 to 40px · bg-co-green active · hair or #3B3637 otherwise</td></tr>
+          <tr><td>Corner block</td><td class="col-value">bg-co-panel · 48px arrow cells · co-data labels · hover #3B3637</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 07 FEEDBACK ═══════════ -->
+  <section id="cat-feedback" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">07 / Feedback</p>
+      <h2 class="t-h2">Said in words</h2>
+      <p>No toasts, badges, spinners or alarm colours. A form replaces itself in place; an error is ink.</p>
+    </header>
+
+    <div id="form-sent" class="cl-component-group">
+      <h3>Sent</h3>
+      <p class="t-data t-steel cl-file">src/components/forms/form-status.tsx · FormSent</p>
+      <p>Where the two dots mean exactly what the logo says: something switched on. role="status" announces it.</p>
+      <div class="cl-canvas">
+        <div class="sent" role="status">
+          <p class="t-data sent-line"><span class="dots"><span class="dot"></span><span class="dot"></span></span>Enquiry received</p>
+          <h4 class="t-h3 sent-title">Thank you <span class="emd"></span> that is with us.</h4>
+          <p class="sent-body">A specifier will reply within two working days with test-fits and a costed schedule.</p>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Padding</td><td class="col-value">p 24 py 56 (sm p 32 py 80) · compact py 40</td></tr>
+          <tr><td>Line · title · body</td><td class="col-value">co-data + SignalDots gap 12 · co-h3 mt 24 · 15px muted mt 12</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="form-error" class="cl-component-group">
+      <h3>Not sent</h3>
+      <p class="t-data t-steel cl-file">FormError · FormFootnote</p>
+      <p>The palette has no alarm colour. An error is a 2px ink rule and plain words.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <p class="t-data err" role="alert">Not sent <span class="emd"></span> check the phone number and try again.</p>
+        <p class="t-eyebrow foot-note">Visits are by appointment. We reply within two working days.</p>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Error</td><td class="col-value">role="alert" · co-data ink · border-l-2 ink · pl 12 · mt 20</td></tr>
+          <tr><td>Footnote</td><td class="col-value">co-eyebrow normal-case tracking-normal · mt 16</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="empty-state" class="cl-component-group">
+      <h3>Empty state</h3>
+      <p class="t-data t-steel cl-file">src/components/catalog/catalog-browser.tsx</p>
+      <p>Left-aligned between hairlines: a mono count line, one sentence, two actions. No illustration.</p>
+      <div class="cl-canvas">
+        <div class="empty">
+          <p class="t-data">00 results <span class="emd"></span> nothing matches that combination</p>
+          <p class="empty-body">Widen the filters, or tell us what you are after and we will source it.</p>
+          <div class="empty-actions"><button class="btn btn--secondary" type="button">Clear filters</button><button class="btn btn--primary" type="button">Ask us</button></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Frame</td><td class="col-value">border-y hair · py clamp(48px, 7vw, 96px) · body 15px ink soft max 48ch · actions mt 32</td></tr></tbody>
+      </table>
+    </div>
+
+    <div id="placeholder" class="cl-component-group">
+      <h3>Placeholder frame</h3>
+      <p class="t-data t-steel cl-file">src/components/common/image-placeholder.tsx</p>
+      <p>An honest empty slot until real photography arrives: never filler, never a stock face.</p>
+      <div class="cl-canvas">
+        <div class="cl-variant"><span class="cl-variant-label">variant="warm" · interior</span><div class="ph"><span class="reg reg--corner"></span><span class="t-eyebrow ph-note">Placeholder <span class="emd"></span> founder portrait, as supplied</span></div></div>
+        <div class="cl-variant"><span class="cl-variant-label">variant="white" · cut-out slot</span><div class="ph ph--cut"><span class="reg reg--corner"></span><span class="t-eyebrow ph-note">Placeholder <span class="emd"></span> studio render on white</span></div></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Frame</td><td class="col-value">fog (canvas for cut-outs) · 1px hair · RegistrationCross 12px in · co-eyebrow note</td></tr></tbody>
+      </table>
+    </div>
+
+    <div id="absent" class="cl-component-group">
+      <h3>Absent on purpose</h3>
+      <p>hue components Signal deliberately does not have, and what to use instead.</p>
+      <table class="cl-spec-table">
+        <thead><tr><th>Component</th><th>Signal answer</th></tr></thead>
+        <tbody>
+          <tr><td>Badge, tag, pill</td><td class="col-value">co-eyebrow / co-data text, optionally SignalDots</td></tr>
+          <tr><td>Toast</td><td class="col-value">FormSent replaces the form in place</td></tr>
+          <tr><td>Tooltip, popover</td><td class="col-value">print the label beside the thing · the one floating label is the anatomy hotspot tag, shown on selection, not hover</td></tr>
+          <tr><td>Spinner, skeleton</td><td class="col-value">server-rendered finished content · disabled submit at 0.5</td></tr>
+          <tr><td>Slider, switch, radio</td><td class="col-value">SegmentedControl with discrete values from src/lib/series</td></tr>
+          <tr><td>Avatar</td><td class="col-value">photo as supplied, or a labelled placeholder frame</td></tr>
+          <tr><td>Coloured alert</td><td class="col-value">FormError: 2px ink rule, ink words</td></tr>
+          <tr><td>Breadcrumb</td><td class="col-value">PageHero eyebrow states the location</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 08 OVERLAYS ═══════════ -->
+  <section id="cat-overlays" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">08 / Overlays</p>
+      <h2 class="t-h2">Flat veil</h2>
+      <p>An ink edge on a flat 70% ink veil. No blur, no glass, no shadow.</p>
+    </header>
+
+    <div id="dialog" class="cl-component-group">
+      <h3>Quote dialog</h3>
+      <p class="t-data t-steel cl-file">src/components/providers/quote-dialog-provider.tsx · useQuoteDialog().openQuote(subject?)</p>
+      <p>Canvas sheet, 1px ink frame, ink rule under the head. Same in both modes: the dialog is always paper.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="dlg-stage">
+          <div class="dlg-ghost"><p class="t-eyebrow">01 / Systems</p><p class="t-h2">Two chassis. Every table.</p></div>
+          <span class="dlg-veil"></span>
+          <div class="dlg paper" role="dialog" aria-label="Get a quote">
+            <div class="dlg-head">
+              <div><p class="t-eyebrow">Enquiry <span class="emd"></span> get a quote</p><h4 class="t-h3 dlg-title">Enquiring about STRETCH S Single Table · Medium Beam</h4><p class="dlg-desc">A floor plan and a headcount are enough to start.</p></div>
+              <button class="ibtn" type="button" aria-label="Close"><i class="icon-x"></i></button>
+            </div>
+            <div class="dlg-body">
+              <div class="field-grid">
+                <div class="field"><span class="t-eyebrow">Name</span><input class="input" placeholder="Your full name"></div>
+                <div class="field"><span class="t-eyebrow">Phone</span><input class="input" placeholder="+91"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Overlay</td><td class="col-value">fixed inset-0 · bg-co-ink/70 · no blur</td></tr>
+          <tr><td>Sheet</td><td class="col-value">w min(600px, 92vw) · max-h 90vh · 1px border-co-ink · bg-co-bg · radius 0 · no shadow</td></tr>
+          <tr><td>Head</td><td class="col-value">p 24 (sm py 28 px 32) · border-b ink · co-eyebrow · co-h3 max 24ch · 15px muted</td></tr>
+          <tr><td>Close</td><td class="col-value">40px ink-outlined square · lucide X 16px stroke 1.5 · hover ink fill</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="sticky-bar" class="cl-component-group">
+      <h3>Sticky quote bar</h3>
+      <p class="t-data t-steel cl-file">src/components/series/series-sticky-bar.tsx</p>
+      <p>Fog strip on an ink rule, between the spec block and the pager. Plain primary: no dots.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="sticky">
+          <p class="t-data sticky-sum">Single Table · Medium Beam · 1600 × 750 × 720 mm<span class="t-steel"> · Nordic Oak top</span></p>
+          <span class="t-data t-steel">CHSS-ST-SB160</span>
+          <button class="btn btn--primary btn--sm" type="button">Get a quote</button>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Bar</td><td class="col-value">68px (SERIES_BAR_HEIGHT) · bg-co-bg-alt · border-t ink</td></tr>
+          <tr><td>Motion</td><td class="col-value">translateY 100% to 0 · 300ms cubic-bezier(0.65, 0, 0.35, 1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="accordion" class="cl-component-group">
+      <h3>Accordion</h3>
+      <p class="t-data t-steel cl-file">src/components/common/faq-section.tsx</p>
+      <p>Native details and summary, so it works without scripts. Plus and minus are text in a 28px ink square.</p>
+      <div class="cl-canvas cl-canvas--col">
+        <details class="faq" open>
+          <summary class="faq-sum"><span class="t-data faq-n">01</span><span class="faq-q">Do you only sell the two desking systems?</span><span class="faq-toggle t-data"><span class="faq-plus">+</span><span class="faq-minus">−</span></span></summary>
+          <div class="faq-a"><p>Desking is configured from the two series; cabins, meeting tables, seating and storage are quoted to your floor plan.</p></div>
+        </details>
+        <details class="faq">
+          <summary class="faq-sum is-hover"><span class="t-data faq-n">02</span><span class="faq-q">How long does a quote take?</span><span class="faq-toggle t-data"><span class="faq-plus">+</span><span class="faq-minus">−</span></span></summary>
+          <div class="faq-a"><p>A specifier replies within two working days.</p></div>
+        </details>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Row</td><td class="col-value">py 20 · border-b hair · hover fog</td></tr>
+          <tr><td>Number</td><td class="col-value">co-data steel · ink when open</td></tr>
+          <tr><td>Question · answer</td><td class="col-value">16 / 17px 500 ink · 15px / 1.55 ink soft max 65ch</td></tr>
+          <tr><td>Toggle</td><td class="col-value">28px · 1px ink · + / − · open = ink fill</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 09 OPENERS ═══════════ -->
+  <section id="cat-openers" class="cl-category-panel">
+    <header class="cl-panel-head">
+      <p class="t-eyebrow">09 / Openers</p>
+      <h2 class="t-h2">One drawing set</h2>
+      <p>Every route opens with PageHero, every section with SectionHeading, every page ends on CtaBand.</p>
+    </header>
+
+    <div id="section-heading" class="cl-component-group">
+      <h3>Section heading</h3>
+      <p class="t-data t-steel cl-file">src/components/common/section-heading.tsx</p>
+      <p>Mono label, caps title, standfirst on one baseline, closed by an ink rule. Labels read "01 / Systems" (on /about, a section sign and a spaced em dash).</p>
+      <div class="cl-canvas">
+        <div class="sh">
+          <p class="t-eyebrow">01 / Systems</p>
+          <h4 class="t-h2 sh-title">Two chassis. Every table.</h4>
+          <div class="sh-side"><p class="sh-blurb">Both desking systems run at 720mm, so tops sit flush wherever two configurations meet. Pick a system, then a configuration, a length and a depth.</p><a class="btn btn--link" href="#">All collections <span class="arrow">→</span></a></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Grid</td><td class="col-value">lg 200px · minmax(0,1fr) · minmax(0,420px) · items-end · gap-x clamp(20px, 2.5vw, 40px)</td></tr>
+          <tr><td>Rule</td><td class="col-value">border-b ink (panel-fg on dark) · pb clamp(20px, 2vw, 28px) · mb clamp(32px, 3.4vw, 48px)</td></tr>
+          <tr><td>Title · blurb</td><td class="col-value">co-h2 max 18ch · 15px ink soft max 46ch + link arrow</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="page-hero" class="cl-component-group">
+      <h3>Page hero</h3>
+      <p class="t-data t-steel cl-file">src/components/common/page-hero.tsx</p>
+      <p>Canvas, the hair grid, a mono label, the claim in extended caps, a lead, and an optional spec-rows aside on columns 9 to 12. Text only, so the claim is the LCP element.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="phero paper">
+          <div class="hgrid hgrid--hair" aria-hidden="true">
+            <span class="hgrid-line" style="left:0"></span><span class="hgrid-line" style="left:8.333%"></span><span class="hgrid-line" style="left:16.667%"></span><span class="hgrid-line" style="left:25%"></span><span class="hgrid-line" style="left:33.333%"></span><span class="hgrid-line" style="left:41.667%"></span><span class="hgrid-line" style="left:50%"></span><span class="hgrid-line" style="left:58.333%"></span><span class="hgrid-line" style="left:66.667%"></span><span class="hgrid-line" style="left:75%"></span><span class="hgrid-line" style="left:83.333%"></span><span class="hgrid-line" style="left:91.667%"></span><span class="hgrid-line" style="left:calc(100% - 1px)"></span>
+          </div>
+          <div class="phero-copy">
+            <p class="t-eyebrow">Collections <span class="emd"></span> Desking systems</p>
+            <h4 class="t-h1 phero-title">Two desking systems, one working height.</h4>
+            <p class="t-lead phero-lead">Both run at 720mm, so tops sit flush wherever two configurations meet, and both are built from a short element set rather than one-off parts.</p>
+          </div>
+          <div class="phero-aside">
+            <dl class="spec t-data">
+              <div class="spec-row"><dt>Systems</dt><dd>STRETCH S · STRETCH V</dd></div>
+              <div class="spec-row"><dt>Height</dt><dd>720 mm</dd></div>
+              <div class="spec-row"><dt>Span</dt><dd>800 → 4000 mm</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Frame</td><td class="col-value">relative overflow-hidden · border-b ink · HairlineGrid (hair)</td></tr>
+          <tr><td>Copy</td><td class="col-value">co-eyebrow · co-h1 + KineticHeading max 16ch · co-lead max 58ch · gaps clamp(20px, 2.6vw, 36px)</td></tr>
+          <tr><td>Aside</td><td class="col-value">lg:col-span-4 col-start-9 · bg-co-bg plate · usually SpecRows</td></tr>
+          <tr><td>Padding</td><td class="col-value">pt clamp(40px, 5vw, 72px) · pb clamp(48px, 6vw, 96px)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="cta-band" class="cl-component-group">
+      <h3>CTA band</h3>
+      <p class="t-data t-steel cl-file">src/components/common/cta-band.tsx</p>
+      <p>Every page ends on it. tone="dark" is the ink block. The button is the plain primary: the header already carries the dots.</p>
+      <div class="cl-canvas cl-canvas--flush">
+        <div class="cta ink">
+          <div><p class="t-eyebrow">Enquiry</p><h4 class="t-h1 cta-head">Send us your floor plan.</h4><p class="cta-body">Get a costed proposal back <span class="emd"></span> no cart, no checkout, a real specification from a real person, usually inside two working days.</p></div>
+          <div class="cta-actions"><button class="btn btn--primary btn--lg" type="button">Get a quote</button><a class="btn btn--secondary btn--lg" href="#">Book a showroom visit</a></div>
+        </div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Light · dark</td><td class="col-value">bg-co-bg border-t ink · bg-co-panel</td></tr>
+          <tr><td>Grid · padding</td><td class="col-value">1.4fr · 1fr · items-end · py clamp(72px, 9vw, 140px)</td></tr>
+          <tr><td>Type</td><td class="col-value">co-eyebrow · co-h1 max 16ch · clamp(15px, 1.3vw, 18px) ink soft</td></tr>
+          <tr><td>Actions</td><td class="col-value">Button lg primary / onDark (no dots) + optional secondary</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="logo" class="cl-component-group">
+      <h3>Logo</h3>
+      <p class="t-data t-steel cl-file">src/components/common/logo.tsx · public/brand/*.svg</p>
+      <p>The client's vector masters, placed only through Logo. Never retyped, redrawn or recoloured. Minimum 140px wide.</p>
+      <div class="cl-canvas">
+        <div class="logo-tile paper"><img src="../../../public/brand/logo-primary.svg" alt="Cohuman primary logo"><span class="t-eyebrow">tone="dark" · on canvas</span></div>
+        <div class="logo-tile ink"><img src="../../../public/brand/logo-reverse.svg" alt="Cohuman reversed logo"><span class="t-eyebrow">tone="light" · on ink</span></div>
+        <div class="logo-tile paper"><img class="logo-min" src="../../../public/brand/logo-primary.svg" alt="Cohuman logo at minimum size"><span class="t-eyebrow">Minimum 140px · clear space half cap height</span></div>
+      </div>
+      <table class="cl-spec-table">
+        <thead><tr><th>Tone</th><th>File</th><th>Ground</th></tr></thead>
+        <tbody>
+          <tr><td>dark</td><td class="col-value">logo-primary.svg</td><td>Canvas, fog, light film</td></tr>
+          <tr><td>light</td><td class="col-value">logo-reverse.svg</td><td>Ink, dark film, footer</td></tr>
+          <tr><td>mono-dark / mono-light</td><td class="col-value">logo-ink.svg / logo-white.svg</td><td>One-colour contexts only</td></tr>
+          <tr><td>Icons</td><td class="col-value">mark-reverse.svg on ink · src/app/icon.svg</td><td>Favicon, manifest</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  </div>
+  </main>
+</div>
+
+<div class="floating-bar">
+  <button class="mode-btn active" type="button" data-mode="light">Canvas</button>
+  <button class="mode-btn" type="button" data-mode="dark">Ink block</button>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const modeBtns = document.querySelectorAll('.mode-btn');
+  modeBtns.forEach(b => b.addEventListener('click', () => {
+    root.dataset.theme = b.dataset.mode;
+    modeBtns.forEach(x => x.classList.toggle('active', x === b));
+  }));
+
+  function switchCategory(cat) {
+    document.querySelectorAll('.cl-category-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.cl-toc-category').forEach(h => h.classList.remove('active'));
+    const panel = document.getElementById('cat-' + cat);
+    const head = document.querySelector('.cl-toc-category[data-cat="' + cat + '"]');
+    if (panel) panel.classList.add('active');
+    if (head) head.classList.add('active');
+  }
+  const mainEl = document.querySelector('.cl-main');
+  document.querySelectorAll('.cl-toc-category').forEach(h => h.addEventListener('click', () => {
+    switchCategory(h.dataset.cat);
+    mainEl.scrollTop = 0;
+  }));
+  document.querySelectorAll('.cl-toc-sub').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    switchCategory(a.dataset.cat);
+    document.querySelectorAll('.cl-toc-sub').forEach(x => x.classList.toggle('active', x === a));
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth' }));
+  }));
+
+  const groups = document.querySelectorAll('.cl-component-group');
+  const tocSubs = document.querySelectorAll('.cl-toc-sub');
+  mainEl.addEventListener('scroll', () => {
+    let activeId = null;
+    groups.forEach(g => { if (g.offsetParent && g.offsetTop - 80 <= mainEl.scrollTop) activeId = g.id; });
+    if (activeId) tocSubs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + activeId));
+  }, { passive: true });
+
+  document.querySelectorAll('a').forEach(a => {
+    if (a.closest('.cl-toc')) return;
+    a.addEventListener('click', e => e.preventDefault());
+  });
+
+  // Motion replay: rule draw, wipes, word rise, number tick (400ms linear)
+  function tick(el) {
+    const from = +el.dataset.from, to = +el.dataset.tick, t0 = performance.now();
+    const step = now => {
+      const p = Math.min((now - t0) / 400, 1);
+      el.textContent = Math.round(from + (to - from) * p);
+      if (p < 1) requestAnimationFrame(step); else { el.dataset.tick = from; el.dataset.from = to; }
+    };
+    requestAnimationFrame(step);
+  }
+  document.querySelectorAll('.replay').forEach(btn => btn.addEventListener('click', () => {
+    const group = btn.closest('.cl-component-group');
+    group.querySelectorAll('.anim').forEach(el => { el.classList.remove('is-playing'); void el.offsetWidth; el.classList.add('is-playing'); });
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) group.querySelectorAll('[data-tick]').forEach(tick);
+  }));
+</script>
+</body>
+</html>

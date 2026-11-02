@@ -1,13 +1,24 @@
 import type { Dispatch, SetStateAction } from "react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ALL_OPTIONS, type ResolvedSpecification, type Specification } from "@/lib/configurator";
-import { depthFieldLabel, lengthFieldLabel } from "@/lib/series";
-import { EmptyNote, FinishGroup, OptionTiles, SizeField, StepHeading } from "./configurator-controls";
+import {
+  clampIndex,
+  configSizeRange,
+  depthFieldLabel,
+  depthOptions,
+  lengthFieldLabel,
+} from "@/lib/series";
+import { EmptyNote, Field, FinishGroup, OptionTiles, StepHeading } from "./configurator-controls";
+import { seatLabel, sizeHint } from "./labels";
 
 /**
  * The five step bodies. Each reads the one specification and writes it through the
  * configurator's own setter, so the option logic is exactly the configurator's — these
  * only decide how a choice is drawn.
+ *
+ * Every step opens the same way — a question in extended caps and a plain note — even
+ * when the series has nothing to offer in it, so the panel never changes shape between
+ * steps and an empty step reads as an answer rather than a gap.
  */
 
 export type StepKey = "series" | "config" | "top" | "legs" | "extras";
@@ -16,12 +27,6 @@ interface StepProps {
   spec: Specification;
   resolved: ResolvedSpecification;
   setSpec: Dispatch<SetStateAction<Specification>>;
-}
-
-/** "1 seat", "4 seats", and nothing at all where the spec does not state a count. */
-function seatLabel(seats: string): string | null {
-  if (!seats || seats === "—" || seats === "–" || seats === "-") return null;
-  return seats === "1" ? "1 seat" : `${seats} seats`;
 }
 
 function SeriesStep({ spec, onPick }: { spec: Specification; onPick: (slug: string) => void }) {
@@ -44,45 +49,65 @@ function SeriesStep({ spec, onPick }: { spec: Specification; onPick: (slug: stri
 function ConfigurationStep({ spec, resolved, setSpec }: StepProps) {
   const { options, top } = resolved;
   const config = options.series.configs.find((entry) => entry.slug === top.slug);
-  const showDepth = !top.dia && !top.sq && top.deps.length > 0;
+  // The same derivation the spec block uses: round and square tops lock their depth.
+  const depths = config
+    ? depthOptions({ series: options.series, config, lenIndex: spec.lenIndex, depIndex: spec.depIndex })
+    : null;
 
   return (
     <>
       <StepHeading
         heading="Which configuration?"
-        note={`${options.tops.length} configurations in this series.`}
+        note={`${options.tops.length} configurations in this series. Pick one, then its size.`}
       />
       <OptionTiles
         dense
-        items={options.tops.map((entry) => ({
-          id: entry.slug,
-          name: entry.name,
-          meta: seatLabel(entry.seats) ?? entry.shape,
-          on: entry.slug === spec.topSlug,
-          onPick: () => setSpec((s) => ({ ...s, topSlug: entry.slug, lenIndex: 0, depIndex: 0 })),
-        }))}
+        items={options.tops.map((entry) => {
+          const source = options.series.configs.find((c) => c.slug === entry.slug);
+          const range = source ? `${configSizeRange(source)} mm` : null;
+          return {
+            id: entry.slug,
+            name: entry.name,
+            meta: [range, seatLabel(entry.seats)].filter((line): line is string => Boolean(line)),
+            on: entry.slug === spec.topSlug,
+            onPick: () => setSpec((s) => ({ ...s, topSlug: entry.slug, lenIndex: 0, depIndex: 0 })),
+          };
+        })}
       />
 
       {config ? (
-        <div className="mt-10 grid gap-6">
-          <SizeField label={lengthFieldLabel(config)}>
+        <div className="mt-10 grid gap-8">
+          <Field
+            label={lengthFieldLabel(config)}
+            hint={sizeHint({ axis: "length", config, count: top.lens.length })}
+            hintId="cfg-length-hint"
+          >
             <SegmentedControl
               label={lengthFieldLabel(config)}
-              value={spec.lenIndex}
+              describedBy="cfg-length-hint"
+              value={clampIndex(spec.lenIndex, top.lens.length)}
               options={top.lens.map((mm, index) => ({ value: index, label: mm }))}
               onChange={(index) => setSpec((s) => ({ ...s, lenIndex: index }))}
             />
-          </SizeField>
+          </Field>
 
-          {showDepth ? (
-            <SizeField label={depthFieldLabel(config)}>
+          {depths && depths.values.length > 0 ? (
+            <Field
+              label={depthFieldLabel(config)}
+              hint={sizeHint({ axis: "depth", config, count: depths.values.length, locked: depths.locked })}
+              hintId="cfg-depth-hint"
+            >
               <SegmentedControl
                 label={depthFieldLabel(config)}
-                value={spec.depIndex}
-                options={top.deps.map((mm, index) => ({ value: index, label: mm }))}
-                onChange={(index) => setSpec((s) => ({ ...s, depIndex: index }))}
+                describedBy="cfg-depth-hint"
+                locked={depths.locked}
+                value={depths.locked ? 0 : clampIndex(spec.depIndex, depths.values.length)}
+                options={depths.values.map((mm, index) => ({ value: index, label: mm }))}
+                onChange={(index) => {
+                  if (!depths.locked) setSpec((s) => ({ ...s, depIndex: index }));
+                }}
               />
-            </SizeField>
+            </Field>
           ) : null}
         </div>
       ) : null}
@@ -96,31 +121,40 @@ function FinishStep({ spec, resolved, setSpec }: StepProps) {
 
   if (!topFinishes.length && !frameFinishes.length) {
     return (
-      <EmptyNote>
-        This series&apos; specification names materials rather than finish colours, so there
-        is nothing to choose here — we confirm the finish on the quote.
-      </EmptyNote>
+      <>
+        <StepHeading heading="Which finishes?" />
+        <EmptyNote>
+          This series’ specification names materials rather than finish colours, so there
+          is nothing to choose here — we confirm the finish on the quote.
+        </EmptyNote>
+      </>
     );
   }
 
   return (
     <>
-      {topFinishes.length ? (
-        <FinishGroup
-          heading="Top finish"
-          items={topFinishes}
-          activeCode={spec.topFinishCode}
-          onPick={(code) => setSpec((s) => ({ ...s, topFinishCode: code }))}
-        />
-      ) : null}
-      {frameFinishes.length ? (
-        <FinishGroup
-          heading="Frame finish"
-          items={frameFinishes}
-          activeCode={spec.frameFinishCode}
-          onPick={(code) => setSpec((s) => ({ ...s, frameFinishCode: code }))}
-        />
-      ) : null}
+      <StepHeading
+        heading="Which finishes?"
+        note="The top and the frame are specified separately. Both are keyed under the plan."
+      />
+      <div className="grid gap-8">
+        {topFinishes.length ? (
+          <FinishGroup
+            label="Top finish"
+            items={topFinishes}
+            activeCode={spec.topFinishCode}
+            onPick={(code) => setSpec((s) => ({ ...s, topFinishCode: code }))}
+          />
+        ) : null}
+        {frameFinishes.length ? (
+          <FinishGroup
+            label="Frame finish"
+            items={frameFinishes}
+            activeCode={spec.frameFinishCode}
+            onPick={(code) => setSpec((s) => ({ ...s, frameFinishCode: code }))}
+          />
+        ) : null}
+      </div>
     </>
   );
 }
@@ -151,16 +185,19 @@ function ExtrasStep({ spec, resolved, setSpec }: StepProps) {
 
   if (!accessories.length) {
     return (
-      <EmptyNote>
-        This series publishes no accessory schedule — tell us what you need on the enquiry
-        and we will quote it against the run.
-      </EmptyNote>
+      <>
+        <StepHeading heading="Anything to add?" />
+        <EmptyNote>
+          This series publishes no accessory schedule — tell us what you need on the enquiry
+          and we will quote it against the run.
+        </EmptyNote>
+      </>
     );
   }
 
   return (
     <>
-      <StepHeading heading="Anything to add?" note="Select as many as apply." />
+      <StepHeading heading="Anything to add?" note="Optional — select as many as apply, or none." />
       <OptionTiles
         multi
         items={accessories.map((entry) => ({

@@ -18,19 +18,19 @@ import { PageHero } from "@/components/common/page-hero";
 export const metadata: Metadata = {
   title: "Collections",
   description:
-    "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+    "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
   alternates: { canonical: "/collections" },
   openGraph: {
     title: "Collections",
     description:
-      "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+      "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
     url: "/collections",
     images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Collections",
     description:
-      "Two desking systems, specified to the millimetre — STRETCHS on a fixed beam chassis and STRETCH on an adjustable one.",
+      "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
   },
 };
 
@@ -64,7 +64,7 @@ function entryRows({ collection, series }: Entry): SpecRow[] {
     { k: "Type", v: collection.kicker },
     { k: "Configurations", v: pad(series.configs.length) },
     { k: "Span", v: spanLabel(series.configs) },
-    { k: "Working height", v: `${series.workingHeightMm} mm` },
+    { k: "Working height", v: `${series.workingHeightMm}\u00A0mm` },
     { k: "Includes", v: includesLabel(series) },
   ];
 }
@@ -160,7 +160,7 @@ export default async function CollectionsPage() {
     { k: "Systems", v: pad(entries.length) },
     { k: "Configurations", v: pad(allConfigs.length) },
     { k: "Span", v: spanLabel(allConfigs) },
-    { k: "Working height", v: `${workingHeight} mm` },
+    { k: "Working height", v: `${workingHeight}\u00A0mm` },
     { k: "Pricing", v: "Price on request" },
   ];
 

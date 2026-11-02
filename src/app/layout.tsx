@@ -149,7 +149,7 @@ const DRAWER_SERIES: DrawerSeries[] = ALL_SERIES.map((series) => {
     blurb: series.promise,
     image: collectionPhoto[series.slug],
     configs: series.configs.length,
-    span: `${Math.min(...lens)}–${Math.max(...lens)} mm`,
+    span: `${Math.min(...lens)}–${Math.max(...lens)}\u00A0mm`,
   };
 });
 
@@ -257,7 +257,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-IN"
       className={`${archivo.variable} ${martianMono.variable} h-full antialiased`}
       /*
         The head script below adds `co-js` before React hydrates, so the client's class

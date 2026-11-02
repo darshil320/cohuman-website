@@ -70,7 +70,7 @@ export default async function CatalogPage() {
       <CatalogBrowser products={products} categories={categories} />
 
       <CtaBand
-        heading="Can't see it here?"
+        heading="Can’t see it here?"
         body="Tell us the piece, the quantity and the room it is going in. We will source it and price it properly — no cart, no list price."
         secondary={{ label: "Book a showroom visit", href: "/contact" }}
       />

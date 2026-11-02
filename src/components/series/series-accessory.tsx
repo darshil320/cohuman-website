@@ -81,7 +81,7 @@ export function SeriesAccessory() {
               </tbody>
             </table>
             {hasInferred ? (
-              <p className="mt-3 text-[12.5px] leading-[1.55] text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
+              <p className="mt-3 text-[13px] leading-[1.55] text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
             ) : null}
             <p className="mt-5 max-w-[52ch] text-[13px] leading-[1.55] text-co-panel-muted">
               Travel is the span the tray covers, not the length of the top — we size it

@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { Field } from "@/components/configurator/configurator-controls";
+import { seatLabel } from "@/components/configurator/labels";
 import { FinishChip } from "@/components/ui/finish-chip";
 import { configSizeRange, type SeriesConfig } from "@/lib/series";
 import { cn } from "@/lib/utils";
@@ -12,11 +14,41 @@ import { useSeriesConfigurator } from "./series-context";
 const GROW_MS = 450;
 /** How far the strip arrows scroll it. */
 const STRIP_STEP_PX = 480;
+/** Sub-pixel slack when deciding the strip is at either end. */
+const EDGE_SLACK_PX = 1;
 
 const EASE = "ease-[cubic-bezier(0.65,0,0.35,1)]";
 
 /** Two-digit ordinal, so the counter never jumps width as it counts. */
 const pad = (value: number) => String(value).padStart(2, "0");
+
+/** Whether the strip can scroll further left / right — drives the arrows' disabled state. */
+function useStripEdges(stripRef: RefObject<HTMLDivElement | null>) {
+  const [edges, setEdges] = useState({ atStart: true, atEnd: false });
+
+  const measure = useCallback(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const atStart = strip.scrollLeft <= EDGE_SLACK_PX;
+    const atEnd = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - EDGE_SLACK_PX;
+    setEdges((prev) => (prev.atStart === atStart && prev.atEnd === atEnd ? prev : { atStart, atEnd }));
+  }, [stripRef]);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const frame = requestAnimationFrame(measure);
+    strip.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      strip.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [stripRef, measure]);
+
+  return { ...edges, measure };
+}
 
 /**
  * The configuration picker, under the spec block — a filmstrip you can compare across.
@@ -33,6 +65,12 @@ const pad = (value: number) => String(value).padStart(2, "0");
  *   4. the strip re-centres on the chosen card, ready for the next comparison.
  *
  * Reduced motion skips 2–3: the selection applies and the page jumps to the viewer.
+ * Keyboard activation skips 3 and the scroll: the page staying put keeps the focused card
+ * on screen, and the grown card already shows the render, name and size.
+ *
+ * The finish chips here are a filter, not a finish choice, and are labelled so. They
+ * carry no signal dot: the spec block's progress rail is this configurator's one green
+ * thing.
  */
 export function SeriesConfigRail() {
   const { series, config, finish, setFinish, visibleConfigs, pickConfig } = useSeriesConfigurator();
@@ -44,6 +82,7 @@ export function SeriesConfigRail() {
   const flightTimer = useRef<number | null>(null);
   const [flight, setFlight] = useState<Flight | null>(null);
   const endFlight = useCallback(() => setFlight(null), []);
+  const { atStart, atEnd, measure } = useStripEdges(stripRef);
 
   useEffect(
     () => () => {
@@ -57,6 +96,7 @@ export function SeriesConfigRail() {
     const strip = stripRef.current;
     if (!strip) return;
     const timer = window.setTimeout(() => {
+      measure();
       const card = strip.querySelector<HTMLElement>(`[data-slug="${config.slug}"]`);
       if (!card) return;
       strip.scrollTo({
@@ -65,11 +105,13 @@ export function SeriesConfigRail() {
       });
     }, GROW_MS);
     return () => window.clearTimeout(timer);
-  }, [config.slug, visibleConfigs.length]);
+  }, [config.slug, visibleConfigs.length, measure]);
 
-  const choose = (item: SeriesConfig) => {
+  const choose = (item: SeriesConfig, viaKeyboard: boolean) => {
     const alreadyChosen = item.slug === config.slug;
     pickConfig(series.configs.indexOf(item));
+
+    if (viaKeyboard) return;
 
     if (prefersReducedMotion()) {
       scrollToViewer("auto");
@@ -100,25 +142,31 @@ export function SeriesConfigRail() {
     });
   };
 
+  const arrowClass =
+    "relative -ml-px flex h-11 w-11 items-center justify-center border border-co-ink transition-colors first:ml-0 enabled:z-[1] enabled:hover:bg-co-ink enabled:hover:text-co-bg disabled:cursor-default disabled:border-co-border disabled:text-co-muted-2 focus-visible:z-10";
+
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
         <div>
           <p className="co-eyebrow">02 / Configurations — pick one to see it above</p>
           {filters ? (
-            <div role="group" aria-label="Filter by top finish" className="mt-4 flex flex-wrap gap-3.5">
-              {filters.map((filter) => (
-                <FinishChip
-                  key={filter.key}
-                  name={filter.label}
-                  code={codeFor(filter.label) ?? (filter.key === "all" ? "All tops" : undefined)}
-                  fill={filter.swatch}
-                  selected={finish === filter.key}
-                  onSelect={() => setFinish(filter.key)}
-                  className="w-[64px]"
-                />
-              ))}
-            </div>
+            <Field label="Filter by top finish" className="mt-5">
+              <div role="group" aria-label="Filter configurations by top finish" className="flex flex-wrap items-start gap-3.5">
+                {filters.map((filter) => (
+                  <FinishChip
+                    key={filter.key}
+                    name={filter.label}
+                    code={codeFor(filter.label) ?? (filter.key === "all" ? "All tops" : undefined)}
+                    fill={filter.swatch}
+                    selected={finish === filter.key}
+                    onSelect={() => setFinish(filter.key)}
+                    dot={false}
+                    className="w-[96px]"
+                  />
+                ))}
+              </div>
+            </Field>
           ) : null}
         </div>
 
@@ -132,31 +180,44 @@ export function SeriesConfigRail() {
             <button
               type="button"
               aria-label="Scroll configurations left"
+              disabled={atStart}
               onClick={() => nudge(-1)}
-              className="flex h-10 w-10 items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
+              className={arrowClass}
             >
-              ←
+              <span aria-hidden>←</span>
             </button>
             <button
               type="button"
               aria-label="Scroll configurations right"
+              disabled={atEnd}
               onClick={() => nudge(1)}
-              className="-ml-px flex h-10 w-10 items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
+              className={arrowClass}
             >
-              →
+              <span aria-hidden>→</span>
             </button>
           </div>
         </div>
       </div>
 
+      {/*
+        `pt-1` and the 4px inset on wide screens leave room for the 2px focus ring (offset
+        2px): an overflowing strip clips everything outside it, the ring included.
+      */}
       <div
         ref={stripRef}
         role="group"
         aria-label={`${series.wordmark} configurations`}
-        className="relative -mx-[18px] flex snap-x snap-proximity items-start gap-3 overflow-x-auto px-[18px] pb-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+        className="relative -mx-[18px] flex snap-x snap-proximity items-start gap-3 overflow-x-auto px-[18px] pb-4 pt-1 sm:-mx-6 sm:px-6 lg:-mx-1 lg:px-1"
       >
+        {visibleConfigs.length === 0 ? (
+          <p className="co-data py-6 text-co-muted-2">
+            No configuration is photographed in this finish — choose All to see every one.
+          </p>
+        ) : null}
+
         {visibleConfigs.map((item) => {
           const on = item.slug === config.slug;
+          const facts = [`${configSizeRange(item)}\u00A0mm`, seatLabel(item.seats)].filter(Boolean).join(" · ");
           return (
             <button
               key={item.slug}
@@ -165,7 +226,8 @@ export function SeriesConfigRail() {
               title={item.name}
               aria-pressed={on}
               aria-label={`${item.n} — ${item.name}${on ? ", shown above" : ""}`}
-              onClick={() => choose(item)}
+              // `detail` is 0 for a click synthesised from Enter or Space.
+              onClick={(event) => choose(item, event.detail === 0)}
               className={cn(
                 "group relative flex shrink-0 snap-center flex-col overflow-hidden border bg-co-bg p-3 text-left transition-[width,border-color,background-color] duration-[450ms] motion-reduce:transition-none",
                 EASE,
@@ -190,7 +252,7 @@ export function SeriesConfigRail() {
                 />
               </span>
 
-              <span className={cn("co-data mt-2.5 block whitespace-nowrap", on ? "text-co-ink" : "text-co-muted-2")}>
+              <span className={cn("co-data mt-2.5 block max-w-full truncate", on ? "text-co-ink" : "text-co-muted-2")}>
                 {item.n} · {item.short}
               </span>
 
@@ -199,11 +261,11 @@ export function SeriesConfigRail() {
                   <span className="block font-display text-[clamp(16px,1.5vw,20px)] font-semibold leading-[0.95] tracking-[-0.02em]">
                     {item.name}
                   </span>
-                  <span className="co-data mt-2 block text-co-muted-2">
-                    {configSizeRange(item)} mm · {item.seats} {item.seats === "1" ? "seat" : "seats"}
-                  </span>
+                  <span className="co-data mt-2 block text-co-muted-2">{facts}</span>
                   <span className="co-data block text-co-muted-2">{item.code}</span>
-                  <span className="co-data mt-2 block text-co-ink">Shown above ↑</span>
+                  <span className="co-data mt-2 block text-co-ink">
+                    Shown above <span aria-hidden>↑</span>
+                  </span>
                 </span>
               ) : null}
             </button>

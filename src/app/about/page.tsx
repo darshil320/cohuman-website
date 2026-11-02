@@ -9,7 +9,6 @@ import { ClipReveal } from "@/components/ui/clip-reveal";
 import { FigureCaption } from "@/components/ui/figure-caption";
 import { HairlineGrid } from "@/components/ui/hairline-grid";
 import { KineticHeading } from "@/components/ui/kinetic-heading";
-import { MeasureRule } from "@/components/ui/measure-rule";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { SpecRows } from "@/components/ui/spec-rows";
@@ -225,7 +224,6 @@ export default async function AboutPage() {
                 <h3 className="co-h3">{c.name}</h3>
                 <div>
                   <p className="max-w-[48ch] text-[15px] leading-[1.55] text-co-ink-soft">{c.blurb}</p>
-                  <MeasureRule className="mt-5 max-w-[220px]" />
                 </div>
               </StaggerItem>
             ))}
@@ -305,7 +303,10 @@ export default async function AboutPage() {
             ))}
           </StaggerContainer>
           <Reveal className="mt-[clamp(48px,6vw,88px)] border-t border-co-ink pt-[clamp(24px,3vw,40px)]">
-            <p className="co-h2 max-w-[24ch]">{FOUNDERS_CLOSE}</p>
+            {/* Eighteen words: set to be read, in Archivo, not as a wall of capitals. */}
+            <p className="max-w-[40ch] text-[clamp(22px,2.2vw,30px)] leading-[1.3] text-co-ink">
+              {FOUNDERS_CLOSE}
+            </p>
           </Reveal>
         </section>
       ) : null}

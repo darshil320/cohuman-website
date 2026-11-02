@@ -76,7 +76,7 @@ export function SeriesConfigGallery() {
                 className={cn("co-cutout object-contain", moved && "co-wipe-in")}
               />
             </div>
-            <DimensionLine label={`${configLengthLabel(item)} mm`} className="mx-auto mt-2 w-[78%]" />
+            <DimensionLine label={`${configLengthLabel(item)}\u00A0mm`} className="mx-auto mt-2 w-[78%]" />
             <figcaption className="co-data mt-4">
               {finishCaption(series, item) ? (
                 <>

@@ -8,7 +8,6 @@ import { SectionHeading } from "@/components/common/section-heading";
 import { ClipReveal } from "@/components/ui/clip-reveal";
 import { FigureCaption } from "@/components/ui/figure-caption";
 import { IndexHeader, IndexRow } from "@/components/ui/index-row";
-import { MeasureRule } from "@/components/ui/measure-rule";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal } from "@/components/ui/scroll-reveal";
 import { SpecRows, type SpecRow } from "@/components/ui/spec-rows";
@@ -157,11 +156,11 @@ export default async function ProductPage({ params }: PageProps) {
             {/*
               Plain, not kinetic: a hyphenated name ("Height-Adjustable") must be free to
               break at the hyphen on a phone, and the per-word masks would clip it instead.
+              The floor yields to 9.8vw under ~350px so "CONFERENCE" fits a 320px phone.
             */}
-            <h1 className="co-display mt-4 max-w-[18ch] text-[clamp(34px,5.6vw,88px)]">
+            <h1 className="co-display mt-4 max-w-[18ch] text-[clamp(min(34px,9.8vw),5.6vw,88px)]">
               {product.name}
             </h1>
-            <MeasureRule className="mt-[clamp(20px,2.4vw,32px)] max-w-[820px]" />
             <p className="co-lead mt-6 max-w-[46ch]">{product.tagline}</p>
           </div>
 
@@ -250,7 +249,7 @@ export default async function ProductPage({ params }: PageProps) {
             </ul>
 
             <ProductQuoteActions productName={product.name} tone="dark" className="mt-9" />
-            <p className="mt-5 max-w-[40ch] text-[12.5px] leading-relaxed text-co-panel-faint">
+            <p className="mt-5 max-w-[40ch] text-[13px] leading-relaxed text-co-panel-faint">
               Price on request — {bandLabel} band. Quantity, finish and installation change
               the number, so we quote rather than list.
             </p>
