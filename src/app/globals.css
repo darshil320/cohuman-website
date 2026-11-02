@@ -114,7 +114,9 @@
   --text-co-eyebrow: 0.6875rem; /* 11 */
 
   /* Section rhythm — the white space is the material, so it is a token, not a guess. */
-  --space-co-section: clamp(64px, 8vw, 120px);
+  /* 48px floor on phones: two section paddings meet between sections, and 2 × 64 left a
+     dead band a third of a phone screen tall. Unchanged from ~800px up. */
+  --space-co-section: clamp(48px, 8vw, 120px);
   --space-co-section-lg: clamp(80px, 10vw, 160px);
 
   /*
@@ -576,6 +578,124 @@ a:focus-visible,
 .co-clip[data-shown],
 .co-clip[data-shown]::after {
   animation-play-state: running;
+}
+
+/*
+  Phones: the plotter draws down the page.
+
+  A phone scrolls one full-width column top to bottom, and a left-to-right wipe across
+  that column shows half-words and thin image slivers mid-scroll. Under 768px the same
+  wipes run in the direction of travel instead: blocks open top to bottom while lifting
+  16px into place, images open top to bottom behind a horizontal ink hairline. They are
+  shorter and eased out (`--ease-co`), so each lands before the next flick of the thumb,
+  and they fire as they arrive rather than on a stagger — in one column the stagger only
+  made lower items wait. Still no fades: clip and transform only.
+*/
+@keyframes co-wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(16px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes co-open-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes co-wipe-edge-down {
+  from {
+    transform: translateY(-1px);
+    visibility: visible;
+  }
+  to {
+    transform: translateY(calc(100% - 1px));
+    visibility: visible;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .co-reveal {
+    animation-name: co-wipe-down;
+    animation-duration: 0.5s;
+    animation-timing-function: var(--ease-co);
+  }
+
+  .co-js .co-reveal:not([data-shown]) {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(16px);
+  }
+
+  .co-stagger-item {
+    animation-delay: 0s;
+  }
+
+  .co-clip,
+  .co-clip::after {
+    animation-duration: 0.65s;
+    animation-timing-function: var(--ease-co);
+  }
+
+  .co-clip {
+    animation-name: co-open-down;
+  }
+
+  .co-clip::after {
+    border-left: 0;
+    border-top: 1px solid var(--color-co-ink);
+    animation-name: co-wipe-edge-down;
+  }
+
+  .co-js .co-clip:not([data-shown]) {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/*
+  Swipe rail (`co-rail`): under 768px a row of figures scrolls sideways, one figure and
+  the edge of the next in view, snapping to each. It bleeds through the shell's gutter to
+  the screen edge so the next figure reads as "more this way". From 768px up the class
+  does nothing, and the same children sit in the grid the element declares with `md:`
+  classes. Offscreen figures are not yet intersecting, so each wipes open as it is swiped
+  into view.
+*/
+@media (max-width: 767.98px) {
+  .co-rail {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--co-gutter);
+    margin-inline: calc(var(--co-gutter) * -1);
+    padding-inline: var(--co-gutter);
+    scrollbar-width: none;
+    --co-gutter: 18px;
+  }
+
+  .co-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .co-rail > * {
+    flex: 0 0 min(80%, 340px);
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 767.98px) {
+  .co-rail {
+    --co-gutter: 24px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

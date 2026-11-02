@@ -269,6 +269,7 @@ Elevation strategy is **flat**. Depth is a rule or a surface change. A layer tha
 | **Micro** | 150ms | `cubic-bezier(0.4, 0, 0.2, 1)` (Tailwind default) | Colour changes on hover, arrow nudge (4px) |
 | **Standard** | 400ms | `linear` (`--duration-plot`, `--ease-plot`) | `co-rule` line draws, nav underline draw, progress fill, number tick |
 | **Emphasis** | 600ms | `cubic-bezier(0.65, 0, 0.35, 1)` | `co-reveal` block wipe (800ms for `co-clip` image wipe, 500ms for `co-wipe-in`) |
+| **Phone reveal** | 500ms / 650ms | `--ease-co` | Under 768px: `co-reveal` opens top to bottom while lifting 16px, `co-clip` opens top to bottom behind a horizontal hairline; no stagger |
 
 | Motion | Spec |
 |---|---|

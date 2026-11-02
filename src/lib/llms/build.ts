@@ -1,5 +1,5 @@
 import { catalog } from "@/lib/catalog";
-import { PRICE_BAND_LABEL } from "@/lib/catalog/types";
+import { PRICE_BAND_LABEL, type Collection } from "@/lib/catalog/types";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { ALL_SERIES } from "@/lib/series";
 import { chartDepths, chartLengths } from "@/lib/series/derive";
@@ -94,13 +94,15 @@ export async function buildLlmsTxt(): Promise<string> {
 
     "## Desking series",
     "",
-    "Each series is a configurable system with its own sizes and component schedule.",
+    "A series is either configurable (its own sizes and component schedule) or a photographed range (pieces shown, sizes quoted to the customer's plan).",
     "",
     ...collections.map((collection) => {
       const series = ALL_SERIES.find((s) => s.slug === collection.slug);
       const detail = series
         ? ` ${series.configs.length} configurations, ${series.workingHeightMm} mm working height.`
-        : "";
+        : collection.pieces
+          ? ` Photographed range: ${collection.pieces.join(", ")}. Sizes quoted to plan.`
+          : "";
       return `- [${collection.name}](${url(`/collections/${collection.slug}`)}): ${collection.blurb}${detail}`;
     }),
     "",
@@ -162,7 +164,7 @@ export async function buildLlmsTxt(): Promise<string> {
     `- [Home](${url("/")}): what Cohuman makes and who it makes it for.`,
     `- [Catalog](${url("/catalog")}): every product, filterable by category and price band.`,
     `- [Collections](${url("/collections")}): the desking series and their configurators.`,
-    `- [Sectors](${url("/sectors")}): executive, healthcare and residential work.`,
+    `- [Sectors](${url("/sectors")}): executive, healthcare and hospitality work.`,
     `- [Solutions by space](${url("/solutions")}): furniture schedules by room type.`,
     `- [Services](${url("/services")}): space planning, fit-out, installation, aftercare.`,
     `- [Projects](${url("/projects")}): photographed installs.`,
@@ -195,6 +197,24 @@ function productSection(
     ...(product.features.length
       ? ["- Features:", ...product.features.map((feature) => `  - ${feature}`)]
       : []),
+    "",
+  ];
+}
+
+/**
+ * A photographed range: what it includes and what the photographs show. No sizes — the
+ * manufacturer has not specified it yet, so none are published.
+ */
+function rangeSection(collection: Collection): string[] {
+  return [
+    `### ${collection.name} (wordmark: ${collection.wordmark ?? collection.name})`,
+    "",
+    `- URL: ${url(`/collections/${collection.slug}`)}`,
+    `- Type: ${collection.kicker}`,
+    `- Overview: ${collection.lead ?? collection.blurb}`,
+    `- Includes: ${(collection.pieces ?? []).join(", ")}`,
+    "- Sizes: not published; quoted to the customer's floor plan.",
+    ...(collection.photos ?? []).map((photo) => `- Photograph: ${photo.alt}`),
     "",
   ];
 }
@@ -322,7 +342,8 @@ export async function buildLlmsFullTxt(): Promise<string> {
     "",
     ...collections.flatMap((collection) => {
       const series = ALL_SERIES.find((s) => s.slug === collection.slug);
-      return series ? seriesSection(series) : [];
+      if (series) return seriesSection(series);
+      return collection.pieces ? rangeSection(collection) : [];
     }),
 
     "## Product catalog in full",

@@ -6,6 +6,7 @@ import projectsData from "@/data/projects.json";
 import sectorsData from "@/data/sectors.json";
 import servicesData from "@/data/services.json";
 import spacesData from "@/data/spaces.json";
+import { collectionsSchema } from "./collection-schema";
 import { foundersSchema } from "./founder-schema";
 import type { CatalogRepository } from "./repository";
 import type {
@@ -22,7 +23,9 @@ import type {
 } from "./types";
 
 const categories = categoriesData as Category[];
-const collections = collectionsData as Collection[];
+// Parsed, not cast, for the same reason as founders: a photographed collection names
+// files and must not ship a missing caption or a hero that is not a scene.
+const collections: Collection[] = collectionsSchema.parse(collectionsData);
 const products = productsData as Product[];
 const projects = projectsData as Project[];
 const sectors = sectorsData as Sector[];

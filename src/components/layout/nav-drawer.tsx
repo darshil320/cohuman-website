@@ -17,6 +17,13 @@ export interface DrawerSeries {
   span: string;
 }
 
+/** A photographed range: no specification, so a name and a type, not a measured plate. */
+export interface DrawerRange {
+  slug: string;
+  wordmark: string;
+  kicker: string;
+}
+
 export interface DrawerLink {
   label: string;
   href: string;
@@ -26,9 +33,10 @@ export interface DrawerLink {
 /**
  * The Collections drawer.
  *
- * Hovering "Collections" in the header drops a full-width panel carrying both desking
- * series as measured figures — the cut-out, its real configuration count and millimetre
- * span — plus the routes that sit under them. It wipes down from the bar; nothing fades.
+ * Hovering "Collections" in the header drops a full-width panel carrying the specified
+ * desking series as measured figures — the cut-out, its real configuration count and
+ * millimetre span — with the photographed ranges listed by name beneath them (they have
+ * no specification to draw), plus the routes that sit under them. It wipes down from the bar; nothing fades.
  *
  * Presentation only — every link in here also exists in the normal nav and on
  * /collections, so nothing is reachable exclusively by hover.
@@ -36,11 +44,13 @@ export interface DrawerLink {
 export function NavDrawer({
   open,
   series,
+  ranges,
   links,
   onClose,
 }: {
   open: boolean;
   series: DrawerSeries[];
+  ranges: DrawerRange[];
   links: DrawerLink[];
   onClose: () => void;
 }) {
@@ -56,6 +66,7 @@ export function NavDrawer({
           className="absolute inset-x-0 hidden border-b border-co-ink bg-co-bg xl:block"
         >
           <div className="co-shell grid grid-cols-[1.55fr_0.9fr] gap-x-[clamp(32px,4vw,72px)] py-[clamp(28px,3vw,44px)]">
+            <div>
             <div className="grid grid-cols-2 gap-x-[clamp(20px,2.4vw,40px)]">
               {series.map((s, i) => (
                 <Link key={s.slug} href={`/collections/${s.slug}`} onClick={onClose} className="group block">
@@ -77,6 +88,29 @@ export function NavDrawer({
                   </span>
                 </Link>
               ))}
+            </div>
+
+            {ranges.length ? (
+              <div className="mt-6 border-t border-co-ink pt-4">
+                <p className="co-eyebrow">Photographed ranges / sized to plan</p>
+                <ul className="mt-3 grid grid-cols-3 gap-x-[clamp(20px,2.4vw,40px)]">
+                  {ranges.map((r) => (
+                    <li key={r.slug}>
+                      <Link
+                        href={`/collections/${r.slug}`}
+                        onClick={onClose}
+                        className="group block border-b border-co-border py-2 transition-colors duration-150 hover:bg-co-bg-alt"
+                      >
+                        <span className="block font-display text-[18px] font-semibold uppercase leading-[0.9] tracking-[-0.02em] text-co-ink">
+                          {r.wordmark}
+                        </span>
+                        <span className="mt-1.5 block text-[13px] leading-snug text-co-muted">{r.kicker}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
             </div>
 
             <div className="border-l border-co-border pl-[clamp(20px,2.4vw,40px)]">

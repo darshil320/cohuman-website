@@ -1,5 +1,8 @@
 import type { z } from "zod";
+import type { collectionSchema } from "./collection-schema";
 import type { founderSchema } from "./founder-schema";
+
+export type { CollectionPhoto } from "./collection-schema";
 
 export type PriceBand = "budget" | "value" | "premium";
 
@@ -15,12 +18,21 @@ export interface Category {
   shortLabel: string;
 }
 
-export interface Collection {
-  slug: string;
-  name: string;
-  kicker: string;
-  blurb: string;
-  slotHint: string;
+/** A configurator series or a photographed range — see `collection-schema.ts`. */
+export type Collection = z.infer<typeof collectionSchema>;
+
+/** A collection with photographs and no specification: a gallery page, not a configurator. */
+export type PhotographedCollection = Collection & {
+  wordmark: string;
+  lead: string;
+  pieces: string[];
+  photos: NonNullable<Collection["photos"]>;
+};
+
+export function isPhotographed(collection: Collection): collection is PhotographedCollection {
+  return Boolean(
+    collection.photos?.length && collection.wordmark && collection.lead && collection.pieces?.length,
+  );
 }
 
 export interface Product {
@@ -68,7 +80,7 @@ export interface Project {
 }
 
 /**
- * A market Cohuman sells into — healthcare, private residence, executive.
+ * A market Cohuman sells into — healthcare, hospitality, executive.
  *
  * Everything the client has not supplied yet is an empty array rather than invented
  * content: `ranges` waits on real product names and specs, `photos` on real photography,

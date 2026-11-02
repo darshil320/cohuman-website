@@ -16,10 +16,13 @@ import { cn } from "@/lib/utils";
 export function CollectionActions({
   name,
   href,
+  label = "Configure",
   className,
 }: {
   name: string;
   href: string;
+  /** "Configure" for a series page; a photographed range has nothing to configure. */
+  label?: string;
   className?: string;
 }) {
   const { openQuote } = useQuoteDialog();
@@ -28,7 +31,8 @@ export function CollectionActions({
     <div className={cn("flex flex-wrap items-center gap-x-7 gap-y-4", className)}>
       <Button asChild>
         <Link href={href}>
-          Configure<span className="sr-only"> {name}</span>
+          {label}
+          <span className="sr-only"> {name}</span>
         </Link>
       </Button>
 

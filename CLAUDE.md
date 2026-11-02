@@ -145,11 +145,27 @@ counted track records and photo paths that don't exist — run `npm test` after 
 
 ## Collections are desking series, not SKU lists
 
-Every collection is a configurable desking system, so `/collections/[slug]` renders a
-configurator rather than a product grid: the customer picks a configuration plus a
-length and depth before enquiring, and the quote depends on all three. Two series ship
-today, both ported from the manufacturer's own specification PDFs (`PROS.pdf` via the
-Claude Design source `PROS Series PDP.dc.html`, and `VARIDEX.pdf`).
+A collection is one of two kinds, and `/collections/[slug]` renders whichever it is:
+
+1. **A specified series** — a configurator rather than a product grid: the customer picks
+   a configuration plus a length and depth before enquiring, and the quote depends on all
+   three. Two ship today, both ported from the manufacturer's own specification PDFs
+   (`PROS.pdf` via the Claude Design source `PROS Series PDP.dc.html`, and `VARIDEX.pdf`).
+2. **A photographed range** — STRETCH F (slug `fulcrum`), APEX (`apex`), ELEMENT
+   (`element`). The client supplied photographs only (`~/Downloads/Workstation/`), no
+   specification, so these quote **no sizes, no part codes and no dimension lines**: the
+   page (`src/components/collections/collection-gallery.tsx`) shows the range in situ, the
+   pieces on white, the leg finishes as photographed, and ends on the enquiry ("sized to
+   plan"). Everything lives in the `src/data/collections.json` entry (`wordmark`, `lead`,
+   `pieces`, `photos`, `legFinishes`), validated by `collection-schema.ts`;
+   `collections.test.ts` checks every photo file exists and that no millimetre size or
+   seat count creeps into the copy. Photos are in `public/fulcrum|apex|element/`, converted
+   to sRGB (the STRETCH F originals are CMYK) and cut-outs cropped to content. Captions and
+   alt text describe only what is visible. **Open item:** when the manufacturer's spec
+   sheets arrive, write a `SeriesDefinition` for each and the configurator takes over
+   (`findSeries` wins over the gallery). The `Stech V` / `Strech S` folders next to them
+   also hold newer catalogues and renders for the two specified series — not yet compared
+   with `src/lib/series`.
 
 The four demo collections (Meridian, Origin, Loom, Parlour) were invented for the
 original e-commerce demo and are **gone**, along with the `col` field that pointed at
@@ -163,7 +179,10 @@ collection is a desking series with a configurator, not a bucket for SKUs.
   not copy tweaks.
 - **Adding a series** — write a `SeriesDefinition`, add it to `ALL_SERIES`, and add a
   matching entry to `src/data/collections.json` (which drives /collections, the
-  sitemap and llms.txt). No component changes.
+  sitemap and llms.txt). No component changes. **Adding a photographed range** — the
+  collections.json entry alone, with its photos; it appears on /collections, the homepage
+  systems index, the Collections drawer (listed under the measured plates), the sitemap
+  and llms.txt.
 - **Optional sections** — a definition can omit `swatches` (finish board), `accessory`
   (VARIDEX's wire-channel SKU table) or `gallery` (photographed-but-unquoted
   products); those components return `null`. VARIDEX has no finish filter because its
@@ -391,7 +410,10 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   400ms linear (`co-rule`), headline words lift (`co-word-rise`); sizes **tick** on change
   (`useTick`/`TickNumber`). All gated on `html.co-js` — a class set by a blocking inline
   script in `layout.tsx` — so no script means nothing is ever hidden, and all disabled
-  under `prefers-reduced-motion`. Do not reintroduce framer `initial={{ opacity: 0 }}`
+  under `prefers-reduced-motion`. **Under 768px the wipes run top → bottom** (blocks lift
+  16px as they open) and fire without a stagger — a left-to-right wipe across a phone's
+  full-width column showed half-words mid-scroll. Figure sets (Spaces, Projects) are
+  swipe rails on phones (`co-rail`). Do not reintroduce framer `initial={{ opacity: 0 }}`
   on static content: it serializes as an inline `opacity:0`, so the page is blank when
   JS fails.
 - **Share images.** `src/app/opengraph-image.tsx` is the site-wide card. A page that sets

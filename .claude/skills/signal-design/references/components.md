@@ -473,6 +473,15 @@ Every product render carries at least one. Interiors carry a caption but no dime
 
 ---
 
+### Swipe rail: `co-rail` (CSS utility in `globals.css`)
+- Under 768px only: a flex row that scrolls sideways, `scroll-snap-type: x mandatory`, each child `min(80%, 340px)` wide so the next one shows at the edge, bleeding through the shell gutter (18px / 24px); scrollbar hidden
+- From 768px it does nothing: the element declares its real grid with `md:` classes (`co-rail md:grid md:grid-cols-2 …`)
+- Used for figure sets on the homepage (Spaces, Projects); offscreen figures wipe open as they are swiped in
+
+### Photographed range: `CollectionGallery` (`src/components/collections/collection-gallery.tsx`)
+- For a collection with photographs and no specification: `PageHero` (wordmark, lead, `SpecRows`: Type, Range, Sizes "Quoted to your plan", Pricing), the lead interior as Fig. 01, `01 / Range` (scenes two-up, an odd last one full width; cut-outs four-up on a top ink rule), `02 / Finishes` on fog when a leg-finish shot exists, `CtaBand`
+- No `DimensionLine`: there is no size to read. Interiors `co-highkey`; cut-outs `co-cutout` with `co-reveal` on the image; the finish shot is not desaturated
+
 ## 22. LOGO: `Logo` (`src/components/common/logo.tsx`)
 
 | Tone | File | Ground |

@@ -21,8 +21,9 @@ export function SiteFooter() {
   return (
     <footer className="bg-co-panel text-co-panel-muted">
       <div className="co-shell">
-        <div className="grid grid-cols-1 gap-y-12 border-b border-co-panel-border py-[clamp(56px,7vw,104px)] sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)] lg:gap-x-[clamp(32px,4vw,72px)]">
-          <div className="sm:col-span-2 lg:col-span-1">
+        {/* Phones: the two link lists sit side by side, so the footer is one screen, not two. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 border-b border-co-panel-border py-[clamp(56px,7vw,104px)] lg:grid-cols-[1.6fr_repeat(3,1fr)] lg:gap-x-[clamp(32px,4vw,72px)]">
+          <div className="col-span-2 lg:col-span-1">
             <Logo tone="light" className="mb-9 w-[168px]" sizes="168px" />
             <p className="co-h3 mb-9 max-w-[18ch] text-co-panel-fg">
               Precision-made modular office furniture, built in Surat.
@@ -50,7 +51,7 @@ export function SiteFooter() {
             </div>
           ))}
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <p className="co-eyebrow mb-5 text-co-panel-faint">Get in touch</p>
             <address className="grid gap-3 border-t border-co-panel-border pt-3.5 text-[14px] not-italic leading-relaxed">
               <span className="text-co-panel-fg">{siteConfig.address.line2}</span>

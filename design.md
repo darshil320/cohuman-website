@@ -196,8 +196,8 @@ repeats the hero above it. Every page ends on `CtaBand` (or, on /contact and /b2
 |---|---|---|
 | Lines draw in | 400ms **linear** (`--duration-plot`, `--ease-plot`) | `co-rule`: dimension lines, the hero grid, measure rules |
 | Numbers tick | 400ms linear, only on change; first render is the real value | `useTick` / `TickNumber` (sizes in the spec block and viewer) |
-| Images wipe | left → right behind a moving ink hairline | `co-clip` / `ClipReveal`; `co-wipe-in` for click-swapped frames |
-| Blocks reveal | left → right wipe | `co-reveal` / `Reveal` / `StaggerItem` |
+| Images wipe | left → right behind a moving ink hairline; **phones (<768px): top → bottom** behind a horizontal hairline, 650ms `--ease-co` | `co-clip` / `ClipReveal`; `co-wipe-in` for click-swapped frames |
+| Blocks reveal | left → right wipe; **phones: top → bottom while lifting 16px**, 500ms `--ease-co`, no stagger | `co-reveal` / `Reveal` / `StaggerItem` |
 | Headlines | words lift from a mask, transform only | `KineticHeading` |
 | Choosing a configuration | the card grows, its neighbours shrink (450ms), then its render flies into the viewer while the page scrolls up (750ms) | `series-config-rail.tsx`, `series-config-flight.tsx` |
 
@@ -207,6 +207,15 @@ is present (set by a blocking script in `layout.tsx`) and the element is not yet
 static content. `prefers-reduced-motion` turns every one of these off in CSS; framer runs
 under `MotionConfig reducedMotion="user"`. Counters (`useCountUp`) start at their final
 value.
+
+**Why phones wipe downward.** A phone scrolls one full-width column, and a left-to-right
+wipe across it showed half-words and image slivers mid-scroll. Under 768px the plotter
+draws in the direction of travel, shorter and eased out, so each reveal lands before the
+next flick. Same rule: clip and transform only, never opacity.
+
+**Swipe rails on phones.** Sections that are a set of figures (Spaces, Projects) scroll
+sideways under 768px (`co-rail`): one figure and the edge of the next in view, snapping,
+bleeding through the gutter. From 768px the same children sit in the section's grid.
 
 ## Rules
 

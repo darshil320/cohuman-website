@@ -17,19 +17,19 @@ import { PageHero } from "@/components/common/page-hero";
 export const metadata: Metadata = {
   title: "Sectors",
   description:
-    "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+    "Beyond the office floor — executive cabins, hospital and clinic furniture, and hotel and hospitality interiors, made in the same Surat workshop.",
   alternates: { canonical: "/sectors" },
   openGraph: {
     title: "Sectors",
     description:
-      "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+      "Beyond the office floor — executive cabins, hospital and clinic furniture, and hotel and hospitality interiors, made in the same Surat workshop.",
     url: "/sectors",
     images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Sectors",
     description:
-      "Beyond the office floor — executive cabins, hospital and clinic furniture, and premium residential interiors, made in the same Surat workshop.",
+      "Beyond the office floor — executive cabins, hospital and clinic furniture, and hotel and hospitality interiors, made in the same Surat workshop.",
   },
 };
 

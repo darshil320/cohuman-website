@@ -8,29 +8,31 @@ import { FigureCaption } from "@/components/ui/figure-caption";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal } from "@/components/ui/scroll-reveal";
 import { SpecRows, type SpecRow } from "@/components/ui/spec-rows";
-import { catalog, type Collection } from "@/lib/catalog";
+import { ClipReveal } from "@/components/ui/clip-reveal";
+import { catalog, isPhotographed, type Collection, type PhotographedCollection } from "@/lib/catalog";
 import { collectionPhoto } from "@/lib/photos";
 import { findSeries, rangeLabel, spanLabel, type SeriesDefinition } from "@/lib/series";
 import { itemListJsonLd } from "@/lib/seo/structured-data";
 import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { PageHero } from "@/components/common/page-hero";
+import { listLabel } from "@/lib/utils";
+
+const COLLECTIONS_DESCRIPTION =
+  "Five office desking systems: STRETCH S and STRETCH V, configured to the millimetre, and the STRETCH F, APEX and ELEMENT ranges, quoted to your plan.";
 
 export const metadata: Metadata = {
   title: "Collections",
-  description:
-    "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
+  description: COLLECTIONS_DESCRIPTION,
   alternates: { canonical: "/collections" },
   openGraph: {
     title: "Collections",
-    description:
-      "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
+    description: COLLECTIONS_DESCRIPTION,
     url: "/collections",
     images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Collections",
-    description:
-      "Two desking systems, specified to the millimetre — STRETCH S on a fixed beam chassis and STRETCH V on an adjustable one.",
+    description: COLLECTIONS_DESCRIPTION,
   },
 };
 
@@ -55,11 +57,17 @@ function includesLabel(series: SeriesDefinition): string {
 
 /**
  * Every row is read off the series definition, so this page can never quote a span or a
- * height the configurator does not offer. A collection without a series definition
- * shows only what the collection itself states.
+ * height the configurator does not offer. A photographed range has no specification:
+ * it lists its pieces and says sizes are quoted, never a number.
  */
 function entryRows({ collection, series }: Entry): SpecRow[] {
-  if (!series) return [{ k: "Type", v: collection.kicker }];
+  if (!series) {
+    return [
+      { k: "Type", v: collection.kicker },
+      ...(collection.pieces ? [{ k: "Range", v: collection.pieces.join(", ") }] : []),
+      { k: "Sizes", v: "Quoted to your plan" },
+    ];
+  }
   return [
     { k: "Type", v: collection.kicker },
     { k: "Configurations", v: pad(series.configs.length) },
@@ -80,6 +88,7 @@ function entryRows({ collection, series }: Entry): SpecRow[] {
  */
 function SeriesEntry({ entry, index }: { entry: Entry; index: number }) {
   const { collection, series } = entry;
+  if (!series && isPhotographed(collection)) return <RangeEntry collection={collection} index={index} />;
   const href = `/collections/${collection.slug}`;
   const photo = collectionPhoto[collection.slug];
   // The config the collection render actually shows, so the caption names it rather
@@ -145,6 +154,54 @@ function SeriesEntry({ entry, index }: { entry: Entry; index: number }) {
   );
 }
 
+/**
+ * A photographed range: its lead interior, set high-key and wiped open, with no
+ * dimension lines — there is no specification to read them from.
+ */
+function RangeEntry({
+  collection,
+  index,
+}: {
+  collection: PhotographedCollection;
+  index: number;
+}) {
+  const hero = collection.photos[0];
+  return (
+    <article className="grid grid-cols-1 gap-y-10 border-b border-co-border py-[clamp(48px,6vw,96px)] last:border-b-0 lg:grid-cols-12 lg:items-center lg:gap-x-0">
+      <figure className="relative lg:col-span-7 lg:pr-[clamp(24px,3.5vw,56px)]">
+        <RegistrationCross className="-left-2 -top-2 z-10" />
+        <ClipReveal className="aspect-[7/4] border border-co-border bg-co-bg-alt">
+          <Image
+            src={hero.src}
+            alt={hero.alt}
+            fill
+            sizes="(min-width: 1024px) 52vw, 100vw"
+            className="co-highkey object-cover"
+          />
+        </ClipReveal>
+        <FigureCaption n={index + 1} className="mt-5">
+          {`${collection.wordmark} — ${hero.caption.toLowerCase()}`}
+        </FigureCaption>
+      </figure>
+
+      <Reveal className="flex flex-col lg:col-span-5">
+        <p className="co-eyebrow">
+          {pad(index + 1)} — {collection.kicker}
+        </p>
+        <h3 className="co-h1 mt-4 text-[clamp(38px,5vw,72px)]">{collection.wordmark}</h3>
+        <p className="co-lead mt-6 max-w-[44ch]">{collection.blurb}</p>
+        <SpecRows rows={entryRows({ collection, series: null })} className="mt-8" />
+        <CollectionActions
+          name={collection.name}
+          href={`/collections/${collection.slug}`}
+          label="See the range"
+          className="mt-8"
+        />
+      </Reveal>
+    </article>
+  );
+}
+
 export default async function CollectionsPage() {
   const collections = await catalog.getCollections();
   const entries: Entry[] = collections.map((collection) => ({
@@ -156,8 +213,14 @@ export default async function CollectionsPage() {
   const allConfigs = allSeries.flatMap((series) => series.configs);
   const workingHeight = rangeLabel(allSeries.map((series) => series.workingHeightMm));
 
+  const configurable = allSeries.map((series) => series.wordmark);
+  const photographed = entries.flatMap(({ collection, series }) =>
+    !series && collection.wordmark ? [collection.wordmark] : [],
+  );
+
   const heroRows: SpecRow[] = [
     { k: "Systems", v: pad(entries.length) },
+    { k: "Configurable", v: configurable.join(", ") },
     { k: "Configurations", v: pad(allConfigs.length) },
     { k: "Span", v: spanLabel(allConfigs) },
     { k: "Working height", v: `${workingHeight}\u00A0mm` },
@@ -183,13 +246,19 @@ export default async function CollectionsPage() {
 
       <PageHero
         eyebrow="Collections — Desking systems"
-        title="Two desking systems, one working height."
+        title="Every desk, by the system."
         titleClassName="max-w-[14ch]"
         lead={
           <>
-            Both run at {workingHeight}mm, so tops sit flush wherever two configurations meet,
-            and both are built from a short element set rather than one-off parts. Pick a
-            system, then configure the table.
+            {listLabel(configurable)} are specified to the millimetre: pick a configuration,
+            a length and a depth, and the quote follows.
+            {photographed.length ? (
+              <>
+                {" "}
+                {listLabel(photographed)} are photographed ranges: see the pieces, send the plan,
+                and the sizes come back with the quote.
+              </>
+            ) : null}
           </>
         }
         aside={<SpecRows rows={heroRows} />}
@@ -199,8 +268,8 @@ export default async function CollectionsPage() {
       <section className="co-shell pt-[clamp(64px,8vw,120px)]">
         <SectionHeading
           eyebrow="01 / Systems"
-          title="Pick a chassis."
-          blurb="Each system is one chassis and a short element set. Choose a configuration, a length and a depth — the quote follows the specification, not the other way round."
+          title="Pick a system."
+          blurb="Each system is one leg and one family of tops. Configure the specified ones to a length and a depth; send a plan for the photographed ones. Either way the quote follows the specification, not the other way round."
           className="mb-0"
         />
         {entries.map((entry, index) => (
@@ -209,7 +278,7 @@ export default async function CollectionsPage() {
       </section>
 
       <CtaBand
-        heading="Not sure which chassis?"
+        heading="Not sure which system?"
         body="Send the floor plan and the headcount. We will tell you which system fits and quote it to the millimetre."
         subject="Desking systems"
         secondary={{ label: "Book a showroom visit", href: "/contact" }}

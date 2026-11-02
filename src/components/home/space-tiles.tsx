@@ -12,9 +12,10 @@ import { spacePhoto } from "@/lib/photos";
  *
  * Photographs of finished installs, run the way the moodboard treats interiors: high-key
  * and cool, partly desaturated (`co-highkey`), so the furniture rather than the room
- * styling is the subject. Each frame wipes open left to right and carries a figure
- * number. `Space.includes` is deliberately not shown: it lists the illustrative demo
- * products, not real Cohuman ones.
+ * styling is the subject. Each frame wipes open and carries a figure number. On phones
+ * the four sit on a swipe rail rather than stacking four screens deep. `Space.includes`
+ * is deliberately not shown: it lists the illustrative demo products, not real Cohuman
+ * ones.
  */
 export function SpaceTiles({
   spaces,
@@ -36,7 +37,8 @@ export function SpaceTiles({
         linkLabel="Workspace solutions"
       />
 
-      <StaggerContainer className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+      {/* A swipe rail on phones (`co-rail`), the four-up grid from md. */}
+      <StaggerContainer className="co-rail md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-12 lg:grid-cols-4">
         {spaces.map((sp, i) => (
           <StaggerItem key={sp.slug}>
             <Link href="/solutions" className="group block">
@@ -46,7 +48,7 @@ export function SpaceTiles({
                     src={spacePhoto[sp.slug]}
                     alt={sp.slotHint}
                     fill
-                    sizes="(min-width: 1024px) 24vw, (min-width: 640px) 50vw, 100vw"
+                    sizes="(min-width: 1024px) 24vw, (min-width: 768px) 50vw, 80vw"
                     className="co-highkey object-cover"
                   />
                 </ClipReveal>

@@ -18,6 +18,9 @@ import { cn } from "@/lib/utils";
 /** Cover the frame; on portrait screens hold the film's chosen focus, centred from md up. */
 const FRAME = "object-cover object-[var(--film-x)_50%] md:object-center";
 
+/** Height of the ink control block (its cells are `min-h-12`). */
+const CONTROLS_HEIGHT = 48;
+
 /** Horizontal travel, in px, that counts as a swipe on touch screens. */
 const SWIPE_PX = 48;
 
@@ -115,7 +118,10 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
     const update = () => {
       const node = sectionRef.current;
       if (!node) return;
-      setHeroChrome({ overHero: node.getBoundingClientRect().bottom > HEADER_HEIGHT, tone });
+      // Solid once the ink control block reaches the header: a transparent header over
+      // that block would put the ink logo on ink.
+      const overHero = node.getBoundingClientRect().bottom > HEADER_HEIGHT + CONTROLS_HEIGHT;
+      setHeroChrome({ overHero, tone });
     };
     update();
     window.addEventListener("scroll", update, { passive: true });

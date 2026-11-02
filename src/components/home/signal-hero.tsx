@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -66,8 +67,11 @@ export function SignalHeroPanel({
       <HairlineGrid tone="signal" />
 
       <div
-        className="co-shell relative grid w-full grid-cols-1 gap-y-12 pb-[clamp(96px,10vh,128px)] lg:grid-cols-12 lg:items-center lg:gap-x-0"
-        style={{ paddingTop: `calc(${HEADER_HEIGHT}px + clamp(32px, 6vh, 72px))` }}
+        // Phones: the panel shares the hero's grid cell with the films, so its height sets
+        // the hero's. Tighter spacing and one action keep it inside one screen, with the
+        // ink control block on the first screen rather than below it.
+        className="co-shell relative grid w-full grid-cols-1 gap-y-8 pb-[72px] pt-[calc(var(--co-header)+16px)] md:gap-y-12 md:pb-[clamp(96px,10vh,128px)] md:pt-[calc(var(--co-header)+clamp(32px,6vh,72px))] lg:grid-cols-12 lg:items-center lg:gap-x-0"
+        style={{ "--co-header": `${HEADER_HEIGHT}px` } as CSSProperties}
       >
         <div className="flex flex-col lg:col-span-6 lg:pr-10">
           <p className="co-eyebrow">Office systems / Surat, IN</p>
@@ -88,11 +92,12 @@ export function SignalHeroPanel({
             quoted to your floor plan.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
+          <div className="mt-6 flex flex-wrap gap-3 sm:gap-4 md:mt-8">
             <Button asChild>
               <Link href="/configure">Configure a desk</Link>
             </Button>
-            <Button asChild variant="secondary">
+            {/* Phones carry one action here; the showroom has its own section further down. */}
+            <Button asChild variant="secondary" className="hidden sm:inline-flex">
               <Link href="/contact">Book a showroom visit</Link>
             </Button>
           </div>
@@ -169,7 +174,7 @@ export function SignalHeroPanel({
             <FigureCaption n={1}>
               {series.wordmark} {config.name.toLowerCase()} · {config.seats} seats
             </FigureCaption>
-            <p className="co-data text-co-muted-2">{siteConfig.coordinates.label}</p>
+            <p className="co-data hidden text-co-muted-2 sm:block">{siteConfig.coordinates.label}</p>
           </div>
         </figure>
       </div>

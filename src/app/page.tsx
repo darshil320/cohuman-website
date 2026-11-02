@@ -14,12 +14,12 @@ import { FigureCaption } from "@/components/ui/figure-caption";
 import { IndexRow } from "@/components/ui/index-row";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
-import { catalog } from "@/lib/catalog";
+import { catalog, isPhotographed, type PhotographedCollection } from "@/lib/catalog";
 import { COMPARE_FILM, HERO_FILMS, LEAD_FILM, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
 import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesConfig, type SeriesDefinition } from "@/lib/series";
 import { siteConfig } from "@/lib/site-config";
-import { cn } from "@/lib/utils";
+import { cn, listLabel, numberWord } from "@/lib/utils";
 
 /*
   The homepage declares its own canonical rather than leaning on the root layout, which
@@ -40,20 +40,23 @@ function defaultImage(series: SeriesDefinition): string | undefined {
   return series.configs.find((c) => c.slug === series.defaultConfigSlug)?.image;
 }
 
+/** Two-digit row number. */
+const rowNumber = (i: number) => String(i + 1).padStart(2, "0");
+
 /**
  * The systems index, built from data rather than written as copy: the STRETCH S, STRETCH V
  * and Meeting ranges are `spanLabel` over the real configurations, so the homepage can
- * never quote a size the configurator does not offer. Systems without a measured range
- * say what they are instead of inventing one.
+ * never quote a size the configurator does not offer. The photographed ranges (STRETCH F,
+ * APEX, ELEMENT) and the systems without a page say what they are instead of inventing a
+ * range.
  */
-function systemRows(): SystemRow[] {
+function systemRows(ranges: PhotographedCollection[]): SystemRow[] {
   const meeting = [...PROS_SERIES.configs, ...VARIDEX_SERIES.configs].filter((c) =>
     isMeetingConfig(c.slug),
   );
 
-  return [
+  const rows: Omit<SystemRow, "n">[] = [
     {
-      n: "01",
       title: PROS_SERIES.wordmark,
       type: PROS_SERIES.eyebrow,
       range: spanLabel(PROS_SERIES.configs),
@@ -61,25 +64,21 @@ function systemRows(): SystemRow[] {
       image: defaultImage(PROS_SERIES),
     },
     {
-      n: "02",
       title: VARIDEX_SERIES.wordmark,
       type: VARIDEX_SERIES.eyebrow,
       range: spanLabel(VARIDEX_SERIES.configs),
       href: `/collections/${VARIDEX_SERIES.slug}`,
       image: defaultImage(VARIDEX_SERIES),
     },
+    ...ranges.map((range) => ({
+      title: range.wordmark,
+      type: range.kicker,
+      range: "Sized to plan",
+      href: `/collections/${range.slug}`,
+      // The hover preview multiplies into the row, so only a render on white will do.
+      image: range.photos.find((photo) => photo.kind === "cutout")?.src,
+    })),
     {
-      n: "03",
-      // The client's name for the cabin system; it has no series data yet, so it links to
-      // the executive sector and states what it is rather than a measured range.
-      title: "STRETCH F",
-      type: "Manager and director rooms",
-      range: "Desk + storage + seating",
-      href: "/sectors/executive",
-      image: "/pros/manager-cabinet.jpg",
-    },
-    {
-      n: "04",
       title: "Meeting",
       type: "Square, round and boardroom tables",
       range: spanLabel(meeting),
@@ -87,20 +86,19 @@ function systemRows(): SystemRow[] {
       image: "/pros/meet-long.jpg",
     },
     {
-      n: "05",
       title: "Seating",
       type: "Task, executive, visitor",
       range: "Price on request",
       quoteSubject: "Seating",
     },
     {
-      n: "06",
       title: "Storage",
       type: "Pedestals, side cabinets, credenzas",
       range: "Price on request",
       quoteSubject: "Storage",
     },
   ];
+  return rows.map((row, i) => ({ ...row, n: rowNumber(i) }));
 }
 
 /**
@@ -136,11 +134,15 @@ function heroPanels(config: SeriesConfig): HeroPanel[] {
 }
 
 export default async function HomePage() {
-  const [spaces, services, projects] = await Promise.all([
+  const [spaces, services, projects, collections] = await Promise.all([
     catalog.getSpaces(),
     catalog.getServices(),
     catalog.getProjects(),
+    catalog.getCollections(),
   ]);
+  const ranges = collections.filter(isPhotographed);
+  const configurable = [PROS_SERIES.wordmark, VARIDEX_SERIES.wordmark];
+  const systemCount = configurable.length + ranges.length;
 
   const heroConfig =
     VARIDEX_SERIES.configs.find((c) => c.slug === HERO_CONFIG_SLUG) ?? VARIDEX_SERIES.configs[0];
@@ -159,14 +161,14 @@ export default async function HomePage() {
       <section className="co-shell co-section">
         <SectionHeading
           eyebrow="01 / Systems"
-          title="Two chassis. Every table."
-          blurb="Both desking systems run at 720mm, so tops sit flush wherever two configurations meet. Pick a system, then a configuration, a length and a depth."
+          title={`${numberWord(systemCount)} systems. Every table.`}
+          blurb={`${listLabel(configurable)} configure to the millimetre; ${listLabel(ranges.map((r) => r.wordmark))} are sized to your plan. Pick a system, then the pieces.`}
           linkHref="/collections"
           linkLabel="All collections"
           className="mb-0 border-b-0"
         />
         <Reveal>
-          <SystemsIndex rows={systemRows()} />
+          <SystemsIndex rows={systemRows(ranges)} />
         </Reveal>
       </section>
 
@@ -181,7 +183,8 @@ export default async function HomePage() {
           linkHref="/projects"
           linkLabel="All projects"
         />
-        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto]">
+        {/* A swipe rail on phones (`co-rail`); the lead project and two beside it from md. */}
+        <StaggerContainer className="co-rail md:grid md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto] md:gap-6">
           {featured.map((pr, i) => (
             <StaggerItem key={pr.slug} className={cn(i === 0 && "md:row-span-2")}>
               <Link href="/projects" className="group flex h-full flex-col">
@@ -196,7 +199,7 @@ export default async function HomePage() {
                       src={pr.images[0]}
                       alt={`${pr.name} — completed fit-out`}
                       fill
-                      sizes={i === 0 ? "(min-width: 768px) 62vw, 100vw" : "(min-width: 768px) 31vw, 100vw"}
+                      sizes={i === 0 ? "(min-width: 768px) 62vw, 80vw" : "(min-width: 768px) 31vw, 80vw"}
                       className="co-highkey object-cover"
                     />
                   </ClipReveal>
@@ -271,8 +274,8 @@ export default async function HomePage() {
             <p className="co-eyebrow">05 / Showroom</p>
             <h2 className="co-h2 mt-5 max-w-[14ch]">Sit on it before you specify it.</h2>
             <p className="co-lead mt-6 max-w-[40ch]">
-              Both desking systems are set up on Hazira Road, in Surat. Bring the floor plan —
-              we will lay the configurations out at the sizes you are considering.
+              {listLabel(configurable)} are set up on Hazira Road, in Surat. Bring the floor
+              plan — we will lay the configurations out at the sizes you are considering.
             </p>
             <p className="co-data mt-6 text-co-ink">{siteConfig.address.line1}</p>
             <p className="co-data text-co-muted-2">{siteConfig.address.line2}</p>

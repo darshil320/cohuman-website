@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 const ROUTES = [
   { href: "/catalog", label: "Catalog", note: "Every product, by category and price band." },
   { href: "/collections", label: "Desking series", note: "Configure a size, then enquire." },
-  { href: "/sectors", label: "Sectors", note: "Executive, healthcare and residential work." },
+  { href: "/sectors", label: "Sectors", note: "Executive, healthcare and hospitality work." },
   { href: "/contact", label: "Contact", note: "Ask a specifier, or book a showroom visit." },
 ];
 

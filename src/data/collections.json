@@ -12,5 +12,137 @@
     "kicker": "Adjustable-beam desking system",
     "blurb": "The beam adjusts, so one chassis covers a span of sizes: desks, returns, benches and meeting tables off eight part numbers.",
     "slotHint": "STRETCH V: face-to-face bench with side screens and wire channel"
+  },
+  {
+    "slug": "fulcrum",
+    "name": "STRETCH F Series",
+    "kicker": "Frame-leg desking system",
+    "blurb": "A frame leg at the ends and a panel leg at the centre, across team benches, single desks, meeting tables and a high table.",
+    "slotHint": "STRETCH F: team benches with frame legs and desk screens",
+    "wordmark": "STRETCH F",
+    "lead": "One leg family for the team floor and the meeting space: frame legs carry the ends of every top, a solid panel leg carries the middle of the long ones, and the benches take desk screens. Sizes, tops and finishes are quoted to your plan.",
+    "pieces": [
+      "Team bench",
+      "Single desk",
+      "Meeting table",
+      "High table"
+    ],
+    "photos": [
+      {
+        "src": "/fulcrum/scene-benches.jpg",
+        "kind": "scene",
+        "caption": "Team benches and a single desk",
+        "alt": "An open-plan floor with STRETCH F team benches on rust-red frame legs, with desk screens and mobile pedestals, and a single desk in the foreground"
+      },
+      {
+        "src": "/fulcrum/scene-floor.jpg",
+        "kind": "scene",
+        "caption": "Bench runs on the open floor",
+        "alt": "Two STRETCH F bench runs with desk screens on an open floor, a storage wall and planting behind"
+      },
+      {
+        "src": "/fulcrum/scene-meeting.jpg",
+        "kind": "scene",
+        "caption": "Meeting table and high table",
+        "alt": "A STRETCH F meeting table and a high table with bar stools beside a timber wall"
+      },
+      {
+        "src": "/fulcrum/elevation-frame.jpg",
+        "kind": "cutout",
+        "caption": "Bench elevation, closed frame leg",
+        "alt": "STRETCH F bench in elevation: closed frame legs at each end, a centre panel leg and a cable riser"
+      },
+      {
+        "src": "/fulcrum/elevation-panel.jpg",
+        "kind": "cutout",
+        "caption": "Bench elevation, open frame leg",
+        "alt": "STRETCH F bench in elevation: open frame legs at each end, a centre panel leg and a cable riser"
+      },
+      {
+        "src": "/fulcrum/meeting-table.jpg",
+        "kind": "cutout",
+        "caption": "Meeting table",
+        "alt": "STRETCH F meeting table with frame legs, a centre panel leg and two cable ports"
+      },
+      {
+        "src": "/fulcrum/high-table.jpg",
+        "kind": "cutout",
+        "caption": "High table",
+        "alt": "STRETCH F high table on frame legs joined by a footrest rail"
+      }
+    ]
+  },
+  {
+    "slug": "apex",
+    "name": "APEX Series",
+    "kicker": "Splayed-leg desks and benches",
+    "blurb": "A tapered, splayed leg under executive desks and team benches, photographed in four leg finishes.",
+    "slotHint": "APEX: team bench with splayed legs and desk screens",
+    "wordmark": "APEX",
+    "lead": "One leg drawn two ways: angled out at the corners of an executive desk and its return, and paired under a team bench with desk screens. Sizes, tops and finishes are quoted to your plan.",
+    "pieces": [
+      "Executive desk",
+      "Team bench"
+    ],
+    "photos": [
+      {
+        "src": "/apex/workstation.jpg",
+        "kind": "scene",
+        "caption": "Team bench",
+        "alt": "An APEX team bench with desk screens on splayed navy legs, in an open office with a lounge corner behind"
+      },
+      {
+        "src": "/apex/cabin.jpg",
+        "kind": "scene",
+        "caption": "Executive desk with return",
+        "alt": "An APEX executive desk with a side return, a credenza and a high-back chair in a cabin"
+      }
+    ],
+    "legFinishes": {
+      "src": "/apex/leg-finishes.jpg",
+      "kind": "scene",
+      "caption": "Leg finishes, as photographed",
+      "alt": "Four APEX legs side by side, each in a different finish: gold, white, rust and navy"
+    }
+  },
+  {
+    "slug": "element",
+    "name": "ELEMENT Series",
+    "kicker": "Executive, team and conference tables",
+    "blurb": "Slim tapered legs and a broad panel leg across executive desks, team benches and conference tables, photographed in four leg finishes.",
+    "slotHint": "ELEMENT: team bench with a panel leg and desk screens",
+    "wordmark": "ELEMENT",
+    "lead": "Slim tapered legs at the corners and a broad panel leg at the centre, from the cabin to the conference room to the team floor. Sizes, tops and finishes are quoted to your plan.",
+    "pieces": [
+      "Executive desk",
+      "Team bench",
+      "Conference table"
+    ],
+    "photos": [
+      {
+        "src": "/element/workstation.jpg",
+        "kind": "scene",
+        "caption": "Team bench",
+        "alt": "An ELEMENT team bench on rust legs with a centre panel leg and desk screens, in an open office"
+      },
+      {
+        "src": "/element/cabin.jpg",
+        "kind": "scene",
+        "caption": "Executive desk with storage return",
+        "alt": "An ELEMENT executive desk with a storage return and a tall bookcase in a cabin"
+      },
+      {
+        "src": "/element/conference.jpg",
+        "kind": "scene",
+        "caption": "Conference table",
+        "alt": "An ELEMENT conference table with slim tapered legs and a panel leg, with meeting chairs"
+      }
+    ],
+    "legFinishes": {
+      "src": "/element/leg-finishes.jpg",
+      "kind": "scene",
+      "caption": "Leg finishes, as photographed",
+      "alt": "Four ELEMENT legs side by side, each in a different finish: black, white, rust and navy"
+    }
   }
 ]

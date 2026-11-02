@@ -14,7 +14,8 @@ import { ORGANIZATION_ID } from "@/lib/seo/structured-data";
 import { siteConfig } from "@/lib/site-config";
 import { ALL_SERIES } from "@/lib/series";
 import { collectionPhoto } from "@/lib/photos";
-import type { DrawerSeries } from "@/components/layout/nav-drawer";
+import type { DrawerRange, DrawerSeries } from "@/components/layout/nav-drawer";
+import { catalog, isPhotographed } from "@/lib/catalog";
 
 /*
   Two variable families cover the whole site.
@@ -250,11 +251,20 @@ const jsonLd = {
   ],
 };
 
-export default function RootLayout({
+/** The photographed ranges, listed under the drawer's measured plates. */
+async function drawerRanges(): Promise<DrawerRange[]> {
+  const collections = await catalog.getCollections();
+  return collections
+    .filter(isPhotographed)
+    .map(({ slug, wordmark, kicker }) => ({ slug, wordmark, kicker }));
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ranges = await drawerRanges();
   return (
     <html
       lang="en-IN"
@@ -303,7 +313,7 @@ export default function RootLayout({
           {/* One IntersectionObserver for every `[data-reveal]` on the page. */}
           <RevealObserver />
           <QuoteDialogProvider>
-            <SiteHeader series={DRAWER_SERIES} />
+            <SiteHeader series={DRAWER_SERIES} ranges={ranges} />
             <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
               {children}
             </main>

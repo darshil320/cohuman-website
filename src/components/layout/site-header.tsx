@@ -11,13 +11,18 @@ import { useHeroChrome } from "@/lib/hero-chrome";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
-import { NavDrawer, type DrawerLink, type DrawerSeries } from "@/components/layout/nav-drawer";
+import {
+  NavDrawer,
+  type DrawerLink,
+  type DrawerRange,
+  type DrawerSeries,
+} from "@/components/layout/nav-drawer";
 
 /** How long the drawer survives the pointer leaving, so a diagonal sweep to it is forgiving. */
 const DRAWER_CLOSE_MS = 180;
 
 const DRAWER_LINKS: DrawerLink[] = [
-  { label: "All collections", href: "/collections", note: "Both series, side by side." },
+  { label: "All collections", href: "/collections", note: "Every system, side by side." },
   { label: "Configure a desk", href: "/configure", note: "Pick the size and finish, get the part numbers." },
   { label: "Workspace solutions", href: "/solutions", note: "Furnish by room type." },
   { label: "B2B / bulk orders", href: "/b2b", note: "Floor-plate quantities on one schedule." },
@@ -41,7 +46,7 @@ const DRAWER_LINKS: DrawerLink[] = [
  * header's own box and vanishes. That was the "menu won't open after scrolling" bug: the
  * old header added `backdrop-blur` once the page scrolled.
  */
-export function SiteHeader({ series }: { series: DrawerSeries[] }) {
+export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges: DrawerRange[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
@@ -230,6 +235,7 @@ export function SiteHeader({ series }: { series: DrawerSeries[] }) {
         <NavDrawer
           open={drawerOpen}
           series={series}
+          ranges={ranges}
           links={DRAWER_LINKS}
           onClose={() => setDrawerOpen(false)}
         />

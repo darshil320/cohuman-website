@@ -48,27 +48,27 @@
     "enquirySubject": "Hospital / healthcare furniture enquiry"
   },
   {
-    "slug": "residence",
-    "name": "Residence",
-    "kicker": "Premium home interiors and home offices",
-    "blurb": "The same workshop, a different brief. Wardrobes, storage walls, study desks and home offices, made to the dimensions of the room rather than to a catalogue size — and finished to sit beside the rest of the interior.",
+    "slug": "hospitality",
+    "name": "Hospitality",
+    "kicker": "Hotel lobbies, lounges, restaurants and cafés",
+    "blurb": "The same workshop, a guest-facing brief. Reception desks, lobby and lounge seating, restaurant and café tables and business-centre desks, made to the dimensions of the room rather than to a catalogue size, and finished to the interior designer's specification.",
     "considerations": [
       {
         "title": "Made to the room",
-        "detail": "Sizes come off a site measure. A wall is rarely the length a flat-pack expects it to be, and a made piece does not need filler panels to pretend otherwise."
+        "detail": "Sizes come off a site measure, so a reception counter or a banquette run fits the wall it stands against instead of leaving a gap to fill."
       },
       {
-        "title": "One finish across the house",
-        "detail": "Because we manufacture, the study, the wardrobe and the media wall can share a veneer and an edge, which is what makes a house read as designed rather than assembled."
+        "title": "One finish across the property",
+        "detail": "Because we manufacture, reception, lounge and restaurant can share a veneer, a laminate or a powder-coat colour, matched to what the designer has specified elsewhere."
       },
       {
-        "title": "The same hardware as the offices",
-        "detail": "Runners, hinges and mechanisms are specified to the standard a commercial fit-out demands, which is a higher one than most residential work uses."
+        "title": "Specified for public use",
+        "detail": "Runners, hinges, edges and upholstery are specified to the standard of our office fit-outs, because a lobby is used by more people in a day than most offices are."
       }
     ],
     "ranges": [],
     "photos": [],
     "projectSlugs": [],
-    "enquirySubject": "Home / residential furniture enquiry"
+    "enquirySubject": "Hospitality furniture enquiry"
   }
 ]

@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 // All imagery is served from `public/` now — the Unsplash remote pattern this used to
 // carry is gone along with the stock photography it allowed.
 const nextConfig: NextConfig = {
+  // Retired URLs, kept working: the Residence sector became Hospitality.
+  async redirects() {
+    return [{ source: "/sectors/residence", destination: "/sectors/hospitality", permanent: true }];
+  },
   images: {
     /*
       Next only encodes at qualities listed here — a `quality=` a component asks for that
