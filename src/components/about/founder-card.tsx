@@ -9,7 +9,7 @@ import type { Founder } from "@/lib/catalog";
  * One co-founder, as a figure on a drawing sheet.
  *
  * Square photo frame with a registration cross and a figure caption ("Fig. 0X — Name,
- * Role"), the name in display caps, role and focus areas in mono, the bio in Archivo.
+ * Role"), the name in display caps, role and focus areas as data labels, the bio in the Body cut.
  * The photograph is shown as supplied — no high-key grade, which is for interiors, not
  * people. Where no photo has been supplied the frame stays, labelled, and empty: never a
  * stock face.

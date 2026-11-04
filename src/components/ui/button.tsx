@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * Hover never turns anything green: the signal is for state, and hover is not state.
  */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-3.5 whitespace-nowrap font-mono text-[12px] font-normal uppercase tracking-[0.02em] [font-stretch:87.5%] transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50",
+  "group/button inline-flex shrink-0 items-center justify-center gap-3.5 whitespace-nowrap font-mono text-[12px] font-normal uppercase tracking-[0.06em] transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {

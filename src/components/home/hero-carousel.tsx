@@ -371,9 +371,9 @@ function FilmPanel({
 }
 
 /*
-  The control glyphs, drawn rather than typed: neither Archivo nor Martian Mono carries
+  The control glyphs, drawn rather than typed: Sequel Sans does not carry
   arrows or media symbols, so typed ones fell back to a system font, and ▶ can render as
-  an emoji. 1.25px strokes and square fills on `currentColor`, sized to the 11px mono.
+  an emoji. 1.25px strokes and square fills on `currentColor`, sized to the 12px data label.
 */
 function PlayIcon() {
   return (

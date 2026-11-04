@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface DimensionLineProps {
   /**
-   * The measured value, e.g. "1200 — 1600". Read it off the series data, never type it.
+   * The measured value, e.g. "1200 – 1600". Read it off the series data, never type it.
    * A node rather than a string so a live size can tick (`TickNumber`).
    */
   label: ReactNode;

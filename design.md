@@ -94,18 +94,27 @@ Green is never decoration, never a heading colour, never a hover fill.
 
 | Role | Face | Setting | Utility |
 |---|---|---|---|
-| Display / claims | **Archivo Expanded** — Archivo at `wdth` 125 | SemiBold 600, UPPERCASE, −0.02em, line-height 0.9 | `co-display`, `co-h1`, `co-h2`, `co-h3`, or `font-display` |
-| Body | **Archivo** — `wdth` 100 | 400, 15px / 1.55 | default; `co-lead` for standfirsts |
-| Data / labels | **Martian Mono** — `wdth` 87.5 | 400, 11px UPPERCASE, +0.02em | `co-data` (ink), `co-eyebrow` (steel) |
+| Display / h1 claims | **Sequel Sans Disp** | Semi Bold 600, UPPERCASE, −0.02em, line-height 0.9 | `co-display`, `co-h1`, or `font-display` |
+| Headings / index names | **Sequel Sans Head** | Semi Bold 600, UPPERCASE, −0.02em (h3: 0) | `co-h2`, `co-index`, `co-h3`, or `font-heading` |
+| Body | **Sequel Sans Body** | Roman 400 (Medium 500 / Semi Bold 600 for emphasis), 15px / 1.55 | default; `co-lead` for standfirsts |
+| Data / labels | **Sequel Sans Body**, tabular figures | Roman 400, 12px UPPERCASE, +0.06em | `co-data` (ink), `co-eyebrow` (steel), or `font-mono` |
 
-Both families load through `next/font/google` with `axes: ["wdth"]` (`src/app/layout.tsx`),
-so Archivo Expanded is the *same file* as body Archivo at `font-stretch: 125%`. Tokens:
-`--font-display`, `--font-body` (both Archivo), `--font-mono` (Martian Mono). The
-`.font-display` and `.font-mono` classes set the width (and caps for display) in the base
-layer, so a utility can still override them.
+One family in its three optical cuts, loaded with `next/font/local` from
+`src/app/fonts/sequel-sans/` (`src/app/layout.tsx`). The family is static, so only the
+weights the site sets ship: Body 400/500/600, Head 600, Disp 600 — add a file there
+before using another weight, or the browser fakes it. Tokens: `--font-display` (Disp),
+`--font-heading` (Head), `--font-body` (Body), `--font-mono` (Body — the name is kept
+because the data role is wired through it; it is no longer a monospace face).
+`.font-mono` switches on `tabular-nums`; caps roles switch on the `case` feature so
+dashes, × and colons sit on the cap height. Sequel Sans draws no arrows or IPA; those
+fall through to the system stack. Ranges use a spaced en dash (`1200 – 1600`, from
+`rangeLabel`).
 
-Rule of thumb: **data in mono, claims in caps, reading in Archivo.** Anything you could
-measure — a size, a code, a quantity, a step — is mono.
+**Licence:** Sequel Sans is a commercial OGJ Type Design family. Self-hosting it on the
+site needs a webfont licence — confirm one covers cohuman.in.
+
+Rule of thumb: **data in tabular caps, claims in display caps, reading in Body.**
+Anything you could measure — a size, a code, a quantity, a step — is a data label.
 
 ### Scale (`--text-co-*`)
 
@@ -130,7 +139,7 @@ the overflow guard (`overflow-wrap: break-word`) is a last resort, not a layout 
 (`720 mm`, `1200 — 1600`, `Fig. 01 —`) — the labels in `src/lib/series/derive.ts` already
 do this, and `npm test` checks it. Use ’ for apostrophes (never a straight quote in copy),
 × in sizes, tabular figures for anything that ticks. Part codes (`PROS-TOP-NOK`) never
-break at their hyphens. A sentence longer than about seven words is set in Archivo, not
+break at their hyphens. A sentence longer than about seven words is set in Sequel Sans Body, not
 in display capitals.
 
 ## Visual system
@@ -225,7 +234,7 @@ bleeding through the gutter. From 768px the same children sit in the section's g
    the client's deliberate exception.
 2. No rounded corners anywhere except the two dots.
 3. Every product image carries a real dimension.
-4. Data in mono, claims in caps, reading in Archivo.
+4. Data in tabular caps, claims in display caps, reading in Sequel Sans Body.
 5. No heritage claims for the brand — no founding year, no years in business, no "since",
    no counted proof stats. A founder's personal career history on /about is the one
    approved exception.

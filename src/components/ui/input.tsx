@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * A Signal form field: no box, one ink rule underneath, the value set large in Archivo —
+ * A Signal form field: no box, one ink rule underneath, the value set large in Sequel Sans —
  * a line on a form, not a container. Focus is the global 2px ink outline.
  */
 export const fieldClass =

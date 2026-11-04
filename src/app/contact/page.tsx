@@ -79,7 +79,7 @@ const contactRows = [
 
 /** Mono, but in the address's own case — an email set in caps reads as a different address. */
 const MONO_LINK =
-  "font-mono text-[12px] leading-[1.5] tracking-[0.02em] [font-stretch:87.5%] text-co-ink underline decoration-co-border underline-offset-4 transition-colors hover:decoration-co-ink";
+  "font-mono text-[12px] leading-[1.5] tracking-[0.06em] text-co-ink underline decoration-co-border underline-offset-4 transition-colors hover:decoration-co-ink";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

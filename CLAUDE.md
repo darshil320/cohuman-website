@@ -32,10 +32,14 @@ The short version:
   one genuine state in green (the progress rail, an active tab, a selected row). Two
   deliberate exceptions, both client requests: the homepage hero's green grid lines and
   the systems index's hover dots.
-- **Type:** Archivo Expanded (Archivo at `wdth` 125, 600, caps, −0.02em, 0.9) for
-  claims; Archivo for reading; Martian Mono (`wdth` 87.5, 11px caps) for anything you
-  could measure. Utilities `co-display`/`co-h1`–`co-h3`, `co-data`, `co-eyebrow`; tokens
-  `--font-display`, `--font-body`, `--font-mono`.
+- **Type:** Sequel Sans, self-hosted in its three optical cuts — Disp (Semi Bold, caps,
+  −0.02em, 0.9) for display/h1 claims, Head (Semi Bold) for h2/h3/index names, Body
+  (Roman 400; 500/600 for emphasis) for reading and, with tabular figures at 12px caps
+  +0.06em, for anything you could measure. Utilities `co-display`/`co-h1`–`co-h3`,
+  `co-index`, `co-data`, `co-eyebrow`; tokens `--font-display`, `--font-heading`,
+  `--font-body`, `--font-mono` (the last now resolves to Body, not a monospace face).
+  Static files in `src/app/fonts/sequel-sans/` — only the weights in use ship. Commercial
+  OGJ family: confirm the webfont licence covers the site.
 - **Logo:** the client's vector masters in `public/brand/` (`logo-primary.svg`,
   `logo-reverse.svg`, mono variants, and the compact `mark-*.svg`), placed only via
   `<Logo>` (`src/components/common/logo.tsx`) — never retyped or redrawn. Min 140px
@@ -71,8 +75,8 @@ skill by name with the Skill tool (or `/name`), then give it the prompt in the t
   and reuse `src/components/ui` primitives and `co-*` utilities; no new tokens. Sizes come
   from `src/lib/series`; every product render gets a `DimensionLine` and a `FigureCaption`;
   the page ends on `CtaBand`. Check 1440 and 390 before finishing."
-- *Typography* — "Use `better-typography` on [files/route]. Signal is fixed: Archivo
-  Expanded 600 caps for claims, Archivo for reading, Martian Mono 11px caps for data. Fix
+- *Typography* — "Use `better-typography` on [files/route]. Signal is fixed: Sequel Sans
+  Disp/Head 600 caps for claims, Body for reading, Body 12px tabular caps for data. Fix
   craft only — scale steps, measure, wrapping, tabular figures, punctuation, unit spacing —
   and keep `npm test` green (range labels are tested)."
 - *Configurator* — "Use `interface-design` on [`src/components/configurator/**` |
@@ -111,7 +115,7 @@ drifting.
   metrics
 - Content: local JSON files (`src/data/*.json`) behind a repository interface —
   see "Data layer" below
-- Fonts: Archivo + Martian Mono via `next/font/google` with `axes: ["wdth"]`
+- Fonts: Sequel Sans (Disp/Head/Body cuts) via `next/font/local`; `ImageResponse` reads the TTFs in `src/app/_og/`
 - Vitest for the pure data helpers (`npm test`)
 
 ## Data layer (CMS-swap seam)

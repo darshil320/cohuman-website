@@ -71,28 +71,28 @@
   --color-co-hero-bg: #f3efe1;
 
   /*
-    One variable family does both display and body: Archivo's `wdth` axis runs 62–125,
-    so Archivo Expanded is the same file at `font-stretch: 125%`. Martian Mono carries
-    every measured value, code and label at `font-stretch: 87.5%`.
+    One family, Sequel Sans, in its three optical cuts (loaded in layout.tsx): Disp for
+    display and h1, Head for h2/h3/index names, Body for reading. `--font-mono` keeps its
+    name — the 'data' role is wired through it — but now resolves to the Body cut with
+    tabular figures, not a monospace family. The system stack after each one covers the
+    glyphs Sequel Sans does not draw (arrows, IPA).
   */
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-martian), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: var(--font-sequel-disp), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sequel-head), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-sequel-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-sequel-body), ui-sans-serif, system-ui, sans-serif;
 
   /*
     Type scale, read off the moodboard at 1440px and scaled down to a 320px phone.
-    Display is extended caps at 0.9 line-height; everything you could measure is 11px
-    mono. Tracking is fixed at −0.02em for display — the expanded cut is already wide,
-    so it does not want the progressive tightening the old grotesque needed.
+    Display is caps at 0.9 line-height; everything you could measure is 12px caps in the
+    Body cut. Tracking is fixed at −0.02em for display.
 
     Sizes are in rem (16px root), so a reader's browser font-size setting still applies;
     the px each step resolves to at the default root is noted beside it.
 
-    The display steps' floors are `min(<px floor>, <vw>)`, not a bare px floor. Archivo
-    Expanded caps run ~0.8em a letter, so a ten-letter word ("HEALTHCARE", "ENGINEERED")
-    is 8.4–8.7em wide: at a fixed 38–44px it is wider than a 360px phone's 324px column
-    and clipped by the word masks. The vw cap only bites below ~390px, where it shrinks
-    the step just enough for a ~9em word to fit; at 390px and up every step is unchanged.
+    The display steps' floors are `min(<px floor>, <vw>)`, not a bare px floor, so a
+    long caps word ("HEALTHCARE", "ENGINEERED") can never outgrow a 360px phone's 324px
+    column and be clipped by the word masks. The vw cap only bites below ~390px.
   */
   --text-co-display: clamp(min(2.75rem, 11.3vw), 8.9vw, 8rem); /* 44 → 128 */
   --text-co-h1: clamp(min(2.375rem, 9.75vw), 6vw, 5.5rem); /* 38 → 88 */
@@ -107,11 +107,8 @@
     long-form reading.
   */
   --text-co-body: 0.9375rem; /* 15 */
-  /*
-    11px mono, under the usual 12px floor: Martian Mono's caps stand 0.8em tall, so 11px
-    caps are as tall as ~12.5px caps in a typical sans.
-  */
-  --text-co-eyebrow: 0.6875rem; /* 11 */
+  /* 12px caps — Sequel Sans caps stand 0.714em, so smaller stops reading as type. */
+  --text-co-eyebrow: 0.75rem; /* 12 */
 
   /* Section rhythm — the white space is the material, so it is a token, not a guess. */
   /* 48px floor on phones: two section paddings meet between sections, and 2 × 64 left a
@@ -131,9 +128,9 @@
 
 /*
   Family-level defaults. In the base layer on purpose, so any utility on the element —
-  `normal-case`, a `font-stretch-*` — still overrides them.
+  `normal-case`, a `font-*` family — still overrides them.
 
-  `font-display` is the display role, not just a family: extended, caps. That is what
+  `font-display` is the display role, not just a family: caps. That is what
   makes the 70-odd existing `font-display` headings read as Signal without each one
   being rewritten.
 */
@@ -144,14 +141,15 @@
     escaping it. Both are inert on a line that fits.
   */
   .font-display {
-    font-stretch: 125%;
     text-transform: uppercase;
+    font-feature-settings: "case" 1;
     text-wrap: balance;
     overflow-wrap: break-word;
   }
 
+  /* The data role: measured values keep one digit width, so a ticking size never shifts. */
   .font-mono {
-    font-stretch: 87.5%;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -163,31 +161,30 @@
 */
 @utility co-eyebrow {
   font-family: var(--font-mono);
-  font-stretch: 87.5%;
   font-size: var(--text-co-eyebrow);
   font-weight: 400;
   line-height: 1.5;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
+  font-feature-settings: "case" 1;
   color: var(--color-co-muted-2);
 }
 
 /*
   The moodboard's `.m`: a measured value, code or label. Same as the eyebrow, in ink.
 
-  Ligatures are deliberately left on. Martian Mono ships no `liga`; its only contextual
-  feature is `calt`, which swaps - – — × : + = for raised `.case` forms when they sit
-  between digits or capitals — the case-sensitive punctuation a caps label wants
-  ("PROS-TOP-NOK", "1600×750"). `font-variant-ligatures: none` would switch that off.
+  Sequel Sans's `case` feature raises - – — × : and brackets to sit on the cap height —
+  the case-sensitive punctuation an all-caps label wants ("PROS-TOP-NOK", "1600×750").
+  CSS has no property for it, hence the raw tag. Caps at this size take 0.06em tracking.
 */
 @utility co-data {
   font-family: var(--font-mono);
-  font-stretch: 87.5%;
   font-size: var(--text-co-eyebrow);
   font-weight: 400;
   line-height: 1.5;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
+  font-feature-settings: "case" 1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -199,36 +196,36 @@
 */
 @utility co-display {
   font-family: var(--font-display);
-  font-stretch: 125%;
   font-size: var(--text-co-display);
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
 @utility co-h1 {
   font-family: var(--font-display);
-  font-stretch: 125%;
   font-size: var(--text-co-h1);
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
 @utility co-h2 {
-  font-family: var(--font-display);
-  font-stretch: 125%;
+  font-family: var(--font-heading);
   font-size: var(--text-co-h2);
   font-weight: 600;
   line-height: 0.92;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -239,25 +236,25 @@
   arbitrary classes repeated in each.
 */
 @utility co-index {
-  font-family: var(--font-display);
-  font-stretch: 125%;
+  font-family: var(--font-heading);
   font-size: var(--text-co-index);
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
 @utility co-h3 {
-  font-family: var(--font-display);
-  font-stretch: 125%;
+  font-family: var(--font-heading);
   font-size: var(--text-co-h3);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-transform: uppercase;
+  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }

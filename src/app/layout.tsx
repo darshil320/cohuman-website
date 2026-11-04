@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Martian_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import { RevealObserver } from "@/components/ui/reveal-observer";
 import { Analytics } from "@vercel/analytics/next";
@@ -18,30 +18,36 @@ import type { DrawerRange, DrawerSeries } from "@/components/layout/nav-drawer";
 import { catalog, isPhotographed } from "@/lib/catalog";
 
 /*
-  Two variable families cover the whole site.
+  Sequel Sans, in the three optical cuts the family ships — each drawn for a size range,
+  so each role gets the cut made for it rather than one file scaled across all of them:
 
-  - Archivo carries both display and body. `axes: ["wdth"]` adds the width axis (62–125)
-    to the default weight axis, so Archivo Expanded — the display face — is this same
-    file at `font-stretch: 125%`, not a second download. Body text sits at the default
-    width of 100.
-  - Martian Mono carries every measured value, code, size and label, at
-    `font-stretch: 87.5%`.
+  - Disp — display and h1 claims (Semi Bold).
+  - Head — h2, h3 and index-row names (Semi Bold).
+  - Body — reading text, buttons, labels and every measured value (Roman, Medium,
+    Semi Bold). Measured values switch on its tabular figures (`tnum`) instead of a
+    separate monospace family.
 
-  `weight` is deliberately absent: on a variable font it would make Next fetch one
-  static instance per value instead of the single variable file. `display`, `preload`
-  and `adjustFontFallback` stay at their defaults; `subsets` is what makes Next inject
-  the preload link.
+  The family is static, not variable, so each weight the site sets is its own file;
+  weights the site never sets are not shipped. Sequel Sans has no arrows (→ ← ↑ ↓), so
+  those fall through to the system stack in `--font-*`.
 */
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
+const sequelBody = localFont({
+  variable: "--font-sequel-body",
+  src: [
+    { path: "./fonts/sequel-sans/sequel-sans-body-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/sequel-sans/sequel-sans-body-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/sequel-sans/sequel-sans-body-600.woff2", weight: "600", style: "normal" },
+  ],
 });
 
-const martianMono = Martian_Mono({
-  variable: "--font-martian",
-  subsets: ["latin"],
-  axes: ["wdth"],
+const sequelHead = localFont({
+  variable: "--font-sequel-head",
+  src: [{ path: "./fonts/sequel-sans/sequel-sans-head-600.woff2", weight: "600", style: "normal" }],
+});
+
+const sequelDisp = localFont({
+  variable: "--font-sequel-disp",
+  src: [{ path: "./fonts/sequel-sans/sequel-sans-disp-600.woff2", weight: "600", style: "normal" }],
 });
 
 export const metadata: Metadata = {
@@ -268,7 +274,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en-IN"
-      className={`${archivo.variable} ${martianMono.variable} h-full antialiased`}
+      className={`${sequelBody.variable} ${sequelHead.variable} ${sequelDisp.variable} h-full antialiased`}
       /*
         The head script below adds `co-js` before React hydrates, so the client's class
         list legitimately differs from the server's. Without this, React reports a

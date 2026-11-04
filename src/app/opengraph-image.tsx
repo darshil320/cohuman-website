@@ -11,10 +11,9 @@ import { join } from "node:path";
   anyone opens it. Routes that set their own `openGraph.images` (the collection pages)
   still win over this one.
 
-  `ImageResponse` cannot read variable fonts or woff2, so `_og/` holds two static OFL
-  instances pulled from Google Fonts: Archivo at wdth 125 / wght 600 (the display face)
-  and Martian Mono at wdth 87.5 / wght 400 (the data face). The underscore keeps the
-  folder out of the router.
+  `ImageResponse` cannot read woff2, so `_og/` holds the two Sequel Sans TTFs it needs:
+  Semi Bold Disp (the display face) and Roman Body (the data face). The underscore keeps
+  the folder out of the router.
 */
 
 export const alt = "Cohuman — Engineered for two. Scaled for the floor.";
@@ -30,8 +29,8 @@ const GUTTER = 64;
 
 export default async function OpengraphImage() {
   const [display, mono, logo] = await Promise.all([
-    readFile(join(process.cwd(), "src/app/_og/archivo-expanded-600.ttf")),
-    readFile(join(process.cwd(), "src/app/_og/martian-mono-875-400.ttf")),
+    readFile(join(process.cwd(), "src/app/_og/sequel-sans-disp-600.ttf")),
+    readFile(join(process.cwd(), "src/app/_og/sequel-sans-body-400.ttf")),
     readFile(join(process.cwd(), "public/brand/logo-primary.svg"), "base64"),
   ]);
 
@@ -68,7 +67,7 @@ export default async function OpengraphImage() {
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <img src={`data:image/svg+xml;base64,${logo}`} width={300} height={41} alt="" />
-          <div style={{ fontFamily: "Martian Mono", fontSize: 16, color: STEEL, letterSpacing: 1 }}>
+          <div style={{ fontFamily: "Sequel Sans Body", fontSize: 16, color: STEEL, letterSpacing: 1 }}>
             OFFICE SYSTEMS — SURAT, IN
           </div>
         </div>
@@ -76,8 +75,8 @@ export default async function OpengraphImage() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              fontFamily: "Archivo Expanded",
-              fontSize: 70,
+              fontFamily: "Sequel Sans Disp",
+              fontSize: 84,
               lineHeight: 0.92,
               letterSpacing: -1.6,
               display: "flex",
@@ -94,7 +93,7 @@ export default async function OpengraphImage() {
             <div style={{ flex: 1, height: 1, background: INK }} />
             <div
               style={{
-                fontFamily: "Martian Mono",
+                fontFamily: "Sequel Sans Body",
                 fontSize: 15,
                 padding: "0 14px",
                 background: CANVAS,
@@ -111,8 +110,8 @@ export default async function OpengraphImage() {
     {
       ...size,
       fonts: [
-        { name: "Archivo Expanded", data: display, style: "normal", weight: 600 },
-        { name: "Martian Mono", data: mono, style: "normal", weight: 400 },
+        { name: "Sequel Sans Disp", data: display, style: "normal", weight: 600 },
+        { name: "Sequel Sans Body", data: mono, style: "normal", weight: 400 },
       ],
     },
   );

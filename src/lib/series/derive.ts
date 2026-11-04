@@ -94,18 +94,18 @@ export function chartDepths(config: SeriesConfig): string {
 */
 
 /**
- * `min — max` over a list of millimetre values, or the single value when they agree.
+ * `min – max` over a list of millimetre values, or the single value when they agree.
  *
- * The spaced em dash is the moodboard's drawing-label convention, kept on purpose: these
- * are set in Martian Mono, where an en and an em dash fill the same one-character cell,
- * so the en dash's usual job — a visibly shorter range dash — does not apply. The spaces
- * either side are no-break, so a range never splits across two lines.
+ * An en dash, the range dash: the labels are set in proportional Sequel Sans, where it
+ * reads visibly shorter than the em dash used between phrases. Spaced, because both ends
+ * are multi-digit numbers in caps labels; the spaces are no-break, so a range never
+ * splits across two lines.
  */
 export function rangeLabel(values: readonly number[]): string {
   if (values.length === 0) return "";
   const min = Math.min(...values);
   const max = Math.max(...values);
-  return min === max ? `${min}` : `${min}${NBSP}—${NBSP}${max}`;
+  return min === max ? `${min}` : `${min}${NBSP}–${NBSP}${max}`;
 }
 
 /** The length range a configuration is offered in; a diameter for round tops. */
