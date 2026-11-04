@@ -73,7 +73,7 @@ export function SeriesElements() {
                 <span className="co-data">{String(index + 1).padStart(2, "0")}</span>
 
                 <div className="min-w-0">
-                  <h3 className="font-display text-[clamp(20px,2.2vw,30px)] font-semibold leading-[0.95] tracking-[-0.02em]">
+                  <h3 className="font-display text-[clamp(20px,2.2vw,30px)] font-semibold leading-[1.2] tracking-[-0.02em]">
                     {element.name}
                   </h3>
                   <p className="mt-2.5 max-w-[52ch] text-[14px] leading-[1.55] text-co-muted">

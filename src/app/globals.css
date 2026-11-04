@@ -130,19 +130,17 @@
   Family-level defaults. In the base layer on purpose, so any utility on the element —
   `normal-case`, a `font-*` family — still overrides them.
 
-  `font-display` is the display role, not just a family: caps. That is what
-  makes the 70-odd existing `font-display` headings read as Signal without each one
-  being rewritten.
+  `font-display` is the display role, not just a family. Titles are set in natural case
+  (the client dropped the all-caps titles); caps are kept only for data labels, eyebrows
+  and buttons.
 */
 @layer base {
   /*
-    `balance` evens the lines of a wrapping caps name so it never ends on one stranded
+    `balance` evens the lines of a wrapping title so it never ends on one stranded
     word; `break-word` lets a word wider than its column break at the edge instead of
     escaping it. Both are inert on a line that fits.
   */
   .font-display {
-    text-transform: uppercase;
-    font-feature-settings: "case" 1;
     text-wrap: balance;
     overflow-wrap: break-word;
   }
@@ -198,10 +196,8 @@
   font-family: var(--font-display);
   font-size: var(--text-co-display);
   font-weight: 600;
-  line-height: 0.9;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -210,10 +206,8 @@
   font-family: var(--font-display);
   font-size: var(--text-co-h1);
   font-weight: 600;
-  line-height: 0.9;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -222,10 +216,8 @@
   font-family: var(--font-heading);
   font-size: var(--text-co-h2);
   font-weight: 600;
-  line-height: 0.92;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -239,10 +231,8 @@
   font-family: var(--font-heading);
   font-size: var(--text-co-index);
   font-weight: 600;
-  line-height: 0.9;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -251,10 +241,8 @@
   font-family: var(--font-heading);
   font-size: var(--text-co-h3);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  font-feature-settings: "case" 1;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   text-wrap: balance;
   overflow-wrap: break-word;
 }

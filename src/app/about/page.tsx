@@ -170,7 +170,7 @@ export default async function AboutPage() {
                 className={`border-co-border py-4 pr-6 [&:nth-child(-n+2)]:border-b sm:[&:nth-child(-n+2)]:border-b-0 ${i > 0 ? "sm:border-l sm:pl-6" : ""}`}
               >
                 <dt className="co-eyebrow">{d.k}</dt>
-                <dd className="mt-2 font-display text-[clamp(16px,1.6vw,22px)] font-semibold leading-none tracking-[-0.02em]">
+                <dd className="mt-2 font-display text-[clamp(16px,1.6vw,22px)] font-semibold leading-[1.2] tracking-[-0.02em]">
                   {d.v}
                 </dd>
               </div>

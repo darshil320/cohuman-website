@@ -258,7 +258,7 @@ export function SeriesConfigRail() {
 
               {on ? (
                 <span className="mt-2 block border-t border-co-border pt-3">
-                  <span className="block font-display text-[clamp(16px,1.5vw,20px)] font-semibold leading-[0.95] tracking-[-0.02em]">
+                  <span className="block font-display text-[clamp(16px,1.5vw,20px)] font-semibold leading-[1.2] tracking-[-0.02em]">
                     {item.name}
                   </span>
                   <span className="co-data mt-2 block text-co-muted-2">{facts}</span>

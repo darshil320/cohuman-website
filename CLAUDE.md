@@ -32,8 +32,8 @@ The short version:
   one genuine state in green (the progress rail, an active tab, a selected row). Two
   deliberate exceptions, both client requests: the homepage hero's green grid lines and
   the systems index's hover dots.
-- **Type:** Sequel Sans, self-hosted in its three optical cuts — Disp (Semi Bold, caps,
-  −0.02em, 0.9) for display/h1 claims, Head (Semi Bold) for h2/h3/index names, Body
+- **Type:** Sequel Sans, self-hosted in its three optical cuts — Disp (Semi Bold, natural
+  case — titles are never uppercased — −0.02em, 1.1) for display/h1 claims, Head (Semi Bold) for h2/h3/index names, Body
   (Roman 400; 500/600 for emphasis) for reading and, with tabular figures at 12px caps
   +0.06em, for anything you could measure. Utilities `co-display`/`co-h1`–`co-h3`,
   `co-index`, `co-data`, `co-eyebrow`; tokens `--font-display`, `--font-heading`,
@@ -76,7 +76,7 @@ skill by name with the Skill tool (or `/name`), then give it the prompt in the t
   from `src/lib/series`; every product render gets a `DimensionLine` and a `FigureCaption`;
   the page ends on `CtaBand`. Check 1440 and 390 before finishing."
 - *Typography* — "Use `better-typography` on [files/route]. Signal is fixed: Sequel Sans
-  Disp/Head 600 caps for claims, Body for reading, Body 12px tabular caps for data. Fix
+  Disp/Head 600 natural-case titles, Body for reading, Body 12px tabular caps for data. Fix
   craft only — scale steps, measure, wrapping, tabular figures, punctuation, unit spacing —
   and keep `npm test` green (range labels are tested)."
 - *Configurator* — "Use `interface-design` on [`src/components/configurator/**` |

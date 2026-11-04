@@ -37,7 +37,7 @@ export function SeriesPager() {
           className="group flex min-w-0 flex-col items-start gap-2 border-r border-co-border py-6 pr-4 text-left transition-colors hover:bg-co-bg-alt md:flex-row md:items-center md:justify-between md:py-8 md:pr-8"
         >
           <span className="co-data text-co-muted-2 transition-colors group-hover:text-co-ink">← Prev</span>
-          <span className="truncate font-display text-[clamp(16px,1.7vw,24px)] font-semibold leading-none tracking-[-0.02em]">
+          <span className="truncate font-display text-[clamp(16px,1.7vw,24px)] font-semibold leading-[1.2] tracking-[-0.02em]">
             {prev.short}
           </span>
         </button>
@@ -61,7 +61,7 @@ export function SeriesPager() {
           className="group flex min-w-0 flex-col items-end gap-2 py-6 pl-4 text-right transition-colors hover:bg-co-bg-alt md:flex-row-reverse md:items-center md:justify-between md:py-8 md:pl-8"
         >
           <span className="co-data text-co-muted-2 transition-colors group-hover:text-co-ink">Next →</span>
-          <span className="truncate font-display text-[clamp(16px,1.7vw,24px)] font-semibold leading-none tracking-[-0.02em]">
+          <span className="truncate font-display text-[clamp(16px,1.7vw,24px)] font-semibold leading-[1.2] tracking-[-0.02em]">
             {next.short}
           </span>
         </button>

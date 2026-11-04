@@ -94,8 +94,8 @@ Green is never decoration, never a heading colour, never a hover fill.
 
 | Role | Face | Setting | Utility |
 |---|---|---|---|
-| Display / h1 claims | **Sequel Sans Disp** | Semi Bold 600, UPPERCASE, −0.02em, line-height 0.9 | `co-display`, `co-h1`, or `font-display` |
-| Headings / index names | **Sequel Sans Head** | Semi Bold 600, UPPERCASE, −0.02em (h3: 0) | `co-h2`, `co-index`, `co-h3`, or `font-heading` |
+| Display / h1 claims | **Sequel Sans Disp** | Semi Bold 600, natural case, −0.02em, line-height 1.1 | `co-display`, `co-h1`, or `font-display` |
+| Headings / index names | **Sequel Sans Head** | Semi Bold 600, natural case, −0.02em, 1.1 (h3: −0.01em, 1.2) | `co-h2`, `co-index`, `co-h3`, or `font-heading` |
 | Body | **Sequel Sans Body** | Roman 400 (Medium 500 / Semi Bold 600 for emphasis), 15px / 1.55 | default; `co-lead` for standfirsts |
 | Data / labels | **Sequel Sans Body**, tabular figures | Roman 400, 12px UPPERCASE, +0.06em | `co-data` (ink), `co-eyebrow` (steel), or `font-mono` |
 
@@ -105,7 +105,7 @@ weights the site sets ship: Body 400/500/600, Head 600, Disp 600 — add a file 
 before using another weight, or the browser fakes it. Tokens: `--font-display` (Disp),
 `--font-heading` (Head), `--font-body` (Body), `--font-mono` (Body — the name is kept
 because the data role is wired through it; it is no longer a monospace face).
-`.font-mono` switches on `tabular-nums`; caps roles switch on the `case` feature so
+Titles are never uppercased — the client dropped all-caps titles; type them in natural case (series wordmarks such as STRETCH S stay as written). `.font-mono` switches on `tabular-nums`; the caps label roles switch on the `case` feature so
 dashes, × and colons sit on the cap height. Sequel Sans draws no arrows or IPA; those
 fall through to the system stack. Ranges use a spaced en dash (`1200 – 1600`, from
 `rangeLabel`).
@@ -113,7 +113,7 @@ fall through to the system stack. Ranges use a spaced en dash (`1200 – 1600`, 
 **Licence:** Sequel Sans is a commercial OGJ Type Design family. Self-hosting it on the
 site needs a webfont licence — confirm one covers cohuman.in.
 
-Rule of thumb: **data in tabular caps, claims in display caps, reading in Body.**
+Rule of thumb: **data in tabular caps, claims in natural-case display, reading in Body.**
 Anything you could measure — a size, a code, a quantity, a step — is a data label.
 
 ### Scale (`--text-co-*`)
@@ -194,7 +194,7 @@ in display capitals.
 
 Secondary routes open with `PageHero` (`src/components/common`: hairline grid, mono
 label, extended-caps claim, lead, optional spec-rows aside). Section openers are
-`SectionHeading`: mono label · display-caps title · standfirst, on one baseline, closed by
+`SectionHeading`: mono label · display title · standfirst, on one baseline, closed by
 an ink rule. With no standfirst or link the title spans both remaining columns at a 24ch
 measure. Keep titles to six words or fewer, and don't open a section with a heading that
 repeats the hero above it. Every page ends on `CtaBand` (or, on /contact and /b2b, on the form).
@@ -234,7 +234,7 @@ bleeding through the gutter. From 768px the same children sit in the section's g
    the client's deliberate exception.
 2. No rounded corners anywhere except the two dots.
 3. Every product image carries a real dimension.
-4. Data in tabular caps, claims in display caps, reading in Sequel Sans Body.
+4. Data in tabular caps, claims in natural-case display, reading in Sequel Sans Body.
 5. No heritage claims for the brand — no founding year, no years in business, no "since",
    no counted proof stats. A founder's personal career history on /about is the one
    approved exception.

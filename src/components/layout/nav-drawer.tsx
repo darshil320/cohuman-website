@@ -77,7 +77,7 @@ export function NavDrawer({
                     </figcaption>
                   </figure>
                   <span className="mt-4 flex items-baseline justify-between gap-3 border-t border-co-ink pt-3">
-                    <span className="font-display text-[clamp(20px,1.8vw,26px)] font-semibold leading-[0.9] tracking-[-0.02em] text-co-ink">
+                    <span className="font-display text-[clamp(20px,1.8vw,26px)] font-semibold leading-[1.2] tracking-[-0.02em] text-co-ink">
                       {s.wordmark}
                     </span>
                     <span className="co-data text-co-muted-2">{s.configs} configs</span>
@@ -101,7 +101,7 @@ export function NavDrawer({
                         onClick={onClose}
                         className="group block border-b border-co-border py-2 transition-colors duration-150 hover:bg-co-bg-alt"
                       >
-                        <span className="block font-display text-[18px] font-semibold uppercase leading-[0.9] tracking-[-0.02em] text-co-ink">
+                        <span className="block font-display text-[18px] font-semibold leading-[1.2] tracking-[-0.01em] text-co-ink">
                           {r.wordmark}
                         </span>
                         <span className="mt-1.5 block text-[13px] leading-snug text-co-muted">{r.kicker}</span>

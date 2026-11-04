@@ -76,7 +76,7 @@ export function KineticHeading({ children, className }: { children: ReactNode; c
         return (
           <span key={index} className="contents">
             {order > 0 ? " " : null}
-            <span className="-my-1 inline-flex overflow-hidden py-1">
+            <span className="-my-[0.15em] inline-flex overflow-hidden py-[0.15em]">
               <span
                 className="co-kinetic-word inline-block"
                 style={{ "--co-i": order } as React.CSSProperties}

@@ -270,7 +270,7 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
                     <span aria-hidden className="co-data text-co-muted-2">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[0.95] tracking-[-0.02em]">
+                    <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[1.2] tracking-[-0.02em]">
                       {item.label}
                     </span>
                     <span aria-hidden className="text-[18px] leading-none">
