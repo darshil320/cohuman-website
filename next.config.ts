@@ -15,7 +15,8 @@ const nextConfig: NextConfig = {
       72 is the hero: it is the LCP image, full-bleed behind a scrim and a headline, so
       the extra bytes between 72 and 75 buy nothing a visitor can see. 75 is the default
       everything else inherits. 90 is the series renders and the full-screen viewer, both
-      of which get magnified past 1:1.
+      of which get magnified past 1:1, and the project photographs (homepage, /projects,
+      sector pages), which the client found soft at 75.
     */
     qualities: [72, 75, 90],
     // AVIF first, WebP for the browsers without it. Next's default order is the reverse,
@@ -26,13 +27,13 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000,
     /*
       Next's default tops out at 3840. Nothing under `public/` is wider than 1920 (the
-      three heroes; series renders are 1400, everything else 1600), and the optimiser
+      three heroes and the project photographs; series renders are 1400, most else 1600), and the optimiser
       never enlarges — a request for w=3840 returns the source width and burns its own
       cache entry for a byte-identical file. Capping at 1920 removes two of those per
       image per format.
 
-      The widest fractional consumer is `64vw` (src/app/projects/page.tsx:48), then
-      `62vw` (src/components/series/series-stage.tsx:80). Trade-off, stated plainly: on a
+      The widest fractional consumers are `62vw` (the homepage's lead project and
+      src/components/series/series-stage.tsx) and `58vw` (the /projects plate rail). Trade-off, stated plainly: on a
       3840px viewport that 62vw slot wants ~2380px and now gets 1920, so it can render
       marginally soft — but the 1400px source holds no extra detail to serve anyway.
 

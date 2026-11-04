@@ -252,8 +252,12 @@ IndianOil, ICICI Prudential Life, IDFC FIRST Bank, L&T, LIC Housing Finance, DMa
 Shamani's Figuring Out, CarTrade, Reliance Nashik, NTT DATA, TaskUs, Indiabulls), then KP
 Group and the Surat jobs. An entry with `"hidden": true` (Devshree today) stays in the
 file but is filtered out by the repository — JSON's way of commenting it out. Array order is display order; the first three are the homepage's
-featured projects. Photos live in `public/projects/<slug>/`, cropped to 3:2, sRGB, ≤1600px
-progressive JPEG. Cities appear only where the folder named one. `delivered` describes
+featured projects. Photos live in `public/projects/<slug>/`, cropped to 3:2, sRGB, 1920px
+(Next's top `deviceSize`), JPEG q90 4:4:4 with a light unsharp mask, re-exported from the
+Drive originals. **Project photos do not take `co-highkey`** and render at `quality={90}`
+(homepage, /projects, sector cards): the client found the filtered, q75 versions washed
+out and soft. The older Surat shots (Narola, PNR, Montessa) are still the 1600px files on
+hand — no originals. Cities appear only where the folder named one. `delivered` describes
 only what the photographs show. `projects.test.ts` checks every image exists and keeps
 counted claims out of the copy. **Open item:** confirm with the client that each named
 client has cleared publication — several folders came from the Office Ideas portfolio.

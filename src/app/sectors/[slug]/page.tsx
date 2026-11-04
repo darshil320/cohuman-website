@@ -258,7 +258,8 @@ export default async function SectorPage({ params }: Props) {
                           alt={`${project.name} — completed fit-out`}
                           fill
                           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-                          className="co-highkey object-cover"
+                          quality={90}
+                          className="object-cover"
                         />
                       </ClipReveal>
                       <FigureCaption n={figure} className="mt-3">

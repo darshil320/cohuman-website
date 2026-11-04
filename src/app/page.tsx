@@ -196,7 +196,8 @@ export default async function HomePage() {
                       alt={`${pr.name} — completed fit-out`}
                       fill
                       sizes={i === 0 ? "(min-width: 768px) 62vw, 80vw" : "(min-width: 768px) 31vw, 80vw"}
-                      className="co-highkey object-cover"
+                      quality={90}
+                      className="object-cover"
                     />
                   </ClipReveal>
                   <FigureCaption n={firstProjectFigure + i} className="mt-3">

@@ -76,7 +76,8 @@ function PlateHeading({ project, index }: { project: Project; index: number }) {
 /**
  * Completed fit-outs as a drawing set: each project a plate — its name and what was
  * delivered, then every photograph at one large size on a sideways rail, pinned with
- * registration crosses. Figure numbers run down the whole page. Only the fields a project
+ * registration crosses. Client photographs show in their own colour — no `co-highkey`
+ * (the client found it washed out) — at quality 90. Figure numbers run down the whole page. Only the fields a project
  * actually carries are printed — no city where none was shared, no counts, no sectors.
  */
 export default async function ProjectsPage() {
@@ -126,7 +127,8 @@ export default async function ProjectsPage() {
                             fill
                             sizes="(min-width: 768px) min(58vw, 860px), 86vw"
                             preload={lcp}
-                            className="co-highkey object-cover"
+                            quality={90}
+                            className="object-cover"
                           />
                         </Frame>
                         <RegistrationCross className="-left-2 -top-2" />
