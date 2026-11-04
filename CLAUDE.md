@@ -26,7 +26,10 @@ The short version:
 
 - **Palette "Ivory paper"** (values in `src/app/globals.css`; token *names* are
   historical, *values* are the Signal roles): canvas `#FBF8EE` (never pure white), fog
-  `#F3EFE1`, brand ink `#231F20`, steel `#6B665D` for meta, hair `#DCD6C4`, and the
+  `#F3EFE1`, brand ink `#231F20` for type and buttons, **Deep Tide `#2F6F6D` for every
+  dark block** (`co-panel`: spec block, footer, hero controls — white/near-white text
+  only, nothing else passes AA on it), **Sunlit `#F9B939` only as the ° chip on
+  provisional codes** (fill under ink, never text), steel `#6B665D` for meta, hair `#DCD6C4`, and the
   logo green `#5EB646` (`co-green`) as a **status light only** — selected, active,
   progress, sent. The header's quote dots are on every screen, so content adds at most
   one genuine state in green (the progress rail, an active tab, a selected row). Two

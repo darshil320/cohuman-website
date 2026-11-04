@@ -69,7 +69,7 @@ export function SeriesAccessory() {
                     <th scope="row" className="py-4 pr-4 text-left font-normal text-co-panel-fg">
                       {row.code}
                       {isInferredCode(series, row.code) ? (
-                        <span className="text-co-panel-faint" title={INFERRED_CODE_FOOTNOTE}>
+                        <span className="ml-0.5 inline-block bg-co-sunlit px-[3px] leading-none text-co-ink" title={INFERRED_CODE_FOOTNOTE}>
                           °
                         </span>
                       ) : null}

@@ -57,12 +57,21 @@
     to #5eb646 for full-strength lines.
   */
   --color-co-grid-signal: #9dd089;
-  /* Ink block: the spec block on product pages, the footer, the occasional dark band. */
-  --color-co-panel: #231f20;
-  --color-co-panel-border: #3b3637;
-  --color-co-panel-fg: #fbf8ee;
-  --color-co-panel-muted: #b4aea4;
-  --color-co-panel-faint: #9e988d;
+  /*
+    Deep Tide block (brand primary dark, #2F6F6D): the spec block on product pages, the
+    footer, the hero's corner controls, the occasional dark band. Ink stays the colour of
+    type and buttons. Deep Tide is mid-dark, so only white and near-white text pass AA on
+    it: fg 5.8:1, muted 5.0:1, faint 4.6:1 — the three tiers sit close on purpose. The
+    border is darker than the block, so the green progress rail reads against its track
+    (3.1:1) as well as against the block.
+  */
+  --color-co-panel: #2f6f6d;
+  --color-co-panel-border: #255a58;
+  --color-co-panel-fg: #ffffff;
+  --color-co-panel-muted: #e8efed;
+  --color-co-panel-faint: #dce7e4;
+  /* Sunlit (brand warm accent): a small marker fill under ink type (9.3:1), never text. */
+  --color-co-sunlit: #f9b939;
   --color-co-cta-green: #231f20;
   --color-co-cta-green-ink: #fbf8ee;
   --color-co-placeholder-frame-1: #f3efe1;

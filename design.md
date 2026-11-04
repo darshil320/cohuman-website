@@ -20,19 +20,21 @@ did not have to move. The **values** are the Signal roles.
 |---|---|---|---|---|
 | Canvas | `#FBF8EE` | `--color-co-bg`, `--color-co-surface` | Page ground. A tint of brand Ivory — never pure white. | ~62% |
 | Fog | `#F3EFE1` | `--color-co-bg-alt`, `--color-co-hero-bg` | Panels, hover rows, sticky quote bar, placeholder frames | ~18% |
-| Ink | `#231F20` | `--color-co-ink`, `--color-co-panel` | Type, primary buttons, the PDP spec block, the footer | ~14% |
+| Ink | `#231F20` | `--color-co-ink` | Type, primary buttons | ~20% |
+| Deep Tide | `#2F6F6D` | `--color-co-panel` | Every dark block: the PDP spec block, the footer, the hero corner controls, dark bands | ~14% |
 | Ink soft | `#3D3A36` | `--color-co-ink-soft` | Body copy, leads | — |
 | Muted | `#55514A` | `--color-co-muted` | Secondary body copy | — |
 | Steel | `#6B665D` | `--color-co-muted-2`, `--color-co-faint`, `--color-co-placeholder` | Meta: eyebrows, labels, captions, placeholders | ~3% |
 | Hair | `#DCD6C4` | `--color-co-border`, `--color-co-card-border` | 1px rules | ~2% |
 | Rule strong | `#8F8874` | `--color-co-border-strong` | A rule that is the only edge of a control (3:1) | — |
-| On ink | `#FBF8EE` / `#B4AEA4` / `#9E988D` | `--color-co-panel-fg` / `-muted` / `-faint` | Text on the ink block | — |
-| Ink rule | `#3B3637` | `--color-co-panel-border` | Hairlines on the ink block | — |
+| On Deep Tide | `#FFFFFF` / `#E8EFED` / `#DCE7E4` | `--color-co-panel-fg` / `-muted` / `-faint` | Text on the Deep Tide block — only near-white passes AA on it, so the tiers sit close | — |
+| Tide rule | `#255A58` | `--color-co-panel-border` | Hairlines and the progress-rail track on Deep Tide (darker than the block, so the green rail reads against it at 3.1:1) | — |
+| Sunlit | `#F9B939` | `--color-co-sunlit` | Marker fill under ink type only — the ° chip on provisional part codes. Never text, never a large fill | <1% |
 | **Signal** | **`#5EB646`** | `--color-co-green`, `--color-co-green-light` | **State only** — see rules | **~1%** |
 
 `#5EB646` is the green in the client's vector logo masters and the brand guidelines, so the
-UI's signal and the mark's dots and bar are the same colour. The brand's Deep Tide,
-Ocean and Sunlit are not used on the website.
+UI's signal and the mark's dots and bar are the same colour. Deep Tide carries the dark blocks and Sunlit the one marker (colour option 01,
+`moodboards/colour-options.html`); Ocean is not used on the website.
 
 ### Contrast (WCAG 2.x)
 
@@ -44,9 +46,11 @@ Every text pair in use, checked:
 | Ink soft on canvas / fog | 10.6 / 9.8 | AAA |
 | Muted on canvas / fog | 7.4 / 6.9 | AAA / AA |
 | Steel on canvas / fog | 5.4 / 4.95 | AA (all sizes) |
-| Canvas on ink | 15.3 | AAA |
-| Panel-muted on ink | 7.4 | AAA |
-| Panel-faint on ink | 5.7 | AA |
+| White on Deep Tide | 5.8 | AA |
+| Panel-muted on Deep Tide | 5.0 | AA |
+| Panel-faint on Deep Tide | 4.6 | AA |
+| Ink on Sunlit | 9.3 | AAA |
+| Signal on Deep Tide / on tide rule | 2.3 / 3.1 | non-text; the rail reads against its track |
 | Ink on signal | 6.4 | AA |
 | Signal on canvas | 2.39 | **non-text only, never alone** |
 | Rule strong on canvas | 3.3 | UI component (3:1) |
@@ -185,7 +189,7 @@ in display capitals.
 | `SegmentedControl` | Square segmented size selector, 44px cells; selected = ink fill + `aria-pressed`; a `locked` (fixed) value is dashed and unfilled; `describedBy` links its helper text |
 | `FinishChip` | Square swatch chip with name and unbreakable part code; selected = offset ink outline + dot (`dot={false}` where the progress rail is already lit) |
 | `ProgressRail` | 2px track, green fill, "Step n of m" caption |
-| `SpecRows` | `<dl>` of mono key/value rows on hairlines; `tone="dark"` for the ink block |
+| `SpecRows` | `<dl>` of mono key/value rows on hairlines; `tone="dark"` for the Deep Tide block |
 | `IndexRow` / `IndexHeader` | The parts-list row: number, name in caps, type, mono range, arrow; hover = fog + cut-out thumbnail + dots |
 | `DimensionLine` | 1px rule with end ticks and a mono value, `axis="x" \| "y"` |
 | `RegistrationCross`, `FigureCaption`, `HairlineGrid`, `SignalDots`, `TickNumber` | Drawing marks and state |

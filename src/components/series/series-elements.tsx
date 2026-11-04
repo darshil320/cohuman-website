@@ -20,13 +20,13 @@ const MOBILE_PEEK = 3;
 const ROW_GRID =
   "grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 md:grid-cols-[56px_minmax(0,1.4fr)_minmax(0,0.5fr)_minmax(0,0.8fr)] lg:grid-cols-[90px_minmax(0,1.4fr)_minmax(0,0.5fr)_260px]";
 
-/** A part number, with the steel `°` where the code is pattern-matched, not printed. */
+/** A part number, with the Sunlit `°` chip where the code is pattern-matched, not printed. */
 function ElementCode({ series, code }: { series: SeriesDefinition; code: string }) {
   return (
     <>
       {code}
       {isInferredCode(series, code) ? (
-        <span className="text-co-muted-2" title={INFERRED_CODE_FOOTNOTE}>
+        <span className="ml-0.5 inline-block bg-co-sunlit px-[3px] leading-none text-co-ink" title={INFERRED_CODE_FOOTNOTE}>
           °
         </span>
       ) : null}
