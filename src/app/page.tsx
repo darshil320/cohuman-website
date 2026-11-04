@@ -255,7 +255,8 @@ export default async function HomePage() {
                   alt={showroom.alt}
                   fill
                   sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="co-highkey object-cover"
+                  quality={90}
+                  className="object-cover"
                 />
               </ClipReveal>
               <div className="mt-3 flex flex-wrap justify-between gap-x-6 gap-y-1">

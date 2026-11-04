@@ -52,7 +52,9 @@ The short version:
   never typed. No gradients, glass, blur, shadows, glows or hover zooms.
 - **Cut-outs:** product renders take `co-cutout` (multiply + feathered edge). Never wrap
   one in an element with `clip-path`/`filter`/`opacity`/an isolating transform — the
-  white box comes back. Interiors take `co-highkey`.
+  white box comes back. Interiors *used to* take `co-highkey`; the client found it washed
+  out, so photos on the homepage, /solutions and every project photo now render unfiltered
+  at `quality={90}`. Other routes still carry it — remove there too if asked.
 
 ## Design workflow — which skill, when
 
@@ -193,8 +195,9 @@ collection is a desking series with a configurator, not a bucket for SKUs.
   PDF specifies materials, not colours.
 - **One client boundary** — `src/components/series/series-pdp.tsx` shares configurator
   state, so the viewer, size chart, sticky bar and enquiry payload cannot disagree.
-- **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`) → B ink
-  spec block with the viewer, square size selectors and the green progress rail
+- **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`) → B spec
+  block — viewer on the left, ink spec panel on the right (client request; on phones the
+  viewer comes first), square size selectors and the green progress rail
   (`series-spec-block`, `series-config-rail` at `#configurations`) → C per-configuration
   gallery (`series-config-gallery`) → the drawing-set sections (assembly — hidden for now, commented out in
   `series-pdp.tsx` and `sections.ts` — elements, anatomy, finishes, accessory, products — numbered as they render, see

@@ -10,9 +10,9 @@ import { spacePhoto } from "@/lib/photos";
 /**
  * Furnish by space.
  *
- * Photographs of finished installs, run the way the moodboard treats interiors: high-key
- * and cool, partly desaturated (`co-highkey`), so the furniture rather than the room
- * styling is the subject. Each frame wipes open and carries a figure number. On phones
+ * Photographs of finished installs, in their own colour — the moodboard's high-key,
+ * partly desaturated treatment (`co-highkey`) was dropped at the client's request, who
+ * found it washed out. Each frame wipes open and carries a figure number. On phones
  * the four sit on a swipe rail rather than stacking four screens deep. `Space.includes`
  * is deliberately not shown: it lists the illustrative demo products, not real Cohuman
  * ones.
@@ -49,7 +49,8 @@ export function SpaceTiles({
                     alt={sp.slotHint}
                     fill
                     sizes="(min-width: 1024px) 24vw, (min-width: 768px) 50vw, 80vw"
-                    className="co-highkey object-cover"
+                    quality={90}
+                    className="object-cover"
                   />
                 </ClipReveal>
                 <FigureCaption n={firstFigure + i} className="mt-3">

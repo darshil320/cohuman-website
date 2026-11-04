@@ -12,8 +12,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * A — the name hero. Officemate's first beat, in Signal: the configuration's name in
  * extended caps on a lot of canvas, a series eyebrow that says where you are in the
  * range, and a dimension rule carrying the size range the configuration is offered in.
- * The ink block in the bottom-left corner is the top of the spec block below, reaching
- * up into the white — one brand colour used as one solid block, not sprinkled.
+ * The ink block in the bottom-right corner is the top of the spec block's ink panel
+ * below, reaching up into the white — one brand colour used as one solid block, not sprinkled.
  *
  * Everything reads the shared configurator state, so picking a configuration anywhere
  * on the page renames this hero.
@@ -48,8 +48,9 @@ export function SeriesNameHero() {
           <p className="co-lead mt-6 max-w-[46ch]">{series.promise}</p>
         </div>
 
-        {/* Anchored to the shell's outer edge — the same edge the spec block starts on. */}
-        <div aria-hidden className="absolute -bottom-px left-0 h-[clamp(56px,7vw,110px)] w-[clamp(120px,21vw,300px)] bg-co-panel" />
+        {/* Anchored to the shell's outer right edge — the edge the spec panel bleeds to.
+            Desktop only: on phones the viewer, not the panel, comes next. */}
+        <div aria-hidden className="absolute -bottom-px right-0 hidden h-[clamp(56px,7vw,110px)] w-[clamp(120px,21vw,300px)] bg-co-panel lg:block" />
       </div>
     </section>
   );

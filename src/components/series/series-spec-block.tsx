@@ -54,8 +54,8 @@ function Provisional() {
 
 /**
  * B — the spec block. Officemate's solid colour block, turned to ink: mono spec rows,
- * the two size selectors, the progress rail and the bill of components on the left; the
- * viewer — poster plus WebGL stage, with its dimension lines — on the canvas beside it.
+ * the two size selectors, the progress rail and the bill of components on the right; the
+ * viewer — poster plus WebGL stage, with its dimension lines — on the canvas to its left.
  * The configuration picker runs full width underneath.
  *
  * The progress rail is this view's one green thing. It counts what is set, not where
@@ -124,8 +124,17 @@ export function SeriesSpecBlock() {
 
   return (
     <section id="specification" className="scroll-mt-[72px] border-b border-co-ink">
-      <div className="co-shell grid grid-cols-1 lg:grid-cols-[minmax(360px,440px)_minmax(0,1fr)]">
-        <div className="-mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-ml-12 lg:pl-12 lg:pr-10">
+      {/* Viewer on the left, the ink spec panel on the right (client request). The panel
+          bleeds through the shell's right gutter, as it used to through the left. On phones
+          the viewer comes first, then the panel. */}
+      <div className="co-shell grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
+        <div className="min-w-0 py-[clamp(32px,4vw,64px)] lg:pr-[clamp(24px,3.5vw,56px)]">
+          <div className="lg:sticky lg:top-[104px]">
+            <SeriesStage />
+          </div>
+        </div>
+
+        <div className="-mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-mr-12 lg:pl-10 lg:pr-12">
           <p className="co-eyebrow mb-5 text-co-panel-faint">01 / Specification</p>
           <SpecRows rows={rows} tone="dark" />
 
@@ -231,11 +240,6 @@ export function SeriesSpecBlock() {
           </p>
         </div>
 
-        <div className="min-w-0 py-[clamp(32px,4vw,64px)] lg:pl-[clamp(24px,3.5vw,56px)]">
-          <div className="lg:sticky lg:top-[104px]">
-            <SeriesStage />
-          </div>
-        </div>
       </div>
 
       <div id="configurations" className="co-shell scroll-mt-[72px] border-t border-co-border py-[clamp(28px,3vw,44px)]">

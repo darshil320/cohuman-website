@@ -40,7 +40,9 @@ export const collectionPhoto: Record<string, string> = {
 /** Space (`Space.slug`) → a photograph of that space type in a finished install. */
 export const spacePhoto: Record<string, string> = {
   cabin: "/spaces/cabin.jpg",
-  workstation: "/spaces/workstation.jpg",
+  // Previous shot, kept on disk: another brand's chairs were in frame (client request).
+  // workstation: "/spaces/workstation.jpg",
+  workstation: "/spaces/workstation-google.jpg",
   meeting: "/spaces/meeting.jpg",
   lounge: "/spaces/lounge.jpg",
 };
