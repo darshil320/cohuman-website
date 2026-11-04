@@ -192,8 +192,8 @@ collection is a desking series with a configurator, not a bucket for SKUs.
 - **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`) → B ink
   spec block with the viewer, square size selectors and the green progress rail
   (`series-spec-block`, `series-config-rail` at `#configurations`) → C per-configuration
-  gallery (`series-config-gallery`) → the drawing-set sections (assembly, elements,
-  anatomy, finishes, accessory, products — numbered as they render, see
+  gallery (`series-config-gallery`) → the drawing-set sections (assembly — hidden for now, commented out in
+  `series-pdp.tsx` and `sections.ts` — elements, anatomy, finishes, accessory, products — numbered as they render, see
   `src/lib/series/sections.ts`) → D prev / Get a quote · all / next (`series-pager`, in
   the page flow, never fixed) → enquiry. The sticky quote bar shows between the spec
   block and the pager, then hands off to the pager's own quote button. **There is no
@@ -239,10 +239,24 @@ There are no image placeholders left on these pages.
 
 ## Demo catalog
 
-`src/data/products.json` (16 products) and `projects.json` are still the illustrative
-data carried over from the original demo, and `/catalog` still serves them. They are
-not real Cohuman products — replace them as real product data arrives. The catalog
-filters by category and price band only.
+`src/data/products.json` (16 products) is still the illustrative data carried over from
+the original demo, and `/catalog` still serves it. These are not real Cohuman products —
+replace them as real product data arrives. The catalog filters by category and price
+band only.
+
+## Projects
+
+`src/data/projects.json` is real: completed installs from the client's "completed
+projects" Drive folder — named national clients first (Google BKC, Rojo Integrations,
+IndianOil, ICICI Prudential Life, IDFC FIRST Bank, L&T, LIC Housing Finance, DMart, Raj
+Shamani's Figuring Out, CarTrade, Reliance Nashik, NTT DATA, TaskUs, Indiabulls), then KP
+Group and the Surat jobs. An entry with `"hidden": true` (Devshree today) stays in the
+file but is filtered out by the repository — JSON's way of commenting it out. Array order is display order; the first three are the homepage's
+featured projects. Photos live in `public/projects/<slug>/`, cropped to 3:2, sRGB, ≤1600px
+progressive JPEG. Cities appear only where the folder named one. `delivered` describes
+only what the photographs show. `projects.test.ts` checks every image exists and keeps
+counted claims out of the copy. **Open item:** confirm with the client that each named
+client has cleared publication — several folders came from the Office Ideas portfolio.
 
 ## Homepage hero
 
@@ -252,9 +266,9 @@ filters by category and price band only.
 1. **The lead film** — `LEAD_FILM` in **`src/lib/hero-films.ts`**: full screen under the
    transparent header, with the page's **H1** set over it by `FilmIntro`
    (`src/components/home/film-intro.tsx`): a mono line, the tagline, one sentence and
-   one action, on a compact canvas title block (1px ink frame, 360px wide) high in the top
-   left — the film's close-ups leave no empty part of the frame for type to sit on
-   directly, and that corner is the calmest part of all four shots.
+   one action, on a canvas title block (1px ink frame) high in the top left: from `lg` a
+   short, wide strip (headline on one line, then label | sentence | action) that stays in
+   the band of sweep above the orbiting desk; on phones a 360px stacked block.
 2. **The comparison film** — `COMPARE_FILM` + `FilmBand`: the previous hero (the
    `Video 1.MOV` wide-shot loop with the claim in ink straight on the sweep, as an H2),
    kept **temporarily** so the client can compare the two. When they pick, delete the
@@ -263,11 +277,10 @@ filters by category and price band only.
    grid, with real dimensions. It is an H2 behind a lead film and takes the H1 back if the
    lead film's poster is ever missing.
 
-The film files live in `public/video/` (MP4 + WebM + a poster). The current one is a
-client-supplied 1280×720, 10-second, four-shot studio film, encoded with ffmpeg: audio
-stripped and cropped 12% off the right edge to frame out a corner watermark (client's
-instruction); the edit itself is the client's. Its close-ups fill the frame, so the claim
-sits on its own title block, not on the footage. Set each film's `tone` (header type colour
+The film files live in `public/video/` (MP4 + WebM + a poster). The current lead film is
+the client's `VIDEO 2 .mp4`: 1344×768, 10 seconds, one continuous orbit of the
+marble-topped desk, no cuts, no watermark — encoded full frame with the audio stripped.
+The claim sits on its own title block, not on the footage. Set each film's `tone` (header type colour
 over it) and `mobileFocus` (the part of the frame a phone keeps).
 
 The ink corner block holds every hero control: pause / play (required for looping video,
@@ -339,7 +352,7 @@ space type).
 - **`src/components/common/image-placeholder.tsx`** — every product/project/hero
   image renders a labelled fog frame until a real `src` is passed. Grep for
   `<ImagePlaceholder` usages without `src` before launch.
-- **`src/data/products.json`, `projects.json`** — SKUs, specs and case studies
+- **`src/data/products.json`** — SKUs and specs
   are illustrative, carried over from the original demo. Real product data,
   photography, and project case studies (with permission to publish) are open
   items with the client. **No product has been photographed:** `Product.images`
@@ -412,10 +425,18 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   script in `layout.tsx` — so no script means nothing is ever hidden, and all disabled
   under `prefers-reduced-motion`. **Under 768px the wipes run top → bottom** (blocks lift
   16px as they open) and fire without a stagger — a left-to-right wipe across a phone's
-  full-width column showed half-words mid-scroll. Figure sets (Spaces, Projects) are
-  swipe rails on phones (`co-rail`). Do not reintroduce framer `initial={{ opacity: 0 }}`
+  full-width column showed half-words mid-scroll. Figure sets (Spaces, the homepage's
+  projects) are swipe rails on phones (`co-rail`). On /projects every project is a plate
+  rail at all widths (`co-plate-rail` + `ProjectRail`, `src/components/projects/`): each
+  photo one large frame, bleeding to the screen's right edge, with an ink segmented rule,
+  mono counter and square arrows — no green, the page has many of them. Do not reintroduce framer `initial={{ opacity: 0 }}`
   on static content: it serializes as an inline `opacity:0`, so the page is blank when
   JS fails.
+- **Systems index hover previews are line drawings**, not photos: ink on transparent in
+  `public/lines/`, traced from each system's own render by
+  `scripts/trace-line-drawing.py` (OpenCV: bilateral smooth, Canny, small-blob removal)
+  and mapped in `lineDrawing` (`src/lib/photos.ts`). Re-trace when a render changes.
+  APEX and ELEMENT have none yet — only room shots were supplied, which do not trace.
 - **Share images.** `src/app/opengraph-image.tsx` is the site-wide card. A page that sets
   its own `openGraph` *replaces* the parent's, image included — so spread
   `images: [SHARE_IMAGE]` (`src/lib/seo/share-image.ts`) into it unless the page has a

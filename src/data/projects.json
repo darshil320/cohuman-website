@@ -1,5 +1,181 @@
 [
   {
+    "slug": "google",
+    "name": "Google",
+    "city": "Bandra Kurla Complex, Mumbai",
+    "delivered": "Workstation floors of bench desking with blue fabric screens under drum pendants, a café counter with yellow bar stools on a herringbone floor, and a reception lounge of rope-woven sofas and armchairs.",
+    "images": [
+      "/projects/google/01.jpg",
+      "/projects/google/02.jpg",
+      "/projects/google/03.jpg",
+      "/projects/google/04.jpg",
+      "/projects/google/05.jpg"
+    ]
+  },
+  {
+    "slug": "rojo-integrations",
+    "name": "Rojo Integrations",
+    "delivered": "Long-run bench desking along the glazing, a reception lounge in red and grey with yellow ottomans, a café of white tables and moulded chairs, and planter-screened meeting tables.",
+    "images": [
+      "/projects/rojo-integrations/01.jpg",
+      "/projects/rojo-integrations/02.jpg",
+      "/projects/rojo-integrations/03.jpg",
+      "/projects/rojo-integrations/04.jpg",
+      "/projects/rojo-integrations/05.jpg"
+    ]
+  },
+  {
+    "slug": "indianoil",
+    "name": "IndianOil",
+    "delivered": "Boardrooms built around long marble-finish tables in tan high-back chairs, an oval conference table in white and black, and a sculpted feature wall carrying the logo.",
+    "images": [
+      "/projects/indianoil/01.jpg",
+      "/projects/indianoil/02.jpg",
+      "/projects/indianoil/03.jpg",
+      "/projects/indianoil/04.jpg",
+      "/projects/indianoil/05.jpg"
+    ]
+  },
+  {
+    "slug": "icici-prudential",
+    "name": "ICICI Prudential Life",
+    "city": "Mumbai",
+    "delivered": "Meeting rooms with white glass-topped tables and mesh chairs against acoustic felt panelling, tiered timber amphitheatre seating on a terracotta wall, and a branded reception.",
+    "images": [
+      "/projects/icici-prudential/01.jpg",
+      "/projects/icici-prudential/02.jpg",
+      "/projects/icici-prudential/03.jpg",
+      "/projects/icici-prudential/04.jpg",
+      "/projects/icici-prudential/05.jpg"
+    ]
+  },
+  {
+    "slug": "idfc",
+    "name": "IDFC FIRST Bank",
+    "delivered": "A long terrazzo-topped collaboration table under a sculpted timber tree canopy, a glazed boardroom in tan leather, café-height counters with yellow stools, and an executive cabin.",
+    "images": [
+      "/projects/idfc/01.jpg",
+      "/projects/idfc/02.jpg",
+      "/projects/idfc/03.jpg",
+      "/projects/idfc/04.jpg"
+    ]
+  },
+  {
+    "slug": "larsen-toubro",
+    "name": "Larsen & Toubro",
+    "delivered": "A reception lounge of leather armchairs beside a lit staircase screen, a stone reception counter, a boardroom in green high-back chairs, a café in velvet tub chairs, and a guest lounge.",
+    "images": [
+      "/projects/larsen-toubro/01.jpg",
+      "/projects/larsen-toubro/02.jpg",
+      "/projects/larsen-toubro/03.jpg",
+      "/projects/larsen-toubro/04.jpg",
+      "/projects/larsen-toubro/05.jpg"
+    ]
+  },
+  {
+    "slug": "lic-housing-finance",
+    "name": "LIC Housing Finance",
+    "delivered": "A boardroom of one long timber table seating the full room in tan leather high-back chairs, with displays at either end, and a training room of paired tables and white tub chairs.",
+    "images": [
+      "/projects/lic-housing-finance/01.jpg",
+      "/projects/lic-housing-finance/02.jpg",
+      "/projects/lic-housing-finance/03.jpg",
+      "/projects/lic-housing-finance/04.jpg"
+    ]
+  },
+  {
+    "slug": "dmart",
+    "name": "DMart",
+    "delivered": "A reception in leather lounge chairs and a timber counter, a café with an island counter and bar stools, a training room under a values wall, open desking on blue pedestals, and a meeting room in green chairs.",
+    "images": [
+      "/projects/dmart/01.jpg",
+      "/projects/dmart/02.jpg",
+      "/projects/dmart/03.jpg",
+      "/projects/dmart/04.jpg",
+      "/projects/dmart/05.jpg"
+    ]
+  },
+  {
+    "slug": "figuring-out",
+    "name": "Figuring Out — Raj Shamani",
+    "delivered": "A filming studio set around a meeting table on a timber floor, open desking under a yellow manifesto wall, a meeting room in black mesh chairs, and individual work desks.",
+    "images": [
+      "/projects/figuring-out/01.jpg",
+      "/projects/figuring-out/02.jpg",
+      "/projects/figuring-out/03.jpg",
+      "/projects/figuring-out/04.jpg",
+      "/projects/figuring-out/05.jpg"
+    ]
+  },
+  {
+    "slug": "cartrade",
+    "name": "CarTrade",
+    "delivered": "Open workstation floors along the glazing in mesh task chairs, a sculpted standing-height collaboration table, timber-clad storage columns and planter-topped pendant lights.",
+    "images": [
+      "/projects/cartrade/01.jpg",
+      "/projects/cartrade/02.jpg",
+      "/projects/cartrade/03.jpg",
+      "/projects/cartrade/04.jpg"
+    ]
+  },
+  {
+    "slug": "reliance-nashik",
+    "name": "Reliance",
+    "city": "Nashik",
+    "delivered": "An auditorium of tiered theatre seating in orange upholstery with lit steps, a timber stage with a lectern, and full-height acoustic wall panelling.",
+    "images": [
+      "/projects/reliance-nashik/01.jpg",
+      "/projects/reliance-nashik/02.jpg",
+      "/projects/reliance-nashik/03.jpg",
+      "/projects/reliance-nashik/04.jpg",
+      "/projects/reliance-nashik/05.jpg"
+    ]
+  },
+  {
+    "slug": "ntt",
+    "name": "NTT DATA",
+    "delivered": "A sculpted white reception desk under a timber ceiling, and tiered timber seating steps with upholstered cushions and ottomans in the breakout space.",
+    "images": [
+      "/projects/ntt/01.jpg",
+      "/projects/ntt/02.jpg"
+    ]
+  },
+  {
+    "slug": "taskus",
+    "name": "TaskUs",
+    "delivered": "Meeting cabins behind printed glass, a lounge of rose swivel chairs along a lilac corridor, and an open floor of bench desking under a leaf-canopy ceiling.",
+    "images": [
+      "/projects/taskus/01.jpg",
+      "/projects/taskus/02.jpg",
+      "/projects/taskus/03.jpg"
+    ]
+  },
+  {
+    "slug": "one-indiabulls-centre",
+    "name": "Indiabulls",
+    "city": "One Indiabulls Centre, Mumbai",
+    "delivered": "A staff cafeteria under a timber lattice dome: long dining runs, booths in red and grey, banquette and high-table bays, and a teal lounge sofa against a lit feature wall.",
+    "images": [
+      "/projects/one-indiabulls-centre/01.jpg",
+      "/projects/one-indiabulls-centre/02.jpg",
+      "/projects/one-indiabulls-centre/03.jpg",
+      "/projects/one-indiabulls-centre/04.jpg"
+    ]
+  },
+  {
+    "slug": "unit-708",
+    "name": "KP Group",
+    "delivered": "Two workstation floors on a teal-screened bench system, a timber-slat reception, breakout seating, three glazed meeting rooms, an executive cabin and a sage-green lounge suite.",
+    "images": [
+      "/projects/unit-708/01.jpg",
+      "/projects/unit-708/02.jpg",
+      "/projects/unit-708/03.jpg",
+      "/projects/unit-708/04.jpg",
+      "/projects/unit-708/05.jpg",
+      "/projects/unit-708/06.jpg"
+    ]
+  },
+  {
     "slug": "narola",
     "name": "Narola",
     "delivered": "Open-plan floors of bench desking with upholstered acoustic screens, planter-topped storage runs, glazed meeting rooms, a long shared café table and colour-blocked breakout seating.",
@@ -22,17 +198,6 @@
       "/projects/pnr/03.jpg",
       "/projects/pnr/04.jpg",
       "/projects/pnr/05.jpg"
-    ]
-  },
-  {
-    "slug": "unit-708",
-    "name": "KP Group",
-    "delivered": "Two workstation floors on a teal-screened bench system, a timber-slat reception, breakout seating, and three glazed meeting rooms.",
-    "images": [
-      "/projects/unit-708/01.jpg",
-      "/projects/unit-708/02.jpg",
-      "/projects/unit-708/03.jpg",
-      "/projects/unit-708/04.jpg"
     ]
   },
   {
@@ -59,6 +224,7 @@
   {
     "slug": "devshree",
     "name": "Devshree",
+    "hidden": true,
     "delivered": "Workstation runs with planter dividers and pedestal storage, a full-height locker wall, a curved reception counter and glazed cabin fronts.",
     "images": [
       "/projects/devshree/01.jpg",

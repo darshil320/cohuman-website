@@ -237,11 +237,11 @@ cues · stock lifestyle people · bento grids of rounded cards.
 
 Full screen, under a transparent header, opening on a **film**: the studio footage edge to
 edge with a canvas multiply over it (the grey sweep lands on Signal's paper), and the
-page's claim set on a small drawing's title block high in the top left: a 360px canvas
-panel in a 1px ink frame, ruled into a mono line, the tagline in extended caps, one
-sentence and a full-width action. The film cuts to close-ups that fill the frame, so the
-claim gets its own paper rather than a scrim, kept small so the footage stays the hero.
-The full four-shot edit plays. Panel 2 is, for now, the previous design for the client to
+page's claim set on a drawing's title block high in the top left, a canvas panel in a
+1px ink frame: on desktop a short, wide strip (the tagline in extended caps on one line,
+then mono label, sentence and action in one ruled row), on phones a 360px stacked block. The film is one continuous orbit of the desk, which
+moves through the frame, so the claim gets its own paper rather than a scrim, kept small
+so the footage stays the hero. Panel 2 is, for now, the previous design for the client to
 compare: a wide-shot loop with the claim in ink straight on the empty sweep.
 Panel 3 is the measured bench on the green grid. Panels wipe left → right.
 

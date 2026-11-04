@@ -73,16 +73,15 @@ export function IndexRow({ n, title, type, range, href, onClick, image, classNam
       </span>
 
       {image ? (
-        // The wipe's clip-path sits on the image, not on this wrapper: a clip-path on the
-        // wrapper would make it a stacking context, isolating the multiply blend so the
-        // render's white frame showed as a box on the fog row.
+        // A technical line drawing (ink on transparent, `lineDrawing` in lib/photos.ts),
+        // opened by a clip on the image itself as the row is hovered or focused.
         <span aria-hidden className="pointer-events-none absolute inset-y-1 right-[340px] hidden w-[170px] lg:block">
           <Image
             src={image.src}
             alt=""
             fill
             sizes="170px"
-            className="co-cutout object-contain transition-[clip-path] duration-300 ease-linear [clip-path:inset(0_100%_0_0)] group-hover:[clip-path:inset(0_0_0_0)] group-focus-visible:[clip-path:inset(0_0_0_0)] motion-reduce:transition-none"
+            className="object-contain transition-[clip-path] duration-300 ease-linear [clip-path:inset(0_100%_0_0)] group-hover:[clip-path:inset(0_0_0_0)] group-focus-visible:[clip-path:inset(0_0_0_0)] motion-reduce:transition-none"
           />
         </span>
       ) : null}

@@ -13,17 +13,16 @@
  * missing video leaves the poster as a still.
  *
  * The current lead film is a web encode of a client-supplied studio clip
- * (`gemini_generated_video_c7a02e58.mp4`, 1280×720, 10s, four shots: wide, marble
- * close-up, lift-column close-up, wide), prepared with ffmpeg: audio stripped, and cropped
- * 12% from the right edge to frame out a corner watermark, at the client's instruction.
- * The edit is the client's own and plays in full; it ends on a wide shot and loops to a
- * wide shot. Because the close-ups fill the frame, the claim sits on its own title block
- * (`film-intro.tsx`), not on the footage. To swap in another export:
+ * (`VIDEO 2 .mp4`, 1344×768, 10s): one continuous orbit around the marble-topped
+ * executive desk, no cuts and no watermark, so it plays full frame with only the audio
+ * stripped. The claim sits on its own title block (`film-intro.tsx`) top left, the
+ * calmest corner of the frame. To swap in another export:
  *
- *   ffmpeg -i <src> -vf "crop=<0.88×width>:<height>:0:0" -an -c:v libx264 -profile:v high
- *     -pix_fmt yuv420p -preset slow -crf 21 -movflags +faststart hero-desk.mp4
+ *   ffmpeg -i <src> -an -c:v libx264 -profile:v high -pix_fmt yuv420p -preset slow
+ *     -crf 21 -movflags +faststart hero-desk.mp4
  *
- * (the same filter to VP9 for the WebM; the poster is a frame from the first wide shot).
+ * (VP9 `-crf 33` for the WebM; the poster is the first frame). Crop a watermark out with
+ * `-vf "crop=…"` when a clip carries one.
  */
 export interface HeroFilm {
   id: string;
@@ -52,11 +51,10 @@ export const LEAD_FILM: HeroFilm = {
   id: "desk",
   label: "Film",
   poster: "/video/hero-desk-poster.jpg",
-  alt: "An executive desk with a marble top on a dark timber pedestal and slab legs, filmed in a pale studio: wide shots and close-ups of the marble and the lift column",
+  alt: "An executive desk with a marble top on a dark timber pedestal and slab legs, filmed in a slow orbit in a pale studio",
   video: { mp4: "/video/hero-desk.mp4", webm: "/video/hero-desk.webm" },
   tone: "light",
-  // On a phone: left of centre, where the lift column stands in the close-up and the
-  // pedestal meets the top in the wide shots.
+  // On a phone: left of centre, where the pedestal meets the marble top through the orbit.
   mobileFocus: "40%",
 };
 

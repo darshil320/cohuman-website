@@ -2,42 +2,47 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { CtaBand } from "@/components/common/cta-band";
+import { PageHero } from "@/components/common/page-hero";
 import { SectionHeading } from "@/components/common/section-heading";
+import { ProjectRail } from "@/components/projects/project-rail";
 import { ClipReveal } from "@/components/ui/clip-reveal";
 import { FigureCaption } from "@/components/ui/figure-caption";
-import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
+import { RegistrationCross } from "@/components/ui/registration-cross";
+import { Reveal } from "@/components/ui/scroll-reveal";
 import { catalog } from "@/lib/catalog";
+import type { Project } from "@/lib/catalog/types";
 import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { cn } from "@/lib/utils";
-import { PageHero } from "@/components/common/page-hero";
+
+const DESCRIPTION =
+  "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description:
-    "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+  description: DESCRIPTION,
   alternates: { canonical: "/projects" },
   openGraph: {
     title: "Projects",
-    description:
-      "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+    description: DESCRIPTION,
     url: "/projects",
     images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Projects",
-    description:
-      "Completed Cohuman fit-outs — workstation floors, executive cabins, boardrooms and reception areas, photographed on site.",
+    description: DESCRIPTION,
   },
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * The lead frame. The first project's lead is preloaded as the page's likely LCP image,
- * so it skips the wipe — a clip-path that starts closed would hold back the very paint
- * the preload is there to hurry. Every other frame wipes in.
+ * One photograph's frame. The page's first photograph is preloaded as its likely LCP
+ * image, so it skips the wipe — a clip-path that starts closed would hold back the very
+ * paint the preload is there to hurry. Every other frame wipes in as it reaches the
+ * viewport, including the ones further along a rail as they are scrolled into view.
  */
-function Frame({ wipe, className, children }: { wipe: boolean; className: string; children: ReactNode }) {
+function Frame({ wipe, children }: { wipe: boolean; children: ReactNode }) {
+  const className = "aspect-[3/2] border border-co-border bg-co-bg-alt";
   return wipe ? (
     <ClipReveal className={className}>{children}</ClipReveal>
   ) : (
@@ -45,11 +50,34 @@ function Frame({ wipe, className, children }: { wipe: boolean; className: string
   );
 }
 
+/** A project's heading: number and plate count, name, city, then what was delivered. */
+function PlateHeading({ project, index }: { project: Project; index: number }) {
+  const plates = project.images.length;
+  return (
+    <Reveal className="grid grid-cols-1 items-end gap-x-[clamp(24px,3vw,48px)] gap-y-5 lg:grid-cols-12">
+      <div className="lg:col-span-7">
+        <p className="co-eyebrow">
+          Project {pad(index + 1)}
+          <span aria-hidden> — </span>
+          {pad(plates)} {plates === 1 ? "plate" : "plates"}
+        </p>
+        <h3 id={`project-${project.slug}`} className="co-index mt-4">
+          {project.name}
+        </h3>
+        {project.city ? <p className="co-data mt-3">{project.city}</p> : null}
+      </div>
+      <p className="max-w-[52ch] border-t border-co-ink pt-5 text-[15px] leading-[1.55] text-co-ink-soft lg:col-span-5">
+        {project.delivered}
+      </p>
+    </Reveal>
+  );
+}
+
 /**
- * Completed fit-outs as a drawing set: each project a large lead figure with its copy
- * beside it, then the rest of the shoot as a strip. Figure numbers run down the whole
- * page. Only the fields a project actually carries are printed — no city where none was
- * shared, no counts, no sectors.
+ * Completed fit-outs as a drawing set: each project a plate — its name and what was
+ * delivered, then every photograph at one large size on a sideways rail, pinned with
+ * registration crosses. Figure numbers run down the whole page. Only the fields a project
+ * actually carries are printed — no city where none was shared, no counts, no sectors.
  */
 export default async function ProjectsPage() {
   const projects = await catalog.getProjects();
@@ -68,75 +96,51 @@ export default async function ProjectsPage() {
         lead="Photographed on site after handover. Some of these are named, some are known by the unit they were built into — where a client has not asked to be listed, we do not list them."
       />
 
-      <section className="co-shell co-section">
+      {/* overflow-x-clip: each rail bleeds to the screen's right edge (see `co-plate-rail`). */}
+      <section className="co-shell co-section overflow-x-clip">
         <SectionHeading eyebrow="01 / Projects" title="On site, after handover." className="mb-0" />
 
         {projects.map((project, index) => {
-          const [lead, ...rest] = project.images;
-          const title = `${project.name}${project.city ? `, ${project.city}` : ""}`;
           const fig = firstFigure[index];
+          const place = project.city ? `, ${project.city}` : "";
+          const many = project.images.length > 1;
 
           return (
             <article
               key={project.slug}
-              className="grid gap-y-[clamp(20px,2.4vw,32px)] border-b border-co-border py-[clamp(40px,5vw,80px)]"
+              aria-labelledby={`project-${project.slug}`}
+              className="grid grid-cols-[minmax(0,1fr)] gap-y-[clamp(24px,3vw,40px)] border-b border-co-border py-[clamp(48px,6vw,96px)]"
             >
-              <div className="grid grid-cols-1 items-end gap-x-[clamp(24px,3vw,48px)] gap-y-6 lg:grid-cols-12">
-                {lead ? (
-                  <figure className="lg:col-span-8">
-                    <Frame wipe={index > 0} className="aspect-[3/2] border border-co-border bg-co-bg-alt">
-                      <Image
-                        src={lead}
-                        alt={`${project.name} — completed fit-out`}
-                        fill
-                        sizes="(min-width: 1024px) 64vw, 100vw"
-                        preload={index === 0}
-                        className="co-highkey object-cover"
-                      />
-                    </Frame>
-                    <FigureCaption n={fig} className="mt-3">
-                      {title}
-                    </FigureCaption>
-                  </figure>
-                ) : null}
+              <PlateHeading project={project} index={index} />
 
-                <Reveal className={cn(lead ? "lg:col-span-4 lg:pb-9" : "lg:col-span-12")}>
-                  <p className="co-eyebrow">Project {pad(index + 1)}</p>
-                  <h3 className="co-index mt-4">
-                    {project.name}
-                  </h3>
-                  {project.city ? <p className="co-data mt-3">{project.city}</p> : null}
-                  <p className="mt-5 max-w-[46ch] border-t border-co-border pt-5 text-[15px] leading-[1.55] text-co-ink-soft">
-                    {project.delivered}
-                  </p>
-                </Reveal>
-              </div>
-
-              {rest.length > 0 ? (
-                <StaggerContainer
-                  as="ul"
-                  className="grid list-none grid-cols-2 gap-x-3 gap-y-6 p-0 sm:grid-cols-4 sm:gap-x-6"
-                >
-                  {rest.map((image, i) => (
-                    <StaggerItem key={image} as="li">
-                      <figure>
-                        <ClipReveal className="aspect-[4/3] border border-co-border bg-co-bg-alt">
+              <ProjectRail label={`${project.name}${place}`} count={project.images.length}>
+                {project.images.map((image, i) => {
+                  const lcp = index === 0 && i === 0;
+                  return (
+                    <figure key={image}>
+                      <div className="relative text-co-ink">
+                        <Frame wipe={!lcp}>
                           <Image
                             src={image}
-                            alt={`${project.name} — view ${i + 2}`}
+                            alt={`${project.name} — completed fit-out${many ? `, view ${i + 1}` : ""}`}
                             fill
-                            sizes="(min-width: 640px) 22vw, 45vw"
+                            sizes="(min-width: 768px) min(58vw, 860px), 86vw"
+                            preload={lcp}
                             className="co-highkey object-cover"
                           />
-                        </ClipReveal>
-                        <FigureCaption n={fig + 1 + i} className="mt-2.5">
-                          {project.name}, view {i + 2}
-                        </FigureCaption>
-                      </figure>
-                    </StaggerItem>
-                  ))}
-                </StaggerContainer>
-              ) : null}
+                        </Frame>
+                        <RegistrationCross className="-left-2 -top-2" />
+                        <RegistrationCross className="-bottom-2 -right-2" />
+                      </div>
+                      <FigureCaption n={fig + i} className="mt-3">
+                        {project.name}
+                        {place}
+                        {many ? `, view ${i + 1}` : ""}
+                      </FigureCaption>
+                    </figure>
+                  );
+                })}
+              </ProjectRail>
             </article>
           );
         })}

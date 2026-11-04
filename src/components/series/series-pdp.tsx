@@ -5,7 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import type { SeriesDefinition } from "@/lib/series";
 import { SeriesAccessory } from "./series-accessory";
 import { SeriesAnatomy } from "./series-anatomy";
-import { SeriesAssembly } from "./series-assembly";
+// Assembly section hidden on client request — uncomment this import, the <SeriesAssembly />
+// line below and "assembly" in SECTION_ORDER (src/lib/series/sections.ts) to bring it back.
+// import { SeriesAssembly } from "./series-assembly";
 import { SeriesConfigGallery } from "./series-config-gallery";
 import { SeriesElements } from "./series-elements";
 import { SeriesEnquire } from "./series-enquire";
@@ -61,7 +63,7 @@ function SeriesPdpBody() {
       <SeriesSpecBlock />
       <SeriesConfigGallery />
 
-      <SeriesAssembly />
+      {/* <SeriesAssembly /> — hidden, see the import note above. */}
       <SeriesElements />
       <SeriesAnatomy />
       <SeriesFinishes />

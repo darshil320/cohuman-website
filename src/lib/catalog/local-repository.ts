@@ -27,7 +27,8 @@ const categories = categoriesData as Category[];
 // files and must not ship a missing caption or a hero that is not a scene.
 const collections: Collection[] = collectionsSchema.parse(collectionsData);
 const products = productsData as Product[];
-const projects = projectsData as Project[];
+/** Published projects only; an entry flagged `hidden` stays in the JSON for later. */
+const projects = (projectsData as Project[]).filter((p) => !p.hidden);
 const sectors = sectorsData as Sector[];
 const services = servicesData as Service[];
 const spaces = spacesData as Space[];

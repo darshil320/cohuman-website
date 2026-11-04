@@ -77,6 +77,11 @@ export interface Project {
   delivered: string;
   /** Photographs of the finished install; the first is the lead image. */
   images: string[];
+  /**
+   * Kept in the data but not published — the JSON stand-in for commenting an entry out.
+   * Delete the flag (or set it to false) to put the project back on the site.
+   */
+  hidden?: boolean;
 }
 
 /**

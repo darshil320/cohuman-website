@@ -17,7 +17,8 @@ import { Reveal, StaggerContainer, StaggerItem } from "@/components/ui/scroll-re
 import { catalog, isPhotographed, type PhotographedCollection } from "@/lib/catalog";
 import { COMPARE_FILM, HERO_FILMS, LEAD_FILM, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
-import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesConfig, type SeriesDefinition } from "@/lib/series";
+import { lineDrawing } from "@/lib/photos";
+import { PROS_SERIES, VARIDEX_SERIES, spanLabel, type SeriesConfig } from "@/lib/series";
 import { siteConfig } from "@/lib/site-config";
 import { cn, listLabel, numberWord } from "@/lib/utils";
 
@@ -35,10 +36,6 @@ const HERO_CONFIG_SLUG = "face-to-face-short";
 
 /** Meeting tables across both chassis — the rows the "Meeting" system spans. */
 const isMeetingConfig = (slug: string) => slug.startsWith("meet") || slug === "square";
-
-function defaultImage(series: SeriesDefinition): string | undefined {
-  return series.configs.find((c) => c.slug === series.defaultConfigSlug)?.image;
-}
 
 /** Two-digit row number. */
 const rowNumber = (i: number) => String(i + 1).padStart(2, "0");
@@ -61,29 +58,28 @@ function systemRows(ranges: PhotographedCollection[]): SystemRow[] {
       type: PROS_SERIES.eyebrow,
       range: spanLabel(PROS_SERIES.configs),
       href: `/collections/${PROS_SERIES.slug}`,
-      image: defaultImage(PROS_SERIES),
+      image: lineDrawing[PROS_SERIES.slug],
     },
     {
       title: VARIDEX_SERIES.wordmark,
       type: VARIDEX_SERIES.eyebrow,
       range: spanLabel(VARIDEX_SERIES.configs),
       href: `/collections/${VARIDEX_SERIES.slug}`,
-      image: defaultImage(VARIDEX_SERIES),
+      image: lineDrawing[VARIDEX_SERIES.slug],
     },
     ...ranges.map((range) => ({
       title: range.wordmark,
       type: range.kicker,
       range: "Sized to plan",
       href: `/collections/${range.slug}`,
-      // The hover preview multiplies into the row, so only a render on white will do.
-      image: range.photos.find((photo) => photo.kind === "cutout")?.src,
+      image: lineDrawing[range.slug],
     })),
     {
       title: "Meeting",
       type: "Square, round and boardroom tables",
       range: spanLabel(meeting),
       href: "/solutions",
-      image: "/pros/meet-long.jpg",
+      image: lineDrawing.meeting,
     },
     {
       title: "Seating",

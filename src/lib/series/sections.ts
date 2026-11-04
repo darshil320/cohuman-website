@@ -21,7 +21,7 @@ export type SeriesSectionKey =
 
 /** Page order, top to bottom. */
 const SECTION_ORDER: readonly SeriesSectionKey[] = [
-  "assembly",
+  // "assembly", — hidden on client request; restore with <SeriesAssembly /> in series-pdp.tsx
   "elements",
   "anatomy",
   "finishes",

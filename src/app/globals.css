@@ -698,6 +698,46 @@ a:focus-visible,
   }
 }
 
+/*
+  Plate rail (`co-plate-rail`, /projects): every photograph of a project at one large size
+  in a sideways track, the next frame showing at the edge. Unlike `co-rail` it runs at
+  every width, and it bleeds out of the shell to the right edge of the screen only — the
+  left edge stays on the content column. The end padding mirrors the bleed, so the last
+  frame comes to rest on the column's right edge. The section that holds it clips
+  horizontal overflow (`overflow-x-clip`), because 100vw counts a desktop scrollbar.
+*/
+.co-plate-rail {
+  display: flex;
+  gap: clamp(12px, 1.6vw, 24px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* 8px of room on the other three sides for the registration crosses that overhang each
+     frame's corners — a scroller clips both axes — taken back with a negative margin. */
+  margin: -8px calc((100% - 100vw) / 2) -8px -8px;
+  padding: 8px calc((100vw - 100%) / 2) 8px 8px;
+  scroll-padding-inline-start: 8px;
+}
+
+.co-plate-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.co-plate-rail > * {
+  flex: 0 0 86%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* From 768px: as wide as fits, but never so tall that a frame, its heading and the rail's
+   controls overflow a laptop screen. */
+@media (min-width: 768px) {
+  .co-plate-rail > * {
+    flex-basis: min(58vw, 860px, (100svh - 300px) * 1.5);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .co-reveal,
   .co-wipe-in,
