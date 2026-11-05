@@ -45,7 +45,7 @@ function goToSection(id: string, event: MouseEvent<HTMLButtonElement>) {
 function Provisional() {
   return (
     <>
-      <span aria-hidden className="ml-0.5 inline-block bg-co-sunlit px-[3px] leading-none text-co-ink" title={INFERRED_CODE_FOOTNOTE}>
+      <span aria-hidden title={INFERRED_CODE_FOOTNOTE}>
         °
       </span>
       <span className="sr-only"> (provisional)</span>

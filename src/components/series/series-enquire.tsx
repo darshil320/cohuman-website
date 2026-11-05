@@ -49,7 +49,7 @@ export function SeriesEnquire() {
         <>
           {config.code}
           {inferredCode ? (
-            <span className="ml-0.5 inline-block bg-co-sunlit px-[3px] leading-none text-co-ink" title={INFERRED_CODE_FOOTNOTE}>
+            <span className="text-co-muted-2" title={INFERRED_CODE_FOOTNOTE}>
               °
             </span>
           ) : null}
