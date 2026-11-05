@@ -198,7 +198,10 @@ collection is a desking series with a configurator, not a bucket for SKUs.
   PDF specifies materials, not colours.
 - **One client boundary** — `src/components/series/series-pdp.tsx` shares configurator
   state, so the viewer, size chart, sticky bar and enquiry payload cannot disagree.
-- **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`) → B spec
+- **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`: the breadcrumb full width,
+  then `SeriesNameHeading` opening the spec block's left column above the viewer, the ink
+  panel rising level with it, its top stepped — the client's "suggestion 1", so name,
+  render and spec share the first screen) → B spec
   block — viewer on the left, ink spec panel on the right (client request; on phones the
   viewer comes first), square size selectors and the green progress rail
   (`series-spec-block`, `series-config-rail` at `#configurations`) → C per-configuration

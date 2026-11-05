@@ -22,7 +22,8 @@ import { SeriesStickyBar } from "./series-sticky-bar";
 /**
  * The page, in officemate's order — the moodboard's "kept beat for beat":
  *
- *   A  name hero          SeriesNameHero
+ *   A  name hero          SeriesNameHero (breadcrumb) + SeriesNameHeading, which opens
+ *                         the spec block's left column, beside the panel
  *   B  ink spec block     SeriesSpecBlock (+ the viewer and the configuration picker)
  *   C  gallery            SeriesConfigGallery
  *      the drawing set    assembly, elements, anatomy, finishes, accessory, products —
