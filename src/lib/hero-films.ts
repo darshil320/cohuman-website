@@ -64,9 +64,18 @@ export const LEAD_FILM: HeroFilm = {
   // marble top through the orbit.
   mobileFocus: "40%",
   /*
-    The client's portrait export of the same desk (`ARQ Phone view.mp4`, 1440×2518, 5s):
-    an orbit with the empty sweep above the desk, where the title block sits. Encoded at
-    720 wide, 8px cropped off the top edge (a light line in the export), audio stripped.
+    The client's portrait export of the same desk (`ARQ Phone view.mp4`, 1440×2518, 5s).
+    Re-cut to a phone's 9:19.5 so `object-cover` never crops the desk's ends: 8px off the
+    top (a light line in the export), the empty sweep above the desk (rows 0–900) stretched
+    to 1673, the floor below trimmed — the desk travels 57–79% down the frame, clear of
+    the title block. 720×1564, no audio:
+
+      ffmpeg -i "ARQ Phone view.mp4" -an -filter_complex "[0:v]crop=1440:2510:0:8,split[a][b];
+        [a]crop=1440:900:0:0,scale=1440:1673,setsar=1[top];[b]crop=1440:1457:0:900,setsar=1[rest];
+        [top][rest]vstack,scale=720:-2,setsar=1[v]" -map "[v]" … hero-desk-mobile.mp4
+
+    `setsar=1` matters: without it the stretch leaves non-square pixels and browsers
+    widen the video.
   */
   mobile: {
     poster: "/video/hero-desk-mobile-poster.jpg",

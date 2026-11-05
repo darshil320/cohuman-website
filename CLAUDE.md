@@ -297,8 +297,9 @@ marble-topped desk, no cuts, no watermark — encoded full frame with the audio 
 The claim sits on its own title block, not on the footage. Set each film's `tone` (header type colour
 over it) and `mobileFocus` (the part of the frame a phone keeps). A film may also carry a
 `mobile` portrait cut (poster + video) that replaces it below 768px — the lead film does:
-the client's `ARQ Phone view.mp4`, encoded to `public/video/hero-desk-mobile.*` (720 wide,
-8px off the top, no audio). The poster swaps through a `<picture>`, the video through
+the client's `ARQ Phone view.mp4`, re-cut to a phone's 9:19.5 (720×1564, the empty top sweep stretched and the floor
+trimmed so the desk sits whole in the lower half, clear of the title block — recipe in
+`hero-films.ts`). The poster swaps through a `<picture>`, the video through
 `<source media>`, and the video's own poster is set in an effect (the lead video is
 server-rendered, where the viewport is unknown).
 
