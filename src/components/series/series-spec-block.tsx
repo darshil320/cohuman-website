@@ -20,6 +20,7 @@ import {
 } from "@/lib/series";
 import { prefersReducedMotion } from "./series-config-flight";
 import { useSeriesConfigurator } from "./series-context";
+import { SeriesNameHeading } from "./series-name-hero";
 import { SeriesConfigRail } from "./series-config-rail";
 import { SeriesStage } from "./series-stage";
 
@@ -124,17 +125,23 @@ export function SeriesSpecBlock() {
 
   return (
     <section id="specification" className="scroll-mt-[72px] border-b border-co-ink">
-      {/* Viewer on the left, the ink spec panel on the right (client request). The panel
-          bleeds through the shell's right gutter, as it used to through the left. On phones
-          the viewer comes first, then the panel. */}
+      {/* The name heading and the viewer under it on the left, the ink spec panel on the
+          right, rising level with the heading (client request, "suggestion 1") so the name,
+          the render and the spec share the first screen. The panel bleeds through the
+          shell's right gutter; its top steps — a narrower block first, the full panel a
+          notch lower — the officemate corner block, now part of the panel itself. On phones
+          it stacks: heading, viewer, panel. */}
       <div className="co-shell grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
-        <div className="min-w-0 py-[clamp(32px,4vw,64px)] lg:pr-[clamp(24px,3.5vw,56px)]">
-          <div className="lg:sticky lg:top-[104px]">
+        <div className="min-w-0 pb-[clamp(32px,4vw,64px)] pt-[clamp(40px,5vw,72px)] lg:pr-[clamp(24px,3.5vw,56px)]">
+          <SeriesNameHeading />
+          <div className="mt-[clamp(32px,4vw,56px)] lg:sticky lg:top-[104px]">
             <SeriesStage />
           </div>
         </div>
 
-        <div className="-mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-mr-12 lg:pl-10 lg:pr-12">
+        <div className="relative -mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-mr-12 lg:mt-[calc(clamp(40px,5vw,72px)+clamp(56px,6vw,96px))] lg:pl-10 lg:pr-12">
+          {/* The step: a narrower block reaching up to the heading's top line. */}
+          <div aria-hidden className="absolute bottom-full right-0 hidden h-[clamp(56px,6vw,96px)] w-[62%] bg-co-panel lg:block" />
           <p className="co-eyebrow mb-5 text-co-panel-faint">01 / Specification</p>
           <SpecRows rows={rows} tone="dark" />
 
