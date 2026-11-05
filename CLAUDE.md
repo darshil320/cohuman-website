@@ -295,7 +295,12 @@ The film files live in `public/video/` (MP4 + WebM + a poster). The current lead
 the client's `VIDEO 2 .mp4`: 1344×768, 10 seconds, one continuous orbit of the
 marble-topped desk, no cuts, no watermark — encoded full frame with the audio stripped.
 The claim sits on its own title block, not on the footage. Set each film's `tone` (header type colour
-over it) and `mobileFocus` (the part of the frame a phone keeps).
+over it) and `mobileFocus` (the part of the frame a phone keeps). A film may also carry a
+`mobile` portrait cut (poster + video) that replaces it below 768px — the lead film does:
+the client's `ARQ Phone view.mp4`, encoded to `public/video/hero-desk-mobile.*` (720 wide,
+8px off the top, no audio). The poster swaps through a `<picture>`, the video through
+`<source media>`, and the video's own poster is set in an effect (the lead video is
+server-rendered, where the viewport is unknown).
 
 The ink corner block holds every hero control: pause / play (required for looping video,
 WCAG 2.2.2), the arrows, one bar per panel — the active bar fills with the film's

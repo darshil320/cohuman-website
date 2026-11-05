@@ -102,9 +102,19 @@ function systemRows(ranges: PhotographedCollection[]): SystemRow[] {
  * Checked on the server, so the client never requests a file that is not there.
  */
 function playable(film: HeroFilm): HeroFilm {
-  if (!film.video || !publicFileExists(film.video.mp4)) return { ...film, video: undefined };
-  const webm = film.video.webm && publicFileExists(film.video.webm) ? film.video.webm : undefined;
-  return { ...film, video: { mp4: film.video.mp4, webm } };
+  return { ...film, video: playableVideo(film.video), mobile: playableMobile(film.mobile) };
+}
+
+function playableVideo(video: HeroFilm["video"]): HeroFilm["video"] {
+  if (!video || !publicFileExists(video.mp4)) return undefined;
+  const webm = video.webm && publicFileExists(video.webm) ? video.webm : undefined;
+  return { mp4: video.mp4, webm };
+}
+
+/** The portrait cut survives only if its poster exists; its video follows the same rule. */
+function playableMobile(mobile: HeroFilm["mobile"]): HeroFilm["mobile"] {
+  if (!mobile || !publicFileExists(mobile.poster)) return undefined;
+  return { poster: mobile.poster, video: playableVideo(mobile.video) };
 }
 
 /**

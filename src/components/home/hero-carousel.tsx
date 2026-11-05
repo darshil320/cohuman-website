@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import {
   useCallback,
   useEffect,
@@ -17,6 +17,9 @@ import { cn } from "@/lib/utils";
 
 /** Cover the frame; on portrait screens hold the film's chosen focus, centred from md up. */
 const FRAME = "object-cover object-[var(--film-x)_50%] md:object-center";
+
+/** Below this width a film's portrait cut, when it has one, replaces the landscape one. */
+const MOBILE_MEDIA = "(max-width: 767px)";
 
 /** Height of the ink control block (its cells are `min-h-12`). */
 const CONTROLS_HEIGHT = 48;
@@ -322,6 +325,18 @@ function FilmPanel({
     video.play().catch(() => video.pause());
   }, [playing, mounted]);
 
+  /*
+    A film with a portrait cut gets its video poster here, not in markup: the lead video is
+    server-rendered, where the viewport is unknown, so a poster attribute would always be
+    the landscape still.
+  */
+  const mobilePoster = film.mobile?.poster;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !mobilePoster) return;
+    video.poster = window.matchMedia(MOBILE_MEDIA).matches ? mobilePoster : film.poster;
+  }, [mounted, mobilePoster, film.poster]);
+
   // Report the playhead while this panel is on screen, so the bar and clock follow it.
   useEffect(() => {
     const video = videoRef.current;
@@ -338,35 +353,74 @@ function FilmPanel({
   return (
     <div
       className="relative h-full min-h-[100svh] overflow-hidden bg-co-bg"
-      style={{ "--film-x": film.mobileFocus ?? "50%" } as CSSProperties}
+      style={{ "--film-x": film.mobile ? "50%" : (film.mobileFocus ?? "50%") } as CSSProperties}
     >
-      <Image
-        src={film.poster}
-        alt={film.alt}
-        fill
-        sizes="100vw"
-        preload={lead}
-        loading={lead ? "eager" : "lazy"}
-        className={FRAME}
-      />
-      {film.video && mounted ? (
+      {film.mobile ? (
+        <FilmPoster film={film} mobilePoster={film.mobile.poster} lead={lead} />
+      ) : (
+        <Image
+          src={film.poster}
+          alt={film.alt}
+          fill
+          sizes="100vw"
+          preload={lead}
+          loading={lead ? "eager" : "lazy"}
+          className={FRAME}
+        />
+      )}
+      {(film.video || film.mobile?.video) && mounted ? (
         <video
           ref={videoRef}
           aria-hidden
           muted
           loop
           playsInline
-          poster={film.poster}
+          poster={film.mobile ? undefined : film.poster}
           preload={lead ? "auto" : "metadata"}
           className={cn("absolute inset-0 h-full w-full", FRAME)}
         >
-          {film.video.webm ? <source src={film.video.webm} type="video/webm" /> : null}
-          <source src={film.video.mp4} type="video/mp4" />
+          {/* Phones take the portrait cut; `media` on <source> picks it, first match wins. */}
+          {film.mobile?.video?.webm ? (
+            <source src={film.mobile.video.webm} type="video/webm" media={MOBILE_MEDIA} />
+          ) : null}
+          {film.mobile?.video ? (
+            <source src={film.mobile.video.mp4} type="video/mp4" media={MOBILE_MEDIA} />
+          ) : null}
+          {film.video?.webm ? <source src={film.video.webm} type="video/webm" /> : null}
+          {film.video ? <source src={film.video.mp4} type="video/mp4" /> : null}
         </video>
       ) : null}
       <span aria-hidden className="pointer-events-none absolute inset-0 bg-co-bg mix-blend-multiply" />
       {children ? <div className="relative z-10 h-full">{children}</div> : null}
     </div>
+  );
+}
+
+/**
+ * The poster for a film with a portrait cut: one <picture>, so a phone downloads only the
+ * portrait still and a desktop only the landscape one. `getImageProps` cannot emit a
+ * preload link, so the lead poster asks for high fetch priority instead.
+ */
+function FilmPoster({ film, mobilePoster, lead }: { film: HeroFilm; mobilePoster: string; lead: boolean }) {
+  const common = { alt: film.alt, fill: true, sizes: "100vw" } as const;
+  const {
+    props: { srcSet: mobile },
+  } = getImageProps({ ...common, src: mobilePoster });
+  const {
+    props: { srcSet: desktop, ...rest },
+  } = getImageProps({
+    ...common,
+    src: film.poster,
+    loading: lead ? "eager" : "lazy",
+    fetchPriority: lead ? "high" : "auto",
+  });
+  return (
+    <picture>
+      <source media={MOBILE_MEDIA} srcSet={mobile} />
+      <source srcSet={desktop} />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is in `rest` */}
+      <img {...rest} className={FRAME} />
+    </picture>
   );
 }
 

@@ -45,6 +45,12 @@ export interface HeroFilm {
    * keeping. Desktop always centres.
    */
   mobileFocus?: string;
+  /**
+   * A portrait cut for phones (below 768px), swapped in by media query for both the
+   * poster and the video. With one, `mobileFocus` no longer applies — the portrait frame
+   * is shown centred.
+   */
+  mobile?: { poster: string; video?: { mp4: string; webm?: string } };
 }
 
 export const LEAD_FILM: HeroFilm = {
@@ -54,8 +60,18 @@ export const LEAD_FILM: HeroFilm = {
   alt: "An executive desk with a marble top on a dark timber pedestal and slab legs, filmed in a slow orbit in a pale studio",
   video: { mp4: "/video/hero-desk.mp4", webm: "/video/hero-desk.webm" },
   tone: "light",
-  // On a phone: left of centre, where the pedestal meets the marble top through the orbit.
+  // On a phone without the portrait cut: left of centre, where the pedestal meets the
+  // marble top through the orbit.
   mobileFocus: "40%",
+  /*
+    The client's portrait export of the same desk (`ARQ Phone view.mp4`, 1440×2518, 5s):
+    an orbit with the empty sweep above the desk, where the title block sits. Encoded at
+    720 wide, 8px cropped off the top edge (a light line in the export), audio stripped.
+  */
+  mobile: {
+    poster: "/video/hero-desk-mobile-poster.jpg",
+    video: { mp4: "/video/hero-desk-mobile.mp4", webm: "/video/hero-desk-mobile.webm" },
+  },
 };
 
 /**
