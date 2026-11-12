@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { ImageLightbox, type LightboxItem } from "@/components/common/image-lightbox";
 import { DimensionLine } from "@/components/ui/dimension-line";
 import { TickNumber } from "@/components/ui/tick-number";
-import { selectedLength } from "@/lib/series";
+import { selectedLength, selectedParts } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
 import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
@@ -38,7 +38,7 @@ export function SeriesStage() {
       if (seen.has(item.image)) continue;
       seen.set(item.image, {
         slug: item.slug,
-        item: { src: item.image, alt: item.imageAlt, caption: `${item.name} · ${item.code}` },
+        item: { src: item.image, alt: item.imageAlt, caption: item.name },
       });
     }
     return [...seen.values()];
@@ -143,7 +143,7 @@ export function SeriesStage() {
       */}
       <div className="mt-3 flex items-center gap-4 border-t border-co-border pt-3">
         <p className="co-data m-0 min-w-0 flex-1 truncate text-co-muted-2">
-          Fig. 02 — {config.code}
+          {selectedParts(selection).code}
         </p>
         <span
           aria-hidden

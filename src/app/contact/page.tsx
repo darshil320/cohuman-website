@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
   {
     question: "Do you only sell furniture, or handle the full fit-out?",
     answer:
-      "Both. Services range from space planning and test-fits, to a single-contract turnkey fit-out, to delivery/installation by in-house crews, to ongoing AMC aftercare.",
+      "Both. Services range from space planning and test-fits, to a single-contract furniture fit-out, to delivery/installation by in-house crews, to ongoing AMC aftercare.",
   },
   {
     question: "Can I visit a showroom before ordering?",
@@ -71,8 +71,10 @@ export const metadata: Metadata = {
 };
 
 const contactRows = [
-  { k: "Showroom", v: `${siteConfig.address.line2} — ${siteConfig.address.line1}` },
+  { k: "Showroom", v: `${siteConfig.address.line1}, ${siteConfig.address.line2}` },
   { k: "Phone / WhatsApp", v: siteConfig.phoneDisplay },
+  { k: "Instagram", v: siteConfig.social.instagram.handle },
+  { k: "Cities", v: siteConfig.cities.join(", ") },
   { k: "Hours", v: siteConfig.hours },
   { k: "Legal entity", v: `${siteConfig.legalName} — founded by ${siteConfig.founder}` },
 ];

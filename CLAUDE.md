@@ -29,9 +29,9 @@ The short version:
   `#F3EFE1`, brand ink `#231F20`, steel `#6B665D` for meta, hair `#DCD6C4`, and the
   logo green `#5EB646` (`co-green`) as a **status light only** — selected, active,
   progress, sent. The header's quote dots are on every screen, so content adds at most
-  one genuine state in green (the progress rail, an active tab, a selected row). Two
-  deliberate exceptions, both client requests: the homepage hero's green grid lines and
-  the systems index's hover dots.
+  one genuine state in green (the progress rail, an active tab, a selected row). One
+  deliberate exception, a client request: the green grid lines of the measured hero panel
+  (`SignalHeroPanel`, now only the fallback when the lead film's poster is missing).
 - **Type:** Sequel Sans, self-hosted in its three optical cuts — Disp (Semi Bold, natural
   case — titles are never uppercased — −0.02em, 1.1) for display/h1 claims, Head (Semi Bold) for h2/h3/index names, Body
   (Roman 400; 500/600 for emphasis) for reading and, with tabular figures at 12px caps
@@ -149,6 +149,36 @@ were taken from the bios, not supplied separately. `src/lib/catalog/founders.tes
 allows personal career history (the exception above) but rejects the old trading name,
 counted track records and photo paths that don't exist — run `npm test` after editing.
 
+## Collections menu, PM x Cohuman and single products
+
+Everything a visitor can browse is grouped like the 2026 catalogue — **PM x Cohuman**
+(designer pieces), **Workstations** (the desking systems), **Seating** — by one builder,
+`buildCollectionMenu` (`src/lib/catalog/collection-menu.ts`). It feeds three places that
+must never disagree: the header's **Collections panel** (`collections-panel.tsx` — a
+click, not a hover, opens a full-page menu under the bar: groups in display type with
+counts on the left, the active group's products as pictures on the right; on phones the
+menu row expands in place to a picture rail per group), the **/collections** page (one
+picture grid per group, anchored `#pm-x-cohuman` / `#workstations` / `#seating`) and the
+homepage. Every list of products uses `CollectionCard` — picture, name, one line.
+
+**Single products** (the eight PM x Cohuman pieces and Ergohuman) live in
+`src/data/pieces.json`, parsed with `piecesSchema` (`piece-schema.ts`), served by
+`catalog.getPieces()` and rendered at **`/products/[slug]`**, after amardeepdesign.com's
+product page: name and one size line beside a large gallery (`PieceGallery`), then the
+catalogue's one sentence beside folded `<details>` rows (`PieceDetails`), versions where
+the catalogue draws them, more from the group, `CtaBand`. Text is the catalogue's,
+verbatim; sizes only where it prints them (ARQ, MELLOW, MODO have none). These pages carry
+no `DimensionLine` — the gallery opens on a room shot, and a line drawn under it would
+measure nothing. `pieces.test.ts` checks every image exists. Images are in
+`public/pieces/<slug>/`: `scene.jpg` plus the catalogue's views, extracted from
+`Cohuman_Catalogue_2026_v18.pdf`. The catalogue bakes a flat cream backdrop
+(255, 245, 209) into every render; it was lifted to white by dividing it out only where
+a pixel's colour ratio matches cream (backdrop and shadow), so the product keeps its own
+colour and `co-cutout` multiplies cleanly onto the fog panel. Stretch E and Stretch R
+are photographed ranges in `collections.json` with one small catalogue photo each
+(≈770px wide — replace when larger shots arrive). Type A is not listed: the catalogue has
+drawings for it but no photograph.
+
 ## Collections are desking series, not SKU lists
 
 A collection is one of two kinds, and `/collections/[slug]` renders whichever it is:
@@ -181,29 +211,36 @@ collection is a desking series with a configurator, not a bucket for SKUs.
 - **Data** — `src/lib/series/`: `types.ts` (`SeriesDefinition`), `derive.ts` (every
   size/label derivation), then one folder per series (`pros/`, `varidex/`) holding
   configs, elements, anatomy parts and finishes. `index.ts` exports `ALL_SERIES` and
-  `findSeries`. This is spec data quoted to customers — treat edits as data changes,
+  `findSeries`. Configurations mirror the 2026 catalogue's table types with plain names
+  ("Single table", "Bench", "Face-to-face bench" — no beam or seat qualifiers): Stretch S
+  has six, Stretch V six. Where a type spans several beam lengths, the configuration
+  carries `variants` and `configParts`/`selectedParts` (`derive.ts`) pick the lead code
+  and bill of components for the selected length. This is spec data quoted to customers — treat edits as data changes,
   not copy tweaks.
 - **Adding a series** — write a `SeriesDefinition`, add it to `ALL_SERIES`, and add a
   matching entry to `src/data/collections.json` (which drives /collections, the
   sitemap and llms.txt). No component changes. **Adding a photographed range** — the
   collections.json entry alone, with its photos; it appears on /collections, the homepage
-  systems index, the Collections drawer (listed under the measured plates), the sitemap
+  systems grid, the header's Collections panel (Workstations), the sitemap
   and llms.txt.
-- **Optional sections** — a definition can omit `swatches` (finish board), `accessory`
-  (VARIDEX's wire-channel SKU table) or `gallery` (photographed-but-unquoted
-  products); those components return `null`. VARIDEX has no finish filter because its
-  PDF specifies materials, not colours.
+- **Optional sections** — a definition can omit `gallery` (photographed-but-unquoted
+  products); that component returns `null`. `swatches` and `accessory` are still data
+  (the finish filter and the enquiry use them), but their PDP sections — the finish
+  board and VARIDEX's wire-channel table — were cut in the Nov 2026 review along with
+  the element set: the 2026 catalogue keeps finishes on one shared page and has neither
+  table. VARIDEX has no finish filter because its PDF specifies materials, not colours.
 - **One client boundary** — `src/components/series/series-pdp.tsx` shares configurator
   state, so the viewer, size chart, sticky bar and enquiry payload cannot disagree.
 - **Page order is officemate's**, beat for beat: A name hero (`series-name-hero`: the breadcrumb full width,
   then `SeriesNameHeading` opening the spec block's left column above the viewer, the ink
-  panel rising level with it, its top stepped — the client's "suggestion 1", so name,
-  render and spec share the first screen) → B spec
+  panel rising level with it as one solid rectangle (the stepped top was cut in the Nov
+  2026 review) — the client's "suggestion 1", so name, render and spec share the first
+  screen; no "Config 01 / 14" counter, no figure numbers on the PDP) → B spec
   block — viewer on the left, ink spec panel on the right (client request; on phones the
   viewer comes first), square size selectors and the green progress rail
   (`series-spec-block`, `series-config-rail` at `#configurations`) → C per-configuration
   gallery (`series-config-gallery`) → the drawing-set sections (assembly — hidden for now, commented out in
-  `series-pdp.tsx` and `sections.ts` — elements, anatomy, finishes, accessory, products — numbered as they render, see
+  `series-pdp.tsx` and `sections.ts` — anatomy, products — numbered as they render, see
   `src/lib/series/sections.ts`) → D prev / Get a quote · all / next (`series-pager`, in
   the page flow, never fixed) → enquiry. The sticky quote bar shows between the spec
   block and the pager, then hands off to the pager's own quote button. **There is no
@@ -237,8 +274,9 @@ There are no image placeholders left on these pages.
 
 **Open items:**
 
-- **Four inferred PROS part numbers** (straight connector, side cabinet, credenza,
-  wire box) are pattern-matched, not confirmed. They render with a `°` marker plus a
+- **Two inferred PROS part numbers** (the wire box, and the single table's long-beam
+  code at 1800/2000 mm, a length the catalogue offers and `PROS.pdf` gives no code for)
+  are pattern-matched, not confirmed. They render with a `°` marker plus a
   footnote; the list is `inferredCodes` on the PROS definition. Every VARIDEX code is
   printed in its PDF.
 - **PROS finish swatches** are CSS gradients, not photographed swatches, and the finish
@@ -260,8 +298,11 @@ band only.
 projects" Drive folder — named national clients first (Google BKC, Rojo Integrations,
 IndianOil, ICICI Prudential Life, IDFC FIRST Bank, L&T, LIC Housing Finance, DMart, Raj
 Shamani's Figuring Out, CarTrade, Reliance Nashik, NTT DATA, TaskUs, Indiabulls), then KP
-Group and the Surat jobs. An entry with `"hidden": true` (Devshree today) stays in the
-file but is filtered out by the repository — JSON's way of commenting it out. Array order is display order; the first three are the homepage's
+Group and the Surat jobs. An entry with `"hidden": true` stays in the
+file but is filtered out by the repository — JSON's way of commenting it out. Hidden
+today: Devshree, and — because Cohuman does not do acoustic work (Nov 2026 review) —
+Reliance Nashik, TaskUs and ICICI Prudential Life, whose photographs show acoustic
+panelling. Array order is display order; the first three are the homepage's
 featured projects. Photos live in `public/projects/<slug>/`, cropped to 3:2, sRGB, 1920px
 (Next's top `deviceSize`), JPEG q90 4:4:4 with a light unsharp mask, re-exported from the
 Drive originals. **Project photos do not take `co-highkey`** and render at `quality={90}`
@@ -275,21 +316,19 @@ client has cleared publication — several folders came from the Office Ideas po
 ## Homepage hero
 
 `src/components/home/hero-carousel.tsx` takes an ordered list of panels (`HeroPanel`:
-`film` or `content`) built in `src/app/page.tsx` (`heroPanels`). Today:
+`film` or `content`) built in `src/app/page.tsx` (`heroPanels`). Since the Nov 2026
+review there is **one panel** — the 1-2-3 selector and the comparison film are gone:
 
-1. **The lead film** — `LEAD_FILM` in **`src/lib/hero-films.ts`**: full screen under the
-   transparent header, with the page's **H1** set over it by `FilmIntro`
-   (`src/components/home/film-intro.tsx`): a mono line, the tagline, one sentence and
-   one action, on a canvas title block (1px ink frame) high in the top left: from `lg` a
-   short, wide strip (headline on one line, then label | sentence | action) that stays in
-   the band of sweep above the orbiting desk; on phones a 360px stacked block.
-2. **The comparison film** — `COMPARE_FILM` + `FilmBand`: the previous hero (the
-   `Video 1.MOV` wide-shot loop with the claim in ink straight on the sweep, as an H2),
-   kept **temporarily** so the client can compare the two. When they pick, delete the
-   loser's film entry, overlay and `public/video/` files, and update this list.
-3. **The measured panel** — `SignalHeroPanel` (`signal-hero.tsx`): the bench on the green
-   grid, with real dimensions. It is an H2 behind a lead film and takes the H1 back if the
-   lead film's poster is ever missing.
+- **The lead film** — `LEAD_FILM` in **`src/lib/hero-films.ts`**: full screen under the
+  transparent header, with the page's **H1** set over it by `FilmIntro`
+  (`src/components/home/film-intro.tsx`): a mono line, the tagline, one sentence and
+  one action, on a canvas title block (1px ink frame) high in the top left: from `lg` a
+  short, wide strip (headline on one line, then label | sentence | action) that stays in
+  the band of sweep above the orbiting desk; on phones a 360px stacked block. The desk
+  is **ARQ** (designer collab, PM x Cohuman); the film is to link to ARQ's page once it
+  exists.
+- **Fallback** — `SignalHeroPanel` (`signal-hero.tsx`), the bench on the green grid,
+  takes the hero and the H1 only if the lead film's poster is missing.
 
 The film files live in `public/video/` (MP4 + WebM + a poster). The current lead film is
 the client's `VIDEO 2 .mp4`: 1344×768, 10 seconds, one continuous orbit of the
@@ -354,6 +393,10 @@ space type).
 
 - **`siteConfig.coordinates`** (hero, footer, showroom) are Surat city-centre, marked
   `TODO: confirm` — replace with the showroom's own.
+- **The map is off on purpose** (`siteConfig.mapEmbedUrl` is empty). Google's listing at
+  the catalogue address is still named "FURNITURE CONCEPTS 2.0", and a keyless embed
+  shows it. Once the Google Business Profile is renamed to Cohuman, paste the URL kept in
+  the comment there; the homepage's visit section and /contact pick it up.
 - **Founder photos and LinkedIn** are still to come — `src/data/founders.json` has both
   founders' text; the cards show a labelled empty frame until photos are added.
 - **`siteConfig.suratPhotos` is empty on purpose.** The only showroom photo on file,
@@ -362,8 +405,10 @@ space type).
   `/`, `/about` and `/contact` render text-only until a photo without the old signage is
   added. Check any new photography for old signage before listing it.
 
-- **`src/lib/site-config.ts`** — anything still marked `TODO: confirm` (phone,
-  WhatsApp number, hours, map embed URL, coordinates) is a placeholder. The email addresses
+- **`src/lib/site-config.ts`** — address, phone, Instagram (`@cohuman.india`) and cities
+  (Surat, Mumbai, Ahmedabad) come from the 2026 catalogue's back page, which the client
+  confirmed replaces the earlier Hazira Road address and number. Anything still marked
+  `TODO: confirm` (WhatsApp line, hours, coordinates) is a placeholder. The email addresses
   (tushar@ — the lead inbox — jigar@, devan@ and accounts@cohuman.in; devan@ forwards to
   devan@officeideas.in at the mail server), founders, office contacts and `url` are
   confirmed; `url` resolves to `https://cohuman.in`
@@ -452,11 +497,18 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   mono counter and square arrows — no green, the page has many of them. Do not reintroduce framer `initial={{ opacity: 0 }}`
   on static content: it serializes as an inline `opacity:0`, so the page is blank when
   JS fails.
-- **Systems index hover previews are line drawings**, not photos: ink on transparent in
-  `public/lines/`, traced from each system's own render by
-  `scripts/trace-line-drawing.py` (OpenCV: bilateral smooth, Canny, small-blob removal)
-  and mapped in `lineDrawing` (`src/lib/photos.ts`). Re-trace when a render changes.
-  APEX and ELEMENT have none yet — only room shots were supplied, which do not trace.
+- **The homepage is pictures first**: 01 PM x Cohuman (each piece in its room), 02
+  systems and seating (from `buildCollectionMenu`), then spaces, projects, build, visit.
+  The lead film links to ARQ's page (`HERO_PRODUCT` in `src/app/page.tsx`). The old
+  systems index and its line-drawing previews are gone; `public/lines/` and
+  `scripts/trace-line-drawing.py` are still on disk, unused.
+- **Homepage section openers are stacked** (`SectionHeading layout="stacked"`): label,
+  title, a short description under it, the link on the right. Other routes keep the
+  three-column opener.
+- **ORGATEC popup** (`src/components/common/orgatec-popup.tsx`, data in
+  `src/lib/events/orgatec.ts`): booth H18, 19–21 Nov 2026, Jio World Convention Centre,
+  Mumbai — no sign-up (client decision). Once per session, and it stops rendering by
+  itself after `endsAt`; delete both files after the show.
 - **Share images.** `src/app/opengraph-image.tsx` is the site-wide card. A page that sets
   its own `openGraph` *replaces* the parent's, image included — so spread
   `images: [SHARE_IMAGE]` (`src/lib/seo/share-image.ts`) into it unless the page has a

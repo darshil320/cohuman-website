@@ -46,17 +46,3 @@ export const spacePhoto: Record<string, string> = {
   meeting: "/spaces/meeting.jpg",
   lounge: "/spaces/lounge.jpg",
 };
-
-/**
- * Systems-index row → its hover preview: a technical line drawing (ink on transparent),
- * traced from the system's own render by `scripts/trace-line-drawing.py`, so it shows the
- * real product as an outline rather than a photograph. Keys are collection slugs, plus
- * `meeting` for the meeting-table row. A row without an entry shows no preview — APEX
- * and ELEMENT were only supplied as room shots, which do not trace cleanly.
- */
-export const lineDrawing: Record<string, string> = {
-  pros: "/lines/pros-bench.png",
-  varidex: "/lines/varidex-bench.png",
-  fulcrum: "/lines/fulcrum-elevation.png",
-  meeting: "/lines/pros-meeting.png",
-};

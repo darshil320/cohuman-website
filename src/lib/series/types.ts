@@ -33,17 +33,36 @@ export interface SeriesConfig {
   /** Selectable depths in mm. Ignored when `dia` or `sq`. */
   deps: number[];
   seats: string;
-  /** Beam variant, or "—" where the configuration carries no beam. */
-  beam: string;
   /** Square top: depth always matches the selected side length. */
   sq?: boolean;
   /** Round top: quoted as a diameter, depth is not selectable. */
   dia?: boolean;
-  bom: SeriesBomLine[];
+  /**
+   * Component schedule, for a configuration built the same way at every length. A
+   * configuration whose beam changes with the length carries `variants` instead.
+   */
+  bom?: SeriesBomLine[];
   /**
    * Set where the source PDF documents the configuration and its parts but not a
    * component schedule. Shown in place of the bill of components.
    */
+  bomNote?: string;
+  /**
+   * Per-length schedules. The 2026 catalogue lists one table type (e.g. "Single table")
+   * across several beam lengths; the site shows it as one configuration and swaps the
+   * lead code and the bill of components as the length changes — see `configParts`.
+   * Every length in `lens` must fall in exactly one variant (checked in derive.test.ts).
+   */
+  variants?: SeriesConfigVariant[];
+}
+
+/** The schedule a configuration is built to over a run of lengths. */
+export interface SeriesConfigVariant {
+  /** Lengths this schedule covers — a subset of the configuration's `lens`. */
+  lens: number[];
+  /** Lead code at these lengths. */
+  code: string;
+  bom: SeriesBomLine[];
   bomNote?: string;
 }
 

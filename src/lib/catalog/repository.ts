@@ -9,6 +9,7 @@ import type {
   Service,
   Space,
 } from "./types";
+import type { Piece } from "./piece-schema";
 
 // Swappable seam: today `LocalCatalogRepository` (src/lib/catalog/local-repository.ts)
 // reads the JSON files in src/data/*.json. If the client wants self-serve editing later,
@@ -28,4 +29,7 @@ export interface CatalogRepository {
   getSpaces(): Promise<Space[]>;
   getServices(): Promise<Service[]>;
   getFounders(): Promise<Founder[]>;
+  /** Single products with their own page: PM x Cohuman and seating. */
+  getPieces(): Promise<Piece[]>;
+  getPiece(slug: string): Promise<Piece | null>;
 }

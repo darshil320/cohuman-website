@@ -3,15 +3,12 @@
 import { MotionConfig } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { SeriesDefinition } from "@/lib/series";
-import { SeriesAccessory } from "./series-accessory";
 import { SeriesAnatomy } from "./series-anatomy";
 // Assembly section hidden on client request — uncomment this import, the <SeriesAssembly />
 // line below and "assembly" in SECTION_ORDER (src/lib/series/sections.ts) to bring it back.
 // import { SeriesAssembly } from "./series-assembly";
 import { SeriesConfigGallery } from "./series-config-gallery";
-import { SeriesElements } from "./series-elements";
 import { SeriesEnquire } from "./series-enquire";
-import { SeriesFinishes } from "./series-finishes";
 import { SeriesGalleryStrip } from "./series-gallery";
 import { SeriesNameHero } from "./series-name-hero";
 import { SeriesPager } from "./series-pager";
@@ -26,8 +23,10 @@ import { SeriesStickyBar } from "./series-sticky-bar";
  *                         the spec block's left column, beside the panel
  *   B  ink spec block     SeriesSpecBlock (+ the viewer and the configuration picker)
  *   C  gallery            SeriesConfigGallery
- *      the drawing set    assembly, elements, anatomy, finishes, accessory, products —
- *                         the series' own spec data, kept and restyled
+ *      the drawing set    anatomy, products — the series' own spec data. The element
+ *                         set, the finish board and the wire-channel table were cut in
+ *                         the Nov 2026 review: the catalogue carries finishes on one
+ *                         shared page, and has no element or accessory tables.
  *   D  prev / all / next  SeriesPager
  *      enquiry            SeriesEnquire
  *      sticky quote bar   SeriesStickyBar
@@ -65,10 +64,7 @@ function SeriesPdpBody() {
       <SeriesConfigGallery />
 
       {/* <SeriesAssembly /> — hidden, see the import note above. */}
-      <SeriesElements />
       <SeriesAnatomy />
-      <SeriesFinishes />
-      <SeriesAccessory />
       <SeriesGalleryStrip />
 
       <SeriesPager />

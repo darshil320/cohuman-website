@@ -6,3 +6,4 @@ export const catalog = new LocalCatalogRepository();
 
 export * from "./types";
 export type { CatalogRepository } from "./repository";
+export { PIECE_GROUPS, pieceSizeLabel, type Piece, type PieceGroup, type PieceSize } from "./piece-schema";

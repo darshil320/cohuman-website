@@ -1,4 +1,4 @@
-import type { SeriesConfig, SeriesDefinition } from "./types";
+import type { SeriesBomLine, SeriesConfig, SeriesDefinition } from "./types";
 
 /**
  * Pure derivations off a selected configuration + size indices. Kept out of the
@@ -138,6 +138,32 @@ export function spanLabel(configs: readonly SeriesConfig[]): string {
   return `${Math.min(...lens)}${NBSP}→${NBSP}${Math.max(...lens)}${NBSP}mm`;
 }
 
+/** The lead code and component schedule a configuration is built to at one length. */
+export interface ConfigParts {
+  code: string;
+  bom: SeriesBomLine[];
+  bomNote?: string;
+}
+
+/**
+ * The parts for `config` at `length`: the variant covering that length, or the
+ * configuration's own schedule when it has no variants. A length outside every variant
+ * falls back to the first one rather than inventing a schedule.
+ */
+export function configParts(config: SeriesConfig, length: number): ConfigParts {
+  const variants = config.variants ?? [];
+  if (variants.length === 0) {
+    return { code: config.code, bom: config.bom ?? [], bomNote: config.bomNote };
+  }
+  const variant = variants.find((v) => v.lens.includes(length)) ?? variants[0];
+  return { code: variant.code, bom: variant.bom, bomNote: variant.bomNote ?? config.bomNote };
+}
+
+/** The parts for the current selection. */
+export function selectedParts(selection: SeriesSelection): ConfigParts {
+  return configParts(selection.config, selectedLength(selection));
+}
+
 /** Human label for the selected configuration's finish, or null where the series has none. */
 export function finishLabel(selection: SeriesSelection): string | null {
   const { series, config } = selection;
@@ -148,7 +174,7 @@ export function finishLabel(selection: SeriesSelection): string | null {
 /** The `interest` line sent to /api/enquiry — readable in the lead email as-is. */
 export function enquiryInterest(selection: SeriesSelection): string {
   const { series, config } = selection;
-  return `${series.wordmark} ${config.name} · ${sizeLabel(selection)} · ${config.code}`;
+  return `${series.wordmark} ${config.name} · ${sizeLabel(selection)} · ${selectedParts(selection).code}`;
 }
 
 export function isInferredCode(series: SeriesDefinition, code: string): boolean {

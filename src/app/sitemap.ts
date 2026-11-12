@@ -17,10 +17,11 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections, sectors] = await Promise.all([
+  const [products, collections, sectors, pieces] = await Promise.all([
     catalog.getProducts(),
     catalog.getCollections(),
     catalog.getSectors(),
+    catalog.getPieces(),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
@@ -59,5 +60,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : {}),
   }));
 
-  return [...staticEntries, ...collectionEntries, ...sectorEntries, ...productEntries];
+  // PM x Cohuman and seating: each piece has its own page and its own photographs.
+  const pieceEntries: MetadataRoute.Sitemap = pieces.map((piece) => ({
+    url: `${siteConfig.url}/products/${piece.slug}`,
+    lastModified: CONTENT_REVISED.collections,
+    changeFrequency: "monthly",
+    priority: 0.6,
+    images: [piece.scene, ...piece.views].map((image) => `${siteConfig.url}${image.src}`),
+  }));
+
+  return [...staticEntries, ...collectionEntries, ...pieceEntries, ...sectorEntries, ...productEntries];
 }

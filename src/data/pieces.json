@@ -1,0 +1,369 @@
+[
+  {
+    "slug": "arq",
+    "name": "ARQ",
+    "type": "Executive desk",
+    "group": "pm-x-cohuman",
+    "tagline": "A stone-look top with a sculpted front edge rests on a dark base, with a side return built in.",
+    "about": "ARQ is an executive desk for the cabin. The sculpted edge gives the top a clear front, and the side return keeps a second work surface within reach.",
+    "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
+    "scene": {
+      "src": "/pieces/arq/scene.jpg",
+      "alt": "ARQ executive desk with a stone-look top and dark base in a cabin with tall windows"
+    },
+    "views": [
+      {
+        "src": "/pieces/arq/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "ARQ executive desk from the three-quarter view"
+      },
+      {
+        "src": "/pieces/arq/front.jpg",
+        "label": "Front",
+        "alt": "ARQ executive desk from the front"
+      },
+      {
+        "src": "/pieces/arq/top.jpg",
+        "label": "Top",
+        "alt": "ARQ executive desk from above"
+      }
+    ]
+  },
+  {
+    "slug": "loop",
+    "name": "LOOP",
+    "type": "Executive desk",
+    "group": "pm-x-cohuman",
+    "tagline": "A long executive top carried on a looped metal leg at one end and a storage pedestal at the other.",
+    "about": "LOOP balances an open, looped leg against a solid storage pedestal, so the desk reads light at one end and grounded at the other.",
+    "size": {
+      "w": [
+        2400
+      ],
+      "d": [
+        1100
+      ],
+      "h": [
+        800
+      ]
+    },
+    "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
+    "scene": {
+      "src": "/pieces/loop/scene.jpg",
+      "alt": "LOOP executive desk with a dark top and looped metal leg in a city-view cabin"
+    },
+    "views": [
+      {
+        "src": "/pieces/loop/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "LOOP executive desk from the three-quarter view"
+      },
+      {
+        "src": "/pieces/loop/front.jpg",
+        "label": "Front",
+        "alt": "LOOP executive desk from the front"
+      },
+      {
+        "src": "/pieces/loop/top.jpg",
+        "label": "Top",
+        "alt": "LOOP executive desk from above"
+      }
+    ]
+  },
+  {
+    "slug": "duet",
+    "name": "DUET",
+    "type": "Sofa",
+    "group": "pm-x-cohuman",
+    "tagline": "A high-backed sofa whose outer shell wraps around the seat, in three sizes.",
+    "about": "DUET's shell rises around the seat to make a quiet, enclosed corner in an open lounge. Available as a single seat, a two-seater and a three-seater.",
+    "size": {
+      "w": [
+        1600
+      ],
+      "d": [
+        850
+      ],
+      "h": [
+        750
+      ],
+      "note": "two seater"
+    },
+    "availableAs": [
+      "Single seater",
+      "Two seater",
+      "Three seater"
+    ],
+    "upholstery": "Fabric, leather and eco-leather options available on request",
+    "scene": {
+      "src": "/pieces/duet/scene.jpg",
+      "alt": "DUET two-seater sofa with a tan outer shell and white cushions in a lounge"
+    },
+    "views": [
+      {
+        "src": "/pieces/duet/top.jpg",
+        "label": "Front",
+        "alt": "DUET sofa from the front, cushions in view"
+      },
+      {
+        "src": "/pieces/duet/side.jpg",
+        "label": "Side",
+        "alt": "DUET sofa from the side"
+      },
+      {
+        "src": "/pieces/duet/back.jpg",
+        "label": "Back",
+        "alt": "DUET sofa from the back"
+      }
+    ]
+  },
+  {
+    "slug": "axen",
+    "name": "AXEN",
+    "type": "Sofa",
+    "group": "pm-x-cohuman",
+    "tagline": "A deep, low seat carried on a slim angled metal frame, shown as a two-seater.",
+    "about": "AXEN keeps its seat low and deep, lifted on a slim angled frame so the sofa looks light from every side. Single, two and three seater versions are available on request.",
+    "size": {
+      "w": [
+        900,
+        1400,
+        2000
+      ],
+      "d": [
+        750
+      ],
+      "h": [
+        750
+      ]
+    },
+    "availableAs": [
+      "Single seater",
+      "Two seater",
+      "Three seater"
+    ],
+    "upholstery": "Fabric, leather and eco-leather options available on request",
+    "scene": {
+      "src": "/pieces/axen/scene.jpg",
+      "alt": "AXEN two-seater sofa in olive upholstery on a slim metal frame in an open office"
+    },
+    "views": [
+      {
+        "src": "/pieces/axen/front.jpg",
+        "label": "Front",
+        "alt": "AXEN sofa from the front"
+      },
+      {
+        "src": "/pieces/axen/side.jpg",
+        "label": "Side",
+        "alt": "AXEN sofa from the side"
+      },
+      {
+        "src": "/pieces/axen/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "AXEN sofa from the three-quarter view"
+      }
+    ]
+  },
+  {
+    "slug": "mellow",
+    "name": "MELLOW",
+    "type": "Accent chair",
+    "group": "pm-x-cohuman",
+    "tagline": "A rounded armchair with a split back and wraparound arms, on a solid wood base.",
+    "about": "MELLOW pairs a soft, rounded seat with a warm wooden base: a chair for receptions, cabins and quiet corners.",
+    "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
+    "upholstery": "Fabric, leather and eco-leather options available on request",
+    "scene": {
+      "src": "/pieces/mellow/scene.jpg",
+      "alt": "Two MELLOW armchairs in grey upholstery on wooden bases around a low table"
+    },
+    "views": [
+      {
+        "src": "/pieces/mellow/front.jpg",
+        "label": "Front",
+        "alt": "MELLOW armchair from the front"
+      },
+      {
+        "src": "/pieces/mellow/side.jpg",
+        "label": "Side",
+        "alt": "MELLOW armchair from the side"
+      },
+      {
+        "src": "/pieces/mellow/back.jpg",
+        "label": "Back",
+        "alt": "MELLOW armchair from the back"
+      }
+    ]
+  },
+  {
+    "slug": "modo",
+    "name": "MODO",
+    "type": "Accent chair",
+    "group": "pm-x-cohuman",
+    "tagline": "A tub chair: a soft upholstered seat set inside a dark outer shell.",
+    "about": "MODO sets a soft seat inside a firm dark shell, giving a compact tub chair for breakout and reception spaces.",
+    "upholstery": "Fabric, leather and eco-leather options available on request",
+    "scene": {
+      "src": "/pieces/modo/scene.jpg",
+      "alt": "MODO tub chair with a pale seat inside a dark shell, beside a window"
+    },
+    "views": [
+      {
+        "src": "/pieces/modo/front.jpg",
+        "label": "Front",
+        "alt": "MODO tub chair from the front"
+      },
+      {
+        "src": "/pieces/modo/side.jpg",
+        "label": "Side",
+        "alt": "MODO tub chair from the side"
+      },
+      {
+        "src": "/pieces/modo/back.jpg",
+        "label": "Back",
+        "alt": "MODO tub chair from the back"
+      }
+    ]
+  },
+  {
+    "slug": "orca",
+    "name": "ORCA",
+    "type": "Coffee table",
+    "group": "pm-x-cohuman",
+    "tagline": "A soft-cornered square top on four rounded corner legs.",
+    "about": "ORCA's soft corners and rounded legs make a coffee table that sits easily with any of the lounge pieces.",
+    "size": {
+      "w": [
+        1200
+      ],
+      "d": [
+        1200
+      ],
+      "h": [
+        350
+      ]
+    },
+    "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
+    "scene": {
+      "src": "/pieces/orca/scene.jpg",
+      "alt": "ORCA coffee table with a stone-look top on orange rounded legs, on a rug"
+    },
+    "views": [
+      {
+        "src": "/pieces/orca/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "ORCA coffee table from the three-quarter view"
+      },
+      {
+        "src": "/pieces/orca/front.jpg",
+        "label": "Front",
+        "alt": "ORCA coffee table from the front"
+      },
+      {
+        "src": "/pieces/orca/top.jpg",
+        "label": "Top",
+        "alt": "ORCA coffee table from above"
+      }
+    ]
+  },
+  {
+    "slug": "ren",
+    "name": "REN",
+    "type": "Library",
+    "group": "pm-x-cohuman",
+    "tagline": "Open shelving on slim dark uprights and a low plinth, freestanding or as a library wall.",
+    "about": "REN works as a single freestanding unit or as a full library wall, with open shelves for books, files and objects.",
+    "size": {
+      "w": [
+        3000
+      ],
+      "d": [
+        500
+      ],
+      "h": [
+        2400
+      ],
+      "note": "two units"
+    },
+    "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
+    "scene": {
+      "src": "/pieces/ren/scene.jpg",
+      "alt": "Two REN shelving units with dark uprights holding books and objects"
+    },
+    "views": [
+      {
+        "src": "/pieces/ren/front.jpg",
+        "label": "Front",
+        "alt": "REN shelving, two units from the front"
+      },
+      {
+        "src": "/pieces/ren/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "REN shelving from the three-quarter view"
+      },
+      {
+        "src": "/pieces/ren/side.jpg",
+        "label": "Side",
+        "alt": "A REN unit from the side"
+      }
+    ]
+  },
+  {
+    "slug": "ergohuman",
+    "name": "Ergohuman",
+    "type": "Office chair",
+    "group": "seating",
+    "tagline": "A high-back mesh chair on a polished frame, with adjustable arms and headrest.",
+    "about": "Ergohuman supports the back, neck and arms in breathable mesh, with a polished frame and a five-star base on castors, for long days at the desk.",
+    "availableAs": [
+      "With headrest",
+      "Without headrest",
+      "With leg rest",
+      "Plus"
+    ],
+    "scene": {
+      "src": "/pieces/ergohuman/scene.jpg",
+      "alt": "An Ergohuman mesh chair at a desk in a bright room with plants"
+    },
+    "views": [
+      {
+        "src": "/pieces/ergohuman/front.jpg",
+        "label": "Front",
+        "alt": "Ergohuman chair from the front"
+      },
+      {
+        "src": "/pieces/ergohuman/side.jpg",
+        "label": "Side",
+        "alt": "Ergohuman chair from the side"
+      },
+      {
+        "src": "/pieces/ergohuman/back.jpg",
+        "label": "Back",
+        "alt": "Ergohuman chair from the back"
+      }
+    ],
+    "versions": [
+      {
+        "src": "/pieces/ergohuman/v-headrest.jpg",
+        "label": "With headrest",
+        "alt": "Ergohuman chair with headrest"
+      },
+      {
+        "src": "/pieces/ergohuman/v-no-headrest.jpg",
+        "label": "Without headrest",
+        "alt": "Ergohuman chair without headrest"
+      },
+      {
+        "src": "/pieces/ergohuman/v-leg-rest.jpg",
+        "label": "With leg rest",
+        "alt": "Ergohuman chair with the leg rest pulled out"
+      },
+      {
+        "src": "/pieces/ergohuman/v-plus.jpg",
+        "label": "Plus",
+        "alt": "Ergohuman Plus chair"
+      }
+    ]
+  }
+]

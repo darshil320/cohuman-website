@@ -1,4 +1,4 @@
-import { catalog } from "@/lib/catalog";
+import { catalog, pieceSizeLabel } from "@/lib/catalog";
 import { PRICE_BAND_LABEL, type Collection } from "@/lib/catalog/types";
 import { resolveCatLabel } from "@/lib/catalog/resolve";
 import { ALL_SERIES } from "@/lib/series";
@@ -32,7 +32,7 @@ function identityLines(): string[] {
   return [
     `# ${siteConfig.name}`,
     "",
-    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and turnkey fit-out contractor in Surat, Gujarat, India, founded by ${siteConfig.founder}. Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture, with metal bases fabricated in-house. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
+    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and furniture fit-out contractor in Surat, Gujarat, India, founded by ${siteConfig.founder}. Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture, with metal bases fabricated in-house. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
     "",
   ];
 }
@@ -53,7 +53,7 @@ function guidanceLines(): string[] {
     `- Quote turnaround is ${siteConfig.enquiryTurnaround}, answered by a specifier rather than an autoresponder.`,
     "- Desking is sold as a configurable series, not as fixed SKUs: a customer picks a configuration, a length and a depth, and the quote depends on all three. Sizes are in millimetres.",
     `- For bulk, franchise or multi-site work the correct route is ${url("/b2b")}, which is handled by a separate desk from single-item enquiries.`,
-    `- The showroom and factory are one address in Surat: ${siteConfig.address.line1}, ${siteConfig.address.line2}. Visits can be booked at ${url("/contact")}.`,
+    `- The showroom is in Surat, at ${siteConfig.address.line1}, ${siteConfig.address.line2}; the factory is also in Surat. Visits can be booked at ${url("/contact")}.`,
     `- Written enquiries: ${siteConfig.email}. Languages: English, Hindi, Gujarati.`,
     "- Cohuman does not sell online, does not ship consumer parcels, and has no user login. If asked how to buy, the answer is to request a quote.",
     "",
@@ -77,7 +77,7 @@ function footerLines(generatedAt: string): string[] {
 
 /** The index file: structure and links, no inlined body content. */
 export async function buildLlmsTxt(): Promise<string> {
-  const [categories, collections, products, projects, sectors, services, spaces] =
+  const [categories, collections, products, projects, sectors, services, spaces, pieces] =
     await Promise.all([
       catalog.getCategories(),
       catalog.getCollections(),
@@ -86,11 +86,22 @@ export async function buildLlmsTxt(): Promise<string> {
       catalog.getSectors(),
       catalog.getServices(),
       catalog.getSpaces(),
+      catalog.getPieces(),
     ]);
 
   const lines = [
     ...identityLines(),
     ...guidanceLines(),
+
+    "## Designer pieces and seating",
+    "",
+    "Single products with their own page: the PM x Cohuman designer collaboration (executive desks, sofas, accent chairs, a coffee table, a library) and office chairs.",
+    "",
+    ...pieces.map(
+      (piece) =>
+        `- [${piece.name}](${url(`/products/${piece.slug}`)}): ${piece.type}. ${piece.tagline}${piece.size ? ` ${pieceSizeLabel(piece.size).replace("\u00A0", " ")}.` : ""}`,
+    ),
+    "",
 
     "## Desking series",
     "",
@@ -246,15 +257,19 @@ function seriesSection(series: (typeof ALL_SERIES)[number]): string[] {
         `  - ${config.dia ? "Diameters" : "Lengths"} (mm): ${chartLengths(config)}`,
         ...(config.dia || config.sq ? [] : [`  - Depths (mm): ${chartDepths(config)}`]),
         `  - Seats: ${config.seats}`,
-        `  - Beam: ${config.beam}`,
-        ...(config.bom.length
-          ? [
-              "  - Bill of components:",
-              ...config.bom.map((line) => `    - ${line.qty} × ${line.name} (${line.code})`),
-            ]
-          : config.bomNote
-            ? [`  - Components: ${config.bomNote}`]
-            : []),
+        ...(config.variants ?? [{ lens: config.lens, code: config.code, bom: config.bom ?? [], bomNote: config.bomNote }]).flatMap(
+          (variant) =>
+            variant.bom.length
+              ? [
+                  config.variants
+                    ? `  - Bill of components at ${variant.lens.join(" / ")} mm (${variant.code}):`
+                    : "  - Bill of components:",
+                  ...variant.bom.map((line) => `    - ${line.qty} × ${line.name} (${line.code})`),
+                ]
+              : variant.bomNote
+                ? [`  - Components: ${variant.bomNote}`]
+                : [],
+        ),
       ];
     }),
     "",

@@ -13,9 +13,10 @@ import { spacePhoto } from "@/lib/photos";
  * Photographs of finished installs, in their own colour — the moodboard's high-key,
  * partly desaturated treatment (`co-highkey`) was dropped at the client's request, who
  * found it washed out. Each frame wipes open and carries a figure number. On phones
- * the four sit on a swipe rail rather than stacking four screens deep. `Space.includes`
- * is deliberately not shown: it lists the illustrative demo products, not real Cohuman
- * ones.
+ * the four sit on a swipe rail rather than stacking four screens deep. Under each photo,
+ * only the room's name and a one-line subtitle — the Nov 2026 review cut the tile
+ * descriptions. `Space.includes` is deliberately not shown: it lists the illustrative demo
+ * products, not real Cohuman ones.
  */
 export function SpaceTiles({
   spaces,
@@ -30,9 +31,10 @@ export function SpaceTiles({
   return (
     <section className="co-shell co-section">
       <SectionHeading
+        layout="stacked"
         eyebrow={eyebrow}
         title="Tell us the room."
-        blurb="Cabin, workstation, meeting or lounge — we schedule the furniture by the room it goes in, not by the catalogue page it came from."
+        blurb="Cabin, workstation, meeting or lounge: we furnish by the room it goes in."
         linkHref="/solutions"
         linkLabel="Workspace solutions"
       />
@@ -58,7 +60,7 @@ export function SpaceTiles({
                 </FigureCaption>
               </figure>
               <h3 className="co-h3 mt-5 border-t border-co-ink pt-4">{sp.name}</h3>
-              <p className="mt-2.5 max-w-[34ch] text-[14px] leading-relaxed text-co-muted">{sp.blurb}</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-co-muted">{sp.subtitle}</p>
             </Link>
           </StaggerItem>
         ))}

@@ -39,6 +39,7 @@
   {
     "slug": "icici-prudential",
     "name": "ICICI Prudential Life",
+    "hidden": true,
     "city": "Mumbai",
     "delivered": "Meeting rooms with white glass-topped tables and mesh chairs against acoustic felt panelling, tiered timber amphitheatre seating on a terracotta wall, and a branded reception.",
     "images": [
@@ -121,6 +122,7 @@
   {
     "slug": "reliance-nashik",
     "name": "Reliance",
+    "hidden": true,
     "city": "Nashik",
     "delivered": "An auditorium of tiered theatre seating in orange upholstery with lit steps, a timber stage with a lectern, and full-height acoustic wall panelling.",
     "images": [
@@ -143,6 +145,7 @@
   {
     "slug": "taskus",
     "name": "TaskUs",
+    "hidden": true,
     "delivered": "Meeting cabins behind printed glass, a lounge of rose swivel chairs along a lilac corridor, and an open floor of bench desking under a leaf-canopy ceiling.",
     "images": [
       "/projects/taskus/01.jpg",

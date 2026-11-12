@@ -13,6 +13,12 @@ interface SectionHeadingProps {
   linkLabel?: string;
   /** `dark` for a section on the ink block. */
   tone?: "light" | "dark";
+  /**
+   * `columns` (default): label | title | standfirst on one baseline.
+   * `stacked` (homepage): label, title and a short description under it on the left,
+   * the link on the right — the client's Nov 2026 layout.
+   */
+  layout?: "columns" | "stacked";
   className?: string;
   titleClassName?: string;
 }
@@ -31,10 +37,25 @@ export function SectionHeading({
   linkHref,
   linkLabel,
   tone = "light",
+  layout = "columns",
   className,
   titleClassName,
 }: SectionHeadingProps) {
   const dark = tone === "dark";
+  if (layout === "stacked") {
+    return (
+      <StackedHeading
+        eyebrow={eyebrow}
+        title={title}
+        blurb={blurb}
+        linkHref={linkHref}
+        linkLabel={linkLabel}
+        dark={dark}
+        className={className}
+        titleClassName={titleClassName}
+      />
+    );
+  }
   const hasAside = Boolean(blurb || (linkHref && linkLabel));
 
   return (
@@ -79,6 +100,56 @@ export function SectionHeading({
               <Link href={linkHref}>{linkLabel}</Link>
             </Button>
           ) : null}
+        </div>
+      ) : null}
+    </Reveal>
+  );
+}
+
+/**
+ * The stacked opener: a small mono label, the title, a short description under the
+ * title, and the section's link on the right, closed by the same full-width rule. On
+ * phones the link drops under the description.
+ */
+function StackedHeading({
+  eyebrow,
+  title,
+  blurb,
+  linkHref,
+  linkLabel,
+  dark,
+  className,
+  titleClassName,
+}: Omit<SectionHeadingProps, "tone" | "layout"> & { dark: boolean }) {
+  return (
+    <Reveal
+      className={cn(
+        "mb-[clamp(32px,3.4vw,48px)] grid grid-cols-1 items-end gap-x-[clamp(20px,2.5vw,40px)] gap-y-6 border-b pb-[clamp(20px,2vw,28px)] lg:grid-cols-[minmax(0,1fr)_auto]",
+        dark ? "border-co-panel-fg" : "border-co-ink",
+        className,
+      )}
+    >
+      <div>
+        <p className={cn("co-eyebrow", dark && "text-co-panel-faint")}>{eyebrow}</p>
+        <h2 className={cn("co-h2 mt-4 max-w-[24ch]", dark && "text-co-panel-fg", titleClassName)}>
+          {title}
+        </h2>
+        {blurb ? (
+          <p
+            className={cn(
+              "mt-4 max-w-[56ch] text-[15px] leading-[1.55]",
+              dark ? "text-co-panel-muted" : "text-co-ink-soft",
+            )}
+          >
+            {blurb}
+          </p>
+        ) : null}
+      </div>
+      {linkHref && linkLabel ? (
+        <div className="lg:pb-1">
+          <Button asChild variant={dark ? "linkOnDark" : "link"} arrow>
+            <Link href={linkHref}>{linkLabel}</Link>
+          </Button>
         </div>
       ) : null}
     </Reveal>

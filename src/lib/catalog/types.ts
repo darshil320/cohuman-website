@@ -116,6 +116,8 @@ export interface Space {
   slug: string;
   num: string;
   name: string;
+  /** One line under the name on the homepage tiles — what the room is furnished with. */
+  subtitle: string;
   blurb: string;
   includes: string;
   slotHint: string;

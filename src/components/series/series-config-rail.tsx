@@ -253,7 +253,7 @@ export function SeriesConfigRail() {
               </span>
 
               <span className={cn("co-data mt-2.5 block max-w-full truncate", on ? "text-co-ink" : "text-co-muted-2")}>
-                {item.n} · {item.short}
+                {item.short}
               </span>
 
               {on ? (
@@ -262,7 +262,6 @@ export function SeriesConfigRail() {
                     {item.name}
                   </span>
                   <span className="co-data mt-2 block text-co-muted-2">{facts}</span>
-                  <span className="co-data block text-co-muted-2">{item.code}</span>
                   <span className="co-data mt-2 block text-co-ink">
                     Shown above <span aria-hidden>↑</span>
                   </span>

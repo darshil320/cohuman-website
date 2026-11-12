@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { finishLabel } from "@/lib/series";
+import { finishLabel, selectedParts } from "@/lib/series";
 import { SERIES_BAR_HEIGHT } from "@/lib/layout";
 import { useSeriesConfigurator } from "./series-context";
 
@@ -52,7 +52,7 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
               {config.name} · {size}
               {finish ? <span className="hidden text-co-muted-2 md:inline"> · {finish} top</span> : null}
             </p>
-            <span className="co-data hidden text-co-muted-2 lg:block">{config.code}</span>
+            <span className="co-data hidden text-co-muted-2 lg:block">{selectedParts(selection).code}</span>
             <Button type="button" size="sm" onClick={toEnquire}>
               Get a quote
             </Button>

@@ -6,14 +6,13 @@ import { useCallback, useState, type PointerEvent as ReactPointerEvent } from "r
 import { SectionHeading } from "@/components/common/section-heading";
 import { Button } from "@/components/ui/button";
 import { DimensionLine } from "@/components/ui/dimension-line";
-import { FigureCaption } from "@/components/ui/figure-caption";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { SpecRows } from "@/components/ui/spec-rows";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import type { SeriesPartFocus } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
-import { seriesSectionEyebrow, seriesSectionNo } from "@/lib/series";
+import { seriesSectionEyebrow } from "@/lib/series";
 
 /**
  * Numbered part list beside the reference render.
@@ -79,7 +78,6 @@ export function SeriesAnatomy() {
   const part = series.parts[partIndex];
   const section = series.anatomySection;
   const { w, h } = series.anatomyImageSize;
-  const sectionNo = seriesSectionNo(series, "anatomy");
 
   const [pushed, setPushed] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -218,9 +216,7 @@ export function SeriesAnatomy() {
 
             <figcaption className="mt-3.5 border-t border-co-border pt-3">
               <span className="flex items-start gap-4">
-                <FigureCaption as="span" n={sectionNo} className="min-w-0 flex-1">
-                  {series.anatomyCaption}
-                </FigureCaption>
+                <span className="co-data min-w-0 flex-1 text-co-muted-2">{series.anatomyCaption}</span>
                 {pushedIn ? (
                   <Button type="button" variant="link" onClick={pullBack} className="shrink-0">
                     Whole bench

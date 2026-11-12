@@ -5,9 +5,6 @@ import { DimensionLine } from "@/components/ui/dimension-line";
 import { configSizeRange } from "@/lib/series";
 import { useSeriesConfigurator } from "./series-context";
 
-/** Two-digit ordinal, so the counter never jumps width. */
-const pad = (n: number) => String(n).padStart(2, "0");
-
 /**
  * A — the name hero, split in two so the spec panel can sit beside it (client request,
  * "suggestion 1"): the breadcrumb runs full width here, and `SeriesNameHeading` — the
@@ -40,12 +37,11 @@ export function SeriesNameHero() {
 /** The heading half of the name hero, set at the top of the spec block's left column. */
 export function SeriesNameHeading() {
   const { series, config } = useSeriesConfigurator();
-  const position = series.configs.indexOf(config) + 1;
 
   return (
     <div>
       <p className="co-eyebrow">
-        {series.wordmark} series — {series.eyebrow} — Config {pad(position)} / {pad(series.configs.length)}
+        {series.wordmark} — {series.eyebrow}
       </p>
       <h1 className="co-display mt-4 max-w-[20ch] text-[clamp(30px,4.2vw,64px)]">
         {config.name}

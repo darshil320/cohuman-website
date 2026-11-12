@@ -88,17 +88,19 @@ async function collectDynamicParams() {
     return JSON.parse(raw).map((item) => item.slug);
   };
 
-  const [collections, products, projects, sectors, spaces, services] = await Promise.all([
+  const [collections, products, projects, sectors, spaces, services, pieces] = await Promise.all([
     readSlugs("collections.json"),
     readSlugs("products.json"),
     readSlugs("projects.json"),
     readSlugs("sectors.json"),
     readSlugs("spaces.json"),
     readSlugs("services.json"),
+    readSlugs("pieces.json"),
   ]);
 
   return new Map([
     ["/collections/[slug]", collections],
+    ["/products/[slug]", pieces],
     ["/catalog/[slug]", products],
     ["/projects/[slug]", projects],
     ["/sectors/[slug]", sectors],

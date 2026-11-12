@@ -1,10 +1,9 @@
 /**
  * Films for the homepage hero carousel.
  *
- * `LEAD_FILM` opens the hero: full bleed under the transparent header, with the page's
- * claim on a title block over it. `COMPARE_FILM` follows it, with the previous design.
- * `HERO_FILMS` are further text-free film panels placed after the measured "Engineered
- * for two" panel — none today.
+ * `LEAD_FILM` is the hero: full bleed under the transparent header, with the page's
+ * claim on a title block over it. It is the only panel — the Nov 2026 review removed the
+ * panel selector, the comparison film and the measured panel behind it.
  *
  * Footage lives in `public/video/`. Ship an MP4 (H.264, no audio track, `+faststart`) and,
  * ideally, a WebM alongside it, plus a `poster` still taken from the film's first frame —
@@ -82,24 +81,3 @@ export const LEAD_FILM: HeroFilm = {
     video: { mp4: "/video/hero-desk-mobile.mp4", webm: "/video/hero-desk-mobile.webm" },
   },
 };
-
-/**
- * The previous hero, kept as panel 02 so the client can compare the two before choosing:
- * a 1280×720 studio clip (`Video 1.MOV`, the same 12% crop, no audio) trimmed to its
- * opening wide shot and played forward then back, so it loops without a cut and the
- * desk never rises into the top of the frame — the claim sits directly on that empty
- * sweep (`FilmBand`). Remove it, its overlay and `public/video/hero-desk-loop*` once the
- * client has picked one.
- */
-export const COMPARE_FILM: HeroFilm = {
-  id: "desk-loop",
-  label: "Film",
-  poster: "/video/hero-desk-loop-poster.jpg",
-  alt: "An executive desk with a marble top on a dark pedestal and slab legs, in a pale grey studio",
-  video: { mp4: "/video/hero-desk-loop.mp4", webm: "/video/hero-desk-loop.webm" },
-  tone: "light",
-  // On a phone: the slab legs and the end of the marble, not the dark pedestal mass.
-  mobileFocus: "88%",
-};
-
-export const HERO_FILMS: HeroFilm[] = [];

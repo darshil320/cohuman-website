@@ -17,6 +17,7 @@ import {
   lengthFieldLabel,
   selectedDepth,
   selectedLength,
+  selectedParts,
 } from "@/lib/series";
 import { prefersReducedMotion } from "./series-config-flight";
 import { useSeriesConfigurator } from "./series-context";
@@ -74,8 +75,9 @@ export function SeriesSpecBlock() {
   const depth = selectedDepth(selection);
   const depths = depthOptions(selection);
   const finish = finishLabel(selection);
-  const inferred = isInferredCode(series, config.code);
-  const hasInferredBom = config.bom.some((line) => isInferredCode(series, line.code));
+  const parts = selectedParts(selection);
+  const inferred = isInferredCode(series, parts.code);
+  const hasInferredBom = parts.bom.some((line) => isInferredCode(series, line.code));
 
   const lengthDone = touched.length || config.lens.length === 1;
   const depthDone = touched.depth || depths.locked || depths.values.length === 1;
@@ -92,7 +94,7 @@ export function SeriesSpecBlock() {
       k: series.codeLabel ?? "Code",
       v: (
         <>
-          {config.code}
+          {parts.code}
           {inferred ? <Provisional /> : null}
         </>
       ),
@@ -119,7 +121,6 @@ export function SeriesSpecBlock() {
     },
     { k: "Height", v: `${series.workingHeightMm} mm` },
     { k: "Seats", v: config.seats },
-    { k: "Beam", v: config.beam },
     ...(series.finishFilters ? [{ k: "Finish", v: finish ?? "—" }] : []),
   ];
 
@@ -128,9 +129,9 @@ export function SeriesSpecBlock() {
       {/* The name heading and the viewer under it on the left, the ink spec panel on the
           right, rising level with the heading (client request, "suggestion 1") so the name,
           the render and the spec share the first screen. The panel bleeds through the
-          shell's right gutter; its top steps — a narrower block first, the full panel a
-          notch lower — the officemate corner block, now part of the panel itself. On phones
-          it stacks: heading, viewer, panel. */}
+          shell's right gutter and is one solid rectangle from the heading's top line down —
+          the stepped top was dropped in the Nov 2026 review. On phones it stacks: heading,
+          viewer, panel. */}
       <div className="co-shell grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
         <div className="min-w-0 pb-[clamp(32px,4vw,64px)] pt-[clamp(40px,5vw,72px)] lg:pr-[clamp(24px,3.5vw,56px)]">
           <SeriesNameHeading />
@@ -139,9 +140,7 @@ export function SeriesSpecBlock() {
           </div>
         </div>
 
-        <div className="relative -mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-mr-12 lg:mt-[calc(clamp(40px,5vw,72px)+clamp(56px,6vw,96px))] lg:pl-10 lg:pr-12">
-          {/* The step: a narrower block reaching up to the heading's top line. */}
-          <div aria-hidden className="absolute bottom-full right-0 hidden h-[clamp(56px,6vw,96px)] w-[62%] bg-co-panel lg:block" />
+        <div className="relative -mx-[18px] bg-co-panel px-[18px] py-[clamp(40px,5vw,70px)] text-co-panel-fg sm:-mx-6 sm:px-6 lg:mx-0 lg:-mr-12 lg:mt-[clamp(40px,5vw,72px)] lg:pl-10 lg:pr-12">
           <p className="co-eyebrow mb-5 text-co-panel-faint">01 / Specification</p>
           <SpecRows rows={rows} tone="dark" />
 
@@ -210,7 +209,7 @@ export function SeriesSpecBlock() {
               </tr>
             </thead>
             <tbody>
-              {config.bom.map((line) => (
+              {parts.bom.map((line) => (
                 <tr key={line.code} className="border-b border-co-panel-border align-baseline">
                   <td className="py-2.5 pr-3 normal-case text-co-panel-fg">{line.name}</td>
                   <td className="whitespace-nowrap py-2.5 pr-3 text-co-panel-muted">
@@ -222,8 +221,8 @@ export function SeriesSpecBlock() {
               ))}
             </tbody>
           </table>
-          {config.bomNote ? (
-            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-muted">{config.bomNote}</p>
+          {parts.bomNote ? (
+            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-muted">{parts.bomNote}</p>
           ) : null}
           {inferred || hasInferredBom ? (
             <p className="mt-3 text-[13px] leading-relaxed text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>

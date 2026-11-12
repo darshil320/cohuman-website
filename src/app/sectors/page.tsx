@@ -151,7 +151,7 @@ export default async function SectorsPage() {
             n={pad(sectors.length + 1)}
             name="Desking systems"
             kicker="Office"
-            blurb="STRETCH S and STRETCH V — configurable beam chassis, specified to the millimetre and quoted off a component schedule."
+            blurb="Stretch S and Stretch V — configurable beam chassis, specified to the millimetre and quoted off a component schedule."
             href="/collections"
             detail={deskingRange}
           />

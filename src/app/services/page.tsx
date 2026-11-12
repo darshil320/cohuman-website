@@ -11,19 +11,19 @@ import { PageHero } from "@/components/common/page-hero";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+    "Space planning, furniture fit-out, delivery & installation, and AMC aftercare.",
   alternates: { canonical: "/services" },
   openGraph: {
     title: "Services",
     description:
-      "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+      "Space planning, furniture fit-out, delivery & installation, and AMC aftercare.",
     url: "/services",
     images: [SHARE_IMAGE],
   },
   twitter: {
     title: "Services",
     description:
-      "Space planning, turnkey fit-out, delivery & installation, and AMC aftercare — the whole fit-out, not just the furniture.",
+      "Space planning, furniture fit-out, delivery & installation, and AMC aftercare.",
   },
 };
 

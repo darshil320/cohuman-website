@@ -1,196 +1,154 @@
-import type { SeriesConfig } from "../types";
+import type { SeriesBomLine, SeriesConfig } from "../types";
 
 /**
- * The ten configurations on the VARIDEX element page, in the order the PDF lists them.
+ * STRETCH V (slug `varidex`) — the six table types of the 2026 catalogue (pp. 36–37), in
+ * its order. The catalogue lists ten rows; rows that differ only by beam length (single
+ * table, meeting table, face-to-face bench) are one configuration each here, and the
+ * beam follows the selected length (`variants`, read by `configParts`).
  *
  * Two things about this data, because both are easy to get wrong later:
  *
- * 1. `VARIDEX.pdf` quotes every top as a **range** ("1200~1400mm"), not as discrete
- *    sizes. Only the endpoints are listed here — no intermediate size is invented.
- * 2. The PDF gives no per-configuration part number, so `code` carries the beam or leg
- *    package that defines the configuration. The UI labels that column "Lead component"
- *    rather than "Element code" (see `codeLabel` on the series definition).
+ * 1. Every top is quoted as a **range** ("1200–1400 mm"), not as discrete sizes. Only
+ *    the endpoints are listed here — no intermediate size is invented.
+ * 2. `VARIDEX.pdf` gives no per-configuration part number, so `code` carries the beam or
+ *    leg package that defines the configuration. The UI labels it "Lead component" (see
+ *    `codeLabel` on the series definition).
  *
- * Four further products are photographed and specified in the PDF without appearing in
- * the element table (round meeting top, L shape, manager table, manager table with
- * cabinet). They are not quotable configurations, so they live in the series' `gallery`
- * instead of being given invented sizes and schedules.
+ * Products photographed in the PDF without a size table (round top, L shape, manager
+ * tables) live in the series' `gallery`, not here.
  */
+
+const FOUR_LEG: SeriesBomLine = { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" };
+const TWO_LEG = (qty: string): SeriesBomLine => ({ name: "2 legs package", code: "CHS-2FLEG072-PC", qty });
+const BENCH_LEG_PAIR: SeriesBomLine = { name: "Bench legs, one pair", code: "CHS-2BLEG-PC", qty: "1 pc" };
+const BENCH_MID_LEG: SeriesBomLine = { name: "Bench mid leg", code: "CHS-BMLEG-PC", qty: "1 pc" };
+const SHORT_BEAM = (qty: string): SeriesBomLine => ({
+  name: "Horizontal beam · short",
+  code: "CHS-2B120140-PC",
+  qty,
+});
+const MEDIUM_BEAM = (qty: string): SeriesBomLine => ({
+  name: "Horizontal beam · medium",
+  code: "CHS-2B150180-PC",
+  qty,
+});
+const LONG_BEAM = (qty: string): SeriesBomLine => ({
+  name: "Horizontal beam · long",
+  code: "CHS-2B190240-PC",
+  qty,
+});
+
+/** Depths the catalogue quotes for desks and for facing pairs, as range endpoints. */
+const DESK_DEPTHS = [600, 900];
+const PAIR_DEPTHS = [1200, 1600];
+
 export const VARIDEX_CONFIGS: SeriesConfig[] = [
   {
     slug: "square",
     n: "01",
-    short: "Square",
-    name: "Square Table",
+    short: "Square table",
+    name: "Square table",
     code: "CHS-2FLEG072-PC",
     image: "/varidex/meet-square.jpg",
-    imageAlt: "VARIDEX square meeting table with two chairs",
+    imageAlt: "Stretch V square table with two chairs",
     lens: [900, 1000, 1200],
     deps: [900, 1000, 1200],
     seats: "—",
-    beam: "—",
     sq: true,
-    bom: [{ name: "2 legs package", code: "CHS-2FLEG072-PC", qty: "2 pcs" }],
+    bom: [TWO_LEG("2 pcs")],
   },
   {
-    slug: "single-short",
+    slug: "single",
     n: "02",
-    short: "Single 1.4m",
-    name: "Single Table · Short Beam",
+    short: "Single table",
+    name: "Single table",
     code: "CHS-2B120140-PC",
     image: "/varidex/single-desk.jpg",
-    imageAlt: "VARIDEX single table with modesty panel and white legs",
-    lens: [1200, 1400],
-    deps: [600, 800],
+    imageAlt: "Stretch V single table with modesty panel and white legs",
+    lens: [1200, 1400, 1500, 1800, 1900, 2400],
+    deps: DESK_DEPTHS,
     seats: "—",
-    beam: "2B120140",
-    bom: [
-      { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" },
-      { name: "Horizontal beam · short", code: "CHS-2B120140-PC", qty: "1 pc" },
-    ],
-  },
-  {
-    slug: "single-medium",
-    n: "03",
-    short: "Single 1.8m",
-    name: "Single Table · Medium Beam",
-    code: "CHS-2B150180-PC",
-    image: "/varidex/single-desk.jpg",
-    imageAlt: "VARIDEX single table with modesty panel and white legs",
-    lens: [1500, 1800],
-    deps: [600, 800],
-    seats: "—",
-    beam: "2B150180",
-    bom: [
-      { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" },
-      { name: "Horizontal beam · medium", code: "CHS-2B150180-PC", qty: "1 pc" },
-    ],
-  },
-  {
-    slug: "single-long",
-    n: "04",
-    short: "Single 2.4m",
-    name: "Single Table · Long Beam",
-    code: "CHS-2B190240-PC",
-    image: "/varidex/single-desk.jpg",
-    imageAlt: "VARIDEX single table with modesty panel and white legs",
-    lens: [1900, 2400],
-    deps: [600, 800],
-    seats: "—",
-    beam: "2B190240",
-    bom: [
-      { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" },
-      { name: "Horizontal beam · long", code: "CHS-2B190240-PC", qty: "1 pc" },
+    variants: [
+      { lens: [1200, 1400], code: "CHS-2B120140-PC", bom: [FOUR_LEG, SHORT_BEAM("1 pc")] },
+      { lens: [1500, 1800], code: "CHS-2B150180-PC", bom: [FOUR_LEG, MEDIUM_BEAM("1 pc")] },
+      { lens: [1900, 2400], code: "CHS-2B190240-PC", bom: [FOUR_LEG, LONG_BEAM("1 pc")] },
     ],
   },
   {
     slug: "return",
-    n: "05",
-    short: "Return",
-    name: "Return Table",
+    n: "03",
+    short: "Return table",
+    name: "Return table",
     code: "CHS-2B120140-PC",
     image: "/varidex/l-shape.jpg",
-    imageAlt: "VARIDEX desk with a perpendicular return",
+    imageAlt: "Stretch V desk with a perpendicular return",
     lens: [1200, 1400],
-    deps: [600, 800],
+    deps: DESK_DEPTHS,
     seats: "—",
-    beam: "2B120140",
-    bom: [
-      { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" },
-      { name: "Horizontal beam · short", code: "CHS-2B120140-PC", qty: "1 pc" },
-      { name: "2 legs package", code: "CHS-2FLEG072-PC", qty: "1 pc" },
+    bom: [FOUR_LEG, SHORT_BEAM("1 pc"), TWO_LEG("1 pc")],
+  },
+  {
+    slug: "meeting",
+    n: "04",
+    short: "Meeting table",
+    name: "Meeting table",
+    code: "CHS-2B190240-PC",
+    image: "/varidex/meet-long.jpg",
+    imageAlt: "Stretch V long meeting table in a dark finish",
+    lens: [1900, 2400, 3000, 3600],
+    deps: PAIR_DEPTHS,
+    seats: "—",
+    variants: [
+      { lens: [1900, 2400], code: "CHS-2B190240-PC", bom: [BENCH_LEG_PAIR, LONG_BEAM("2 pcs")] },
+      {
+        lens: [3000, 3600],
+        code: "CHS-2B150180-PC",
+        bom: [BENCH_LEG_PAIR, MEDIUM_BEAM("4 pcs"), BENCH_MID_LEG],
+      },
     ],
   },
   {
     slug: "inline-bench",
-    n: "06",
-    short: "In line",
-    name: "Single In Line Bench",
+    n: "05",
+    short: "In-line bench",
+    name: "In-line bench",
     code: "CHS-SLMLEG-PC",
     image: "/varidex/bench-2.jpg",
-    imageAlt: "VARIDEX two desks run in line with screens",
+    imageAlt: "Stretch V two desks run in line with screens",
     lens: [1200, 1400],
-    deps: [600, 800],
+    deps: DESK_DEPTHS,
     seats: "2",
-    beam: "2B120140",
     bom: [
-      { name: "4 legs package", code: "CHS-4FLEG072-PC", qty: "1 pc" },
+      FOUR_LEG,
       { name: "Single in line mid leg", code: "CHS-SLMLEG-PC", qty: "1 pc" },
-      { name: "Horizontal beam · short", code: "CHS-2B120140-PC", qty: "2 pcs" },
+      SHORT_BEAM("2 pcs"),
     ],
   },
   {
-    slug: "face-to-face-short",
-    n: "07",
-    short: "F2F short",
-    name: "Face To Face Bench · Short Beam",
-    code: "CHS-2B120140-PC",
-    image: "/varidex/bench-4.jpg",
-    imageAlt: "VARIDEX four-seater face-to-face bench",
-    lens: [1200, 1400],
-    deps: [1200, 1600],
-    seats: "4",
-    beam: "2B120140",
-    bom: [
-      { name: "Bench legs, one pair", code: "CHS-2BLEG-PC", qty: "1 pc" },
-      { name: "Horizontal beam · short", code: "CHS-2B120140-PC", qty: "4 pcs" },
-      { name: "Bench mid leg", code: "CHS-BMLEG-PC", qty: "1 pc" },
-    ],
-  },
-  {
-    slug: "face-to-face-medium",
-    n: "08",
-    short: "F2F medium",
-    name: "Face To Face Bench · Medium Beam",
+    slug: "face-to-face",
+    n: "06",
+    short: "Face-to-face bench",
+    name: "Face-to-face bench",
     code: "CHS-2B150180-PC",
     image: "/varidex/bench-4-screen.jpg",
-    imageAlt: "VARIDEX four-seater face-to-face bench with side screens",
-    lens: [1500, 1800],
-    deps: [1200, 1600],
+    imageAlt: "Stretch V four-seat face-to-face bench with side screens",
+    lens: [1200, 1400, 1500, 1800],
+    deps: PAIR_DEPTHS,
     seats: "4",
-    beam: "2B150180",
-    bom: [
-      { name: "Bench legs, one pair", code: "CHS-2BLEG-PC", qty: "1 pc" },
-      { name: "Horizontal beam · medium", code: "CHS-2B150180-PC", qty: "4 pcs" },
-      { name: "Bench mid leg", code: "CHS-BMLEG-PC", qty: "1 pc" },
-    ],
-  },
-  {
-    slug: "meeting-long-beam",
-    n: "09",
-    short: "Meeting 2.4m",
-    name: "Meeting Table · Long Beam",
-    code: "CHS-2B190240-PC",
-    image: "/varidex/meet-rect.jpg",
-    imageAlt: "VARIDEX rectangular meeting table",
-    lens: [1900, 2400],
-    deps: [1200, 1600],
-    seats: "—",
-    beam: "2B190240",
-    bom: [
-      { name: "Bench legs, one pair", code: "CHS-2BLEG-PC", qty: "1 pc" },
-      { name: "Horizontal beam · long", code: "CHS-2B190240-PC", qty: "2 pcs" },
-    ],
-  },
-  {
-    slug: "meeting-extended",
-    n: "10",
-    short: "Meeting 3.6m",
-    name: "Meeting Table · Extended Run",
-    code: "CHS-2B150180-PC",
-    image: "/varidex/meet-long.jpg",
-    imageAlt: "VARIDEX extended meeting table in a dark finish",
-    lens: [3000, 3600],
-    deps: [1200, 1600],
-    seats: "—",
-    beam: "2B150180",
-    bom: [
-      { name: "Bench legs, one pair", code: "CHS-2BLEG-PC", qty: "1 pc" },
-      { name: "Horizontal beam · medium", code: "CHS-2B150180-PC", qty: "4 pcs" },
-      { name: "Bench mid leg", code: "CHS-BMLEG-PC", qty: "1 pc" },
+    variants: [
+      {
+        lens: [1200, 1400],
+        code: "CHS-2B120140-PC",
+        bom: [BENCH_LEG_PAIR, SHORT_BEAM("4 pcs"), BENCH_MID_LEG],
+      },
+      {
+        lens: [1500, 1800],
+        code: "CHS-2B150180-PC",
+        bom: [BENCH_LEG_PAIR, MEDIUM_BEAM("4 pcs"), BENCH_MID_LEG],
+      },
     ],
   },
 ];
 
 /** Landing configuration — the face-to-face bench is the range's most specified table. */
-export const VARIDEX_DEFAULT_SLUG = "face-to-face-medium";
+export const VARIDEX_DEFAULT_SLUG = "face-to-face";

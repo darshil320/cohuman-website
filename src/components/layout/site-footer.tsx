@@ -54,9 +54,22 @@ export function SiteFooter() {
           <div className="col-span-2 sm:col-span-1">
             <p className="co-eyebrow mb-5 text-co-panel-faint">Get in touch</p>
             <address className="grid gap-3 border-t border-co-panel-border pt-3.5 text-[14px] not-italic leading-relaxed">
-              <span className="text-co-panel-fg">{siteConfig.address.line2}</span>
-              <span className="text-co-panel-muted">{siteConfig.address.line1}</span>
-              <span className="co-data text-co-panel-muted">{siteConfig.phoneDisplay}</span>
+              <span className="text-co-panel-fg">{siteConfig.address.line1}</span>
+              <span className="text-co-panel-muted">{siteConfig.address.line2}</span>
+              <a
+                href={`tel:+${siteConfig.phoneE164}`}
+                className="co-data flex min-h-11 items-center text-co-panel-muted transition-colors hover:text-co-panel-fg"
+              >
+                {siteConfig.phoneDisplay}
+              </a>
+              <a
+                href={siteConfig.social.instagram.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="co-data flex min-h-11 items-center normal-case text-co-panel-muted transition-colors hover:text-co-panel-fg"
+              >
+                Instagram {siteConfig.social.instagram.handle}
+              </a>
               {siteConfig.emails.map((inbox) => (
                 <a
                   key={inbox.address}
@@ -77,6 +90,7 @@ export function SiteFooter() {
           <span>
             © {year} Cohuman · {siteConfig.legalName}, Surat
           </span>
+          <span>{siteConfig.cities.join(" · ")}</span>
           <span>{siteConfig.coordinates.label}</span>
           <span>Founded by {siteConfig.founder}</span>
         </div>

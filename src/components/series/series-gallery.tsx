@@ -5,9 +5,8 @@ import { useState } from "react";
 import { ImageLightbox } from "@/components/common/image-lightbox";
 import { MobilePeek } from "@/components/common/mobile-peek";
 import { SectionHeading } from "@/components/common/section-heading";
-import { figureNumber } from "@/components/ui/figure-caption";
 import { useSeriesConfigurator } from "./series-context";
-import { seriesSectionEyebrow, seriesSectionNo } from "@/lib/series";
+import { seriesSectionEyebrow } from "@/lib/series";
 
 /**
  * Products the specification photographs and details but gives no size table or
@@ -27,8 +26,6 @@ export function SeriesGalleryStrip() {
   const [openAt, setOpenAt] = useState<number | null>(null);
   const gallery = series.gallery;
   if (!gallery?.items.length) return null;
-
-  const figure = figureNumber(seriesSectionNo(series, "gallery"));
 
   return (
     <section className="co-section">
@@ -69,7 +66,6 @@ export function SeriesGalleryStrip() {
 
                   <figcaption className="mt-3">
                     <span className="co-data block text-co-muted-2">
-                      {figure}.{index + 1}{"\u00A0— "}
                       <span className="text-co-ink">{item.name}</span>
                     </span>
                     <span className="mt-2 block text-[14px] leading-[1.55] text-co-muted">{item.note}</span>

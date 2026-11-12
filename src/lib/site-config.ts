@@ -63,19 +63,30 @@ export const siteConfig = {
       note: "Invoices and payments.",
     },
   ],
-  phoneDisplay: "+91 98251 43360", // TODO: confirm — assumed to be the Surat line
-  phoneE164: "919825143360",
-  whatsappE164: "919825143360",
+  // From the back page of the 2026 catalogue (v18), which the client confirmed replaces
+  // the earlier Hazira Road address and number. WhatsApp assumed to be the same line.
+  phoneDisplay: "+91 90811 29000",
+  phoneE164: "919081129000",
+  whatsappE164: "919081129000", // TODO: confirm the WhatsApp line is the catalogue number
   address: {
-    line1: "376-378 RJD Integrated Textile Park, Hazira Rd",
-    line2: "Ichchhapor, Surat, Gujarat 394510",
+    line1: "G, Shree Arc 2, Udhana–Magdalla Road",
+    line2: "Opp. Shanidev Temple, near Sosyo Circle, Udhana, Surat, Gujarat 395002",
+    locality: "Surat",
+    region: "Gujarat",
+    postalCode: "395002",
     country: "India",
   },
+  /** Social profiles, as printed in the catalogue. Also the Organization's `sameAs`. */
+  social: {
+    instagram: { handle: "@cohuman.india", href: "https://www.instagram.com/cohuman.india/" },
+  },
+  /** Cities the catalogue lists the company in, in its order. */
+  cities: ["Surat", "Mumbai", "Ahmedabad"],
   hours: "Open · Closes 8 pm",
   /**
    * Printed beside the hero render and in the footer, the way a drawing set carries a
    * site datum. TODO: confirm — these are Surat's city-centre coordinates, not the
-   * Ichchhapor showroom's; replace them with the showroom's own once surveyed.
+   * Udhana showroom's; replace them with the showroom's own once surveyed.
    *
    * The label's spaces are no-break (U+00A0): HTML collapses an ordinary double space to
    * one, so the gap between the two coordinates never rendered, and a plain space let
@@ -86,7 +97,15 @@ export const siteConfig = {
     lng: 72.8311,
     label: "21.1702° N  72.8311° E",
   },
-  mapEmbedUrl: "", // TODO: paste Google Maps embed URL once address is confirmed
+  /**
+   * OFF ON PURPOSE. Google's listing at the catalogue address is still named "FURNITURE
+   * CONCEPTS 2.0" — the previous trading name, which the site must never show (CLAUDE.md,
+   * "No heritage claims"), and a keyless embed cannot hide it. Once the Google Business
+   * Profile is renamed to Cohuman, set this to:
+   *   "https://www.google.com/maps?q=Shree+Arc+2,+Udhana-Magdalla+Road,+near+Sosyo+Circle,+Udhana,+Surat,+Gujarat+395002&output=embed"
+   * and the map appears on the homepage's visit section and on /contact.
+   */
+  mapEmbedUrl: "",
   enquiryTurnaround: "two working days",
   /**
    * Offices, each with the person who actually answers for it. `phoneDisplay`/`phoneE164`
@@ -99,9 +118,12 @@ export const siteConfig = {
       state: "Gujarat",
       role: "Showroom & factory",
       contact: { name: "Tushar Shah", title: "Co-founder & CEO" },
-      phoneDisplay: "+91 98251 43360", // TODO: confirm this is Tushar's line
-      phoneE164: "919825143360",
-      address: ["376-378 RJD Integrated Textile Park, Hazira Rd", "Ichchhapor, Surat, Gujarat 394510"],
+      phoneDisplay: "+91 90811 29000",
+      phoneE164: "919081129000",
+      address: [
+        "G, Shree Arc 2, Udhana–Magdalla Road",
+        "Opp. Shanidev Temple, near Sosyo Circle, Udhana, Surat, Gujarat 395002",
+      ],
       hours: "Open · Closes 8 pm",
     },
     {
@@ -134,7 +156,7 @@ export const siteConfig = {
    * never show (CLAUDE.md, "No heritage claims"). It stays on disk but is not listed. Add
    * a showroom photo without the old signage — interior, or the façade once re-signed:
    *
-   *   { src: "/site/<file>.jpg", alt: "…", caption: "Hazira Road, Surat" },
+   *   { src: "/site/<file>.jpg", alt: "…", caption: "Udhana, Surat" },
    */
   suratPhotos: [] as readonly { src: string; alt: string; caption: string }[],
 } as const;

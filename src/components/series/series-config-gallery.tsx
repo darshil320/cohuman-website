@@ -8,8 +8,6 @@ import { configLengthLabel, type SeriesConfig, type SeriesDefinition } from "@/l
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 /** The finish a configuration was photographed in, or null where the series names none. */
 function finishCaption(series: SeriesDefinition, item: SeriesConfig): string | null {
   const label = series.finishFilters?.find((f) => f.key === item.finish)?.label;
@@ -46,7 +44,7 @@ export function SeriesConfigGallery() {
     <section aria-roledescription="carousel" aria-label={`${series.wordmark} configurations`} className="border-b border-co-ink">
       <div className="co-shell py-[clamp(56px,7vw,104px)] text-center">
         <p className="co-eyebrow">
-          03 / Gallery — configuration {pad(index + 1)} / {pad(configs.length)}
+          03 / Gallery
         </p>
         <h2 className="co-h2 mt-3" aria-live="polite">
           {item.name}
@@ -77,15 +75,9 @@ export function SeriesConfigGallery() {
               />
             </div>
             <DimensionLine label={`${configLengthLabel(item)}\u00A0mm`} className="mx-auto mt-2 w-[78%]" />
-            <figcaption className="co-data mt-4">
-              {finishCaption(series, item) ? (
-                <>
-                  {finishCaption(series, item)} <span className="text-co-muted-2">/ {item.code}</span>
-                </>
-              ) : (
-                item.code
-              )}
-            </figcaption>
+            {finishCaption(series, item) ? (
+              <figcaption className="co-data mt-4">{finishCaption(series, item)}</figcaption>
+            ) : null}
           </figure>
 
           <button

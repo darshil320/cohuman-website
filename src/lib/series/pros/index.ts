@@ -10,12 +10,12 @@ import { PROS_FINISH_FILTERS, PROS_SWATCHES } from "./swatches";
  */
 export const PROS_SERIES: SeriesDefinition = {
   slug: "pros",
-  name: "STRETCH S Series",
-  wordmark: "STRETCH S",
+  name: "Stretch S",
+  wordmark: "Stretch S",
   eyebrow: "Beam desking system",
-  promise: "Seven components. Fourteen configurations. One office.",
+  promise: "Seven components. Six table types. One office.",
   intro:
-    "A single A-leg and beam chassis carries every table in the range — from an 800mm single desk to a 4-metre boardroom. Specify once, extend for a decade.",
+    "A single splayed leg and beam chassis carries every table in the range — from an 800 mm round table to a 4-metre meeting table. Specify once, extend for a decade.",
   workingHeightMm: 720,
 
   configs: PROS_CONFIGS,
@@ -40,7 +40,7 @@ export const PROS_SERIES: SeriesDefinition = {
   // frame reads square-on, which is what makes the part callouts land on the real part.
   anatomyImage: "/pros/bench-2.jpg",
   anatomyImageSize: { w: 1400, h: 808 },
-  anatomyCaption: "Bench · 2 seaters with side screens",
+  anatomyCaption: "Bench with side screens",
 
   swatches: PROS_SWATCHES,
   swatchesSection: {
@@ -57,7 +57,8 @@ export const PROS_SERIES: SeriesDefinition = {
       "Our team quotes PROS with the beam schedule worked out — so what you receive is a component list and a drawing, not a line item.",
   },
 
-  // TODO(client): confirm these four with Tushar/Vaibhav, then replace the codes in
-  // ./configs.ts and empty this list.
-  inferredCodes: ["CHSS-SCON-PC", "CHSS-SCAB-1200", "CHSS-CRED-1600", "CHSS-WBOX-PC"],
+  // TODO(client): confirm these with Tushar/Vaibhav, then replace the codes in
+  // ./configs.ts and empty this list. CHSS-ST-SB200 is the single table at 1800/2000,
+  // which the catalogue offers and PROS.pdf gives no code for.
+  inferredCodes: ["CHSS-WBOX-PC", "CHSS-ST-SB200"],
 };

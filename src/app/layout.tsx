@@ -8,14 +8,14 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { OrgatecPopup } from "@/components/common/orgatec-popup";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { QuoteDialogProvider } from "@/components/providers/quote-dialog-provider";
 import { ORGANIZATION_ID } from "@/lib/seo/structured-data";
 import { siteConfig } from "@/lib/site-config";
 import { ALL_SERIES } from "@/lib/series";
-import { collectionPhoto } from "@/lib/photos";
-import type { DrawerRange, DrawerSeries } from "@/components/layout/nav-drawer";
-import { catalog, isPhotographed } from "@/lib/catalog";
+import { catalog } from "@/lib/catalog";
+import { buildCollectionMenu } from "@/lib/catalog/collection-menu";
 
 /*
   Sequel Sans, in the three optical cuts the family ships — each drawn for a size range,
@@ -128,9 +128,9 @@ export const metadata: Metadata = {
 
   - Organization  — the company. `brand`/`areaServed`/`knowsAbout` are what answer
                     engines read when asked "who is Cohuman"; the `@id` is the stable
-                    identity every other node points at. No `sameAs`: the client has
-                    not confirmed any social or directory profile, and pointing it at a
-                    guessed handle would attach someone else's account to this company.
+                    identity every other node points at. `sameAs` carries only the
+                    profiles printed in the client's catalogue (Instagram today) — never
+                    a guessed handle, which would attach someone else's account here.
   - WebSite       — the site itself, with `publisher` pointing back at the Organization.
                     No `SearchAction`: the site has no /search route, and declaring a
                     search endpoint that 404s is worse than declaring none.
@@ -141,25 +141,6 @@ export const metadata: Metadata = {
   Everything derives from `siteConfig`, so a corrected phone number or a new office
   updates the markup without a second edit here.
 */
-/*
-  The Collections drawer's plates, read off the series specifications rather than written
-  as copy: the configuration count and the millimetre span in the header can never drift
-  from what /collections/<slug> actually offers.
-*/
-const DRAWER_SERIES: DrawerSeries[] = ALL_SERIES.map((series) => {
-  const lens = series.configs.flatMap((config) => config.lens);
-  return {
-    slug: series.slug,
-    wordmark: series.wordmark,
-    name: series.name,
-    kicker: series.eyebrow,
-    blurb: series.promise,
-    image: collectionPhoto[series.slug],
-    configs: series.configs.length,
-    span: `${Math.min(...lens)}–${Math.max(...lens)}\u00A0mm`,
-  };
-});
-
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 
 const jsonLd = {
@@ -179,14 +160,15 @@ const jsonLd = {
       description:
         "Office furniture manufacturer and fit-out contractor in Surat, Gujarat. Desking systems, ergonomic seating, conference tables, storage and reception furniture, supplied on quotation.",
       founder: siteConfig.founders.map((name) => ({ "@type": "Person", name })),
+      sameAs: [siteConfig.social.instagram.href],
       email: siteConfig.email,
       telephone: siteConfig.phoneDisplay,
       address: {
         "@type": "PostalAddress",
         streetAddress: siteConfig.address.line1,
-        addressLocality: "Surat",
-        addressRegion: "Gujarat",
-        postalCode: "394510",
+        addressLocality: siteConfig.address.locality,
+        addressRegion: siteConfig.address.region,
+        postalCode: siteConfig.address.postalCode,
         addressCountry: "IN",
       },
       areaServed: [
@@ -235,9 +217,9 @@ const jsonLd = {
       address: {
         "@type": "PostalAddress",
         streetAddress: siteConfig.address.line1,
-        addressLocality: "Surat",
-        addressRegion: "Gujarat",
-        postalCode: "394510",
+        addressLocality: siteConfig.address.locality,
+        addressRegion: siteConfig.address.region,
+        postalCode: siteConfig.address.postalCode,
         addressCountry: "IN",
       },
       makesOffer: {
@@ -257,12 +239,10 @@ const jsonLd = {
   ],
 };
 
-/** The photographed ranges, listed under the drawer's measured plates. */
-async function drawerRanges(): Promise<DrawerRange[]> {
-  const collections = await catalog.getCollections();
-  return collections
-    .filter(isPhotographed)
-    .map(({ slug, wordmark, kicker }) => ({ slug, wordmark, kicker }));
+/** The header's Collections panel: every group and product, in the catalogue's order. */
+async function collectionGroups() {
+  const [collections, pieces] = await Promise.all([catalog.getCollections(), catalog.getPieces()]);
+  return buildCollectionMenu({ collections, pieces, series: ALL_SERIES });
 }
 
 export default async function RootLayout({
@@ -270,7 +250,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ranges = await drawerRanges();
+  const groups = await collectionGroups();
   return (
     <html
       lang="en-IN"
@@ -319,12 +299,13 @@ export default async function RootLayout({
           {/* One IntersectionObserver for every `[data-reveal]` on the page. */}
           <RevealObserver />
           <QuoteDialogProvider>
-            <SiteHeader series={DRAWER_SERIES} ranges={ranges} />
+            <SiteHeader groups={groups} />
             <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
               {children}
             </main>
             <SiteFooter />
             <WhatsAppButton />
+            <OrgatecPopup />
           </QuoteDialogProvider>
         </MotionConfig>
         <Analytics />

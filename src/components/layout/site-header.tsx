@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
@@ -12,21 +12,11 @@ import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
 import {
-  NavDrawer,
-  type DrawerLink,
-  type DrawerRange,
-  type DrawerSeries,
-} from "@/components/layout/nav-drawer";
-
-/** How long the drawer survives the pointer leaving, so a diagonal sweep to it is forgiving. */
-const DRAWER_CLOSE_MS = 180;
-
-const DRAWER_LINKS: DrawerLink[] = [
-  { label: "All collections", href: "/collections", note: "Every system, side by side." },
-  { label: "Configure a desk", href: "/configure", note: "Pick the size and finish, get the part numbers." },
-  { label: "Workspace solutions", href: "/solutions", note: "Furnish by room type." },
-  { label: "B2B / bulk orders", href: "/b2b", note: "Floor-plate quantities on one schedule." },
-];
+  COLLECTIONS_PANEL_ID,
+  CollectionsPanel,
+  MobileCollections,
+} from "@/components/layout/collections-panel";
+import type { CollectionGroup } from "@/lib/catalog/collection-menu";
 
 /**
  * Site header — the moodboard's nav bar.
@@ -38,7 +28,10 @@ const DRAWER_LINKS: DrawerLink[] = [
  *
  * Over the homepage's full-bleed hero the bar goes transparent (`useHeroChrome`), with
  * light type and the reversed logo on a dark film. It turns solid again once the hero has
- * scrolled away, or whenever the drawer or the mobile menu is open.
+ * scrolled away, or whenever the Collections panel or the mobile menu is open.
+ *
+ * "Collections" is a button, not a hover: clicking it opens the full-page Collections
+ * panel under the bar (`collections-panel.tsx`) and clicking again closes it.
  *
  * NEVER give this element `backdrop-filter`, `filter`, `transform` or `will-change`. Any
  * of them makes the header the containing block for its `position: fixed` children, and
@@ -46,10 +39,9 @@ const DRAWER_LINKS: DrawerLink[] = [
  * header's own box and vanishes. That was the "menu won't open after scrolling" bug: the
  * old header added `backdrop-blur` once the page scrolled.
  */
-export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges: DrawerRange[] }) {
+export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const closeTimer = useRef<number | null>(null);
   const { openQuote } = useQuoteDialog();
   const pathname = usePathname();
 
@@ -62,36 +54,18 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
     setDrawerOpen(false);
   }
 
-  // The overlay is fixed and full-height, so the page behind it must not scroll under it.
+  // Both overlays are fixed and full-height, so the page behind must not scroll under them.
+  const overlayOpen = mobileOpen || drawerOpen;
   useEffect(() => {
-    if (!mobileOpen) return;
+    if (!overlayOpen) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [mobileOpen]);
+  }, [overlayOpen]);
 
-  /*
-    A short close delay, so moving the pointer diagonally from the trigger into the panel
-    does not snap it shut on the way. Opening is immediate — a hover delay on open reads
-    as lag.
-  */
-  const openDrawer = () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    setDrawerOpen(true);
-  };
-
-  const closeDrawer = () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setDrawerOpen(false), DRAWER_CLOSE_MS);
-  };
-
-  useEffect(() => () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-  }, []);
-
-  // Escape closes it, which is the expected key for a hover-revealed panel.
+  // Escape closes the panel.
   useEffect(() => {
     if (!drawerOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -134,17 +108,14 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
             const active = isActive(item.href);
             const isCollections = item.href === "/collections";
             return (
-              <div
-                key={item.href}
-                className="relative"
-                onMouseEnter={isCollections ? openDrawer : closeDrawer}
-                onMouseLeave={isCollections ? closeDrawer : undefined}
-              >
-                <Link
+              <div key={item.href} className="relative">
+                <NavItem
                   href={item.href}
+                  isToggle={isCollections}
+                  expanded={drawerOpen}
+                  onToggle={() => setDrawerOpen((v) => !v)}
+                  onNavigate={() => setDrawerOpen(false)}
                   aria-current={active ? "page" : undefined}
-                  aria-expanded={isCollections ? drawerOpen : undefined}
-                  onFocus={isCollections ? openDrawer : undefined}
                   className={cn(
                     "co-data group relative block py-2 transition-colors duration-150",
                     // Over footage, type runs full strength — a muted grey vanishes on a
@@ -173,7 +144,7 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
                       )}
                     />
                   )}
-                </Link>
+                </NavItem>
               </div>
             );
           })}
@@ -231,15 +202,7 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
         </div>
       </div>
 
-      <div onMouseEnter={openDrawer} onMouseLeave={closeDrawer}>
-        <NavDrawer
-          open={drawerOpen}
-          series={series}
-          ranges={ranges}
-          links={DRAWER_LINKS}
-          onClose={() => setDrawerOpen(false)}
-        />
-      </div>
+      <CollectionsPanel open={drawerOpen} groups={groups} onClose={() => setDrawerOpen(false)} />
 
       <AnimatePresence>
         {mobileOpen && (
@@ -259,6 +222,17 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
             <nav aria-label="Menu" className="co-shell flex w-full flex-col pt-[clamp(16px,4vh,36px)]">
               {fullNav.map((item, index) => {
                 const active = isActive(item.href);
+                if (item.href === "/collections") {
+                  return (
+                    <MobileCollections
+                      key={item.href}
+                      groups={groups}
+                      index={index}
+                      active={active}
+                      onNavigate={() => setMobileOpen(false)}
+                    />
+                  );
+                }
                 return (
                   <Link
                     key={item.href}
@@ -305,5 +279,49 @@ export function SiteHeader({ series, ranges }: { series: DrawerSeries[]; ranges:
         )}
       </AnimatePresence>
     </header>
+  );
+}
+
+/**
+ * A primary-nav entry: a link, or — for Collections — a button that toggles the panel.
+ * The button keeps the link's look and its active rule.
+ */
+function NavItem({
+  href,
+  isToggle,
+  expanded,
+  onToggle,
+  onNavigate,
+  className,
+  children,
+  "aria-current": ariaCurrent,
+}: {
+  href: string;
+  isToggle: boolean;
+  expanded: boolean;
+  onToggle: () => void;
+  onNavigate: () => void;
+  className: string;
+  children: ReactNode;
+  "aria-current"?: "page";
+}) {
+  if (isToggle) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        aria-controls={COLLECTIONS_PANEL_ID}
+        aria-current={ariaCurrent}
+        className={className}
+      >
+        {children}
+      </button>
+    );
+  }
+  return (
+    <Link href={href} onClick={onNavigate} aria-current={ariaCurrent} className={className}>
+      {children}
+    </Link>
   );
 }

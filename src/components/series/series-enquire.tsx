@@ -11,7 +11,13 @@ import { Select } from "@/components/ui/select";
 import { SpecRows, type SpecRow } from "@/components/ui/spec-rows";
 import { Textarea } from "@/components/ui/textarea";
 import { trackLeadSubmitted } from "@/lib/analytics";
-import { INFERRED_CODE_FOOTNOTE, enquiryInterest, finishLabel, isInferredCode } from "@/lib/series";
+import {
+  INFERRED_CODE_FOOTNOTE,
+  enquiryInterest,
+  finishLabel,
+  isInferredCode,
+  selectedParts,
+} from "@/lib/series";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
@@ -35,7 +41,8 @@ export function SeriesEnquire() {
   const finish = finishLabel(selection);
   const quantityLabel = quantity.trim() ? `${quantity.trim()} positions` : "";
 
-  const inferredCode = isInferredCode(series, config.code);
+  const parts = selectedParts(selection);
+  const inferredCode = isInferredCode(series, parts.code);
 
   // Presentation only: the payload below builds its own plain-text lines.
   const selectionRows: SpecRow[] = [
@@ -47,7 +54,7 @@ export function SeriesEnquire() {
       k: series.codeLabel ?? "Element code",
       v: (
         <>
-          {config.code}
+          {parts.code}
           {inferredCode ? (
             <span className="text-co-muted-2" title={INFERRED_CODE_FOOTNOTE}>
               °
@@ -65,7 +72,7 @@ export function SeriesEnquire() {
     setError(null);
 
     const form = new FormData(event.currentTarget);
-    const bom = config.bom.map((line) => `${line.name} ${line.code} × ${line.qty}`).join("; ");
+    const bom = parts.bom.map((line) => `${line.name} ${line.code} × ${line.qty}`).join("; ");
     const payload = {
       name: String(form.get("name") ?? ""),
       company: String(form.get("company") ?? ""),
@@ -80,8 +87,8 @@ export function SeriesEnquire() {
           `Configuration: ${config.name}`,
           `Size: ${size}`,
           ...(finish ? [`Top finish: ${finish}`] : []),
-          `${series.codeLabel ?? "Element code"}: ${config.code}`,
-          `Bill of components: ${bom}`,
+          `${series.codeLabel ?? "Element code"}: ${parts.code}`,
+          `Bill of components: ${bom || parts.bomNote || "to be confirmed with the quote"}`,
         ],
         String(form.get("notes") ?? ""),
       ),
