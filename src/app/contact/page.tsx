@@ -183,7 +183,7 @@ export default async function ContactPage({ searchParams }: Props) {
                   alt={showroom.alt}
                   fill
                   sizes="(min-width: 1024px) 46vw, 100vw"
-                  className="co-highkey object-cover"
+                  className="object-cover"
                 />
               </ClipReveal>
               <div className="mt-3 flex flex-wrap justify-between gap-x-6 gap-y-1">

@@ -1,6 +1,5 @@
 import { catalog, pieceSizeLabel } from "@/lib/catalog";
-import { PRICE_BAND_LABEL, type Collection } from "@/lib/catalog/types";
-import { resolveCatLabel } from "@/lib/catalog/resolve";
+import type { Collection } from "@/lib/catalog/types";
 import { ALL_SERIES } from "@/lib/series";
 import { chartDepths, chartLengths } from "@/lib/series/derive";
 import { siteConfig } from "@/lib/site-config";
@@ -69,7 +68,7 @@ function footerLines(generatedAt: string): string[] {
     `- Index for models: ${url("/llms.txt")}`,
     `- Full text for models: ${url("/llms-full.txt")}`,
     `- Crawler policy: ${url("/robots.txt")}`,
-    "- Schema.org JSON-LD is embedded on every page: Organization, WebSite and FurnitureStore site-wide, Product on catalog pages, ProductGroup on collection pages, FAQPage on the contact page.",
+    "- Schema.org JSON-LD is embedded on every page: Organization, WebSite and FurnitureStore site-wide, Product on product pages, ProductGroup on collection pages, FAQPage on the contact page.",
     "",
     `Generated ${generatedAt} from the site's own catalog data.`,
   ];
@@ -77,11 +76,9 @@ function footerLines(generatedAt: string): string[] {
 
 /** The index file: structure and links, no inlined body content. */
 export async function buildLlmsTxt(): Promise<string> {
-  const [categories, collections, products, projects, sectors, services, spaces, pieces] =
+  const [collections, projects, sectors, services, spaces, pieces] =
     await Promise.all([
-      catalog.getCategories(),
       catalog.getCollections(),
-      catalog.getProducts(),
       catalog.getProjects(),
       catalog.getSectors(),
       catalog.getServices(),
@@ -118,32 +115,6 @@ export async function buildLlmsTxt(): Promise<string> {
     }),
     "",
 
-    "## Product categories",
-    "",
-    // Named without links on purpose: the catalog's category filter is client-side
-    // state, not a query parameter, so there is no per-category URL to cite. Advertising
-    // `/catalog?cat=task` would send a model to the unfiltered page.
-    `All categories live on one page — ${url("/catalog")} — filterable in the browser.`,
-    "",
-    ...categories.map(
-      (category) =>
-        `- ${category.label}: ${
-          products.filter((product) => product.cat === category.id).length
-        } products.`,
-    ),
-    "",
-
-    "## Products",
-    "",
-    ...products.map(
-      (product) =>
-        `- [${product.name}](${url(`/catalog/${product.slug}`)}): ${resolveCatLabel(
-          categories,
-          product.cat,
-        )}, ${PRICE_BAND_LABEL[product.band]} band. ${product.tagline}`,
-    ),
-    "",
-
     "## Sectors",
     "",
     ...sectors.map(
@@ -154,7 +125,7 @@ export async function buildLlmsTxt(): Promise<string> {
 
     "## Solutions by space",
     "",
-    ...spaces.map((space) => `- ${space.name}: ${space.blurb} Includes ${space.includes}.`),
+    ...spaces.map((space) => `- ${space.name}: ${space.blurb}`),
     "",
 
     "## Services",
@@ -173,7 +144,6 @@ export async function buildLlmsTxt(): Promise<string> {
     "## Key pages",
     "",
     `- [Home](${url("/")}): what Cohuman makes and who it makes it for.`,
-    `- [Catalog](${url("/catalog")}): every product, filterable by category and price band.`,
     `- [Collections](${url("/collections")}): the desking series and their configurators.`,
     `- [Tops & finishes](${url("/finishes")}): board shades, veneer, frame colours by system, top cores, edges, screen positions and the technical specification.`,
     `- [Sectors](${url("/sectors")}): executive, healthcare and hospitality work.`,
@@ -188,29 +158,6 @@ export async function buildLlmsTxt(): Promise<string> {
   ];
 
   return lines.join("\n");
-}
-
-/** One product, expanded to everything the PDP states about it. */
-function productSection(
-  product: Awaited<ReturnType<typeof catalog.getProducts>>[number],
-  categoryLabel: string,
-): string[] {
-  return [
-    `### ${product.name}`,
-    "",
-    `- URL: ${url(`/catalog/${product.slug}`)}`,
-    `- Category: ${categoryLabel}`,
-    `- Price band: ${PRICE_BAND_LABEL[product.band]} (price on request — no public figure)`,
-    `- Summary: ${product.tagline}`,
-    `- Materials: ${product.materials}`,
-    `- Sizes: ${product.sizes}`,
-    `- Lead time: ${product.lead}`,
-    `- Warranty: ${product.warranty}`,
-    ...(product.features.length
-      ? ["- Features:", ...product.features.map((feature) => `  - ${feature}`)]
-      : []),
-    "",
-  ];
 }
 
 /**
@@ -324,15 +271,14 @@ function seriesSection(series: (typeof ALL_SERIES)[number]): string[] {
 
 /** The full file: the same site with its body content inlined. */
 export async function buildLlmsFullTxt(): Promise<string> {
-  const [categories, collections, products, projects, sectors, services, spaces] =
+  const [collections, projects, sectors, services, spaces, pieces] =
     await Promise.all([
-      catalog.getCategories(),
       catalog.getCollections(),
-      catalog.getProducts(),
       catalog.getProjects(),
       catalog.getSectors(),
       catalog.getServices(),
       catalog.getSpaces(),
+      catalog.getPieces(),
     ]);
 
   const lines = [
@@ -362,13 +308,21 @@ export async function buildLlmsFullTxt(): Promise<string> {
       return collection.pieces ? rangeSection(collection) : [];
     }),
 
-    "## Product catalog in full",
+    "## Designer pieces and seating in full",
     "",
-    "Every product is quoted, not priced. The band is a relative position in the range, not a number.",
-    "",
-    ...products.flatMap((product) =>
-      productSection(product, resolveCatLabel(categories, product.cat)),
-    ),
+    ...pieces.flatMap((piece) => [
+      `### ${piece.name} — ${piece.type}`,
+      "",
+      `- URL: ${url(`/products/${piece.slug}`)}`,
+      `- Summary: ${piece.tagline}`,
+      `- About: ${piece.about}`,
+      ...(piece.size ? [`- Size (W × D × H): ${pieceSizeLabel(piece.size).replace("\u00A0", " ")}${piece.size.note ? `, ${piece.size.note}` : ""}`] : []),
+      ...(piece.parts ?? []).map((part) => `- ${part.label} (W × D × H): ${pieceSizeLabel(part.size).replace("\u00A0", " ")}`),
+      ...(piece.availableAs ? [`- Available as: ${piece.availableAs.join(", ")}`] : []),
+      ...(piece.upholstery ? [`- Upholstery: ${piece.upholstery}`] : []),
+      ...(piece.finish ? [`- Finish: ${piece.finish}`] : []),
+      "",
+    ]),
 
     "## Sectors in full",
     "",
@@ -410,7 +364,6 @@ export async function buildLlmsFullTxt(): Promise<string> {
       "",
       space.blurb,
       "",
-      `- Includes: ${space.includes}`,
       "",
     ]),
 

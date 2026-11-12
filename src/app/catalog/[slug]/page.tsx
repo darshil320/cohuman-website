@@ -40,6 +40,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const image = product.images?.[0]?.src ?? categoryPhoto[product.cat];
 
   return {
+    // Demo product, not a real Cohuman one: keep it out of search.
+    robots: { index: false, follow: true },
     title: product.name,
     description: product.tagline,
     alternates: { canonical: `/catalog/${product.slug}` },

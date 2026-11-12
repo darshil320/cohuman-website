@@ -140,7 +140,7 @@ export default async function SectorPage({ params }: Props) {
                   alt={lead.alt}
                   fill
                   sizes="(min-width: 1024px) 46vw, 100vw"
-                  className="co-highkey object-cover"
+                  className="object-cover"
                 />
               </ClipReveal>
               <FigureCaption n={1} className="mt-3">
@@ -165,7 +165,7 @@ export default async function SectorPage({ params }: Props) {
                       alt={photo.alt}
                       fill
                       sizes="(min-width: 640px) 48vw, 100vw"
-                      className="co-highkey object-cover"
+                      className="object-cover"
                     />
                   </ClipReveal>
                   <FigureCaption n={firstMoreFigure + i} className="mt-3">

@@ -8,7 +8,6 @@ const STATIC_ROUTES = [
   "/collections",
   "/finishes",
   "/sectors",
-  "/catalog",
   "/b2b",
   "/solutions",
   "/services",
@@ -18,8 +17,7 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections, sectors, pieces] = await Promise.all([
-    catalog.getProducts(),
+  const [collections, sectors, pieces] = await Promise.all([
     catalog.getCollections(),
     catalog.getSectors(),
     catalog.getPieces(),
@@ -46,21 +44,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  /*
-    Product pages carry their own photography, so an entry advertises it: `images` is
-    what puts a URL into Google Images and image-rich Discover cards. Products without
-    shots — which is all sixteen demo records today — simply omit the field.
-  */
-  const productEntries: MetadataRoute.Sitemap = products.map((p) => ({
-    url: `${siteConfig.url}/catalog/${p.slug}`,
-    lastModified: CONTENT_REVISED.products,
-    changeFrequency: "monthly",
-    priority: 0.5,
-    ...(p.images?.length
-      ? { images: p.images.map((image) => `${siteConfig.url}${image.src}`) }
-      : {}),
-  }));
-
+  // The demo catalog (/catalog, 16 illustrative products) is not real Cohuman product
+  // data, so it is left out of the sitemap and marked noindex until real products replace it.
   // PM x Cohuman and seating: each piece has its own page and its own photographs.
   const pieceEntries: MetadataRoute.Sitemap = pieces.map((piece) => ({
     url: `${siteConfig.url}/products/${piece.slug}`,
@@ -70,5 +55,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     images: pieceImages(piece).map((image) => `${siteConfig.url}${image.src}`),
   }));
 
-  return [...staticEntries, ...collectionEntries, ...pieceEntries, ...sectorEntries, ...productEntries];
+  return [...staticEntries, ...collectionEntries, ...pieceEntries, ...sectorEntries];
 }

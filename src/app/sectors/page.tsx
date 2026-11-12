@@ -172,7 +172,7 @@ export default async function SectorsPage() {
                         alt={lead.alt}
                         fill
                         sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-                        className="co-highkey object-cover"
+                        className="object-cover"
                       />
                     </ClipReveal>
                     <FigureCaption n={i + 1} className="mt-3">

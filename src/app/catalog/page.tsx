@@ -8,6 +8,8 @@ import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { PageHero } from "@/components/common/page-hero";
 
 export const metadata: Metadata = {
+  // Demo data (illustrative products), not real Cohuman products: keep it out of search.
+  robots: { index: false, follow: true },
   title: "Catalog",
   description:
     "The full Cohuman range — executive desks, ergonomic seating, workstations, conference tables, storage and reception furniture. Filter by category and budget band.",

@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * quoted to the visitor's plan. When the supplier sends a specification, the collection
  * gets a `SeriesDefinition` and this page gives way to the configurator.
  *
- * Interiors are set high-key (`co-highkey`) and wipe open (`ClipReveal`). Renders on
+ * Interiors render in their own colour and wipe open (`ClipReveal`). Renders on
  * white multiply into the canvas (`co-cutout`) and wipe on the image itself, never on a
  * wrapper, so the blend is not isolated. The leg-finish shot is shown as supplied: it
  * exists to show colour, so it is not desaturated.
@@ -63,7 +63,7 @@ export function CollectionGallery({ collection }: { collection: PhotographedColl
               fill
               preload
               sizes="(min-width: 1440px) 1344px, 100vw"
-              className="co-highkey object-cover"
+              className="object-cover"
             />
           </ClipReveal>
           <FigureCaption n={1} className="mt-3">
@@ -153,7 +153,7 @@ function SceneFigure({ photo, n, wide }: { photo: CollectionPhoto; n: number; wi
           alt={photo.alt}
           fill
           sizes={wide ? "(min-width: 1440px) 1344px, 100vw" : "(min-width: 768px) 50vw, 100vw"}
-          className="co-highkey object-cover"
+          className="object-cover"
         />
       </ClipReveal>
       <FigureCaption n={n} className="mt-3">

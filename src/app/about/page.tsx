@@ -223,7 +223,7 @@ export default async function AboutPage() {
               alt="Open-plan bench desking installed on a finished floor"
               fill
               sizes="100vw"
-              className="co-highkey object-cover"
+              className="object-cover"
             />
           </ClipReveal>
           <div className="mt-4 grid gap-x-10 gap-y-3 md:grid-cols-[1fr_minmax(0,420px)]">
@@ -352,7 +352,7 @@ export default async function AboutPage() {
                           alt={photo.alt}
                           fill
                           sizes="(min-width: 1024px) 50vw, 100vw"
-                          className="co-highkey object-cover"
+                          className="object-cover"
                         />
                       </ClipReveal>
                       <FigureCaption n={++figure} className="mt-3">

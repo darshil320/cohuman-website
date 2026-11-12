@@ -55,8 +55,8 @@ The short version:
 - **Cut-outs:** product renders take `co-cutout` (multiply + feathered edge). Never wrap
   one in an element with `clip-path`/`filter`/`opacity`/an isolating transform — the
   white box comes back. Interiors *used to* take `co-highkey`; the client found it washed
-  out, so photos on the homepage, /solutions and every project photo now render unfiltered
-  at `quality={90}`. Other routes still carry it — remove there too if asked.
+  out, so no route uses it any more — every photo renders in its own colour. The utility
+  is still defined in `globals.css`; do not reintroduce it.
 
 ## Design workflow — which skill, when
 
@@ -315,7 +315,10 @@ There are no image placeholders left on these pages.
 `src/data/products.json` (16 products) is still the illustrative data carried over from
 the original demo, and `/catalog` still serves it. These are not real Cohuman products —
 replace them as real product data arrives. The catalog filters by category and price
-band only.
+band only. **It is hidden from search** (Nov 2026): `/catalog` and `/catalog/[slug]`
+are `noindex`, and neither they nor the 16 products appear in the sitemap or llms.txt —
+the real products are the pieces at `/products/[slug]`. Nothing in the navigation links
+to it.
 
 ## Projects
 
@@ -455,7 +458,9 @@ space type).
   (`brand-marquee.tsx`) and `brand-logos.ts` were removed: whether the
   MERRYFAIR/SPACEWOOD/Humanscale partnerships apply to the Cohuman entity is
   unconfirmed. Do not re-add them until Tushar/Vaibhav confirm. `public/brands/`
-  is still on disk pending that decision.
+  is still on disk pending that decision. **Exception:** the seating the 2026 catalogue
+  itself lists — Ergohuman (live), Spectrum mbm and Zita (to come) — the client cleared
+  to show as products. That clears the products, not a partnership or logo claim.
 - Pricing is shown only as a qualitative band (`budget`/`value`/`premium` →
   "Value"/"Mid"/"Premium") plus "Price on request" — whether real prices should
   ever be public is an open decision, not yet made.

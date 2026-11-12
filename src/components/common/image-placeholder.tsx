@@ -19,7 +19,7 @@ interface ImagePlaceholderProps {
   preload?: boolean;
   /**
    * "warm" (default) — an interior photograph: cover-cropped and run high-key
-   * (`co-highkey`), the way Signal treats every room shot.
+   * in its own colour, as every room shot now renders.
    * "white" — an isolated studio cut-out on white: contained and composited into the
    * ground (`co-cutout`). Never put this variant inside a `ClipReveal` or any wrapper with
    * a clip-path, filter, opacity or transform — that isolates the multiply blend and the
@@ -57,7 +57,7 @@ export function ImagePlaceholder({
         fill
         sizes={sizes}
         preload={preload}
-        className={cn(cutout ? "co-cutout object-contain" : "co-highkey object-cover", className)}
+        className={cn(cutout ? "co-cutout object-contain" : "object-cover", className)}
       />
     );
   }
