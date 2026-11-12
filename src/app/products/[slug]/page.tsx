@@ -8,7 +8,7 @@ import { EnquireButton } from "@/components/common/enquire-button";
 import { PieceGallery, type GalleryImage } from "@/components/pieces/piece-gallery";
 import { PieceDetails } from "@/components/pieces/piece-details";
 import { Button } from "@/components/ui/button";
-import { catalog, pieceSizeLabel, type Piece } from "@/lib/catalog";
+import { catalog, pieceImages, pieceLeadImage, pieceSizeLabel, type Piece } from "@/lib/catalog";
 import { buildCollectionMenu, type CollectionGroup } from "@/lib/catalog/collection-menu";
 import { ALL_SERIES } from "@/lib/series";
 import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
@@ -43,14 +43,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${title} · ${siteConfig.name}`,
       description: piece.tagline,
       url: `/products/${piece.slug}`,
-      images: [piece.scene.src],
+      images: [pieceLeadImage(piece).src],
     },
   };
 }
 
 function galleryImages(piece: Piece): GalleryImage[] {
   return [
-    { ...piece.scene, label: "In a room", kind: "scene" },
+    ...(piece.scene ? [{ ...piece.scene, label: "In a room", kind: "scene" as const }] : []),
     ...piece.views.map((view) => ({ ...view, kind: "cutout" as const })),
   ];
 }
@@ -63,7 +63,7 @@ function productJsonLd(piece: Piece) {
     description: `${piece.tagline} ${piece.about}`,
     brand: { "@type": "Brand", name: siteConfig.name },
     category: piece.type,
-    image: [piece.scene.src, ...piece.views.map((v) => v.src)].map((src) => `${siteConfig.url}${src}`),
+    image: pieceImages(piece).map((image) => `${siteConfig.url}${image.src}`),
     ...(piece.size
       ? {
           width: { "@type": "QuantitativeValue", value: Math.max(...piece.size.w), unitCode: "MMT" },
@@ -147,7 +147,11 @@ export default async function ProductPage({ params }: PageProps) {
           <p className="co-eyebrow mt-[clamp(32px,6vw,96px)]">{piece.type}</p>
           <h1 className="co-display mt-3 text-[clamp(48px,7vw,112px)]">{piece.name}</h1>
           <p className="mt-4 font-heading text-[clamp(20px,2vw,30px)] font-semibold leading-[1.2] tracking-[-0.01em] text-co-muted-2">
-            {piece.size ? pieceSizeLabel(piece.size) : piece.availableAs?.join(" · ") ?? piece.type}
+            {piece.size
+              ? pieceSizeLabel(piece.size)
+              : piece.parts
+                ? piece.parts.map((part) => part.label).join(" · ")
+                : (piece.availableAs?.join(" · ") ?? piece.type)}
           </p>
           {piece.size?.note ? <p className="co-data mt-2 text-co-muted-2">{piece.size.note}</p> : null}
 

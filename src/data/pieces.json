@@ -365,5 +365,104 @@
         "alt": "Ergohuman Plus chair"
       }
     ]
+  },
+  {
+    "slug": "type-a",
+    "name": "Type A",
+    "type": "Workspace system",
+    "group": "workstations",
+    "tagline": "Splayed metal legs, with the services built into the bench.",
+    "about": "Type A pairs splayed metal legs with services built into the bench: perforated metal screens and open shelves along the spine, flip-up boxes in the top and a raceway with a support beam underneath. A matching main table adds side storage for the cabin.",
+    "parts": [
+      {
+        "label": "Workstation",
+        "size": {
+          "w": [
+            2400
+          ],
+          "d": [
+            1200
+          ],
+          "h": [
+            750
+          ]
+        }
+      },
+      {
+        "label": "Main table",
+        "size": {
+          "w": [
+            2100
+          ],
+          "d": [
+            800
+          ],
+          "h": [
+            750
+          ]
+        }
+      },
+      {
+        "label": "Side storage",
+        "size": {
+          "w": [
+            1700
+          ],
+          "d": [
+            400
+          ],
+          "h": [
+            650
+          ]
+        }
+      }
+    ],
+    "builtIn": "Perforated metal screen panels (873 mm) with open shelves (300 mm), flip-up boxes in the top, and a raceway with a support beam. The main table has a 25 mm top and side storage with drawers and shutters",
+    "availableAs": [
+      "Workstation",
+      "Main table"
+    ],
+    "views": [
+      {
+        "src": "/pieces/type-a/workstation.jpg",
+        "label": "Workstation",
+        "alt": "Drawing of the Type A face-to-face workstation: splayed legs, a perforated metal screen with open shelves along the spine"
+      },
+      {
+        "src": "/pieces/type-a/workstation-front.jpg",
+        "label": "Workstation, front",
+        "alt": "Front elevation of the Type A workstation, dimensioned 2400 mm wide and 750 mm high, with the metal panel and raceway marked"
+      },
+      {
+        "src": "/pieces/type-a/workstation-side.jpg",
+        "label": "Workstation, side",
+        "alt": "Side elevation of the Type A workstation showing the splayed legs and the screen spine"
+      },
+      {
+        "src": "/pieces/type-a/workstation-top.jpg",
+        "label": "Workstation, top",
+        "alt": "Plan of the Type A workstation, 2400 by 1200 mm, with four flip-up boxes in the top"
+      },
+      {
+        "src": "/pieces/type-a/main-table.jpg",
+        "label": "Main table",
+        "alt": "Drawing of the Type A main table on a splayed leg, with side storage"
+      },
+      {
+        "src": "/pieces/type-a/main-table-front.jpg",
+        "label": "Main table, front",
+        "alt": "Front elevation of the Type A main table, 2100 mm wide and 750 mm high, with a 25 mm top"
+      },
+      {
+        "src": "/pieces/type-a/main-table-side.jpg",
+        "label": "Main table, side",
+        "alt": "Side elevation of the Type A main table, 800 mm deep, with drawers and shutters in the side storage"
+      },
+      {
+        "src": "/pieces/type-a/main-table-top.jpg",
+        "label": "Main table, top",
+        "alt": "Plan of the Type A main table, 2100 by 800 mm, with 1700 by 400 mm side storage"
+      }
+    ]
   }
 ]

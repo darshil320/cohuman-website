@@ -89,16 +89,8 @@ export function SeriesSpecBlock() {
       : "ready to quote";
 
   const rows: SpecRow[] = [
-    { k: "Model", v: config.name },
-    {
-      k: series.codeLabel ?? "Code",
-      v: (
-        <>
-          {parts.code}
-          {inferred ? <Provisional /> : null}
-        </>
-      ),
-    },
+    // Model and code rows cut (Nov 2026): the heading names the model, and the part
+    // code still travels in the bill of components and the enquiry.
     {
       k: config.dia ? "Diameter" : "Length",
       v: (

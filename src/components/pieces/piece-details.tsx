@@ -45,6 +45,25 @@ export function PieceDetails({ piece }: { piece: Piece }) {
         </Row>
       ) : null}
 
+      {piece.parts ? (
+        <Row title="Dimensions">
+          <dl className="co-data grid grid-cols-[minmax(0,140px)_1fr] gap-y-2">
+            {piece.parts.map((part) => (
+              <div key={part.label} className="contents">
+                <dt className="text-co-muted-2">{part.label}</dt>
+                <dd>{pieceSizeLabel(part.size)} (W × D × H)</dd>
+              </div>
+            ))}
+          </dl>
+        </Row>
+      ) : null}
+
+      {piece.builtIn ? (
+        <Row title="Built in">
+          <p>{piece.builtIn}.</p>
+        </Row>
+      ) : null}
+
       {piece.availableAs ? (
         <Row title="Available as">
           <p>{piece.availableAs.join(", ")}.</p>

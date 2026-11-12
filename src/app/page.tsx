@@ -12,7 +12,7 @@ import { ClipReveal } from "@/components/ui/clip-reveal";
 import { FigureCaption } from "@/components/ui/figure-caption";
 import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { CollectionCard } from "@/components/collections/collection-card";
-import { catalog, type Piece } from "@/lib/catalog";
+import { catalog, pieceLeadImage, type Piece } from "@/lib/catalog";
 import { buildCollectionMenu, type CollectionItem } from "@/lib/catalog/collection-menu";
 import { LEAD_FILM, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
@@ -38,15 +38,18 @@ const HERO_CONFIG_SLUG = "face-to-face";
 function designerItems(pieces: Piece[]): CollectionItem[] {
   return pieces
     .filter((piece) => piece.group === "pm-x-cohuman")
-    .map((piece) => ({
-      slug: piece.slug,
-      title: piece.name,
-      line: piece.type,
-      href: `/products/${piece.slug}`,
-      image: piece.scene.src,
-      imageAlt: piece.scene.alt,
-      imageKind: "scene" as const,
-    }));
+    .map((piece) => {
+      const lead = pieceLeadImage(piece);
+      return {
+        slug: piece.slug,
+        title: piece.name,
+        line: piece.type,
+        href: `/products/${piece.slug}`,
+        image: lead.src,
+        imageAlt: lead.alt,
+        imageKind: lead.kind,
+      };
+    });
 }
 
 /** The product the lead film shows: ARQ, from PM x Cohuman. */

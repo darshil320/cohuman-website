@@ -176,8 +176,12 @@ measure nothing. `pieces.test.ts` checks every image exists. Images are in
 a pixel's colour ratio matches cream (backdrop and shadow), so the product keeps its own
 colour and `co-cutout` multiplies cleanly onto the fog panel. Stretch E and Stretch R
 are photographed ranges in `collections.json` with one small catalogue photo each
-(≈770px wide — replace when larger shots arrive). Type A is not listed: the catalogue has
-drawings for it but no photograph.
+(≈770px wide — replace when larger shots arrive). **Type A** is a piece in the
+`workstations` group, **drawings only**: the catalogue's line drawings (pp. 58–61),
+inverted from light-on-black to ink on white, with no room shot (`scene` is optional for
+exactly this — a drawing is never presented as a photograph). Its sizes are `parts`
+(workstation, main table, side storage). The Stretch S / V spec panel no longer has Model
+or Code rows; the code is still in the bill of components and the enquiry.
 
 ## Collections are desking series, not SKU lists
 

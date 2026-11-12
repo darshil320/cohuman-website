@@ -10,8 +10,12 @@ import { z } from "zod";
  * `collections.json` and `src/lib/series`.
  */
 
-/** The collection groups, in the catalogue's order. Workstations are the systems. */
-export const PIECE_GROUPS = ["pm-x-cohuman", "seating"] as const;
+/**
+ * The collection groups a piece can sit in. Workstations are mostly the desking systems
+ * in `collections.json`; a piece joins them when the catalogue draws a system as fixed
+ * products rather than a configurable range (Type A).
+ */
+export const PIECE_GROUPS = ["pm-x-cohuman", "workstations", "seating"] as const;
 
 const imageSrc = z
   .string()
@@ -25,6 +29,14 @@ const pieceImageSchema = z.object({
 /** Millimetres. A list where the catalogue offers more than one value, e.g. sofa widths. */
 const mm = z.array(z.number().int().positive()).min(1);
 
+const sizeSchema = z.object({
+  w: mm,
+  d: mm,
+  h: mm,
+  /** What the size is of, e.g. "two seater". */
+  note: z.string().trim().min(1).optional(),
+});
+
 export const pieceSchema = z.object({
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "slug must be kebab-case"),
   name: z.string().trim().min(1),
@@ -36,20 +48,19 @@ export const pieceSchema = z.object({
   /** The catalogue's ABOUT paragraph. */
   about: z.string().trim().min(1),
   /** Width × depth × height, as the catalogue prints it. Absent where it prints none. */
-  size: z
-    .object({
-      w: mm,
-      d: mm,
-      h: mm,
-      /** What the size is of, e.g. "two seater". */
-      note: z.string().trim().min(1).optional(),
-    })
-    .optional(),
+  size: sizeSchema.optional(),
+  /** Several products under one name, each with its own size (Type A's workstation and main table). */
+  parts: z.array(z.object({ label: z.string().trim().min(1), size: sizeSchema })).min(1).optional(),
+  /** What comes built in, as the catalogue lists it. */
+  builtIn: z.string().trim().min(1).optional(),
   availableAs: z.array(z.string().trim().min(1)).min(1).optional(),
   finish: z.string().trim().min(1).optional(),
   upholstery: z.string().trim().min(1).optional(),
-  /** The piece in a room. First image on the page and in the menus' scene slots. */
-  scene: pieceImageSchema,
+  /**
+   * The piece in a room: first image on the page. Optional — Type A is drawings only,
+   * and a drawing is never passed off as a photograph.
+   */
+  scene: pieceImageSchema.optional(),
   /** Cut-outs on white, in the catalogue's order; the first is the piece's card image. */
   views: z.array(pieceImageSchema.extend({ label: z.string().trim().min(1) })).min(1),
   /** Named versions with their own render (Ergohuman's headrest, leg rest, Plus). */
@@ -68,4 +79,14 @@ export type PieceSize = NonNullable<Piece["size"]>;
 export function pieceSizeLabel(size: PieceSize): string {
   const axis = (values: number[]) => values.join(" / ");
   return `${axis(size.w)} × ${axis(size.d)} × ${axis(size.h)} mm`;
+}
+
+/** Every picture of a piece, room shot first where there is one. */
+export function pieceImages(piece: Piece): { src: string; alt: string }[] {
+  return [...(piece.scene ? [piece.scene] : []), ...piece.views, ...(piece.versions ?? [])];
+}
+
+/** The picture that stands for a piece in a list: its room shot, else its first view. */
+export function pieceLeadImage(piece: Piece): { src: string; alt: string; kind: "scene" | "cutout" } {
+  return piece.scene ? { ...piece.scene, kind: "scene" } : { ...piece.views[0], kind: "cutout" };
 }

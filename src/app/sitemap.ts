@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { catalog } from "@/lib/catalog";
+import { catalog, pieceImages } from "@/lib/catalog";
 import { CONTENT_REVISED } from "@/lib/seo/content-revised";
 import { siteConfig } from "@/lib/site-config";
 
@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: CONTENT_REVISED.collections,
     changeFrequency: "monthly",
     priority: 0.6,
-    images: [piece.scene, ...piece.views].map((image) => `${siteConfig.url}${image.src}`),
+    images: pieceImages(piece).map((image) => `${siteConfig.url}${image.src}`),
   }));
 
   return [...staticEntries, ...collectionEntries, ...pieceEntries, ...sectorEntries, ...productEntries];

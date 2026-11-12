@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { LocalCatalogRepository } from "./local-repository";
-import { pieceSchema, piecesSchema, pieceSizeLabel } from "./piece-schema";
+import { pieceImages, pieceSchema, piecesSchema, pieceSizeLabel } from "./piece-schema";
 
 const repo = new LocalCatalogRepository();
 
@@ -71,10 +71,21 @@ describe("src/data/pieces.json", () => {
 
   it("points every image at a file that exists", async () => {
     const pieces = await repo.getPieces();
-    const images = pieces.flatMap((p) => [p.scene, ...p.views, ...(p.versions ?? [])]);
+    const images = pieces.flatMap(pieceImages);
     for (const image of images) {
       expect(existsSync(join(process.cwd(), "public", image.src)), image.src).toBe(true);
     }
+  });
+
+  it("lists Type A under workstations as drawings only, with the catalogue's three sizes", async () => {
+    const typeA = await repo.getPiece("type-a");
+    expect(typeA?.group).toBe("workstations");
+    expect(typeA?.scene).toBeUndefined();
+    expect(typeA?.parts?.map((part) => pieceSizeLabel(part.size))).toEqual([
+      "2400 × 1200 × 750\u00A0mm",
+      "2100 × 800 × 750\u00A0mm",
+      "1700 × 400 × 650\u00A0mm",
+    ]);
   });
 
   it("keeps counted or heritage claims out of the copy", async () => {

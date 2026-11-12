@@ -39,7 +39,7 @@ function pieceItem(piece: Piece): CollectionItem {
   return {
     slug: piece.slug,
     title: piece.name,
-    line: piece.size ? pieceSizeLabel(piece.size) : piece.type,
+    line: piece.size ? pieceSizeLabel(piece.size) : piece.parts ? piece.parts.map((p) => p.label).join(" · ") : piece.type,
     href: `/products/${piece.slug}`,
     image: card.src,
     imageAlt: card.alt,
@@ -92,7 +92,8 @@ export function buildCollectionMenu({
       id: "workstations",
       label: "Workstations",
       blurb: "Table systems for open-plan desks, meeting rooms and private cabins, each built around its own leg.",
-      items: systems,
+      // The configurable and photographed systems, then the systems drawn as fixed pieces.
+      items: [...systems, ...pieces.filter((p) => p.group === "workstations").map(pieceItem)],
     },
     {
       id: "seating",
