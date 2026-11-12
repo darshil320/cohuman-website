@@ -5,9 +5,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { ImageLightbox, type LightboxItem } from "@/components/common/image-lightbox";
-import { DimensionLine } from "@/components/ui/dimension-line";
-import { TickNumber } from "@/components/ui/tick-number";
-import { selectedLength, selectedParts } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
 import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
@@ -16,7 +13,7 @@ import { useWebglAvailable, WebglBoundary } from "./webgl-boundary";
 const SeriesStageScene = dynamic(() => import("./series-stage-scene"), { ssr: false });
 
 export function SeriesStage() {
-  const { series, config, selection, dimensionsOn, toggleDimensions, pickConfigBySlug } =
+  const { series, config, pickConfigBySlug } =
     useSeriesConfigurator();
   const reduceMotion = useReducedMotion();
   const [pointerActive, setPointerActive] = useState(false);
@@ -48,8 +45,6 @@ export function SeriesStage() {
     0,
     shots.findIndex((shot) => shot.item.src === config.image),
   );
-
-  const length = selectedLength(selection);
 
   return (
     <div className="group">
@@ -102,30 +97,6 @@ export function SeriesStage() {
           className="absolute inset-0 z-[1] cursor-zoom-in"
         />
 
-        {/*
-          The dimension lines. Mounted, not faded: when they are switched on the rules are
-          new `data-reveal` nodes, so the reveal observer draws them in at plotter speed.
-          The length ticks when a new size is picked.
-        */}
-        {dimensionsOn ? (
-          <div className="pointer-events-none absolute inset-0 z-[2] text-co-ink">
-            <DimensionLine
-              label={
-                <>
-                  {config.dia ? "Ø " : "W "}
-                  <TickNumber value={length} />
-                </>
-              }
-              className="absolute bottom-[9%] left-[8%] right-[12%]"
-            />
-            <DimensionLine
-              axis="y"
-              label={`H ${series.workingHeightMm}`}
-              className="absolute bottom-[24%] right-[4%] top-[18%]"
-            />
-          </div>
-        ) : null}
-
         <ImageLightbox
           items={shots.map((shot) => shot.item)}
           index={shotIndex}
@@ -142,9 +113,7 @@ export function SeriesStage() {
         viewer controls at its end.
       */}
       <div className="mt-3 flex items-center gap-4 border-t border-co-border pt-3">
-        <p className="co-data m-0 min-w-0 flex-1 truncate text-co-muted-2">
-          {selectedParts(selection).code}
-        </p>
+        <span className="flex-1" />
         <span
           aria-hidden
           className={cn(
@@ -157,17 +126,6 @@ export function SeriesStage() {
           </svg>
           Expand
         </span>
-        <button
-          type="button"
-          onClick={toggleDimensions}
-          aria-pressed={dimensionsOn}
-          className={cn(
-            "co-data shrink-0 border px-2.5 py-1 transition-colors",
-            dimensionsOn ? "border-co-ink bg-co-ink text-co-bg" : "border-co-ink text-co-ink hover:bg-co-bg-alt",
-          )}
-        >
-          Dimensions
-        </button>
       </div>
     </div>
   );

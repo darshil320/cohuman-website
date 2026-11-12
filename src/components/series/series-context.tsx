@@ -23,7 +23,6 @@ interface SeriesState {
   lenIndex: number;
   depIndex: number;
   partIndex: number;
-  dimensionsOn: boolean;
   quantity: string;
   /**
    * Which configurator steps the visitor has set themselves this visit. Presentation
@@ -38,7 +37,6 @@ type SeriesAction =
   | { type: "setLength"; index: number }
   | { type: "setDepth"; index: number }
   | { type: "setPart"; index: number }
-  | { type: "toggleDimensions" }
   | { type: "setQuantity"; quantity: string };
 
 /** The part the anatomy section opens on — the table top, wherever it sits in the list. */
@@ -57,7 +55,6 @@ function initialState(series: SeriesDefinition): SeriesState {
     lenIndex: 0,
     depIndex: 0,
     partIndex: defaultPartIndex(series),
-    dimensionsOn: true,
     quantity: "12",
     touched: { config: false, length: false, depth: false },
   };
@@ -84,8 +81,6 @@ function reducer(state: SeriesState, action: SeriesAction): SeriesState {
       return { ...state, depIndex: action.index, touched: { ...state.touched, depth: true } };
     case "setPart":
       return { ...state, partIndex: action.index };
-    case "toggleDimensions":
-      return { ...state, dimensionsOn: !state.dimensionsOn };
     case "setQuantity":
       return { ...state, quantity: action.quantity };
     default:
@@ -106,7 +101,6 @@ interface SeriesContextValue extends SeriesState {
   setLength: (index: number) => void;
   setDepth: (index: number) => void;
   setPart: (index: number) => void;
-  toggleDimensions: () => void;
   setQuantity: (quantity: string) => void;
 }
 
@@ -139,7 +133,6 @@ export function SeriesProvider({
   const setLength = useCallback((index: number) => dispatch({ type: "setLength", index }), []);
   const setDepth = useCallback((index: number) => dispatch({ type: "setDepth", index }), []);
   const setPart = useCallback((index: number) => dispatch({ type: "setPart", index }), []);
-  const toggleDimensions = useCallback(() => dispatch({ type: "toggleDimensions" }), []);
   const setQuantity = useCallback(
     (quantity: string) => dispatch({ type: "setQuantity", quantity }),
     [],
@@ -169,7 +162,6 @@ export function SeriesProvider({
       setLength,
       setDepth,
       setPart,
-      toggleDimensions,
       setQuantity,
     };
   }, [
@@ -181,7 +173,6 @@ export function SeriesProvider({
     setLength,
     setDepth,
     setPart,
-    toggleDimensions,
     setQuantity,
   ]);
 

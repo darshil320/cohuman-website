@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { DimensionLine } from "@/components/ui/dimension-line";
-import { configSizeRange } from "@/lib/series";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
@@ -47,10 +45,6 @@ export function SeriesNameHeading() {
         {config.name}
         <span className="sr-only">, {series.name}</span>
       </h1>
-      <DimensionLine
-        label={`${configSizeRange(config)}\u00A0mm`}
-        className="mt-[clamp(20px,2.4vw,32px)] w-full max-w-[820px]"
-      />
       <p className="co-lead mt-6 max-w-[46ch]">{series.promise}</p>
     </div>
   );

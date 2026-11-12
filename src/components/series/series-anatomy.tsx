@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useCallback, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { SectionHeading } from "@/components/common/section-heading";
 import { Button } from "@/components/ui/button";
-import { DimensionLine } from "@/components/ui/dimension-line";
 import { RegistrationCross } from "@/components/ui/registration-cross";
 import { SpecRows } from "@/components/ui/spec-rows";
 import { HEADER_HEIGHT } from "@/lib/layout";
@@ -210,8 +209,6 @@ export function SeriesAnatomy() {
                 <RegistrationCross className="right-2 top-2 text-co-ink" />
               </div>
 
-              {/* Working height is fixed across the range, so it is true of this render. */}
-              <DimensionLine axis="y" label={`${series.workingHeightMm} H`} />
             </div>
 
             <figcaption className="mt-3.5 border-t border-co-border pt-3">

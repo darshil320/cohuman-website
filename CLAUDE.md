@@ -46,10 +46,12 @@ The short version:
   wide. Icons are the official compact mark reversed on ink (`src/app/icon.svg` plus
   raster fallbacks rendered from it).
 - **Drawing set:** square corners (the two dots are the only round thing), 1px rules,
-  a 12-column hairline grid on heroes, registration crosses, "Fig. 0X" captions, and a
-  `DimensionLine` on **every product render** with sizes read from `src/lib/series`
-  (`rangeLabel`/`configLengthLabel`/`configSizeRange`/`spanLabel` in `derive.ts`) —
-  never typed. No gradients, glass, blur, shadows, glows or hover zooms.
+  a 12-column hairline grid on heroes, registration crosses and "Fig. 0X" captions.
+  **No dimension lines on product pages** (client, Nov 2026): the series PDP's viewer
+  overlay, its Dimensions toggle, the heading rule, the gallery and anatomy lines are all
+  gone — sizes live in the spec panel's selectors, read from `src/lib/series`, never
+  typed. `DimensionLine` survives only on the fallback hero panel, the 404 page and the
+  hidden assembly section. No gradients, glass, blur, shadows, glows or hover zooms.
 - **Cut-outs:** product renders take `co-cutout` (multiply + feathered edge). Never wrap
   one in an element with `clip-path`/`filter`/`opacity`/an isolating transform — the
   white box comes back. Interiors *used to* take `co-highkey`; the client found it washed

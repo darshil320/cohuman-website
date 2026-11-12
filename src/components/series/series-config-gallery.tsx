@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { DimensionLine } from "@/components/ui/dimension-line";
 import { RegistrationCross } from "@/components/ui/registration-cross";
-import { configLengthLabel, type SeriesConfig, type SeriesDefinition } from "@/lib/series";
+import type { SeriesConfig, SeriesDefinition } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
 
@@ -74,7 +73,6 @@ export function SeriesConfigGallery() {
                 className={cn("co-cutout object-contain", moved && "co-wipe-in")}
               />
             </div>
-            <DimensionLine label={`${configLengthLabel(item)}\u00A0mm`} className="mx-auto mt-2 w-[78%]" />
             {finishCaption(series, item) ? (
               <figcaption className="co-data mt-4">{finishCaption(series, item)}</figcaption>
             ) : null}
