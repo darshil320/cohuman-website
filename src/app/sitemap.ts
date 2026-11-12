@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/site-config";
 const STATIC_ROUTES = [
   "",
   "/collections",
+  "/finishes",
   "/sectors",
   "/catalog",
   "/b2b",

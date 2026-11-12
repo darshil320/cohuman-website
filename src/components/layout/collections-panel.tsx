@@ -15,6 +15,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const PANEL_LINKS = [
   { label: "All collections", href: "/collections" },
   { label: "Configure a desk", href: "/configure" },
+  { label: "Tops & finishes", href: "/finishes" },
   { label: "B2B / bulk orders", href: "/b2b" },
 ] as const;
 

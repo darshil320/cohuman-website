@@ -32,7 +32,7 @@ function identityLines(): string[] {
   return [
     `# ${siteConfig.name}`,
     "",
-    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and furniture fit-out contractor in Surat, Gujarat, India, founded by ${siteConfig.founder}. Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture, with metal bases fabricated in-house. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
+    `> ${siteConfig.tagline}. ${siteConfig.legalName} — an office-furniture manufacturer and furniture fit-out contractor in Surat, Gujarat, India, founded by ${siteConfig.founder}. Cohuman designs, manufactures and installs desking systems, ergonomic seating, conference tables, storage and reception furniture in its own factory in Surat. It works on quotation: there is no online checkout, no public price list and no customer accounts.`,
     "",
   ];
 }
@@ -175,6 +175,7 @@ export async function buildLlmsTxt(): Promise<string> {
     `- [Home](${url("/")}): what Cohuman makes and who it makes it for.`,
     `- [Catalog](${url("/catalog")}): every product, filterable by category and price band.`,
     `- [Collections](${url("/collections")}): the desking series and their configurators.`,
+    `- [Tops & finishes](${url("/finishes")}): board shades, veneer, frame colours by system, top cores, edges, screen positions and the technical specification.`,
     `- [Sectors](${url("/sectors")}): executive, healthcare and hospitality work.`,
     `- [Solutions by space](${url("/solutions")}): furniture schedules by room type.`,
     `- [Services](${url("/services")}): space planning, fit-out, installation, aftercare.`,
@@ -348,7 +349,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
     `- Address: ${siteConfig.address.line1}, ${siteConfig.address.line2}`,
     `- Email: ${siteConfig.email}`,
     ...siteConfig.emails.map((inbox) => `- ${inbox.label}: ${inbox.address}`),
-    "- Manufacturing: metal bases fabricated in-house on European CNC machinery; modular systems built to technical drawings",
+    "- Manufacturing: own factory in Surat — CNC routing, panel cutting, edge banding, boring, drilling and assembly under one roof",
     "- Areas served: Gujarat and Maharashtra primarily, India nationally",
     `- Quote turnaround: ${siteConfig.enquiryTurnaround}`,
     "",

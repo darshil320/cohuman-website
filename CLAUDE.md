@@ -185,6 +185,25 @@ exactly this — a drawing is never presented as a photograph). Its sizes are `p
 (workstation, main table, side storage). The Stretch S / V spec panel no longer has Model
 or Code rows; the code is still in the bill of components and the enquiry.
 
+## Tops & finishes, the factory, the spec template
+
+- **/finishes** (`src/app/finishes/page.tsx`, data in `src/lib/finishes.ts`) is the
+  catalogue's shared reference (pp. 68–69): seven board shades with codes, veneer, frame
+  shades by system, top cores, edges, screen positions and the Stretch S / V technical
+  rows. Warranty is "to be confirmed" in the catalogue, so it is not shown. Swatches are
+  the catalogue's own crops in `public/finishes/`, rendered `unoptimized` (tiny files;
+  the image optimiser hung on several). The catalogue's core and edge photos are stock —
+  one carries a third-party watermark — so cores and edges are text only.
+  `finishes.test.ts` checks every swatch file exists. Linked from the Collections panel,
+  the footer and steps 02–03 of the homepage's build section.
+- **/about** opens on the catalogue's "Humans make offices." and shows its "Made in our
+  own factory." spread as six photographs (`public/factory/`), in place of the old
+  capability list (which claimed European machinery the catalogue does not mention).
+- **`docs/cohuman-spec-template.xlsx`** — the spec-entry workbook for the client team:
+  Workstations (one row per system / table type, a column per configuration step),
+  Legs (main vs middle), Pieces, New products (HAT, modesty panels, accessories, Eco),
+  Lists (dropdown values). Grey cells are pre-filled from the catalogue and the site.
+
 ## Collections are desking series, not SKU lists
 
 A collection is one of two kinds, and `/collections/[slug]` renders whichever it is:

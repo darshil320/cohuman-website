@@ -19,7 +19,7 @@ import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { siteConfig, telHref } from "@/lib/site-config";
 
 const DESCRIPTION =
-  "Cohuman designs and manufactures modular office furniture in Surat — metal bases cut in-house on European machinery, systems specified to the millimetre, drawings issued before anything ships.";
+  "Humans make offices. Cohuman designs and makes office furniture in its own factory in Surat: cutting, edge banding, boring, drilling and assembly under one roof.";
 
 export const metadata: Metadata = {
   title: "About",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
  */
 const DATUM = [
   { k: "Discipline", v: "Modular" },
-  { k: "Method", v: "In-house metal" },
+  { k: "Method", v: "Own factory" },
   { k: "Output", v: "Specified" },
   { k: "Ground", v: "Surat, IN" },
 ];
@@ -67,38 +67,17 @@ const DEFINITION = [
 ];
 
 /**
- * Manufacturing capability — the centrepiece.
- *
- * These four survive from the previous page unchanged; only the presentation moved, from
- * a four-up of bordered cards to a ledger of hairline rows. The codes are display
- * indexing rather than real part numbers, which is why they are `aria-hidden` below.
+ * The factory, as the 2026 catalogue shows it (pp. 04–05): six photographs from the
+ * Surat floor, captioned with the process each one shows and nothing more.
  */
-const CAPABILITIES = [
-  {
-    code: "CH·01 BASE",
-    name: "Metal bases, cutting-edge technology",
-    blurb:
-      "Advanced European machinery producing precision metal bases ourselves — the one component most furniture makers still outsource.",
-  },
-  {
-    code: "CH·02 MOD",
-    name: "Modular by design",
-    blurb:
-      "High-accuracy fabrication behind truly modular systems — flexible to lay out, easy to reconfigure, clean to install.",
-  },
-  {
-    code: "CH·03 DWG",
-    name: "Drawings before deliveries",
-    blurb:
-      "Technical drawings and software-backed specifications for architects and facility teams, from concept through to execution.",
-  },
-  {
-    code: "CH·04 FIN",
-    name: "A finish for every brief",
-    blurb:
-      "An extensive range of metal finishes and colour palettes, so a spec can match a brand without giving up durability.",
-  },
-];
+const FACTORY = [
+  { src: "/factory/cnc-routing.jpg", caption: "CNC routing", alt: "A CNC router cutting a pattern into a green panel" },
+  { src: "/factory/panel-cutting.jpg", caption: "Panel cutting", alt: "A worker feeding a board into a panel saw" },
+  { src: "/factory/edge-banding.jpg", caption: "Edge banding", alt: "A white panel coming out of an edge-banding machine" },
+  { src: "/factory/boring.jpg", caption: "Boring", alt: "A line of drill heads boring holes along a panel" },
+  { src: "/factory/assembly.jpg", caption: "Assembly", alt: "A worker drilling into a storage carcass during assembly" },
+  { src: "/factory/factory-floor.jpg", caption: "The factory floor", alt: "The factory floor under a curved roof, with workbenches and stacked panels" },
+] as const;
 
 const PRINCIPLES = [
   {
@@ -156,11 +135,12 @@ export default async function AboutPage() {
         <div className="co-shell relative pb-[clamp(48px,6vw,88px)] pt-[clamp(48px,8vw,128px)]">
           <p className="co-eyebrow">CO—001 · Surat, Gujarat</p>
           <h1 className="co-display mt-[clamp(20px,3vw,36px)] max-w-[13ch]">
-            <KineticHeading>Furniture measured, not guessed.</KineticHeading>
+            <KineticHeading>Humans make offices.</KineticHeading>
           </h1>
+          {/* The catalogue's About, verbatim (2026 catalogue p. 02). */}
           <p className="co-lead mt-[clamp(24px,3vw,40px)] max-w-[46ch]">
-            Cohuman designs and manufactures modular office furniture in Surat — metal bases cut
-            in-house, systems specified to the millimetre, drawings issued before anything ships.
+            Not the computers, the screens or the peripherals. People do the work, and the idea
+            of working together starts with them. That is the meaning of our name.
           </p>
 
           <dl className="mt-[clamp(48px,6vw,88px)] grid grid-cols-2 border-t border-co-ink sm:grid-cols-4">
@@ -202,29 +182,30 @@ export default async function AboutPage() {
         </StaggerContainer>
       </section>
 
-      {/* Capability — the centrepiece, as a parts list. */}
+      {/* Factory — the catalogue's "Made in our own factory." as photographs. */}
       <section className="border-y border-co-ink bg-co-bg-alt">
         <div className="co-shell co-section">
           <SectionHeading
-            eyebrow={next("Capability")}
-            title="The base is where furniture is won or lost."
-            blurb="Most furniture makers buy the metal base in. We cut and form ours, which is the only reason a modular system still lines up on the seventeenth bay."
-            className="mb-0"
+            eyebrow={next("Factory")}
+            title="Made in our own factory."
+            blurb="A full-fledged factory in Surat: cutting, edge banding, boring, drilling and assembly under one roof."
           />
-          <StaggerContainer as="ol" className="grid">
-            {CAPABILITIES.map((c) => (
-              <StaggerItem
-                as="li"
-                key={c.code}
-                className="grid grid-cols-1 gap-x-[clamp(20px,2.5vw,40px)] gap-y-3 border-b border-co-border py-[clamp(22px,2.8vw,40px)] lg:grid-cols-[200px_minmax(0,1fr)_minmax(0,420px)]"
-              >
-                <span aria-hidden className="co-data text-co-muted-2">
-                  {c.code}
-                </span>
-                <h3 className="co-h3">{c.name}</h3>
-                <div>
-                  <p className="max-w-[48ch] text-[15px] leading-[1.55] text-co-ink-soft">{c.blurb}</p>
-                </div>
+          <StaggerContainer className="co-rail md:grid md:grid-cols-3 md:gap-6">
+            {FACTORY.map((photo) => (
+              <StaggerItem key={photo.src}>
+                <figure>
+                  <ClipReveal className="aspect-[3/4] border border-co-border bg-co-bg">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(min-width: 768px) 31vw, 80vw"
+                      quality={90}
+                      className="object-cover"
+                    />
+                  </ClipReveal>
+                  <figcaption className="co-data mt-3 text-co-ink">{photo.caption}</figcaption>
+                </figure>
               </StaggerItem>
             ))}
           </StaggerContainer>
@@ -247,10 +228,17 @@ export default async function AboutPage() {
           </ClipReveal>
           <div className="mt-4 grid gap-x-10 gap-y-3 md:grid-cols-[1fr_minmax(0,420px)]">
             <FigureCaption n={++figure}>Installed — open-plan bench desking</FigureCaption>
-            <p className="max-w-[46ch] text-[15px] leading-[1.55] text-co-ink-soft">
-              Precision is not a drawing-board virtue. It is whether the twelfth desk meets the
-              wall the way the first one did.
-            </p>
+            {/* The catalogue's About, continued. */}
+            <div className="grid max-w-[46ch] gap-3 text-[15px] leading-[1.55] text-co-ink-soft">
+              <p>
+                Furniture should not be static. A good design can be put to more than one use, and
+                the same table can serve a different purpose at a different hour.
+              </p>
+              <p>
+                Our aim is meaning, rather than volume: offices people are happy to come to, where
+                arriving at work feels relaxed, not pressured.
+              </p>
+            </div>
           </div>
         </figure>
       </section>

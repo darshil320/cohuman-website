@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SectionHeading } from "@/components/common/section-heading";
 import { ClipReveal } from "@/components/ui/clip-reveal";
 import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
@@ -11,8 +12,18 @@ import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
  */
 const STEPS = [
   { n: "01", title: "Select your system", body: "Pick the leg system the desk stands on." },
-  { n: "02", title: "Select your top", body: "Choose the desktop core, the edge profile and the finish." },
-  { n: "03", title: "Select your partition", body: "Choose a screen partition, or keep the desk open." },
+  {
+    n: "02",
+    title: "Select your top",
+    body: "Choose the desktop core, the edge profile and the finish.",
+    href: "/finishes",
+  },
+  {
+    n: "03",
+    title: "Select your partition",
+    body: "Choose a screen partition, or keep the desk open.",
+    href: "/finishes",
+  },
   { n: "04", title: "Select your VOLT & BOLT system", body: "Add power and data units at the desk." },
   { n: "05", title: "Select your accessories", body: "Add the accessories your team needs." },
   { n: "06", title: "Your workstation is ready", body: "We build it to your selection." },
@@ -55,6 +66,11 @@ export function BuildWorkstation({ eyebrow }: { eyebrow: string }) {
               <span>
                 <span className="co-h3 block">{step.title}</span>
                 <span className="mt-1.5 block text-[14px] leading-relaxed text-co-muted">{step.body}</span>
+                {"href" in step ? (
+                  <Link href={step.href} className="co-data mt-2 inline-block text-co-ink underline-offset-4 hover:underline">
+                    Tops &amp; finishes →
+                  </Link>
+                ) : null}
               </span>
             </li>
           ))}

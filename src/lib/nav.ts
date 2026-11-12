@@ -28,6 +28,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
       // { label: "Full catalog", href: "/catalog" },
       { label: "Configure your desking", href: "/configure" },
       { label: "Collections", href: "/collections" },
+      { label: "Tops & finishes", href: "/finishes" },
       { label: "Sectors we serve", href: "/sectors" },
       { label: "Workspace solutions", href: "/solutions" },
       { label: "B2B / Bulk orders", href: "/b2b" },
