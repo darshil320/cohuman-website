@@ -408,7 +408,7 @@ silently. Use a verified sender on the real domain (e.g. `leads@cohuman.in`).
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Production: no. Previews: yes | Canonical origin for `metadataBase`, every `canonical`/`og:url`, sitemap, robots.txt and llms.txt. Defaults to `https://cohuman.in`. Set it to the deployment's own origin on preview environments so previews don't advertise production URLs to crawlers and scrapers. |
+| `NEXT_PUBLIC_SITE_URL` | Production: no. Previews: yes | Canonical origin for `metadataBase`, every `canonical`/`og:url`, sitemap, robots.txt and llms.txt. Defaults to `https://www.cohuman.in` — the primary host; Vercel redirects the bare domain to it. Set it to the deployment's own origin on preview environments so previews don't advertise production URLs to crawlers and scrapers. |
 | `RESEND_API_KEY` | Before launch | Sends the lead email. Absent → leads validate and log, no email. |
 | `RESEND_FROM_EMAIL` | Whenever `RESEND_API_KEY` is set | Verified sender address. |
 
@@ -439,7 +439,7 @@ space type).
   `TODO: confirm` (WhatsApp line, hours, coordinates) is a placeholder. The email addresses
   (tushar@ — the lead inbox — jigar@, devan@ and accounts@cohuman.in; devan@ forwards to
   devan@officeideas.in at the mail server), founders, office contacts and `url` are
-  confirmed; `url` resolves to `https://cohuman.in`
+  confirmed; `url` resolves to `https://www.cohuman.in` (the bare domain 308s to www)
   and is no longer the old `cohuman.example.com`, which used to poison every
   canonical, `og:url` and sitemap entry.
 - **`src/components/common/image-placeholder.tsx`** — every product/project/hero

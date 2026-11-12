@@ -14,14 +14,16 @@
  */
 function resolveSiteUrl(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (!raw) return "https://cohuman.in";
+  // www is the primary host: Vercel 308-redirects the bare domain to it, so canonicals,
+  // og:url and the sitemap must name www or every one of them points at a redirect.
+  if (!raw) return "https://www.cohuman.in";
 
   const withScheme = /^https?:\/\//.test(raw) ? raw : `https://${raw}`;
   try {
     return new URL(withScheme).origin;
   } catch {
     throw new Error(
-      `NEXT_PUBLIC_SITE_URL is not a valid URL: ${raw}. Use an origin like https://cohuman.in.`,
+      `NEXT_PUBLIC_SITE_URL is not a valid URL: ${raw}. Use an origin like https://www.cohuman.in.`,
     );
   }
 }
