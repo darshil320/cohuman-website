@@ -1,0 +1,91 @@
+/*
+  Shared skeleton for the three Cohuman moodboards.
+
+  Each board carries its own palette, type and components inline — the directions are
+  meant to look nothing alike. This file only fixes the canvas width and the browser
+  chrome around the mocks, so the three still read as one presentation when they sit
+  side by side.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.board {
+  width: 1600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrap {
+  padding: 0 80px;
+}
+
+/* Product renders are shot on white; multiply drops the white into whatever surface
+   the image sits on without keying out the white frame legs. */
+.blend {
+  mix-blend-mode: multiply;
+}
+
+.mock {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12), 0 40px 90px -40px rgba(0, 0, 0, 0.45);
+}
+
+.mock-bar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  background: #e8e8e6;
+}
+
+.mock-bar i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cdcdc9;
+}
+
+.mock-bar .url {
+  margin-left: 18px;
+  font: 12px/1 ui-sans-serif, system-ui, sans-serif;
+  color: #77787a;
+  background: #fff;
+  padding: 5px 14px;
+  border-radius: 6px;
+  width: 420px;
+}
+
+.mock-body {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Feather a render's edges so its soft floor shadow never ends in a hard line where
+   the photo's rectangle meets the surface behind it. */
+.feather {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-composite: intersect;
+}

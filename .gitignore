@@ -50,3 +50,10 @@ next-env.d.ts
 # App Router icon conventions live in src/app/, not public/, so the blanket *.png rule
 # above would drop them — a missing apple-icon costs a home-screen icon silently.
 !src/app/**/*.png
+
+# bun lockfile — the project installs with npm (package-lock.json); a stray bun.lock
+# could switch the package manager Vercel uses.
+bun.lock
+
+# moodboard renders — regenerated from the HTML boards, too large for the repo
+moodboards/export/

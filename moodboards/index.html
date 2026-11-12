@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1600" />
+<title>Cohuman — Website moodboards · Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* Deliberately neutral: the overview must not lean toward any one direction. */
+  :root { --bg: #f4f4f2; --ink: #141414; --mute: #6b6b68; --line: #d6d6d2; --g: #5cb846; }
+  body { background: var(--bg); color: var(--ink); font-family: "Inter", sans-serif; }
+  .lab { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); }
+  h1 { font-size: 96px; font-weight: 600; letter-spacing: -0.045em; line-height: 0.95; }
+  h2 { font-size: 48px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
+  .sec { padding: 110px 80px 0; }
+  .head { display: grid; grid-template-columns: 1fr 520px; align-items: end; padding-bottom: 26px; border-bottom: 1px solid var(--ink); margin-bottom: 40px; }
+  .head p { font-size: 16px; line-height: 1.6; color: #3c3c3a; }
+
+  .cover { padding: 50px 80px 80px; border-bottom: 1px solid var(--line); }
+  .cover .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 120px; }
+  .cover p { font-size: 22px; line-height: 1.5; color: #3c3c3a; max-width: 760px; margin-top: 34px; }
+
+  .ref { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .ref figure img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border: 1px solid var(--line); }
+  .ref figcaption { font-size: 13.5px; line-height: 1.5; margin-top: 12px; color: #3c3c3a; }
+  .ref figcaption b { display: block; color: var(--ink); margin-bottom: 2px; }
+  .kl { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 34px; }
+  .kl > div { background: #fff; padding: 30px 32px; border: 1px solid var(--line); }
+  .kl h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 14px; display: flex; gap: 10px; align-items: center; }
+  .kl li { list-style: none; font-size: 15px; line-height: 1.5; padding: 10px 0; border-top: 1px solid var(--line); }
+
+  .const { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .const div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 22px; font-size: 14.5px; line-height: 1.5; background: #fff; }
+  .const b { display: block; margin-bottom: 6px; font-size: 15px; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .card { background: #fff; border: 1px solid var(--line); }
+  .card img { width: 100%; aspect-ratio: 1600 / 1000; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .card .in { padding: 26px 28px 30px; }
+  .card h3 { font-size: 34px; font-weight: 600; letter-spacing: -0.035em; margin: 8px 0 10px; }
+  .card p { font-size: 15px; line-height: 1.55; color: #3c3c3a; }
+  .chips { display: flex; gap: 6px; margin: 18px 0; }
+  .chips i { height: 26px; flex: 1; border: 1px solid rgba(0, 0, 0, 0.08); }
+  .card dl { display: grid; grid-template-columns: 96px 1fr; gap: 10px 14px; font-size: 14px; line-height: 1.45; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .card dt { color: var(--mute); }
+  .card .open { display: inline-block; margin-top: 22px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--ink); padding-bottom: 3px; color: var(--ink); text-decoration: none; }
+
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); font-size: 14.5px; line-height: 1.5; }
+  th, td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); font-weight: 600; }
+  td:first-child { color: var(--mute); width: 190px; }
+  tr:last-child td { border-bottom: 0; }
+
+  .next { margin: 110px 80px 0; background: var(--ink); color: #f4f4f2; padding: 56px 60px; display: grid; grid-template-columns: 1fr 560px; gap: 60px; align-items: center; }
+  .next p { font-size: 17px; line-height: 1.6; color: #c9c9c5; }
+  .next li { list-style: none; font-size: 16px; line-height: 1.5; padding: 12px 0; border-top: 1px solid #333; }
+  .foot { padding: 40px 80px 50px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="board">
+
+  <section class="cover">
+    <div class="row"><img src="assets/logo-black.png" alt="Cohuman" style="width:240px" /><span class="lab">Website moodboards — Oct 2026 — for review</span></div>
+    <div class="lab" style="margin-bottom:18px">Three directions</div>
+    <h1>One logo. One product page.<br/>Three ways to stand.</h1>
+    <p>Three moodboards for the new Cohuman website, built from the new logo and its two colours. Each one keeps the product-page structure you liked on officemate.in and rethinks the homepage. Pick one to take forward — or tell us what you'd borrow from another.</p>
+  </section>
+
+  <!-- ===================== Research ===================== -->
+  <section class="sec">
+    <div class="head"><h2>What we took from officemate.in</h2><p>We went through the homepage, the category pages and several product pages. The product page is the part worth keeping — its order of sections is clear and calm. The look around it is not ours.</p></div>
+    <div class="ref">
+      <figure><img src="assets/img/ref-om-pdp-hero.jpg" alt="Officemate product page, name hero" /><figcaption><b>1 · Name hero</b>Series eyebrow and product name in a lot of white, with a red block anchoring the corner.</figcaption></figure>
+      <figure><img src="assets/img/ref-om-pdp-spec.jpg" alt="Officemate product page, spec block" /><figcaption><b>2 · Spec block + cut-out</b>A solid colour block carrying the spec rows, the product cut-out on white beside it.</figcaption></figure>
+      <figure><img src="assets/img/ref-om-pdp-gallery.jpg" alt="Officemate product page, gallery" /><figcaption><b>3 · Variant gallery → Prev / All / Next</b>One gallery per variant, colour label and dots, then a three-cell strip to move between products.</figcaption></figure>
+      <figure><img src="assets/img/ref-om-home.jpg" alt="Officemate homepage hero" /><figcaption><b>Homepage</b>Full-bleed interior with a thin serif tagline. Pleasant, but it looks like most furniture sites.</figcaption></figure>
+    </div>
+    <div class="kl">
+      <div><h3><span style="width:10px;height:10px;border-radius:50%;background:var(--g)"></span>Keep</h3><ul>
+        <li>The product-page order: name hero → colour block with specs + cut-out → per-variant gallery → prev / all / next → enquiry.</li>
+        <li>Products as studio cut-outs, never cropped, with plenty of space around them.</li>
+        <li>One brand colour used as a big solid block, not sprinkled around.</li>
+        <li>An "Enquire" action that is always in reach.</li>
+      </ul></div>
+      <div><h3><span style="width:10px;height:10px;border-radius:50%;background:var(--ink)"></span>Leave behind</h3><ul>
+        <li>Thin, light serif type. It reads "elegant"; the brief is strong and futuristic.</li>
+        <li>Red, and the stock-interior hero with a generic tagline.</li>
+        <li>The scroll-zoom collage and the client-logo wall — busy, and not what a new brand should lead with.</li>
+        <li>Product pages with no sizes or configuration: ours quote by configuration × length × depth.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ===================== Constants ===================== -->
+  <section class="sec">
+    <div class="head"><h2>The same in all three</h2><p>These don't change whichever direction is chosen — so the decision is purely about look, feel and homepage concept.</p></div>
+    <div class="const">
+      <div><b>The logo</b>Black wordmark, two green dots and a green bar — used as-is. Each direction only changes what it sits on.</div>
+      <div><b>The two colours</b>Logo green #5CB846 and black. No new brand colour is introduced, only neutrals.</div>
+      <div><b>Product page structure</b>Officemate's order, section for section, plus our size and finish selectors.</div>
+      <div><b>Lead generation</b>"Get a quote" is the one action on every page. No cart, no prices shown.</div>
+      <div><b>Real products</b>STRETCH and STRETCHS renders throughout — nothing invented.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Directions ===================== -->
+  <section class="sec">
+    <div class="head"><h2>The three directions</h2><p>Each moodboard covers the logo in context, palette, type, imagery, interface parts, a homepage concept and the product page.</p></div>
+    <div class="cards">
+      <div class="card">
+        <img src="assets/thumb-01-signal.jpg" alt="Signal moodboard cover" />
+        <div class="in">
+          <span class="lab">01 — Precision white</span>
+          <h3>Signal</h3>
+          <p>A spec sheet you can walk into. White, ink and drawing marks; every product carries its real dimensions. Green appears only as a signal light.</p>
+          <div class="chips"><i style="background:#fff;flex:3"></i><i style="background:#f1f2f0;flex:2"></i><i style="background:#111312;flex:2"></i><i style="background:#7d837f"></i><i style="background:#5cb846;flex:.5"></i></div>
+          <dl><dt>Feels like</dt><dd>Measured, technical, quiet</dd><dt>Type</dt><dd>Archivo Expanded · Martian Mono</dd><dt>Homepage</dt><dd>A product index — one measured hero, every system as a row</dd><dt>Best if</dt><dd>You want to win on credibility with architects, designers and procurement teams.</dd><dt>Watch-out</dt><dd>Needs discipline; can feel cold if the photography is weak.</dd></dl>
+          <a class="open" href="01-signal.html">Open moodboard 01 →</a>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/thumb-02-nocturne.jpg" alt="Nocturne moodboard cover" />
+        <div class="in">
+          <span class="lab">02 — Dark studio</span>
+          <h3>Nocturne</h3>
+          <p>The showroom with the lights down. Dark warm-neutral page, each product on its own lit plate, green as the light that says "on".</p>
+          <div class="chips"><i style="background:#0c0d0c;flex:3"></i><i style="background:#151716;flex:2"></i><i style="background:#e9ebe7;flex:2"></i><i style="background:#8e948f"></i><i style="background:#5cb846;flex:.6"></i></div>
+          <dl><dt>Feels like</dt><dd>Cinematic, premium, high-tech</dd><dt>Type</dt><dd>Funnel Display · Funnel Sans</dd><dt>Homepage</dt><dd>A dark showroom — one big lit plate, systems on a rail beneath</dd><dt>Best if</dt><dd>You want a premium, car-configurator presence and to sell the showroom visit.</dd><dt>Watch-out</dt><dd>Dark sites demand excellent photography; less "daylight office" warmth.</dd></dl>
+          <a class="open" href="02-nocturne.html">Open moodboard 02 →</a>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/thumb-03-field.jpg" alt="Field moodboard cover" />
+        <div class="in">
+          <span class="lab">03 — Green-forward</span>
+          <h3>Field</h3>
+          <p>Two people. One surface. The logo's story at poster scale — big planes of green, wide rounded type, products held in the O's stadium shape.</p>
+          <div class="chips"><i style="background:#eff0eb;flex:2.5"></i><i style="background:#5cb846;flex:1.6"></i><i style="background:#0b0b0b;flex:1.4"></i><i style="background:#dcedd3;flex:.5"></i><i style="background:#1f3d17;flex:.4"></i></div>
+          <dl><dt>Feels like</dt><dd>Bold, human, graphic</dd><dt>Type</dt><dd>Unbounded · Onest</dd><dt>Homepage</dt><dd>A poster — one green plane, one sentence, a band of system names</dd><dt>Best if</dt><dd>You want to be instantly recognisable and own the green outright.</dd><dt>Watch-out</dt><dd>The loudest of the three; lands fully only with commissioned people photography.</dd></dl>
+          <a class="open" href="03-field.html">Open moodboard 03 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Comparison ===================== -->
+  <section class="sec">
+    <div class="head"><h2>Side by side</h2><p>The same decisions, answered three ways.</p></div>
+    <table>
+      <tr><th></th><th>01 Signal</th><th>02 Nocturne</th><th>03 Field</th></tr>
+      <tr><td>Page canvas</td><td>Pure white with a hairline grid</td><td>Carbon (warm near-black)</td><td>Chalk, with large green planes</td></tr>
+      <tr><td>How much green</td><td>~1% — status only</td><td>~2% — light, glow, one spec block</td><td>~25% — the ground itself</td></tr>
+      <tr><td>Shape language</td><td>Square corners, 1px rules, dimension lines</td><td>Soft 28px plates, pill controls</td><td>Full stadiums (the O) and 32px blocks</td></tr>
+      <tr><td>Logo device used</td><td>Dots = status · bar = progress</td><td>Dots = LEDs · bar = light line</td><td>Dots = pairs · bar = black band · O = frame</td></tr>
+      <tr><td>Product page spec block</td><td>Ink (black)</td><td>Signal green</td><td>Field green, chalk page</td></tr>
+      <tr><td>Motion</td><td>Lines draw in like a plotter</td><td>Plates light up, slow light sweeps</td><td>Colour panels slide like doors</td></tr>
+      <tr><td>Photography needed</td><td>Studio cut-outs (have), high-key interiors</td><td>Studio cut-outs (have), evening-lit interiors</td><td>Studio cut-outs (have), new shoot of people at desks</td></tr>
+      <tr><td>Closest to officemate PDP</td><td>Same structure, cooler and more technical</td><td>Same structure, dark</td><td>Most literal — big colour block on a light page</td></tr>
+    </table>
+  </section>
+
+  <section class="next">
+    <div><div class="lab" style="color:#8a8a86">Next step</div><h2 style="margin-top:16px">Choose a direction</h2><p style="margin-top:18px">Once one is picked we take it to high fidelity: the full homepage and one product page at desktop and mobile, built on the chosen palette, type and parts.</p></div>
+    <ul>
+      <li>1 — Which direction feels most like Cohuman?</li>
+      <li>2 — Anything from the other two you'd want to borrow?</li>
+      <li>3 — Is there budget for a people photo shoot? (Field depends on it.)</li>
+    </ul>
+  </section>
+
+  <div class="foot lab"><span>Cohuman — Website moodboards</span><span>Overview</span></div>
+</div>
+</body>
+</html>

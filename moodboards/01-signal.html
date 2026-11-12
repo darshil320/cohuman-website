@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1600" />
+<title>Cohuman — Moodboard 01 · SIGNAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --paper: #ffffff;
+    --fog: #f1f2f0;
+    --ink: #111312;
+    --steel: #7d837f;
+    --hair: #d9dcd8;
+    --signal: #5cb846;
+  }
+
+  body { background: var(--paper); color: var(--ink); font-family: "Archivo", sans-serif; }
+
+  .x { font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 600; text-transform: uppercase; letter-spacing: -0.02em; line-height: 0.9; }
+  .m { font-family: "Martian Mono", monospace; font-stretch: 87.5%; font-size: 11px; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1.5; }
+  .muted { color: var(--steel); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+  .dots { display: inline-flex; gap: 4px; }
+
+  /* Hairline 12-col grid, the page's only texture. */
+  .gridbg {
+    background-image:
+      linear-gradient(to right, var(--hair) 1px, transparent 1px);
+    background-size: calc(1440px / 12) 100%;
+    background-position: 80px 0;
+  }
+
+  .cross { position: absolute; width: 17px; height: 17px; }
+  .cross::before, .cross::after { content: ""; position: absolute; background: var(--ink); }
+  .cross::before { left: 8px; top: 0; width: 1px; height: 17px; }
+  .cross::after { top: 8px; left: 0; height: 1px; width: 17px; }
+
+  /* Dimension lines — every product shot carries one. */
+  .dim { position: absolute; display: flex; align-items: center; justify-content: center; }
+  .dim.h { height: 1px; background: var(--ink); }
+  .dim.h::before, .dim.h::after { content: ""; position: absolute; top: -5px; width: 1px; height: 11px; background: var(--ink); }
+  .dim.h::before { left: 0; } .dim.h::after { right: 0; }
+  .dim.v { width: 1px; background: var(--ink); }
+  .dim.v::before, .dim.v::after { content: ""; position: absolute; left: -5px; height: 1px; width: 11px; background: var(--ink); }
+  .dim.v::before { top: 0; } .dim.v::after { bottom: 0; }
+  .dim span { background: var(--paper); padding: 2px 8px; font-family: "Martian Mono", monospace; font-stretch: 87.5%; font-size: 10px; }
+  .dim.v span { transform: rotate(-90deg); white-space: nowrap; }
+
+  /* ---------- Cover ---------- */
+  .cover { position: relative; height: 1000px; border-bottom: 1px solid var(--ink); }
+  .cover .top { position: absolute; top: 40px; left: 80px; right: 80px; display: flex; justify-content: space-between; }
+  .cover .title { position: absolute; left: 80px; top: 300px; font-size: 250px; }
+  .cover .sub { position: absolute; left: 86px; top: 196px; display: flex; gap: 40px; align-items: center; }
+  .cover .pos { position: absolute; left: 80px; top: 600px; width: 520px; font-size: 22px; line-height: 1.38; letter-spacing: -0.005em; }
+  .cover .kw { position: absolute; left: 80px; bottom: 60px; display: flex; gap: 0; }
+  .cover .kw div { width: 180px; border-top: 1px solid var(--ink); padding-top: 12px; }
+  .cover .hero-img { position: absolute; right: 70px; top: 470px; width: 760px; }
+  .cover .logo { position: absolute; right: 80px; top: 40px; }
+
+  /* ---------- Sections ---------- */
+  .sec { padding: 120px 80px 0; position: relative; }
+  .sec-h { display: grid; grid-template-columns: 240px 1fr 480px; align-items: end; padding-bottom: 28px; border-bottom: 1px solid var(--ink); margin-bottom: 48px; }
+  .sec-h h2 { font-size: 56px; }
+  .sec-h p { font-size: 15px; line-height: 1.55; color: #3d423f; }
+
+  /* Logo */
+  .logos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hair); border: 1px solid var(--hair); }
+  .lt { height: 340px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .lt img { width: 330px; }
+  .lt .m { position: absolute; left: 20px; bottom: 18px; }
+  .device { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 1px; gap: 1px; background: var(--hair); border: 1px solid var(--hair); border-top: 0; }
+  .device > div { background: var(--paper); padding: 34px 30px 30px; min-height: 230px; position: relative; }
+  .device h4 { font-family: "Archivo"; font-stretch: 125%; font-weight: 600; font-size: 20px; text-transform: uppercase; margin: 26px 0 10px; letter-spacing: -0.01em; }
+  .device p { font-size: 14px; line-height: 1.55; color: #3d423f; max-width: 360px; }
+
+  /* Palette */
+  .pal { display: grid; grid-template-columns: 4fr 2fr 1.6fr 1fr 1fr 1fr; gap: 1px; height: 420px; }
+  .sw { position: relative; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+  .sw b { font-family: "Archivo"; font-stretch: 125%; font-weight: 600; font-size: 22px; text-transform: uppercase; letter-spacing: -0.01em; }
+  .ratio { display: flex; height: 14px; margin-top: 24px; }
+  .ratio span { height: 100%; }
+
+  /* Type */
+  .type { display: grid; grid-template-columns: 960px 1fr; gap: 60px; }
+  .spec-big { font-size: 106px; }
+  .scale { border-top: 1px solid var(--ink); }
+  .scale div { display: grid; grid-template-columns: 110px 1fr 120px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--hair); }
+
+  /* Imagery */
+  .imgs { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 330px 330px; gap: 24px; }
+  .imgs figure { position: relative; overflow: hidden; background: var(--paper); border: 1px solid var(--hair); }
+  .imgs figure img { width: 100%; height: 100%; object-fit: cover; }
+  .imgs figure.cut img { object-fit: contain; padding: 30px; }
+  .imgs figcaption { position: absolute; left: 14px; bottom: 12px; background: var(--paper); padding: 4px 8px; }
+  .imgs .big { grid-row: span 2; }
+  .hk img { filter: grayscale(0.55) contrast(1.06) brightness(1.06); }
+
+  /* Kit */
+  .kit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hair); border: 1px solid var(--hair); }
+  .kit > div { background: var(--paper); padding: 30px; min-height: 250px; }
+  .kit .m.lab { color: var(--steel); margin-bottom: 26px; display: block; }
+  .btn { display: inline-flex; align-items: center; gap: 14px; height: 52px; padding: 0 22px; font-family: "Martian Mono"; font-stretch: 87.5%; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .btn.pri { background: var(--ink); color: var(--paper); }
+  .btn.sec { border: 1px solid var(--ink); }
+  .btn.txt { padding: 0; height: auto; border-bottom: 1px solid var(--ink); padding-bottom: 4px; }
+  .chips { display: flex; gap: 14px; }
+  .chip { width: 76px; }
+  .chip i { display: block; height: 76px; border: 1px solid var(--hair); position: relative; }
+  .chip.on i { outline: 1px solid var(--ink); outline-offset: 3px; }
+  .chip.on i::after { content: ""; position: absolute; right: 6px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+  .chip .m { font-size: 9.5px; margin-top: 10px; display: block; }
+  .seg { display: inline-flex; border: 1px solid var(--ink); }
+  .seg span { padding: 12px 18px; border-right: 1px solid var(--ink); }
+  .seg span:last-child { border-right: 0; }
+  .seg span.on { background: var(--ink); color: var(--paper); }
+  .rows div { display: grid; grid-template-columns: 130px 1fr; padding: 11px 0; border-bottom: 1px solid var(--hair); }
+  .field { border-bottom: 1px solid var(--ink); padding: 8px 0 12px; font-size: 18px; margin-top: 8px; }
+
+  /* Mocks */
+  .notes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+  .notes div { border-top: 1px solid var(--ink); padding-top: 14px; font-size: 14px; line-height: 1.5; color: #3d423f; }
+  .notes b { display: block; color: var(--ink); margin-bottom: 4px; }
+  .pin { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; background: var(--signal); color: var(--ink); font-family: "Martian Mono"; font-size: 10px; font-weight: 600; border-radius: 50%; }
+  .pin.abs { position: absolute; z-index: 5; }
+
+  .nav { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; border-bottom: 1px solid var(--hair); background: var(--paper); position: relative; z-index: 2; }
+  .nav nav { display: flex; gap: 34px; }
+  .nav img { width: 150px; }
+
+  /* Rules */
+  .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; }
+  .rules h4 { font-family: "Archivo"; font-stretch: 125%; font-weight: 600; text-transform: uppercase; font-size: 22px; margin: 18px 0 18px; letter-spacing: -0.01em; }
+  .rules li { list-style: none; font-size: 15px; line-height: 1.5; padding: 12px 0; border-bottom: 1px solid var(--hair); display: grid; grid-template-columns: 34px 1fr; color: #2c302e; }
+  .end { margin-top: 120px; border-top: 1px solid var(--ink); padding: 26px 80px 40px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ===================== COVER ===================== -->
+  <section class="cover gridbg">
+    <div class="top m"><span>Cohuman — Website moodboard</span><span style="margin-right:300px">Direction 01 / 03</span></div>
+    <img class="logo" src="assets/logo-black.png" alt="Cohuman" style="width:220px" />
+    <div class="sub m"><span class="dots"><i class="dot"></i><i class="dot"></i></span><span>Precision white</span><span class="muted">Oct 2026 — for review</span></div>
+    <h1 class="x title">Signal</h1>
+    <p class="pos">A spec sheet you can walk into. Cohuman as an engineering brand — everything measured, nothing decorated. White space is the material; the green is a signal, never decoration.</p>
+    <div class="kw m">
+      <div>01 Measured</div><div>02 Quiet</div><div>03 Technical</div><div>04 Exact</div><div>05 Honest</div>
+    </div>
+    <img class="feather hero-img blend" src="assets/img/pros-bench2.jpg" alt="" />
+    <div class="dim h" style="left:900px;width:600px;top:968px"><span>2 × 1200 — 2400</span></div>
+    <div class="dim v" style="left:1556px;top:520px;height:390px"><span>750</span></div>
+    <span class="cross" style="left:72px;top:150px"></span>
+    <span class="cross" style="left:1512px;top:150px"></span>
+    <span class="m muted" style="position:absolute;right:100px;top:926px">Fig. 01 — STRETCHS bench, two-seat</span>
+  </section>
+
+  <!-- ===================== 01 LOGO ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">01 / Logo in context</span><h2 class="x">The mark</h2><p>The wordmark already holds the brand idea: two green heads above the M, one green bar inside the O. Two people, one shared surface. Signal treats both as indicators — they light up, they never fill.</p></div>
+    <div class="logos">
+      <div class="lt" style="background:var(--paper)"><img src="assets/logo-black.png" alt="" /><span class="m muted">Primary — on paper</span></div>
+      <div class="lt" style="background:var(--ink)"><img src="assets/logo-white.png" alt="" /><span class="m" style="color:#9aa09c">Reversed — on ink</span></div>
+      <div class="lt" style="background:var(--fog);flex-direction:column;gap:22px">
+        <img src="assets/logo-black.png" alt="" style="width:260px" />
+        <span class="m" style="position:static;letter-spacing:.18em">Office systems · Surat</span>
+        <span class="m muted">Lockup — with descriptor</span>
+      </div>
+    </div>
+    <div class="device">
+      <div><span class="dots"><i class="dot" style="width:22px;height:22px"></i><i class="dot" style="width:22px;height:22px"></i></span><h4>Two dots = status</h4><p>Used only as a live indicator: selected finish, the active size, a form that sent. If it is green, something is switched on.</p></div>
+      <div><i style="display:block;width:150px;height:22px;background:var(--signal)"></i><h4>One bar = progress</h4><p>The bar from the O becomes the active underline and the configurator's progress rail — the shared surface, literally under the thing you chose.</p></div>
+      <div><span class="m" style="font-size:26px;letter-spacing:0">┼ ⟷ ⟂</span><h4>Drawing marks</h4><p>Registration crosses, dimension lines and figure numbers. Every product image carries its real size — the website reads like a drawing set.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== 02 COLOUR ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">02 / Colour</span><h2 class="x">Palette</h2><p>Near-total white and ink. Green is held back to roughly one percent of any screen — it reads as a signal precisely because there is so little of it.</p></div>
+    <div class="pal" style="background:var(--hair);border:1px solid var(--hair)">
+      <div class="sw" style="background:var(--paper)"><b>Paper</b><div class="m">#FFFFFF<br/><span class="muted">Canvas · 62%</span></div></div>
+      <div class="sw" style="background:var(--fog)"><b>Fog</b><div class="m">#F1F2F0<br/><span class="muted">Panels · 18%</span></div></div>
+      <div class="sw" style="background:var(--ink);color:var(--paper)"><b>Ink</b><div class="m">#111312<br/><span style="color:#9aa09c">Type, spec block · 14%</span></div></div>
+      <div class="sw" style="background:var(--steel);color:var(--paper)"><b>Steel</b><div class="m">#7D837F<br/>Meta · 3%</div></div>
+      <div class="sw" style="background:var(--hair)"><b>Hair</b><div class="m">#D9DCD8<br/>Rules · 2%</div></div>
+      <div class="sw" style="background:var(--signal)"><b>Signal</b><div class="m">#5CB846<br/>State · 1%</div></div>
+    </div>
+    <div class="ratio"><span style="flex:62;background:var(--paper);border:1px solid var(--hair)"></span><span style="flex:18;background:var(--fog)"></span><span style="flex:14;background:var(--ink)"></span><span style="flex:3;background:var(--steel)"></span><span style="flex:2;background:var(--hair)"></span><span style="flex:1;background:var(--signal)"></span></div>
+    <div class="m muted" style="margin-top:10px">Proportion of any given screen</div>
+  </section>
+
+  <!-- ===================== 03 TYPE ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">03 / Typography</span><h2 class="x">Type</h2><p>An extended grotesque that matches the width of the wordmark, a plain grotesque for reading, and a mono for anything you could measure.</p></div>
+    <div class="type">
+      <div>
+        <div class="m muted" style="margin-bottom:22px">Archivo Expanded — SemiBold 600 — display</div>
+        <div class="x spec-big">Engineered<br/>for two.</div>
+        <div style="display:flex;gap:70px;margin-top:56px;align-items:flex-end">
+          <div><div class="x" style="font-size:150px">Aa</div><div class="m muted" style="margin-top:12px">Display — caps only</div></div>
+          <div><div style="font-size:150px;line-height:.9;font-weight:400">Aa</div><div class="m muted" style="margin-top:12px">Archivo — body</div></div>
+          <div><div style="font-family:'Martian Mono';font-stretch:87.5%;font-size:120px;line-height:.9">Aa</div><div class="m muted" style="margin-top:12px">Martian Mono — data</div></div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:19px;line-height:1.55;margin-bottom:34px">A single beam-and-leg chassis that runs from an 800mm desk to a four-metre boardroom table. Pick a configuration, a length and a depth — the quote follows the spec, not the other way round.</p>
+        <div class="scale">
+          <div><span class="m muted">Display</span><span class="x" style="font-size:34px">Single desk</span><span class="m muted">128 / 0.90</span></div>
+          <div><span class="m muted">H2</span><span class="x" style="font-size:24px">Finishes</span><span class="m muted">56 / 0.90</span></div>
+          <div><span class="m muted">Lead</span><span style="font-size:19px">Two chassis. Every table.</span><span class="m muted">19 / 1.55</span></div>
+          <div><span class="m muted">Body</span><span style="font-size:15px">Melamine on E1 board, 25mm.</span><span class="m muted">15 / 1.55</span></div>
+          <div><span class="m muted">Data</span><span class="m">CHSS-ST-SB110 · 1600 × 750</span><span class="m muted">11 / 1.50</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 04 IMAGERY ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">04 / Imagery</span><h2 class="x">Image</h2><p>Studio cut-outs on pure white, three-quarter angle, never cropped. Interiors run high-key and cool, partially desaturated, so the product — not the room styling — is the subject.</p></div>
+    <div class="imgs">
+      <figure class="cut big" style="border-color:var(--hair)">
+        <img class="feather" src="assets/img/pros-lshape.jpg" alt="" style="padding:70px 60px 90px" />
+        <div class="dim h" style="left:90px;right:120px;bottom:52px"><span>1600 + 1200 return</span></div>
+        <span class="cross" style="left:20px;top:20px"></span><span class="cross" style="right:20px;top:20px"></span>
+        <figcaption class="m">Fig. 02 — Cut-out, with dimension</figcaption>
+      </figure>
+      <figure class="hk"><img src="assets/img/int-openplan.jpg" alt="" /><figcaption class="m">High-key interior</figcaption></figure>
+      <figure class="cut"><img class="feather" src="assets/img/vdx-round.jpg" alt="" /><figcaption class="m">Fig. 03 — Meeting</figcaption></figure>
+      <figure class="cut"><img class="feather" src="assets/img/vdx-manager.jpg" alt="" /><figcaption class="m">Fig. 04 — Cabin</figcaption></figure>
+      <figure class="hk"><img src="assets/img/int-exec.jpg" alt="" /><figcaption class="m">Desaturated −55%</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================== 05 COMPONENTS ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">05 / Interface</span><h2 class="x">Parts</h2><p>Square corners, 1px rules, no shadows. Controls look like they belong on an instrument panel.</p></div>
+    <div class="kit">
+      <div>
+        <span class="m lab">Buttons</span>
+        <div style="display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+          <span class="btn pri">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span>
+          <span class="btn sec">Download spec sheet ↓</span>
+          <span class="btn txt">View configurations →</span>
+        </div>
+      </div>
+      <div>
+        <span class="m lab">Finish selector</span>
+        <div class="chips">
+          <div class="chip on"><i style="background:linear-gradient(168deg,#e6decc,#dbd2be 46%,#e9e2d2)"></i><span class="m">Nordic oak<br/><span class="muted">TOP-NOK</span></span></div>
+          <div class="chip"><i style="background:linear-gradient(168deg,#4e4340,#3d3431 48%,#554a46)"></i><span class="m">Espresso<br/><span class="muted">TOP-EWL</span></span></div>
+          <div class="chip"><i style="background:#f3f2ee"></i><span class="m">White frame<br/><span class="muted">FRM-SWH</span></span></div>
+          <div class="chip"><i style="background:#3d4144"></i><span class="m">Graphite<br/><span class="muted">FRM-GRA</span></span></div>
+        </div>
+      </div>
+      <div>
+        <span class="m lab">Size — length / depth (mm)</span>
+        <div class="seg m" style="margin-bottom:14px"><span>1200</span><span>1400</span><span>1500</span><span class="on">1600</span></div><br/>
+        <div class="seg m"><span>600</span><span>700</span><span class="on">750</span><span>900</span></div>
+        <div style="margin-top:22px;height:2px;background:var(--hair);position:relative"><i style="position:absolute;left:0;top:0;height:2px;width:66%;background:var(--signal)"></i></div>
+        <div class="m muted" style="margin-top:8px">Step 2 of 3 — the bar is the progress rail</div>
+      </div>
+      <div style="grid-column:span 2">
+        <span class="m lab">Spec rows</span>
+        <div class="rows m" style="columns:2;column-gap:40px">
+          <div><span class="muted">Model</span><span>Single desk · medium beam</span></div>
+          <div><span class="muted">Code</span><span>CHSS-ST-SB160</span></div>
+          <div><span class="muted">Length</span><span>1200 — 1600</span></div>
+          <div><span class="muted">Depth</span><span>600 — 900</span></div>
+          <div><span class="muted">Top</span><span>Melamine on E1, 25mm</span></div>
+          <div><span class="muted">Frame</span><span>Powder coat, 80–120 micron</span></div>
+        </div>
+      </div>
+      <div>
+        <span class="m lab">Form field</span>
+        <span class="m muted">Company</span><div class="field">Acme Textiles Pvt Ltd</div>
+        <div style="margin-top:26px" class="m"><span class="dots" style="margin-right:10px"><i class="dot"></i><i class="dot"></i></span>Enquiry received — we will call you back</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 06 HOMEPAGE ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">06 / Homepage</span><h2 class="x">Index</h2><p>New structure: the homepage is a product index, not a lifestyle carousel. One measured hero object, then every system as a row you can scan like a parts list.</p></div>
+    <div class="mock">
+      <div class="mock-bar"><i></i><i></i><i></i><span class="url">cohuman.in</span></div>
+      <div class="mock-body" style="background:var(--paper)">
+        <div class="nav"><img src="assets/logo-black.png" alt="" /><nav class="m"><span>Systems</span><span>Seating</span><span>Spaces</span><span>Projects</span><span>About</span></nav><span class="btn pri" style="height:42px">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span></div>
+        <div class="gridbg" style="position:relative;height:760px;background-size:calc(1440px / 12) 100%;background-position:0 0">
+          <div class="m muted" style="position:absolute;left:48px;top:56px">Office systems — Surat, IN</div>
+          <h3 class="x" style="position:absolute;left:44px;top:100px;font-size:80px">Engineered<br/>for two.<br/><span style="color:var(--steel)">Scaled for<br/>the floor.</span></h3>
+          <p style="position:absolute;left:48px;top:500px;width:420px;font-size:17px;line-height:1.55">Configurable desking, cabins and meeting tables — specified to the millimetre and quoted to your floor plan.</p>
+          <div style="position:absolute;left:48px;top:600px;display:flex;gap:16px"><span class="btn pri">Configure a desk <span class="dots"><i class="dot"></i><i class="dot"></i></span></span><span class="btn sec">Book a showroom visit</span></div>
+          <img src="assets/img/vdx-bench4.jpg" class="feather blend" alt="" style="position:absolute;right:50px;top:170px;width:740px" />
+          <div class="dim h" style="right:80px;width:680px;top:540px"><span>4-seat bench — 2 × 2400</span></div>
+          <div class="dim v" style="right:36px;top:190px;height:310px"><span>1200 ↕ screen</span></div>
+          <span class="m muted" style="position:absolute;right:80px;top:580px">Fig. 01 — STRETCH bench</span>
+          <span class="m muted" style="position:absolute;right:48px;bottom:24px">21.1702° N  72.8311° E</span>
+        </div>
+        <div style="border-top:1px solid var(--ink)">
+          <div class="m muted" style="display:grid;grid-template-columns:90px 360px 1fr 260px 60px;padding:14px 48px;border-bottom:1px solid var(--hair)"><span>No.</span><span>System</span><span>Type</span><span>Range</span><span></span></div>
+          <div style="display:grid;grid-template-columns:90px 360px 1fr 260px 60px;align-items:center;padding:0 48px;height:96px;border-bottom:1px solid var(--hair);background:var(--fog);position:relative">
+            <span class="m">01</span><span class="x" style="font-size:40px">Stretchs</span><span style="font-size:16px">Beam desking system</span><span class="m">Single 800 → Boardroom 4000</span><span class="dots"><i class="dot"></i><i class="dot"></i></span>
+            <img src="assets/img/pros-single.jpg" class="feather blend" alt="" style="position:absolute;left:640px;top:4px;height:88px" />
+          </div>
+          <div style="display:grid;grid-template-columns:90px 360px 1fr 260px 60px;align-items:center;padding:0 48px;height:96px;border-bottom:1px solid var(--hair)"><span class="m">02</span><span class="x" style="font-size:40px">Stretch</span><span style="font-size:16px">Adjustable-beam desking</span><span class="m">Desk → Meeting</span><span>→</span></div>
+          <div style="display:grid;grid-template-columns:90px 360px 1fr 260px 60px;align-items:center;padding:0 48px;height:96px;border-bottom:1px solid var(--hair)"><span class="m">03</span><span class="x" style="font-size:40px">Cabins</span><span style="font-size:16px">Manager and director rooms</span><span class="m">Desk + storage + seating</span><span>→</span></div>
+          <div style="display:grid;grid-template-columns:90px 360px 1fr 260px 60px;align-items:center;padding:0 48px;height:96px"><span class="m">04</span><span class="x" style="font-size:40px">Seating</span><span style="font-size:16px">Task, executive, visitor</span><span class="m">Price on request</span><span>→</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 07 PDP ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">07 / Product page</span><h2 class="x">PDP</h2><p>Officemate's structure, kept beat for beat — white name hero, a solid block holding the specs, one gallery per variant, prev / all / next. Their red block becomes ink; the thin serif becomes measured caps.</p></div>
+    <div class="notes">
+      <div><span class="pin">A</span><b style="margin-top:10px">Name hero</b>Series eyebrow + product name, lots of air. Kept.</div>
+      <div><span class="pin">B</span><b style="margin-top:10px">Spec block + cut-out</b>Solid block with spec rows beside the product. Red → ink.</div>
+      <div><span class="pin">C</span><b style="margin-top:10px">Variant gallery</b>One frame per finish, label + pagination. Adds size selector.</div>
+      <div><span class="pin">D</span><b style="margin-top:10px">Prev / All / Next</b>Three-cell strip, then the quote bar. Kept.</div>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><i></i><i></i><i></i><span class="url">cohuman.in/collections/pros/single-desk</span></div>
+      <div class="mock-body" style="background:var(--paper)">
+        <div class="nav"><img src="assets/logo-black.png" alt="" /><nav class="m"><span>Systems</span><span>Seating</span><span>Spaces</span><span>Projects</span><span>About</span></nav><span class="btn pri" style="height:42px">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span></div>
+        <!-- A -->
+        <div style="position:relative;height:420px">
+          <span class="pin abs" style="left:20px;top:20px">A</span>
+          <div class="m muted" style="position:absolute;left:360px;top:110px">STRETCHS series — Beam desking — Config 02 / 14</div>
+          <h3 class="x" style="position:absolute;left:356px;top:150px;font-size:120px">Single desk</h3>
+          <div class="dim h" style="left:360px;width:820px;top:290px"><span>1200 — 1600 × 600 — 900</span></div>
+          <div style="position:absolute;left:0;bottom:0;width:300px;height:110px;background:var(--ink)"></div>
+        </div>
+        <!-- B -->
+        <div style="position:relative;height:520px;display:grid;grid-template-columns:440px 1fr">
+          <span class="pin abs" style="left:20px;top:20px;z-index:6">B</span>
+          <div style="background:var(--ink);color:var(--paper);padding:70px 48px" class="m">
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-top:1px solid #34383a;border-bottom:1px solid #34383a"><span style="color:#8d938f">Model</span><span>Single desk · SB160</span></div>
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-bottom:1px solid #34383a"><span style="color:#8d938f">Code</span><span>CHSS-ST-SB160</span></div>
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-bottom:1px solid #34383a"><span style="color:#8d938f">Length</span><span>1600 <i class="dot" style="margin-left:6px"></i></span></div>
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-bottom:1px solid #34383a"><span style="color:#8d938f">Depth</span><span>750 <i class="dot" style="margin-left:6px"></i></span></div>
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-bottom:1px solid #34383a"><span style="color:#8d938f">Seats</span><span>1</span></div>
+            <div style="display:grid;grid-template-columns:110px 1fr;padding:13px 0;border-bottom:1px solid #34383a"><span style="color:#8d938f">Finish</span><span>Nordic oak / white</span></div>
+            <div style="margin-top:34px;display:flex;gap:10px;align-items:center"><span class="btn" style="background:var(--signal);color:var(--ink);height:44px">Get a quote</span><span class="btn" style="border:1px solid #4a4f4c;height:44px">Spec PDF ↓</span></div>
+          </div>
+          <div style="position:relative">
+            <img class="feather" src="assets/img/pros-single.jpg" alt="" style="position:absolute;left:110px;top:40px;width:760px" />
+            <div class="dim h" style="left:170px;width:600px;top:478px"><span>1600</span></div>
+            <div class="dim v" style="left:920px;top:110px;height:300px"><span>750 H</span></div>
+          </div>
+        </div>
+        <!-- C -->
+        <div style="position:relative;border-top:1px solid var(--hair);padding:60px 0 50px;text-align:center">
+          <span class="pin abs" style="left:20px;top:20px">C</span>
+          <div class="m muted">Gallery — configuration 07 / 14</div>
+          <div class="x" style="font-size:40px;margin-top:10px">L-shape</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:80px;margin-top:20px">
+            <span class="btn sec" style="width:52px;padding:0;justify-content:center">←</span>
+            <div><img class="feather" src="assets/img/pros-lshape.jpg" alt="" style="width:620px" /><div class="m" style="margin-top:6px">Espresso walnut <span class="muted">/ white frame</span></div></div>
+            <span class="btn sec" style="width:52px;padding:0;justify-content:center">→</span>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:18px"><i style="width:28px;height:3px;background:var(--signal)"></i><i style="width:28px;height:3px;background:var(--hair)"></i><i style="width:28px;height:3px;background:var(--hair)"></i><i style="width:28px;height:3px;background:var(--hair)"></i></div>
+        </div>
+        <!-- D -->
+        <div style="position:relative;display:grid;grid-template-columns:1fr 300px 1fr;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)">
+          <span class="pin abs" style="left:20px;top:-11px">D</span>
+          <div style="padding:30px 48px;display:flex;justify-content:space-between;align-items:center;border-right:1px solid var(--hair)"><span class="m muted">← Prev</span><span class="x" style="font-size:24px">Single 800</span></div>
+          <div style="display:flex;align-items:center;justify-content:center;border-right:1px solid var(--hair)" class="m">All STRETCHS configurations</div>
+          <div style="padding:30px 48px;display:flex;justify-content:space-between;align-items:center"><span class="x" style="font-size:24px">Return desk</span><span class="m muted">Next →</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:var(--fog)">
+          <span class="m">Single desk · 1600 × 750 · Nordic oak / white frame</span>
+          <span class="btn pri" style="height:46px">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 08 RULES ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="m">08 / Motion &amp; rules</span><h2 class="x">Rules</h2><p>How the direction behaves once it moves, and the lines it does not cross.</p></div>
+    <div class="rules">
+      <div><span class="m muted">Motion</span><h4>Plotter, not fade</h4><ul>
+        <li><span class="m">01</span>Lines draw in, 400ms, linear — rules, dimensions, the grid.</li>
+        <li><span class="m">02</span>Numbers tick to their value when a size changes.</li>
+        <li><span class="m">03</span>Images wipe left → right behind a hairline, never fade.</li>
+        <li><span class="m">04</span>Cursor over a product becomes a crosshair with live coordinates.</li>
+      </ul></div>
+      <div><span class="m muted">Rules</span><h4>Hold the line</h4><ul>
+        <li><span class="m">01</span>One green thing per screen. If two things are green, one is wrong.</li>
+        <li><span class="m">02</span>No rounded corners anywhere except the two dots.</li>
+        <li><span class="m">03</span>Every product image carries a real dimension.</li>
+        <li><span class="m">04</span>Data in mono, claims in caps, reading in Archivo.</li>
+      </ul></div>
+      <div><span class="m muted">Not this</span><h4>Off-limits</h4><ul>
+        <li><span class="m">×</span>Gradients, glass, drop shadows, glows.</li>
+        <li><span class="m">×</span>Thin serifs and "elegant" luxury cues.</li>
+        <li><span class="m">×</span>Stock lifestyle people holding coffee.</li>
+        <li><span class="m">×</span>Bento grids of rounded cards.</li>
+      </ul></div>
+    </div>
+    <div class="m muted" style="margin-top:50px">Reference energy — Braun / Dieter Rams · Vitra spec sheets · Teenage Engineering · architectural drawing sets</div>
+  </section>
+
+  <div class="end m"><span>Cohuman — Moodboard 01 · Signal</span><span class="dots"><i class="dot"></i><i class="dot"></i></span><span>Direction 01 / 03</span></div>
+</div>
+</body>
+</html>

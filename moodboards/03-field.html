@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1600" />
+<title>Cohuman — Moodboard 03 · FIELD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Onest:wght@100..900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --chalk: #eff0eb;
+    --field: #5cb846;
+    --black: #0b0b0b;
+    --moss: #1f3d17;
+    --mist: #dcedd3;
+    --concrete: #c9ccc4;
+    --white: #ffffff;
+  }
+
+  body { background: var(--chalk); color: var(--black); font-family: "Onest", sans-serif; }
+
+  .u { font-family: "Unbounded", sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.9; }
+  .t { font-family: "Onest", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dim { color: #5c605a; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--field); }
+  .dots { display: inline-flex; gap: 5px; vertical-align: middle; }
+  .dot.k { background: var(--black); }
+
+  /* The O, as a container: products sit in full stadiums. */
+  .stad { border-radius: 999px; overflow: hidden; position: relative; background: var(--white); }
+  .stad img.p { position: absolute; inset: 0; margin: auto; mix-blend-mode: multiply; }
+
+  .btn { display: inline-flex; align-items: center; gap: 14px; height: 56px; padding: 0 28px; border-radius: 999px; font-family: "Onest"; font-weight: 600; font-size: 16px; }
+  .btn.k { background: var(--black); color: var(--chalk); }
+  .btn.g { background: var(--field); color: var(--black); }
+  .btn.o { box-shadow: inset 0 0 0 2px var(--black); }
+
+  /* ---------- Cover ---------- */
+  .cover { position: relative; height: 1060px; background: linear-gradient(to right, var(--field) 0 62%, var(--chalk) 62% 100%); }
+  .cover .top { position: absolute; top: 44px; left: 80px; right: 80px; display: flex; justify-content: space-between; align-items: center; }
+  .cover h1 { position: absolute; left: 66px; top: 150px; font-size: 330px; }
+  .cover .pos { position: absolute; left: 80px; top: 560px; width: 520px; font-size: 22px; line-height: 1.42; font-weight: 500; }
+  .cover .kw { position: absolute; left: 80px; bottom: 80px; display: flex; gap: 10px; }
+  .cover .kw span { padding: 12px 22px; border-radius: 999px; background: var(--black); color: var(--chalk); font-weight: 600; font-size: 15px; }
+  .cover .stad { position: absolute; right: 80px; top: 470px; width: 860px; height: 440px; }
+
+  /* ---------- Sections ---------- */
+  .sec { padding: 140px 80px 0; position: relative; }
+  .sec-h { display: grid; grid-template-columns: 240px 1fr 460px; align-items: end; margin-bottom: 52px; }
+  .sec-h h2 { font-size: 92px; }
+  .sec-h p { font-size: 16px; line-height: 1.55; color: #2f322e; }
+  .sec-h .t { padding-bottom: 16px; display: flex; gap: 10px; align-items: center; }
+
+  .logos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .lt { height: 330px; border-radius: 32px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .lt img { width: 320px; }
+  .lt .t { position: absolute; left: 28px; bottom: 24px; }
+  .device { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  .device > div { background: var(--white); border-radius: 32px; padding: 34px; min-height: 260px; }
+  .device h4 { font-family: "Unbounded"; font-weight: 600; font-size: 26px; letter-spacing: -0.04em; margin: 28px 0 10px; }
+  .device p { font-size: 15px; line-height: 1.55; color: #3a3d39; max-width: 380px; }
+
+  .pal { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; height: 460px; }
+  .sw { border-radius: 999px; padding: 40px 0; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
+  .sw b { font-family: "Unbounded"; font-weight: 600; font-size: 22px; letter-spacing: -0.04em; }
+  .sw small { font-size: 13px; line-height: 1.45; font-weight: 500; }
+
+  .type { display: grid; grid-template-columns: 980px 1fr; gap: 60px; }
+  .scale div { display: grid; grid-template-columns: 90px 1fr 100px; align-items: baseline; padding: 16px 0; border-bottom: 2px solid var(--black); }
+
+  .imgs { display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: 270px 270px; gap: 16px; }
+  .imgs > div { position: relative; overflow: hidden; }
+  .imgs .cap { position: absolute; left: 50%; transform: translateX(-50%); bottom: 22px; white-space: nowrap; background: var(--black); color: var(--chalk); padding: 7px 14px; border-radius: 999px; z-index: 2; }
+  .imgs .ph img { width: 100%; height: 100%; object-fit: cover; }
+
+  .kit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .kit > div { background: var(--white); border-radius: 32px; padding: 32px; min-height: 260px; }
+  .kit .lab { display: block; margin-bottom: 26px; color: #5c605a; }
+  .fchip { display: inline-flex; align-items: center; gap: 12px; padding: 6px 18px 6px 6px; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--concrete); font-weight: 600; font-size: 14px; margin: 0 6px 10px 0; }
+  .fchip i { width: 34px; height: 34px; border-radius: 50%; }
+  .fchip.on { box-shadow: inset 0 0 0 2px var(--black); background: var(--mist); }
+  .tog { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+  .tog span { padding: 12px 20px; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--concrete); font-weight: 600; font-size: 15px; }
+  .tog span.on { background: var(--field); box-shadow: none; }
+  .rows div { display: grid; grid-template-columns: 120px 1fr; padding: 12px 0; border-bottom: 2px solid var(--black); font-size: 16px; font-weight: 500; }
+  .rows div span:first-child { color: #5c605a; font-weight: 400; }
+
+  .notes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+  .notes div { background: var(--white); border-radius: 26px; padding: 22px 24px; font-size: 14px; line-height: 1.5; color: #3a3d39; }
+  .notes b { color: var(--black); display: block; margin: 12px 0 4px; }
+  .pin { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center; background: var(--black); color: var(--field); font-size: 12px; font-weight: 700; }
+  .pin.abs { position: absolute; z-index: 6; }
+
+  .nav { height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 44px; position: relative; z-index: 3; }
+  .nav nav { display: flex; gap: 8px; font-size: 15px; font-weight: 600; }
+  .nav nav span { padding: 10px 16px; border-radius: 999px; }
+  .nav nav span.on { background: var(--black); color: var(--chalk); }
+  .nav img { width: 156px; }
+
+  .marquee { background: var(--black); color: var(--chalk); height: 96px; display: flex; align-items: center; gap: 40px; white-space: nowrap; overflow: hidden; padding-left: 30px; }
+  .marquee span { font-family: "Unbounded"; font-weight: 600; font-size: 44px; letter-spacing: -0.04em; display: inline-flex; align-items: center; gap: 40px; }
+
+  .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .rules > div { border-radius: 32px; padding: 36px; }
+  .rules h4 { font-family: "Unbounded"; font-weight: 600; font-size: 30px; letter-spacing: -0.045em; margin: 16px 0 18px; line-height: 1; }
+  .rules li { list-style: none; font-size: 15.5px; line-height: 1.5; padding: 12px 0; border-top: 2px solid currentColor; font-weight: 500; }
+  .end { margin-top: 140px; background: var(--field); padding: 34px 80px 44px; display: flex; justify-content: space-between; align-items: center; }
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ===================== COVER ===================== -->
+  <section class="cover">
+    <div class="top"><img src="assets/logo-black-whitedots.png" alt="Cohuman" style="width:210px" /><span class="t">Website moodboard — Direction 03 / 03 — Oct 2026</span></div>
+    <div class="t" style="position:absolute;left:84px;top:118px;display:flex;gap:12px;align-items:center"><span class="dots"><i class="dot k"></i><i class="dot k"></i></span>Green-forward</div>
+    <h1 class="u">Field</h1>
+    <p class="pos">Two people. One surface. The logo's own story, told at poster scale — big flat planes of the brand green, wide rounded type that rhymes with the wordmark, and products held in the O's stadium shape. The most ownable of the three; nobody in office furniture looks like this.</p>
+    <div class="kw"><span>Bold</span><span>Human</span><span>Graphic</span><span>Direct</span><span>Ownable</span></div>
+    <div class="stad"><img class="feather p" src="assets/img/vdx-bench4.jpg" alt="" style="width:720px" /></div>
+    <span class="t" style="position:absolute;right:120px;top:930px">STRETCH — Four-seat bench</span>
+  </section>
+
+  <!-- ===================== 01 LOGO ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>01 Logo</span><h2 class="u">The mark</h2><p>Two green heads over the M, one green bar through the O: two people sharing one surface. Field takes the green out of the logo and makes it the ground the whole site stands on.</p></div>
+    <div class="logos">
+      <div class="lt" style="background:var(--white)"><img src="assets/logo-black.png" alt="" /><span class="t dim">Primary — on chalk / white</span></div>
+      <div class="lt" style="background:var(--field)"><img src="assets/logo-black-whitedots.png" alt="" /><span class="t">On field — dots knock out</span></div>
+      <div class="lt" style="background:var(--black)"><img src="assets/logo-white.png" alt="" /><span class="t" style="color:#8a8f88">Reversed — on black</span></div>
+    </div>
+    <div class="device">
+      <div><div class="stad" style="width:200px;height:80px"><img src="assets/img/int-green.jpg" alt="" style="width:100%;height:100%;object-fit:cover" /></div><h4>The stadium</h4><p>The O as a frame. Products, photographs, buttons and tags all sit in full stadiums — nothing in between round and square.</p></div>
+      <div><div style="height:80px;display:flex;align-items:center"><div style="width:100%;height:30px;background:var(--black);border-radius:999px"></div></div><h4>The band</h4><p>The bar through the O becomes a heavy black band that runs between sections, carrying a slow marquee of the system names.</p></div>
+      <div><div style="height:80px;display:flex;align-items:center"><span class="dots" style="gap:10px"><i class="dot" style="width:44px;height:44px"></i><i class="dot" style="width:44px;height:44px"></i></span></div><h4>The pair</h4><p>Two dots are always two — bullets, pagination, the cursor, the "sent" state. A pair is the smallest team.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== 02 COLOUR ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>02 Colour</span><h2 class="u">Palette</h2><p>The logo green as a surface, not a highlight — a quarter of every screen. Text on green is always black; white on this green fails contrast.</p></div>
+    <div class="pal">
+      <div class="sw" style="background:var(--chalk);box-shadow:inset 0 0 0 2px var(--concrete)"><b>Chalk</b><small>#EFF0EB<br/>Ground · 45%</small></div>
+      <div class="sw" style="background:var(--field)"><b>Field</b><small>#5CB846<br/>Planes · 25%</small></div>
+      <div class="sw" style="background:var(--black);color:var(--chalk)"><b>Black</b><small>#0B0B0B<br/>Type, bands · 22%</small></div>
+      <div class="sw" style="background:var(--mist)"><b>Mist</b><small>#DCEDD3<br/>4%</small></div>
+      <div class="sw" style="background:var(--moss);color:var(--mist)"><b>Moss</b><small>#1F3D17<br/>3%</small></div>
+      <div class="sw" style="background:var(--white);box-shadow:inset 0 0 0 2px var(--concrete)"><b>White</b><small>#FFFFFF<br/>Plates · 1%</small></div>
+    </div>
+    <div style="display:flex;height:16px;margin-top:26px;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--concrete)"><span style="flex:45;background:var(--chalk)"></span><span style="flex:25;background:var(--field)"></span><span style="flex:22;background:var(--black)"></span><span style="flex:4;background:var(--mist)"></span><span style="flex:3;background:var(--moss)"></span><span style="flex:1;background:var(--white)"></span></div>
+    <div class="t dim" style="margin-top:12px">Proportion of any given screen</div>
+  </section>
+
+  <!-- ===================== 03 TYPE ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>03 Type</span><h2 class="u">Type</h2><p>Unbounded is wide and soft-cornered like the wordmark's own letters — it makes the headline look like it belongs to the logo. Onest keeps the reading plain.</p></div>
+    <div class="type">
+      <div>
+        <div class="t dim" style="margin-bottom:24px">Unbounded — SemiBold 600 — display</div>
+        <div class="u" style="font-size:124px">Two people.<br/>One surface.</div>
+        <div style="display:flex;gap:70px;margin-top:60px;align-items:flex-end">
+          <div><div class="u" style="font-size:160px">Aa</div><div class="t dim" style="margin-top:14px">Unbounded 600</div></div>
+          <div><div class="u" style="font-size:160px;font-weight:300">Aa</div><div class="t dim" style="margin-top:14px">Unbounded 300 — numerals</div></div>
+          <div><div style="font-size:160px;line-height:.9;font-weight:500;letter-spacing:-0.04em">Aa</div><div class="t dim" style="margin-top:14px">Onest 500</div></div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:20px;line-height:1.55;font-weight:500;margin-bottom:36px">A single beam-and-leg chassis that runs from an 800mm desk to a four-metre boardroom table. Pick the configuration, the length and the depth — the quote follows.</p>
+        <div class="scale" style="border-top:2px solid var(--black)">
+          <div><span class="t dim">Display</span><span class="u" style="font-size:36px">Single desk</span><span class="t dim">124 / .90</span></div>
+          <div><span class="t dim">H2</span><span class="u" style="font-size:26px">Finishes</span><span class="t dim">92 / .90</span></div>
+          <div><span class="t dim">Lead</span><span style="font-size:20px;font-weight:500">Two chassis. Every table.</span><span class="t dim">20 / 1.55</span></div>
+          <div><span class="t dim">Body</span><span style="font-size:16px">Melamine on E1 board, 25mm.</span><span class="t dim">16 / 1.55</span></div>
+          <div><span class="t dim">Label</span><span class="t">Nordic oak · 1600 × 750</span><span class="t dim">12 / +8%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 04 IMAGERY ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>04 Image</span><h2 class="u">Image</h2><p>Products held whole in white stadiums. Interiors cropped into stadiums too. The gap: people — the brand is called Cohuman, so the photography should finally show two humans at one desk.</p></div>
+    <div class="imgs">
+      <div style="grid-row:span 2;background:var(--field);border-radius:32px">
+        <div class="stad" style="position:absolute;left:36px;right:36px;top:140px;height:270px"><img class="feather p" src="assets/img/pros-ushape.jpg" alt="" style="width:70%" /></div>
+        <div class="u" style="position:absolute;left:36px;top:36px;font-size:48px">U-shape</div>
+        <span class="cap t">Product in a stadium, on field</span>
+      </div>
+      <div class="ph stad"><img src="assets/img/int-green.jpg" alt="" /><span class="cap t">Interior — stadium crop</span></div>
+      <div class="stad"><img class="feather p" src="assets/img/pros-meet.jpg" alt="" style="width:84%" /><span class="cap t">Meeting</span></div>
+      <div style="background:var(--black);color:var(--chalk);border-radius:32px;padding:34px">
+        <span class="t" style="color:var(--field)">To shoot</span>
+        <div class="u" style="font-size:34px;margin-top:16px;line-height:1">Two people,<br/>one desk.</div>
+        <p style="font-size:14.5px;line-height:1.55;margin-top:18px;color:#c9ccc4">Real Surat teams at Cohuman desks — candid, daylight, hands and conversation. Commissioned, never stock.</p>
+      </div>
+      <div class="ph stad"><img src="assets/img/int-openplan.jpg" alt="" /><span class="cap t">Interior — stadium crop</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== 05 COMPONENTS ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>05 Parts</span><h2 class="u">Parts</h2><p>Everything round is a full stadium; everything else is square-cornered at 32px. Thick 2px rules. Big, thumb-sized targets.</p></div>
+    <div class="kit">
+      <div>
+        <span class="t lab">Buttons</span>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <span class="btn k">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span>
+          <span class="btn g">Configure this desk →</span>
+          <span class="btn o">Book a showroom visit</span>
+        </div>
+      </div>
+      <div>
+        <span class="t lab">Finish</span>
+        <div>
+          <span class="fchip on"><i style="background:linear-gradient(160deg,#ece5d4,#d7cdb7)"></i>Nordic oak</span>
+          <span class="fchip"><i style="background:linear-gradient(160deg,#5a4e4a,#352d2a)"></i>Espresso walnut</span>
+          <span class="fchip"><i style="background:#f6f5f1;box-shadow:inset 0 0 0 1px #d8d6cf"></i>White frame</span>
+          <span class="fchip"><i style="background:#41454a"></i>Graphite</span>
+        </div>
+      </div>
+      <div>
+        <span class="t lab">Size (mm)</span>
+        <div class="tog" style="margin-bottom:10px"><span>1200</span><span>1400</span><span>1500</span><span class="on">1600</span></div>
+        <div class="tog"><span>600</span><span>700</span><span class="on">750</span><span>900</span></div>
+        <div style="margin-top:22px;display:flex;gap:6px;align-items:center"><i class="dot k"></i><i class="dot k"></i><i class="dot" style="background:var(--concrete)"></i><span class="t dim" style="margin-left:10px">Step 2 of 3</span></div>
+      </div>
+      <div style="grid-column:span 2">
+        <span class="t lab">Spec</span>
+        <div class="rows" style="columns:2;column-gap:40px">
+          <div><span>Model</span><span>Single desk · medium beam</span></div>
+          <div><span>Code</span><span>CHSS-ST-SB160</span></div>
+          <div><span>Length</span><span>1200 – 1600</span></div>
+          <div><span>Depth</span><span>600 – 900</span></div>
+          <div><span>Top</span><span>Melamine on E1, 25mm</span></div>
+          <div><span>Frame</span><span>Powder coat, 80–120μ</span></div>
+        </div>
+      </div>
+      <div>
+        <span class="t lab">Form</span>
+        <div style="border-radius:999px;box-shadow:inset 0 0 0 2px var(--black);padding:14px 24px;font-size:16px;font-weight:500"><span class="t dim" style="display:block;font-size:10px;margin-bottom:2px">Company</span>Acme Textiles Pvt Ltd</div>
+        <div style="margin-top:14px;border-radius:999px;background:var(--field);padding:14px 22px;display:flex;gap:12px;align-items:center;font-weight:600;font-size:14.5px"><span class="dots"><i class="dot k"></i><i class="dot k"></i></span>Sent — we will call you back</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 06 HOMEPAGE ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>06 Home</span><h2 class="u">Poster</h2><p>New structure: the homepage opens as a poster. A full green plane with one sentence, the hero product in a stadium bridging the green into the page, then a black band of system names.</p></div>
+    <div class="mock">
+      <div class="mock-bar"><i></i><i></i><i></i><span class="url">cohuman.in</span></div>
+      <div class="mock-body" style="background:var(--chalk)">
+        <div style="background:var(--field);height:640px;position:relative">
+          <div class="nav"><img src="assets/logo-black-whitedots.png" alt="" /><nav><span class="on">Systems</span><span>Seating</span><span>Spaces</span><span>Projects</span><span>About</span></nav><span class="btn k" style="height:48px">Get a quote</span></div>
+          <h3 class="u" style="position:absolute;left:40px;top:120px;font-size:132px">Two people.<br/>One surface.</h3>
+          <p style="position:absolute;left:44px;top:420px;width:400px;font-size:18px;line-height:1.5;font-weight:500">Configurable desking, cabins and meeting tables — specified and quoted to your floor plan.</p>
+          <div style="position:absolute;left:44px;top:520px;display:flex;gap:12px"><span class="btn k">Configure a desk</span><span class="btn o">Visit showroom</span></div>
+        </div>
+        <div class="stad" style="position:absolute;right:44px;top:400px;width:780px;height:380px"><img class="feather p" src="assets/img/pros-bench2.jpg" alt="" style="width:600px" /></div>
+        <div style="height:180px"></div>
+        <div class="marquee"><span>STRETCHS <i class="dots"><i class="dot"></i><i class="dot"></i></i> STRETCH <i class="dots"><i class="dot"></i><i class="dot"></i></i> Cabins <i class="dots"><i class="dot"></i><i class="dot"></i></i> Meeting <i class="dots"><i class="dot"></i><i class="dot"></i></i> Seating <i class="dots"><i class="dot"></i><i class="dot"></i></i> Storage</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:44px">
+          <div style="background:var(--white);border-radius:32px;height:420px;position:relative;overflow:hidden">
+            <div class="t dim" style="position:absolute;left:34px;top:32px">01 — Beam desking</div>
+            <div class="u" style="position:absolute;left:32px;top:64px;font-size:64px">STRETCHS</div>
+            <img src="assets/img/pros-lshape.jpg" class="feather blend" alt="" style="position:absolute;right:20px;bottom:20px;width:470px" />
+            <span class="btn g" style="position:absolute;left:34px;bottom:34px;height:48px">Configure →</span>
+          </div>
+          <div style="background:var(--black);color:var(--chalk);border-radius:32px;height:420px;position:relative;overflow:hidden">
+            <div class="t" style="position:absolute;left:34px;top:32px;color:#8a8f88">02 — Adjustable beam</div>
+            <div class="u" style="position:absolute;left:32px;top:64px;font-size:64px">STRETCH</div>
+            <div class="stad" style="position:absolute;right:30px;bottom:30px;width:420px;height:230px"><img class="feather p" src="assets/img/vdx-lshape.jpg" alt="" style="width:330px" /></div>
+            <span class="btn g" style="position:absolute;left:34px;bottom:34px;height:48px">Configure →</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:16px;padding:0 44px 44px;align-items:center">
+          <div class="stad" style="height:300px"><img src="assets/img/int-green.jpg" alt="" style="width:100%;height:100%;object-fit:cover" /></div>
+          <div style="padding-left:20px"><div class="u" style="font-size:56px">Come and sit<br/>on it.</div><p style="font-size:17px;line-height:1.5;margin:16px 0 22px;font-weight:500;color:#2f322e">See the systems in person at the Surat showroom.</p><span class="btn k">Book a visit <span class="dots"><i class="dot"></i><i class="dot"></i></span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 07 PDP ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>07 PDP</span><h2 class="u">Product</h2><p>This is officemate's page most literally: their big red spec block becomes a big field-green block, and the white page around it becomes chalk. The structure is identical; only the voice changes.</p></div>
+    <div class="notes">
+      <div><span class="pin">A</span><b>Name hero</b>Series eyebrow + product name, set huge. Kept.</div>
+      <div><span class="pin">B</span><b>Spec block + product</b>Big colour block with spec rows. Red → field green.</div>
+      <div><span class="pin">C</span><b>Variant gallery</b>Product in a stadium, finish pills, two-dot pagination.</div>
+      <div><span class="pin">D</span><b>Prev / All / Next</b>Black band of three, then a green quote bar. Kept.</div>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><i></i><i></i><i></i><span class="url">cohuman.in/collections/pros/single-desk</span></div>
+      <div class="mock-body" style="background:var(--chalk)">
+        <div class="nav"><img src="assets/logo-black.png" alt="" /><nav><span class="on">Systems</span><span>Seating</span><span>Spaces</span><span>Projects</span><span>About</span></nav><span class="btn k" style="height:48px">Get a quote</span></div>
+        <!-- A -->
+        <div style="position:relative;height:400px">
+          <span class="pin abs" style="left:20px;top:16px">A</span>
+          <div class="t dim" style="position:absolute;left:360px;top:96px">STRETCHS series · Beam desking · 02 / 14</div>
+          <h3 class="u" style="position:absolute;left:354px;top:130px;font-size:132px">Single desk</h3>
+          <div style="position:absolute;left:0;bottom:0;width:300px;height:110px;background:var(--field)"></div>
+        </div>
+        <!-- B -->
+        <div style="position:relative;display:grid;grid-template-columns:520px 1fr;height:560px">
+          <span class="pin abs" style="left:20px;top:16px">B</span>
+          <div style="background:var(--field);padding:64px 48px;margin-top:-1px">
+            <div class="rows">
+              <div style="border-top:2px solid var(--black)"><span style="color:var(--moss)">Model</span><span>Single desk · SB160</span></div>
+              <div><span style="color:var(--moss)">Code</span><span>CHSS-ST-SB160</span></div>
+              <div><span style="color:var(--moss)">Length</span><span>1200 – 1600 mm</span></div>
+              <div><span style="color:var(--moss)">Depth</span><span>600 – 900 mm</span></div>
+              <div><span style="color:var(--moss)">Seats</span><span>1</span></div>
+              <div><span style="color:var(--moss)">Finish</span><span>Nordic oak / white</span></div>
+            </div>
+            <span class="btn k" style="margin-top:34px">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span>
+          </div>
+          <div style="position:relative">
+            <img src="assets/img/pros-single.jpg" class="feather blend" alt="" style="position:absolute;left:30px;top:40px;width:780px" />
+            <span class="t" style="position:absolute;right:44px;bottom:30px;background:var(--black);color:var(--chalk);padding:8px 16px;border-radius:999px">1600 × 750 · Nordic oak</span>
+          </div>
+        </div>
+        <!-- C -->
+        <div style="position:relative;padding:100px 44px 60px;text-align:center">
+          <span class="pin abs" style="left:20px;top:40px">C</span>
+          <div class="t dim">Gallery — configuration 07 / 14</div>
+          <div class="u" style="font-size:64px;margin-top:14px">L-shape</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:34px">
+            <span class="btn o" style="width:56px;padding:0;justify-content:center">←</span>
+            <div class="stad" style="width:860px;height:400px"><img class="feather p" src="assets/img/pros-lshape.jpg" alt="" style="width:600px" /></div>
+            <span class="btn o" style="width:56px;padding:0;justify-content:center">→</span>
+          </div>
+          <div style="margin-top:26px"><span class="fchip"><i style="background:linear-gradient(160deg,#ece5d4,#d7cdb7)"></i>Nordic oak</span><span class="fchip on"><i style="background:linear-gradient(160deg,#5a4e4a,#352d2a)"></i>Espresso walnut</span></div>
+          <div style="display:flex;gap:6px;justify-content:center;margin-top:12px"><i class="dot k"></i><i class="dot k"></i><i class="dot" style="background:var(--concrete)"></i><i class="dot" style="background:var(--concrete)"></i></div>
+        </div>
+        <!-- D -->
+        <div style="position:relative;display:grid;grid-template-columns:1fr 300px 1fr;background:var(--black);color:var(--chalk)">
+          <span class="pin abs" style="left:20px;top:-13px;background:var(--field);color:var(--black)">D</span>
+          <div style="padding:34px 44px;display:flex;justify-content:space-between;align-items:center;border-right:2px solid #262725"><span class="t" style="color:#8a8f88">← Prev</span><span class="u" style="font-size:32px">Single 800</span></div>
+          <div style="display:flex;align-items:center;justify-content:center;border-right:2px solid #262725" class="t">All STRETCHS</div>
+          <div style="padding:34px 44px;display:flex;justify-content:space-between;align-items:center"><span class="u" style="font-size:32px">Return desk</span><span class="t" style="color:#8a8f88">Next →</span></div>
+        </div>
+        <div style="background:var(--field);display:flex;align-items:center;justify-content:space-between;padding:20px 44px">
+          <span style="font-weight:600;font-size:16px">Single desk · 1600 × 750 · Nordic oak / white frame</span><span class="btn k" style="height:50px">Get a quote <span class="dots"><i class="dot"></i><i class="dot"></i></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 08 RULES ===================== -->
+  <section class="sec">
+    <div class="sec-h"><span class="t"><span class="dots"><i class="dot"></i><i class="dot"></i></span>08 Rules</span><h2 class="u">Rules</h2><p>How it behaves once it moves, and the lines it does not cross.</p></div>
+    <div class="rules">
+      <div style="background:var(--field)"><span class="t">Motion</span><h4>Panels, not particles</h4><ul>
+        <li>Colour planes slide in like sliding doors — 350ms, snappy.</li>
+        <li>The black band's marquee drifts; it speeds up as you scroll.</li>
+        <li>Pill buttons are magnetic — they lean toward the cursor.</li>
+        <li>The two dots hop once when an enquiry is sent.</li>
+      </ul></div>
+      <div style="background:var(--black);color:var(--chalk)"><span class="t" style="color:var(--field)">Rules</span><h4>Own the green</h4><ul>
+        <li>Green covers about a quarter of every screen — it is the ground.</li>
+        <li>Text on green is always black. Never white.</li>
+        <li>Round means a full stadium. Nothing half-rounded.</li>
+        <li>Giant cropped type belongs to the homepage only.</li>
+      </ul></div>
+      <div style="background:var(--white)"><span class="t dim">Not this</span><h4>Off-limits</h4><ul>
+        <li>"Eco" clichés — leaves, sprouts. Our green is the logo, not a claim.</li>
+        <li>Green gradients or a second green.</li>
+        <li>Stock people or illustrated characters.</li>
+        <li>Thin, quiet, luxury cues — this direction is loud on purpose.</li>
+      </ul></div>
+    </div>
+    <div class="t dim" style="margin-top:50px">Reference energy — Swiss transit signage · HAY / Muuto colour confidence · Studio Dumbar posters · Kvadrat</div>
+  </section>
+
+  <div class="end"><img src="assets/logo-black-whitedots.png" alt="" style="width:150px" /><span class="t">Moodboard 03 — Field — Direction 03 / 03</span></div>
+</div>
+</body>
+</html>

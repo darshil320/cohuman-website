@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1600" />
+<title>Cohuman — Brand colour options</title>
+<style>
+  /*
+    Three ways to bring the rest of the brand palette (CoHuman Brand Guidelines p.11–12)
+    onto the Signal site. Each option is shown on the same four real site parts: the
+    homepage hero corner, the systems index, the product-page spec block and the footer.
+    Coastal green stays a status light in all three.
+  */
+  @font-face { font-family: "Sequel Body"; src: url("../src/app/fonts/sequel-sans/sequel-sans-body-400.woff2") format("woff2"); font-weight: 400; }
+  @font-face { font-family: "Sequel Body"; src: url("../src/app/fonts/sequel-sans/sequel-sans-body-500.woff2") format("woff2"); font-weight: 500; }
+  @font-face { font-family: "Sequel Head"; src: url("../src/app/fonts/sequel-sans/sequel-sans-head-600.woff2") format("woff2"); font-weight: 600; }
+  @font-face { font-family: "Sequel Disp"; src: url("../src/app/fonts/sequel-sans/sequel-sans-disp-600.woff2") format("woff2"); font-weight: 600; }
+
+  :root {
+    --canvas: #fbf8ee; --fog: #f3efe1; --ink: #231f20; --steel: #6b665d; --hair: #dcd6c4;
+    --coastal: #5eb646; --tide: #2f6f6d; --ocean: #00825c; --sunlit: #f9b939; --ivory: #fff7d2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e9e6dc; color: var(--ink); font-family: "Sequel Body", sans-serif; -webkit-font-smoothing: antialiased; }
+  .page { width: 1600px; margin: 0 auto; padding: 60px 80px 80px; }
+  .lab { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; font-feature-settings: "case" 1; font-variant-numeric: tabular-nums; }
+  .disp { font-family: "Sequel Disp"; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+  .head { font-family: "Sequel Head"; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+  .dots { display: inline-flex; gap: 4px; vertical-align: middle; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--coastal); display: block; }
+
+  header.top { display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid var(--ink); padding-bottom: 24px; margin-bottom: 30px; }
+  header.top h1 { font-size: 64px; }
+  .palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 60px; }
+  .palette div { height: 110px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+
+  .opt { background: var(--canvas); margin-bottom: 56px; border: 1px solid var(--hair); }
+  .opt-h { display: grid; grid-template-columns: 120px 1fr 560px; gap: 30px; padding: 34px 40px 28px; border-bottom: 1px solid var(--hair); align-items: end; }
+  .opt-h .n { font-size: 64px; }
+  .opt-h h2 { font-size: 40px; }
+  .opt-h p { font-size: 15px; line-height: 1.55; color: #3d3a36; }
+  .ratio { display: flex; height: 10px; margin-top: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .cell { position: relative; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); min-height: 360px; overflow: hidden; }
+  .cell:nth-child(2n) { border-right: 0; }
+  .cap { position: absolute; left: 16px; top: 12px; color: var(--steel); z-index: 3; }
+
+  /* hero corner */
+  .hero { height: 360px; background: #d9d6ce url("assets/img/int-boardroom.jpg") center/cover; }
+  .hero .block { position: absolute; left: 24px; top: 44px; width: 380px; }
+  .hero .block .t { padding: 16px 18px; font-size: 26px; }
+  .hero .block .row { display: flex; }
+  .hero .block .row span { padding: 12px 18px; }
+  .hero .ctrl { position: absolute; left: 0; bottom: 0; display: flex; }
+  .hero .ctrl span { padding: 12px 16px; }
+
+  /* index */
+  .idx { padding: 44px 24px 16px; }
+  .idx .r { display: grid; grid-template-columns: 40px 1fr 150px 30px; align-items: center; height: 62px; border-bottom: 1px solid var(--hair); padding: 0 10px; }
+  .idx .r .nm { font-size: 26px; }
+  .idx .r.hov { background: var(--fog); }
+  .tag { font-size: 11px; padding: 3px 7px; margin-left: 10px; vertical-align: middle; }
+
+  /* spec block */
+  .pdp { display: grid; grid-template-columns: 1fr 300px; height: 100%; min-height: 360px; }
+  .pdp .viewer { position: relative; display: flex; align-items: center; justify-content: center; padding-top: 30px; }
+  .pdp .viewer img { width: 92%; mix-blend-mode: multiply; }
+  .pdp .spec { padding: 40px 24px 20px; }
+  .pdp .spec .kv { display: grid; grid-template-columns: 80px 1fr; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.18); }
+  .pdp .seg { display: flex; margin-top: 14px; }
+  .pdp .seg span { padding: 8px 11px; border: 1px solid; margin-right: -1px; }
+  .rail { height: 3px; margin-top: 14px; position: relative; }
+  .rail i { position: absolute; left: 0; top: 0; height: 3px; width: 66%; background: var(--coastal); }
+  .btn { display: inline-flex; padding: 12px 16px; margin-top: 16px; }
+
+  /* footer */
+  .foot { padding: 44px 30px 24px; height: 100%; min-height: 360px; display: flex; flex-direction: column; justify-content: space-between; }
+  .foot .big { font-size: 38px; max-width: 460px; }
+  .foot .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; font-size: 14px; line-height: 1.7; }
+
+  .verdict { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--hair); }
+  .verdict div { padding: 20px 40px; font-size: 14px; line-height: 1.55; border-right: 1px solid var(--hair); }
+  .verdict div:last-child { border-right: 0; }
+  .verdict b { display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div><div class="lab" style="color:var(--steel);margin-bottom:12px">Cohuman — colour options for the Signal site</div><h1 class="disp">Using the rest of the palette</h1></div>
+    <img src="../public/brand/logo-primary.svg" alt="Cohuman" style="width:200px" />
+  </header>
+
+  <div class="palette lab">
+    <div style="background:var(--ivory)"><span>Ivory</span><span>#FFF7D2 · light ground</span></div>
+    <div style="background:var(--tide);color:#fff"><span>Deep Tide</span><span>#2F6F6D · primary dark</span></div>
+    <div style="background:var(--ocean);color:#fff"><span>Ocean</span><span>#00825C · supporting</span></div>
+    <div style="background:var(--coastal)"><span>Coastal</span><span>#5EB646 · logo, fixed</span></div>
+    <div style="background:var(--sunlit)"><span>Sunlit</span><span>#F9B939 · warm accent</span></div>
+    <div style="background:var(--ink);color:#fff"><span>Ink</span><span>#231F20 · text</span></div>
+  </div>
+
+  <!-- ============ OPTION 1 ============ -->
+  <section class="opt">
+    <div class="opt-h">
+      <div class="disp n">01</div>
+      <div><div class="lab" style="color:var(--steel)">Restrained</div><h2 class="disp">Deep Tide as the dark, Sunlit as the marker</h2></div>
+      <div><p>Every ink block on the site (hero corner, PDP spec block, footer) becomes Deep Tide; ink stays for type and buttons. Sunlit appears only as a small marker — a "new" tag, the ° on unconfirmed codes. Nothing else changes. About 15% colour per screen.</p>
+        <div class="ratio"><span style="flex:62;background:var(--canvas);outline:1px solid var(--hair)"></span><span style="flex:14;background:var(--tide)"></span><span style="flex:20;background:var(--ink)"></span><span style="flex:2;background:var(--sunlit)"></span><span style="flex:1;background:var(--coastal)"></span></div></div>
+    </div>
+    <div class="grid">
+      <div class="cell hero"><span class="cap lab" style="background:var(--canvas);padding:3px 6px;left:24px;top:14px">Homepage hero</span>
+        <div class="block" style="background:var(--canvas);border:1px solid var(--ink)"><div class="t disp">Precision-made modular office furniture.</div><div class="row lab" style="border-top:1px solid var(--ink)"><span style="flex:1">Surat, IN</span><span style="background:var(--ink);color:#fff">Configure a desk</span></div></div>
+        <div class="ctrl lab" style="background:var(--tide);color:#fff"><span>❚❚</span><span>01 Film</span><span style="opacity:.6">02 Film</span><span>00:01 / 00:10</span></div>
+      </div>
+      <div class="cell"><span class="cap lab">Systems index</span>
+        <div class="idx">
+          <div class="r hov lab"><span>01</span><span class="head nm">STRETCH S</span><span>Single 800 → 4000</span><span class="dots"><i></i><i></i></span></div>
+          <div class="r lab"><span>02</span><span class="head nm">STRETCH V<span class="tag" style="background:var(--sunlit)">New</span></span><span>Desk → Meeting</span><span>→</span></div>
+          <div class="r lab"><span>03</span><span class="head nm">STRETCH F</span><span>Sized to plan</span><span>→</span></div>
+          <div class="r lab"><span>04</span><span class="head nm">Apex</span><span>Sized to plan</span><span>→</span></div>
+        </div></div>
+      <div class="cell"><span class="cap lab">Product page — spec block</span>
+        <div class="pdp"><div class="viewer"><img src="assets/img/pros-single.jpg" alt="" /></div>
+          <div class="spec lab" style="background:var(--tide);color:#fff">
+            <div class="kv"><span style="opacity:.7">Model</span><span>Single desk</span></div>
+            <div class="kv"><span style="opacity:.7">Code</span><span>CHSS-ST-SB160<sup style="color:var(--sunlit)">°</sup></span></div>
+            <div class="kv"><span style="opacity:.7">Length</span><span>1200 – 1600</span></div>
+            <div class="seg"><span>1400</span><span style="background:#fff;color:var(--ink);border-color:#fff">1600</span></div>
+            <div class="rail" style="background:rgba(255,255,255,.2)"><i></i></div>
+            <span class="btn" style="background:var(--ink);color:#fff">Get a quote</span>
+          </div></div></div>
+      <div class="cell" style="background:var(--tide);color:#fff"><span class="cap lab" style="color:rgba(255,255,255,.7)">Footer</span>
+        <div class="foot"><div class="disp big">Tell us the floor. We'll quote the room.</div>
+          <div class="cols"><div>Collections<br/>Sectors<br/>Projects</div><div>tushar@cohuman.in<br/>Surat, Gujarat</div><div><img src="../public/brand/logo-reverse.svg" alt="" style="width:150px" /></div></div></div></div>
+    </div>
+    <div class="verdict"><div><b>Feels like</b>Today's site, warmer and more on-brand. The safest step.</div><div><b>Matches guidelines</b>Partly — Deep Tide anchors as the guidelines ask, but Ocean is unused.</div><div><b>Effort</b>Small: token values only (panel colour + one marker). A few hours.</div></div>
+  </section>
+
+  <!-- ============ OPTION 2 ============ -->
+  <section class="opt">
+    <div class="opt-h">
+      <div class="disp n">02</div>
+      <div><div class="lab" style="color:var(--steel)">By the guidelines</div><h2 class="disp">Deep Tide anchors, Ocean bands, Sunlit buttons</h2></div>
+      <div><p>The guideline proportions on the site: ivory leads, Deep Tide carries every dark block, Ocean takes whole bands (showroom, enquiry CTA), and the primary "Get a quote" button turns Sunlit with ink text — the warm accent, always the thing to press. About 35% colour.</p>
+        <div class="ratio"><span style="flex:45;background:var(--canvas);outline:1px solid var(--hair)"></span><span style="flex:25;background:var(--tide)"></span><span style="flex:12;background:var(--ink)"></span><span style="flex:9;background:var(--ocean)"></span><span style="flex:5;background:var(--coastal)"></span><span style="flex:4;background:var(--sunlit)"></span></div></div>
+    </div>
+    <div class="grid">
+      <div class="cell hero"><span class="cap lab" style="background:var(--canvas);padding:3px 6px;left:24px;top:14px">Homepage hero</span>
+        <div class="block" style="background:var(--tide);color:#fff"><div class="t disp">Precision-made modular office furniture.</div><div class="row lab" style="border-top:1px solid rgba(255,255,255,.25)"><span style="flex:1">Surat, IN</span><span style="background:var(--sunlit);color:var(--ink)">Configure a desk</span></div></div>
+        <div class="ctrl lab" style="background:var(--tide);color:#fff"><span>❚❚</span><span>01 Film</span><span style="opacity:.6">02 Film</span><span>00:01 / 00:10</span></div>
+      </div>
+      <div class="cell"><span class="cap lab">Systems index + showroom band</span>
+        <div class="idx" style="padding-bottom:0">
+          <div class="r hov lab"><span>01</span><span class="head nm">STRETCH S</span><span>Single 800 → 4000</span><span class="dots"><i></i><i></i></span></div>
+          <div class="r lab"><span>02</span><span class="head nm">STRETCH V</span><span>Desk → Meeting</span><span>→</span></div>
+        </div>
+        <div style="background:var(--ocean);color:#fff;margin:14px 24px 0;padding:22px 22px">
+          <div class="lab" style="opacity:.8">Showroom — Surat</div>
+          <div class="disp" style="font-size:30px;margin-top:8px">Come and sit on it.</div>
+          <span class="btn lab" style="background:var(--sunlit);color:var(--ink)">Book a visit</span>
+        </div></div>
+      <div class="cell"><span class="cap lab">Product page — spec block</span>
+        <div class="pdp"><div class="viewer"><img src="assets/img/pros-single.jpg" alt="" /></div>
+          <div class="spec lab" style="background:var(--tide);color:#fff">
+            <div class="kv"><span style="opacity:.7">Model</span><span>Single desk</span></div>
+            <div class="kv"><span style="opacity:.7">Code</span><span>CHSS-ST-SB160</span></div>
+            <div class="kv"><span style="opacity:.7">Length</span><span>1200 – 1600</span></div>
+            <div class="seg"><span>1400</span><span style="background:#fff;color:var(--ink);border-color:#fff">1600</span></div>
+            <div class="rail" style="background:rgba(255,255,255,.2)"><i></i></div>
+            <span class="btn" style="background:var(--sunlit);color:var(--ink)">Get a quote</span>
+          </div></div></div>
+      <div class="cell" style="background:var(--tide);color:#fff"><span class="cap lab" style="color:rgba(255,255,255,.7)">Footer</span>
+        <div class="foot"><div class="disp big">Tell us the floor. We'll quote the room.</div>
+          <div class="cols"><div>Collections<br/>Sectors<br/>Projects</div><div>tushar@cohuman.in<br/>Surat, Gujarat</div><div><img src="../public/brand/logo-reverse.svg" alt="" style="width:150px" /></div></div></div></div>
+    </div>
+    <div class="verdict"><div><b>Feels like</b>The brand book come to life — fresher, more colourful, less "drawing set".</div><div><b>Matches guidelines</b>Fully — all five colours in the stated proportions and text pairings.</div><div><b>Effort</b>Medium: tokens plus new Ocean band and Sunlit button variants. About a day.</div></div>
+  </section>
+
+  <!-- ============ OPTION 3 ============ -->
+  <section class="opt">
+    <div class="opt-h">
+      <div class="disp n">03</div>
+      <div><div class="lab" style="color:var(--steel)">Wayfinding</div><h2 class="disp">One colour per system</h2></div>
+      <div><p>The pages stay ivory and ink, but each system owns a colour: STRETCH S Deep Tide, STRETCH V Ocean, the photographed ranges Sunlit. Its spec block, index-row marker and page accents take that colour, so you always know which system you're in. About 15% colour, but it changes page to page.</p>
+        <div class="ratio"><span style="flex:62;background:var(--canvas);outline:1px solid var(--hair)"></span><span style="flex:20;background:var(--ink)"></span><span style="flex:6;background:var(--tide)"></span><span style="flex:5;background:var(--ocean)"></span><span style="flex:4;background:var(--sunlit)"></span><span style="flex:1;background:var(--coastal)"></span></div></div>
+    </div>
+    <div class="grid">
+      <div class="cell hero"><span class="cap lab" style="background:var(--canvas);padding:3px 6px;left:24px;top:14px">Homepage hero</span>
+        <div class="block" style="background:var(--canvas);border:1px solid var(--ink)"><div class="t disp">Precision-made modular office furniture.</div><div class="row lab" style="border-top:1px solid var(--ink)"><span style="flex:1">Surat, IN</span><span style="background:var(--ink);color:#fff">Configure a desk</span></div></div>
+        <div class="ctrl lab" style="background:var(--ink);color:#fff"><span>❚❚</span><span>01 Film</span><span style="opacity:.6">02 Film</span><span>00:01 / 00:10</span></div>
+      </div>
+      <div class="cell"><span class="cap lab">Systems index — colour-coded</span>
+        <div class="idx">
+          <div class="r hov lab" style="box-shadow:inset 6px 0 0 var(--tide)"><span>01</span><span class="head nm">STRETCH S</span><span>Single 800 → 4000</span><span class="dots"><i></i><i></i></span></div>
+          <div class="r lab" style="box-shadow:inset 6px 0 0 var(--ocean)"><span>02</span><span class="head nm">STRETCH V</span><span>Desk → Meeting</span><span>→</span></div>
+          <div class="r lab" style="box-shadow:inset 6px 0 0 var(--sunlit)"><span>03</span><span class="head nm">STRETCH F</span><span>Sized to plan</span><span>→</span></div>
+          <div class="r lab" style="box-shadow:inset 6px 0 0 var(--sunlit)"><span>04</span><span class="head nm">Apex</span><span>Sized to plan</span><span>→</span></div>
+        </div></div>
+      <div class="cell"><span class="cap lab">STRETCH V page — Ocean spec block</span>
+        <div class="pdp"><div class="viewer"><img src="../public/varidex/single-desk.jpg" alt="" /></div>
+          <div class="spec lab" style="background:var(--ocean);color:#fff">
+            <div class="kv"><span style="opacity:.75">Model</span><span>Single · medium</span></div>
+            <div class="kv"><span style="opacity:.75">Code</span><span>CHS-2B150180-PC</span></div>
+            <div class="kv"><span style="opacity:.75">Length</span><span>1500 – 1800</span></div>
+            <div class="seg"><span>1500</span><span style="background:#fff;color:var(--ink);border-color:#fff">1800</span></div>
+            <div class="rail" style="background:rgba(255,255,255,.25)"><i style="background:#fff"></i></div>
+            <span class="btn" style="background:var(--ink);color:#fff">Get a quote</span>
+          </div></div></div>
+      <div class="cell" style="background:var(--ink);color:#fff"><span class="cap lab" style="color:rgba(255,255,255,.7)">Footer — stays ink</span>
+        <div class="foot"><div class="disp big">Tell us the floor. We'll quote the room.</div>
+          <div class="cols"><div><span style="display:inline-block;width:10px;height:10px;background:var(--tide);margin-right:8px"></span>STRETCH S<br/><span style="display:inline-block;width:10px;height:10px;background:var(--ocean);margin-right:8px"></span>STRETCH V<br/><span style="display:inline-block;width:10px;height:10px;background:var(--sunlit);margin-right:8px"></span>Ranges</div><div>tushar@cohuman.in<br/>Surat, Gujarat</div><div><img src="../public/brand/logo-reverse.svg" alt="" style="width:150px" /></div></div></div></div>
+    </div>
+    <div class="verdict"><div><b>Feels like</b>Signal's drawing set, with a colour key — like a transit map. Each system feels distinct.</div><div><b>Matches guidelines</b>Uses every colour, but not in the guideline proportions on any one page.</div><div><b>Effort</b>Medium: a colour field per series in the data, threaded through spec block, index and pager.</div></div>
+  </section>
+
+  <p class="lab" style="color:var(--steel)">In all three: Coastal #5EB646 stays a status light (selected, progress, the quote dots). Ink stays the text colour. White on Ocean passes AA (4.8:1); Sunlit is never text on ivory, only a fill under ink type (9.3:1).</p>
+</div>
+</body>
+</html>
