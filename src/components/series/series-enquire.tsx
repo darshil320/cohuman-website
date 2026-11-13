@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { SectionHeading } from "@/components/common/section-heading";
-import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent } from "@/components/forms/form-status";
+import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent, SubmitButton } from "@/components/forms/form-status";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import { Select } from "@/components/ui/select";
 import { SpecRows, type SpecRow } from "@/components/ui/spec-rows";
 import { Textarea } from "@/components/ui/textarea";
 import { trackLeadSubmitted } from "@/lib/analytics";
+import { sendLead } from "@/lib/leads/client";
+import { usePendingSubmit } from "@/lib/use-pending-submit";
 import {
   INFERRED_CODE_FOOTNOTE,
   enquiryInterest,
@@ -33,8 +35,8 @@ export function SeriesEnquire() {
   const { series, config, selection, size, quantity, setQuantity, pickConfigBySlug } =
     useSeriesConfigurator();
   const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { busy, pending, run } = usePendingSubmit();
 
   const section = series.enquirySection;
   const interest = enquiryInterest(selection);
@@ -68,9 +70,6 @@ export function SeriesEnquire() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitting(true);
-    setError(null);
-
     const form = new FormData(event.currentTarget);
     const bom = parts.bom.map((line) => `${line.name} ${line.code} × ${line.qty}`).join("; ");
     const payload = {
@@ -94,24 +93,15 @@ export function SeriesEnquire() {
       ),
     };
 
-    try {
-      const response = await fetch("/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-      if (!result.success) {
-        setError(result.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-      trackLeadSubmitted("product_enquiry", { interest });
-      setSent(true);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+    const result = await run(() => sendLead("/api/enquiry", payload));
+    if (!result) return; // already sending
+    if (!result.ok) {
+      setError(result.error);
+      return;
     }
+    setError(null);
+    trackLeadSubmitted("product_enquiry", { interest });
+    setSent(true);
   }
 
   return (
@@ -151,17 +141,18 @@ export function SeriesEnquire() {
                 <div className={FORM_GRID}>
                   <div className={FIELD}>
                     <Label htmlFor="series-name">Name</Label>
-                    <Input id="series-name" name="name" placeholder="Your name" required />
+                    <Input id="series-name" autoComplete="name" name="name" placeholder="Your name" required />
                   </div>
                   <div className={FIELD}>
                     <Label htmlFor="series-company">Company</Label>
-                    <Input id="series-company" name="company" placeholder="Organisation" />
+                    <Input id="series-company" autoComplete="organization" name="company" placeholder="Organisation" />
                   </div>
                   <div className={FIELD}>
                     <Label htmlFor="series-email">Email</Label>
                     <Input
                       id="series-email"
                       name="email"
+                      autoComplete="email"
                       type="email"
                       placeholder="you@company.com"
                       required
@@ -169,11 +160,11 @@ export function SeriesEnquire() {
                   </div>
                   <div className={FIELD}>
                     <Label htmlFor="series-phone">Phone</Label>
-                    <Input id="series-phone" name="phone" type="tel" placeholder="+91" required />
+                    <Input id="series-phone" autoComplete="tel" name="phone" type="tel" placeholder="+91" required />
                   </div>
                   <div className={FIELD}>
                     <Label htmlFor="series-city">City</Label>
-                    <Input id="series-city" name="city" placeholder="Site location" />
+                    <Input id="series-city" autoComplete="address-level2" name="city" placeholder="Site location" />
                   </div>
                   <div className={FIELD}>
                     <Label htmlFor="series-quantity">Quantity</Label>
@@ -214,9 +205,7 @@ export function SeriesEnquire() {
 
                 <FormError message={error} />
 
-                <Button type="submit" disabled={submitting} className="mt-8 w-full">
-                  {submitting ? "Sending…" : "Request a quote"}
-                </Button>
+                <SubmitButton label="Request a quote" busy={busy} pending={pending} />
                 <FormFootnote>
                   We reply within {siteConfig.enquiryTurnaround}. No mailing list.
                 </FormFootnote>

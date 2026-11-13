@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import categories from "@/data/categories.json";
 import collections from "@/data/collections.json";
-import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent } from "@/components/forms/form-status";
-import { Button } from "@/components/ui/button";
+import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent, SubmitButton } from "@/components/forms/form-status";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { trackLeadSubmitted } from "@/lib/analytics";
+import { sendLead } from "@/lib/leads/client";
+import { usePendingSubmit } from "@/lib/use-pending-submit";
 import { siteConfig } from "@/lib/site-config";
 
 const baseInterestOptions = [
@@ -29,8 +30,12 @@ interface EnquiryFormProps {
 
 export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryFormProps) {
   const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { busy, pending, run } = usePendingSubmit();
+  // The form can be on the page twice (the /contact tab and the site-wide quote dialog),
+  // so its field ids are per instance.
+  const uid = useId();
+  const id = (field: string) => `${uid}-${field}`;
 
   const interestOptions =
     defaultInterest && !baseInterestOptions.includes(defaultInterest)
@@ -39,31 +44,17 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitting(true);
-    setError(null);
-
-    const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(form.entries());
-
-    try {
-      const response = await fetch("/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-      if (!result.success) {
-        setError(result.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-      trackLeadSubmitted("product_enquiry", { interest: String(payload.interest ?? "") });
-      setSent(true);
-      onSuccess?.();
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+    const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const result = await run(() => sendLead("/api/enquiry", payload));
+    if (!result) return; // already sending
+    if (!result.ok) {
+      setError(result.error);
+      return;
     }
+    setError(null);
+    trackLeadSubmitted("product_enquiry", { interest: String(payload.interest ?? "") });
+    setSent(true);
+    onSuccess?.();
   }
 
   if (sent) {
@@ -79,32 +70,32 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
     <form onSubmit={handleSubmit} className={compact ? "p-6" : "p-6 sm:p-8"}>
       <div className={FORM_GRID}>
         <div className={FIELD}>
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" placeholder="Your full name" required />
+          <Label htmlFor={id("name")}>Name</Label>
+          <Input id={id("name")} autoComplete="name" name="name" placeholder="Your full name" required />
         </div>
         <div className={FIELD}>
-          <Label htmlFor="company">Company</Label>
-          <Input id="company" name="company" placeholder="Organisation" />
+          <Label htmlFor={id("company")}>Company</Label>
+          <Input id={id("company")} autoComplete="organization" name="company" placeholder="Organisation" />
         </div>
         <div className={FIELD}>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" placeholder="name@company.com" required />
+          <Label htmlFor={id("email")}>Email</Label>
+          <Input id={id("email")} autoComplete="email" name="email" type="email" placeholder="name@company.com" required />
         </div>
         <div className={FIELD}>
-          <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" name="phone" type="tel" placeholder="+91" required />
+          <Label htmlFor={id("phone")}>Phone</Label>
+          <Input id={id("phone")} autoComplete="tel" name="phone" type="tel" placeholder="+91" required />
         </div>
         <div className={FIELD}>
-          <Label htmlFor="city">City / location</Label>
-          <Input id="city" name="city" placeholder="Where is the office?" />
+          <Label htmlFor={id("city")}>City / location</Label>
+          <Input id={id("city")} autoComplete="address-level2" name="city" placeholder="Where is the office?" />
         </div>
         <div className={FIELD}>
-          <Label htmlFor="quantity">Seats / quantity</Label>
-          <Input id="quantity" name="quantity" placeholder="e.g. 60 seats" />
+          <Label htmlFor={id("quantity")}>Seats / quantity</Label>
+          <Input id={id("quantity")} name="quantity" placeholder="e.g. 60 seats" />
         </div>
         <div className={`${FIELD} sm:col-span-2`}>
-          <Label htmlFor="interest">Product or collection of interest</Label>
-          <Select id="interest" name="interest" defaultValue={defaultInterest ?? interestOptions[0]}>
+          <Label htmlFor={id("interest")}>Product or collection of interest</Label>
+          <Select id={id("interest")} name="interest" defaultValue={defaultInterest ?? interestOptions[0]}>
             {interestOptions.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -113,9 +104,9 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
           </Select>
         </div>
         <div className={`${FIELD} sm:col-span-2`}>
-          <Label htmlFor="message">Requirements</Label>
+          <Label htmlFor={id("message")}>Requirements</Label>
           <Textarea
-            id="message"
+            id={id("message")}
             name="message"
             rows={4}
             placeholder="Floor area, timeline, existing layout, budget band, anything else useful…"
@@ -125,9 +116,7 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
 
       <FormError message={error} />
 
-      <Button type="submit" disabled={submitting} className="mt-8 w-full">
-        {submitting ? "Sending…" : "Send enquiry"}
-      </Button>
+      <SubmitButton label="Send enquiry" busy={busy} pending={pending} />
       <FormFootnote>
         No newsletters, no reselling your details. We reply within {siteConfig.enquiryTurnaround}.
       </FormFootnote>

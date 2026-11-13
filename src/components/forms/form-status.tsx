@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import { SignalDots } from "@/components/ui/signal-dots";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,54 @@ export function FormError({ message }: { message: string | null }) {
     <p role="alert" className="co-data mt-5 border-l-2 border-co-ink pl-3 text-co-ink">
       Not sent — {message}
     </p>
+  );
+}
+
+/** Both labels share one grid cell, so the swap never changes the button's size. */
+const ROLL =
+  "col-start-1 row-start-1 transition-transform duration-(--duration-press) ease-(--ease-enter)";
+
+/**
+ * The submit for every lead form, wired to `usePendingSubmit`.
+ *
+ * Disabled the moment the form is sent (`busy`) — but it does not dim: a reply inside
+ * 300ms changes nothing on screen. Only a slow reply (`pending`) rolls the label up and
+ * "Sending…" in from below — a roll, not a fade, because Signal has no fades — and the
+ * live region announces it. Full width, so no press scale (`still`).
+ */
+export function SubmitButton({
+  label,
+  busy,
+  pending,
+  className,
+}: {
+  label: string;
+  busy: boolean;
+  pending: boolean;
+  className?: string;
+}) {
+  return (
+    <>
+      <Button
+        type="submit"
+        still
+        disabled={busy}
+        aria-busy={pending || undefined}
+        className={cn("mt-8 w-full disabled:opacity-100", className)}
+      >
+        <span className="grid overflow-hidden">
+          <span aria-hidden={pending || undefined} className={cn(ROLL, pending && "-translate-y-full")}>
+            {label}
+          </span>
+          <span aria-hidden={!pending || undefined} className={cn(ROLL, !pending && "translate-y-full")}>
+            Sending…
+          </span>
+        </span>
+      </Button>
+      <span className="sr-only" aria-live="polite">
+        {pending ? "Sending" : ""}
+      </span>
+    </>
   );
 }
 

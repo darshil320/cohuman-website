@@ -1,47 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent } from "@/components/forms/form-status";
-import { Button } from "@/components/ui/button";
+import { FIELD, FORM_GRID, FormError, FormFootnote, FormSent, SubmitButton } from "@/components/forms/form-status";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trackLeadSubmitted } from "@/lib/analytics";
+import { sendLead } from "@/lib/leads/client";
+import { usePendingSubmit } from "@/lib/use-pending-submit";
 import { siteConfig } from "@/lib/site-config";
 
 export function ShowroomVisitForm() {
   const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { busy, pending, run } = usePendingSubmit();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitting(true);
-    setError(null);
-
-    const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(form.entries());
-
-    try {
-      const response = await fetch("/api/showroom-visit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-      if (!result.success) {
-        setError(result.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-      trackLeadSubmitted("showroom_visit", {
-        preferredDate: String(payload.preferredDate ?? ""),
-      });
-      setSent(true);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+    const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+    const result = await run(() => sendLead("/api/showroom-visit", payload));
+    if (!result) return; // already sending
+    if (!result.ok) {
+      setError(result.error);
+      return;
     }
+    setError(null);
+    trackLeadSubmitted("showroom_visit", {
+      preferredDate: String(payload.preferredDate ?? ""),
+    });
+    setSent(true);
   }
 
   if (sent) {
@@ -57,15 +44,15 @@ export function ShowroomVisitForm() {
       <div className={FORM_GRID}>
         <div className={FIELD}>
           <Label htmlFor="visit-name">Name</Label>
-          <Input id="visit-name" name="name" placeholder="Your full name" required />
+          <Input id="visit-name" autoComplete="name" name="name" placeholder="Your full name" required />
         </div>
         <div className={FIELD}>
           <Label htmlFor="visit-email">Email</Label>
-          <Input id="visit-email" name="email" type="email" placeholder="name@company.com" required />
+          <Input id="visit-email" autoComplete="email" name="email" type="email" placeholder="name@company.com" required />
         </div>
         <div className={FIELD}>
           <Label htmlFor="visit-phone">Phone</Label>
-          <Input id="visit-phone" name="phone" type="tel" placeholder="+91" required />
+          <Input id="visit-phone" autoComplete="tel" name="phone" type="tel" placeholder="+91" required />
         </div>
         <div className={FIELD}>
           <Label htmlFor="visit-partySize">Number of visitors</Label>
@@ -92,9 +79,7 @@ export function ShowroomVisitForm() {
 
       <FormError message={error} />
 
-      <Button type="submit" disabled={submitting} className="mt-8 w-full">
-        {submitting ? "Sending…" : "Book showroom visit"}
-      </Button>
+      <SubmitButton label="Book showroom visit" busy={busy} pending={pending} />
       <FormFootnote>
         Visits are by appointment. We reply within {siteConfig.enquiryTurnaround}.
       </FormFootnote>

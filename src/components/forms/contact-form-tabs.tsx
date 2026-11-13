@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { ShowroomVisitForm } from "@/components/forms/showroom-visit-form";
 import { cn } from "@/lib/utils";
@@ -17,9 +17,28 @@ const TABS: { id: Tab; label: string }[] = [
  *
  * The active tab carries the green bar — the logo's bar, used as the active underline —
  * and `aria-selected`, so the state is in the markup as well as the colour.
+ *
+ * Both forms stay mounted and the inactive panel is `hidden`, so switching tabs never
+ * throws away what the visitor has typed. The tabs follow the ARIA tabs pattern: one tab
+ * stop, ←/→ move between them (Home/End to the ends) and select on the same frame.
  */
 export function ContactFormTabs() {
   const [tab, setTab] = useState<Tab>("enquiry");
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = TABS.length - 1;
+    const next =
+      event.key === "ArrowRight" ? (index === last ? 0 : index + 1)
+      : event.key === "ArrowLeft" ? (index === 0 ? last : index - 1)
+      : event.key === "Home" ? 0
+      : event.key === "End" ? last
+      : null;
+    if (next === null) return;
+    event.preventDefault();
+    setTab(TABS[next].id);
+    tabRefs.current[next]?.focus();
+  };
 
   return (
     <div className="border border-co-ink bg-co-bg">
@@ -29,12 +48,17 @@ export function ContactFormTabs() {
           return (
             <button
               key={t.id}
+              ref={(node) => {
+                tabRefs.current[i] = node;
+              }}
               type="button"
               role="tab"
               id={`contact-tab-${t.id}`}
               aria-selected={on}
-              aria-controls={on ? `contact-panel-${t.id}` : undefined}
+              aria-controls={`contact-panel-${t.id}`}
+              tabIndex={on ? 0 : -1}
               onClick={() => setTab(t.id)}
+              onKeyDown={(event) => onKeyDown(event, i)}
               className={cn(
                 "co-data relative px-4 py-4 text-left transition-colors sm:px-6",
                 i > 0 && "border-l border-co-ink",
@@ -48,9 +72,17 @@ export function ContactFormTabs() {
           );
         })}
       </div>
-      <div role="tabpanel" id={`contact-panel-${tab}`} aria-labelledby={`contact-tab-${tab}`}>
-        {tab === "enquiry" ? <EnquiryForm compact /> : <ShowroomVisitForm />}
-      </div>
+      {TABS.map((t) => (
+        <div
+          key={t.id}
+          role="tabpanel"
+          id={`contact-panel-${t.id}`}
+          aria-labelledby={`contact-tab-${t.id}`}
+          hidden={tab !== t.id}
+        >
+          {t.id === "enquiry" ? <EnquiryForm compact /> : <ShowroomVisitForm />}
+        </div>
+      ))}
     </div>
   );
 }
