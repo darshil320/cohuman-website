@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { MotionConfig } from "framer-motion";
 import { RevealObserver } from "@/components/ui/reveal-observer";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -289,25 +288,22 @@ export default async function RootLayout({
         <link rel="llms-txt" type="text/plain" href="/llms.txt" />
         <link rel="llms-full-txt" type="text/plain" href="/llms-full.txt" />
         {/*
-          One reduced-motion switch for the whole tree. Every animation in the site is
-          `framer-motion`, so honouring `prefers-reduced-motion` here means no component
-          has to check it — and crucially none of them may, since branching on
-          `useReducedMotion()` in markup renders a different tree on the server than in
-          the browser and breaks hydration.
+          No framer at the root: the header's overlays and the site-wide chrome are CSS, so
+          the animation library only loads on the routes that use it (the series pages and
+          the lightbox), each under its own `MotionConfig reducedMotion="user"`. Reduced
+          motion for everything else is the global layer in globals.css.
         */}
-        <MotionConfig reducedMotion="user">
-          {/* One IntersectionObserver for every `[data-reveal]` on the page. */}
-          <RevealObserver />
-          <QuoteDialogProvider>
-            <SiteHeader groups={groups} />
-            <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
-              {children}
-            </main>
-            <SiteFooter />
-            <WhatsAppButton />
-            <OrgatecPopup />
-          </QuoteDialogProvider>
-        </MotionConfig>
+        {/* One IntersectionObserver for every `[data-reveal]` on the page. */}
+        <RevealObserver />
+        <QuoteDialogProvider>
+          <SiteHeader groups={groups} />
+          <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
+            {children}
+          </main>
+          <SiteFooter />
+          <WhatsAppButton />
+          <OrgatecPopup />
+        </QuoteDialogProvider>
         <Analytics />
         <SpeedInsights />
       </body>

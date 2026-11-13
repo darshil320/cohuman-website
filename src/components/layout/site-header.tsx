@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { useHeroChrome } from "@/lib/hero-chrome";
+import { useOverlayFocus } from "@/lib/use-overlay-focus";
 import { cn } from "@/lib/utils";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { fullNav, primaryNav } from "@/lib/nav";
@@ -38,10 +38,24 @@ import type { CollectionGroup } from "@/lib/catalog/collection-menu";
  * the mobile menu — sized `top: 72px; bottom: 0` against the viewport — collapses to the
  * header's own box and vanishes. That was the "menu won't open after scrolling" bug: the
  * old header added `backdrop-blur` once the page scrolled.
+ *
+ * Both overlays are CSS (`co-drop` in globals.css), not framer: they wipe down from the
+ * bar on a transition, so closing one mid-open turns it around, and the header ships no
+ * animation library. Each mounts on its first open and then stays mounted, `inert` and
+ * hidden while closed. `useOverlayFocus` moves focus in, keeps Tab inside, closes on
+ * Escape and hands focus back to the trigger.
  */
 export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // Mounted on first open, kept after, so the close can animate and the panel's images
+  // are not fetched on pages where nobody opens it.
+  const [menuMounted, setMenuMounted] = useState(false);
+  if (mobileOpen && !menuMounted) setMenuMounted(true);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerToggleRef = useRef<HTMLButtonElement>(null);
   const { openQuote } = useQuoteDialog();
   const pathname = usePathname();
 
@@ -65,15 +79,8 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
     };
   }, [overlayOpen]);
 
-  // Escape closes the panel.
-  useEffect(() => {
-    if (!drawerOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setDrawerOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [drawerOpen]);
+  useOverlayFocus(mobileOpen, menuRef, menuToggleRef, () => setMobileOpen(false));
+  useOverlayFocus(drawerOpen, drawerRef, drawerToggleRef, () => setDrawerOpen(false));
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -112,6 +119,7 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
                 <NavItem
                   href={item.href}
                   isToggle={isCollections}
+                  buttonRef={drawerToggleRef}
                   expanded={drawerOpen}
                   onToggle={() => setDrawerOpen((v) => !v)}
                   onNavigate={() => setDrawerOpen(false)}
@@ -167,117 +175,127 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
             dots
             variant={onDark ? "onDark" : "primary"}
             onClick={() => openQuote()}
-            className="gap-2.5 px-3 sm:gap-3.5 sm:px-4"
+            className="co-hit gap-2.5 px-3 sm:gap-3.5 sm:px-4"
           >
             {/* Shortened on phones so the action never drops out of the bar. */}
             <span className="sm:hidden">Quote</span>
             <span className="hidden sm:inline">Get a quote</span>
           </Button>
 
+          {/*
+            40px visual, 44px target (`co-hit`). The two bars cross into an X with
+            transform only — each slides 3.5px (half the 7px between their centres) and
+            turns — so neither jumps position mid-turn.
+          */}
           <button
+            ref={menuToggleRef}
             type="button"
             onClick={() => setMobileOpen((open) => !open)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
             className={cn(
-              "relative flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[6px] border xl:hidden",
+              "co-hit flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[6px] border xl:hidden",
               onDark ? "border-co-panel-fg" : "border-co-ink",
             )}
           >
             <span
               className={cn(
-                "block h-px w-[18px] transition-transform duration-200",
+                "block h-px w-[18px] transition-transform duration-(--duration-drawer-in) ease-(--ease-move)",
                 ink,
-                mobileOpen && "absolute rotate-45",
+                mobileOpen && "translate-y-[3.5px] rotate-45",
               )}
             />
             <span
               className={cn(
-                "block h-px w-[18px] transition-transform duration-200",
+                "block h-px w-[18px] transition-transform duration-(--duration-drawer-in) ease-(--ease-move)",
                 ink,
-                mobileOpen && "absolute -rotate-45",
+                mobileOpen && "-translate-y-[3.5px] -rotate-45",
               )}
             />
           </button>
         </div>
       </div>
 
-      <CollectionsPanel open={drawerOpen} groups={groups} onClose={() => setDrawerOpen(false)} />
+      <CollectionsPanel
+        open={drawerOpen}
+        groups={groups}
+        panelRef={drawerRef}
+        onClose={() => setDrawerOpen(false)}
+      />
 
-      <AnimatePresence>
-        {mobileOpen && (
-          /*
-            The overlay wipes down from the bar rather than fading — the same plotter
-            motion as the page. Interactive chrome, mounted on demand, so a framer
-            `initial` here never reaches the server HTML.
-          */
-          <motion.div
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
-            animate={{ clipPath: "inset(0 0 0% 0)" }}
-            exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.3, ease: [0.65, 0, 0.35, 1] }}
-            style={{ top: HEADER_HEIGHT }}
-            className="fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg xl:hidden"
-          >
-            <nav aria-label="Menu" className="co-shell flex w-full flex-col pt-[clamp(16px,4vh,36px)]">
-              {fullNav.map((item, index) => {
-                const active = isActive(item.href);
-                if (item.href === "/collections") {
-                  return (
-                    <MobileCollections
-                      key={item.href}
-                      groups={groups}
-                      index={index}
-                      active={active}
-                      onNavigate={() => setMobileOpen(false)}
-                    />
-                  );
-                }
+      {menuMounted ? (
+        /*
+          The overlay wipes down from the bar rather than fading — the same plotter
+          motion as the page. Mounted on first open, never in the server HTML.
+        */
+        <div
+          ref={menuRef}
+          id="mobile-menu"
+          data-open={mobileOpen ? "" : undefined}
+          inert={!mobileOpen}
+          style={{ top: HEADER_HEIGHT }}
+          className="co-drop fixed inset-x-0 bottom-0 flex flex-col overflow-y-auto bg-co-bg xl:hidden"
+        >
+          <nav aria-label="Menu" className="co-shell flex w-full flex-col pt-[clamp(16px,4vh,36px)]">
+            {fullNav.map((item, index) => {
+              const active = isActive(item.href);
+              if (item.href === "/collections") {
                 return (
-                  <Link
+                  <MobileCollections
                     key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    aria-current={active ? "page" : undefined}
-                    className="group relative grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-3 border-b border-co-border py-[clamp(12px,2vh,18px)]"
-                  >
-                    <span aria-hidden className="co-data text-co-muted-2">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[1.2] tracking-[-0.02em]">
-                      {item.label}
-                    </span>
-                    <span aria-hidden className="text-[18px] leading-none">
-                      →
-                    </span>
-                    {active ? (
-                      <span aria-hidden className="absolute -bottom-px left-0 block h-[2px] w-16 bg-co-ink" />
-                    ) : null}
-                  </Link>
+                    groups={groups}
+                    index={index}
+                    active={active}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
                 );
-              })}
-            </nav>
-
-            <div className="co-shell mt-auto flex w-full flex-col gap-4 py-[clamp(24px,5vh,44px)]">
-              <Button
-                type="button"
-                onClick={() => {
-                  setMobileOpen(false);
-                  openQuote();
-                }}
-                className="w-full"
-              >
-                Get a quote
-              </Button>
-              <Button asChild variant="link" arrow className="self-start justify-self-start">
-                <Link href="/contact" onClick={() => setMobileOpen(false)}>
-                  Contact &amp; showroom
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className="group relative grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-3 border-b border-co-border py-[clamp(12px,2vh,18px)]"
+                >
+                  <span aria-hidden className="co-data text-co-muted-2">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[1.2] tracking-[-0.02em]">
+                    {item.label}
+                  </span>
+                  <span aria-hidden className="text-[18px] leading-none">
+                    →
+                  </span>
+                  {active ? (
+                    <span aria-hidden className="absolute -bottom-px left-0 block h-[2px] w-16 bg-co-ink" />
+                  ) : null}
                 </Link>
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              );
+            })}
+          </nav>
+
+          <div className="co-shell mt-auto flex w-full flex-col gap-4 py-[clamp(24px,5vh,44px)]">
+            <Button
+              type="button"
+              still
+              onClick={() => {
+                setMobileOpen(false);
+                openQuote();
+              }}
+              className="w-full"
+            >
+              Get a quote
+            </Button>
+            <Button asChild variant="link" arrow className="self-start justify-self-start">
+              <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                Contact &amp; showroom
+              </Link>
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
@@ -289,6 +307,7 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
 function NavItem({
   href,
   isToggle,
+  buttonRef,
   expanded,
   onToggle,
   onNavigate,
@@ -298,6 +317,7 @@ function NavItem({
 }: {
   href: string;
   isToggle: boolean;
+  buttonRef: RefObject<HTMLButtonElement | null>;
   expanded: boolean;
   onToggle: () => void;
   onNavigate: () => void;
@@ -308,6 +328,7 @@ function NavItem({
   if (isToggle) {
     return (
       <button
+        ref={buttonRef}
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}

@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 import { CollectionCard } from "@/components/collections/collection-card";
 import type { CollectionGroup } from "@/lib/catalog/collection-menu";
 import { HEADER_HEIGHT } from "@/lib/layout";
@@ -27,32 +26,36 @@ const PANEL_LINKS = [
  * Pointing at (or focusing) a group swaps the pictures; the group's name links to its
  * section of /collections.
  *
- * It wipes down from the bar, like the mobile menu — no fade. Mounted only while open,
- * so the framer `initial` never reaches the server HTML.
+ * It wipes down from the bar, like the mobile menu — no fade (`co-drop`, a CSS
+ * transition, so a close mid-open turns around). Mounted on the first open and kept, so
+ * its pictures are only fetched once somebody asks for them; `inert` while closed.
  */
 export function CollectionsPanel({
   open,
   groups,
+  panelRef,
   onClose,
 }: {
   open: boolean;
   groups: CollectionGroup[];
+  panelRef: RefObject<HTMLDivElement | null>;
   onClose: () => void;
 }) {
   const [activeId, setActiveId] = useState(groups[0]?.id);
+  const [mounted, setMounted] = useState(false);
+  if (open && !mounted) setMounted(true);
   const active = groups.find((g) => g.id === activeId) ?? groups[0];
 
   return (
-    <AnimatePresence>
-      {open && active ? (
-        <motion.div
+    <>
+      {mounted && active ? (
+        <div
+          ref={panelRef}
           id={COLLECTIONS_PANEL_ID}
-          initial={{ clipPath: "inset(0 0 100% 0)" }}
-          animate={{ clipPath: "inset(0 0 0% 0)" }}
-          exit={{ clipPath: "inset(0 0 100% 0)" }}
-          transition={{ duration: 0.3, ease: [0.65, 0, 0.35, 1] }}
+          data-open={open ? "" : undefined}
+          inert={!open}
           style={{ top: HEADER_HEIGHT }}
-          className="fixed inset-x-0 bottom-0 hidden overflow-y-auto border-t border-co-border bg-co-bg xl:block"
+          className="co-drop fixed inset-x-0 bottom-0 hidden overflow-y-auto border-t border-co-border bg-co-bg xl:block"
         >
           <div className="co-shell grid grid-cols-[minmax(280px,0.7fr)_minmax(0,1.7fr)] gap-x-[clamp(40px,5vw,96px)] py-[clamp(36px,4vw,64px)]">
             <nav aria-label="Collection groups" className="lg:sticky lg:top-0 lg:self-start">
@@ -124,9 +127,9 @@ export function CollectionsPanel({
               </ul>
             </div>
           </div>
-        </motion.div>
+        </div>
       ) : null}
-    </AnimatePresence>
+    </>
   );
 }
 
@@ -164,51 +167,66 @@ export function MobileCollections({
         <span className="font-display text-[clamp(22px,6vw,32px)] font-semibold leading-[1.2] tracking-[-0.02em]">
           Collections
         </span>
-        <span aria-hidden className="text-[22px] leading-none">
-          {expanded ? "−" : "+"}
+        {/* One glyph that turns: + becomes − as the vertical bar rotates flat. */}
+        <span aria-hidden className="relative block size-[14px]">
+          <span className="absolute inset-x-0 top-1/2 block h-[1.5px] -translate-y-1/2 bg-co-ink" />
+          <span
+            className={cn(
+              "absolute inset-y-0 left-1/2 block w-[1.5px] -translate-x-1/2 bg-co-ink transition-transform duration-(--duration-expand-in) ease-(--ease-move)",
+              expanded && "rotate-90",
+            )}
+          />
         </span>
         {active ? <span aria-hidden className="absolute -bottom-px left-0 block h-[2px] w-16 bg-co-ink" /> : null}
       </button>
 
-      {expanded ? (
-        <div id="mobile-collections" className="pb-5">
-          {groups.map((group) => (
-            <section key={group.id} aria-label={group.label} className="border-t border-co-border py-4">
-              <Link
-                href={`/collections#${group.id}`}
-                onClick={onNavigate}
-                className="flex items-baseline justify-between gap-4"
-              >
-                <span className="font-heading text-[19px] font-semibold text-co-ink">
-                  {group.label} <span className="co-data text-co-muted-2">({pad(group.items.length)})</span>
-                </span>
-                <span className="co-data text-co-ink">All →</span>
-              </Link>
-              <ul className="-mx-[18px] mt-3 flex list-none snap-x snap-mandatory scroll-px-[18px] gap-3 overflow-x-auto px-[18px] pb-1 sm:scroll-px-6 [scrollbar-width:none] sm:-mx-6 sm:px-6">
-                {group.items.map((item) => (
-                  <li key={item.slug} className="w-[148px] shrink-0 snap-start">
-                    <CollectionCard
-                      item={item}
-                      variant="plain"
-                      showLine={false}
-                      onNavigate={onNavigate}
-                      size="sm"
-                      sizes="148px"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-          <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-co-border pt-4">
-            {PANEL_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} onClick={onNavigate} className="co-data text-co-ink">
-                {link.label} →
-              </Link>
+      {/* Opens in place (grid rows 0fr → 1fr); `inert` while closed. */}
+      <div id="mobile-collections" data-open={expanded ? "" : undefined} inert={!expanded} className="co-expander">
+        <div>
+          <div className="pb-5">
+            {groups.map((group) => (
+              <section key={group.id} aria-label={group.label} className="border-t border-co-border py-4">
+                <Link
+                  href={`/collections#${group.id}`}
+                  onClick={onNavigate}
+                  className="flex items-baseline justify-between gap-4"
+                >
+                  <span className="font-heading text-[19px] font-semibold text-co-ink">
+                    {group.label} <span className="co-data text-co-muted-2">({pad(group.items.length)})</span>
+                  </span>
+                  <span className="co-data text-co-ink">All →</span>
+                </Link>
+                <ul className="-mx-[18px] mt-3 flex list-none snap-x snap-mandatory scroll-px-[18px] gap-3 overflow-x-auto px-[18px] pb-1 sm:scroll-px-6 [scrollbar-width:none] sm:-mx-6 sm:px-6">
+                  {group.items.map((item) => (
+                    <li key={item.slug} className="w-[148px] shrink-0 snap-start">
+                      <CollectionCard
+                        item={item}
+                        variant="plain"
+                        showLine={false}
+                        onNavigate={onNavigate}
+                        size="sm"
+                        sizes="148px"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
             ))}
+            <div className="flex flex-wrap gap-x-5 border-t border-co-border pt-2">
+              {PANEL_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={onNavigate}
+                  className="co-data inline-flex min-h-11 items-center text-co-ink"
+                >
+                  {link.label} →
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
+import { MotionConfig, animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import {
   forwardRef,
@@ -451,135 +451,138 @@ export function ImageLightbox({
   if (!item) return null;
 
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
-      <Dialog.Portal>
-        <Dialog.Overlay asChild>
-          <motion.div
-            className="fixed inset-0 z-[70] bg-co-ink"
-            style={{ opacity: backdrop }}
-          />
-        </Dialog.Overlay>
-        <Dialog.Content
-          onKeyDown={onKeyDown}
-          className="fixed inset-0 z-[71] flex flex-col outline-none"
-          aria-describedby={undefined}
-        >
-          <Dialog.Title className="sr-only">{item.alt}</Dialog.Title>
-
-          <header className="relative z-10 flex shrink-0 items-center gap-3 px-3 py-3 sm:px-5">
-            {items.length > 1 ? (
-              <span className="co-data text-co-panel-muted">
-                {index + 1} / {items.length}
-              </span>
-            ) : null}
-            <div className="ml-auto flex items-center gap-1.5">
-              <RoundButton
-                label="Zoom out"
-                disabled={!zoomed}
-                onClick={() => zoomBy(1 / 1.5)}
-              >
-                <MinusIcon />
-              </RoundButton>
-              <RoundButton label="Zoom in" onClick={() => zoomBy(1.5)}>
-                <PlusIcon />
-              </RoundButton>
-              <Dialog.Close asChild>
-                <RoundButton label="Close">
-                  <CloseIcon />
-                </RoundButton>
-              </Dialog.Close>
-            </div>
-          </header>
-
-          <div
-            ref={viewportRef}
-            className={cn(
-              "relative min-h-0 flex-1 touch-none overflow-hidden",
-              zoomed ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in",
-            )}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={(event) => {
-              onPointerUp(event);
-              onTapEnd(event);
-            }}
-            onPointerCancel={onPointerUp}
-            onDoubleClick={onDoubleClick}
-            onWheel={onWheel}
+    // Its own reduced-motion switch: the root layout no longer wraps the tree in one.
+    <MotionConfig reducedMotion="user">
+      <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
+        <Dialog.Portal>
+          <Dialog.Overlay asChild>
+            <motion.div
+              className="fixed inset-0 z-[70] bg-co-ink"
+              style={{ opacity: backdrop }}
+            />
+          </Dialog.Overlay>
+          <Dialog.Content
+            onKeyDown={onKeyDown}
+            className="fixed inset-0 z-[71] flex flex-col outline-none"
+            aria-describedby={undefined}
           >
-            <motion.div className="absolute inset-0" style={{ x, y, scale }}>
-              <motion.div
-                key={item.src}
-                className="absolute inset-0"
-                // A wipe in the direction of travel, never a crossfade: Signal images
-                // wipe, they do not fade. Reduced motion swaps the frame instantly.
-                initial={
-                  reduceMotion
-                    ? false
-                    : { clipPath: enterFrom < 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)" }
-                }
-                animate={{ clipPath: "inset(0 0% 0 0%)" }}
-                transition={WIPE}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  sizes="100vw"
-                  quality={90}
-                  /*
-                    Eager rather than preloaded: this mounts only after a visitor clicks a
-                    thumbnail, so a `<link rel="preload">` in the head would fetch a
-                    full-screen image nobody has opened yet. By the time this renders the
-                    request is already the urgent one on the page, which is what
-                    `fetchPriority="high"` says — and Next documents `fetchPriority` as a
-                    prop not to combine with `preload`.
-                  */
-                  loading="eager"
-                  fetchPriority="high"
-                  draggable={false}
-                  onLoad={(event) =>
-                    setNatural({
-                      w: event.currentTarget.naturalWidth,
-                      h: event.currentTarget.naturalHeight,
-                    })
+            <Dialog.Title className="sr-only">{item.alt}</Dialog.Title>
+
+            <header className="relative z-10 flex shrink-0 items-center gap-3 px-3 py-3 sm:px-5">
+              {items.length > 1 ? (
+                <span className="co-data text-co-panel-muted">
+                  {index + 1} / {items.length}
+                </span>
+              ) : null}
+              <div className="ml-auto flex items-center gap-1.5">
+                <RoundButton
+                  label="Zoom out"
+                  disabled={!zoomed}
+                  onClick={() => zoomBy(1 / 1.5)}
+                >
+                  <MinusIcon />
+                </RoundButton>
+                <RoundButton label="Zoom in" onClick={() => zoomBy(1.5)}>
+                  <PlusIcon />
+                </RoundButton>
+                <Dialog.Close asChild>
+                  <RoundButton label="Close">
+                    <CloseIcon />
+                  </RoundButton>
+                </Dialog.Close>
+              </div>
+            </header>
+
+            <div
+              ref={viewportRef}
+              className={cn(
+                "relative min-h-0 flex-1 touch-none overflow-hidden",
+                zoomed ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in",
+              )}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={(event) => {
+                onPointerUp(event);
+                onTapEnd(event);
+              }}
+              onPointerCancel={onPointerUp}
+              onDoubleClick={onDoubleClick}
+              onWheel={onWheel}
+            >
+              <motion.div className="absolute inset-0" style={{ x, y, scale }}>
+                <motion.div
+                  key={item.src}
+                  className="absolute inset-0"
+                  // A wipe in the direction of travel, never a crossfade: Signal images
+                  // wipe, they do not fade. Reduced motion swaps the frame instantly.
+                  initial={
+                    reduceMotion
+                      ? false
+                      : { clipPath: enterFrom < 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)" }
                   }
-                  className="select-none object-contain"
-                />
+                  animate={{ clipPath: "inset(0 0% 0 0%)" }}
+                  transition={WIPE}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="100vw"
+                    quality={90}
+                    /*
+                      Eager rather than preloaded: this mounts only after a visitor clicks a
+                      thumbnail, so a `<link rel="preload">` in the head would fetch a
+                      full-screen image nobody has opened yet. By the time this renders the
+                      request is already the urgent one on the page, which is what
+                      `fetchPriority="high"` says — and Next documents `fetchPriority` as a
+                      prop not to combine with `preload`.
+                    */
+                    loading="eager"
+                    fetchPriority="high"
+                    draggable={false}
+                    onLoad={(event) =>
+                      setNatural({
+                        w: event.currentTarget.naturalWidth,
+                        h: event.currentTarget.naturalHeight,
+                      })
+                    }
+                    className="select-none object-contain"
+                  />
+                </motion.div>
               </motion.div>
-            </motion.div>
-          </div>
+            </div>
 
-          {items.length > 1 ? (
-            <>
-              <EdgeButton
-                side="left"
-                label="Previous image"
-                disabled={index === 0}
-                onClick={() => goto(index - 1, -1)}
-              />
-              <EdgeButton
-                side="right"
-                label="Next image"
-                disabled={index === items.length - 1}
-                onClick={() => goto(index + 1, 1)}
-              />
-            </>
-          ) : null}
-
-          <footer className="relative z-10 shrink-0 px-4 pb-4 pt-3 text-center sm:pb-6">
-            {item.caption ? (
-              <p className="co-data mx-auto max-w-[64ch] text-co-panel-fg">
-                {item.caption}
-              </p>
+            {items.length > 1 ? (
+              <>
+                <EdgeButton
+                  side="left"
+                  label="Previous image"
+                  disabled={index === 0}
+                  onClick={() => goto(index - 1, -1)}
+                />
+                <EdgeButton
+                  side="right"
+                  label="Next image"
+                  disabled={index === items.length - 1}
+                  onClick={() => goto(index + 1, 1)}
+                />
+              </>
             ) : null}
-            <p className="co-eyebrow mt-1.5 text-co-panel-faint">
-              {zoomed ? "Drag to move · double-tap to fit" : "Double-tap or pinch to zoom"}
-            </p>
-          </footer>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+
+            <footer className="relative z-10 shrink-0 px-4 pb-4 pt-3 text-center sm:pb-6">
+              {item.caption ? (
+                <p className="co-data mx-auto max-w-[64ch] text-co-panel-fg">
+                  {item.caption}
+                </p>
+              ) : null}
+              <p className="co-eyebrow mt-1.5 text-co-panel-faint">
+                {zoomed ? "Drag to move · double-tap to fit" : "Double-tap or pinch to zoom"}
+              </p>
+            </footer>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </MotionConfig>
   );
 }
 
@@ -595,7 +598,7 @@ const RoundButton = forwardRef<
       aria-label={label}
       title={label}
       className={cn(
-        "flex h-10 w-10 items-center justify-center border border-co-panel-fg text-co-panel-fg transition-colors hover:bg-co-panel-fg hover:text-co-ink disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-co-panel-fg",
+        "co-hit flex h-10 w-10 items-center justify-center border border-co-panel-fg text-co-panel-fg transition-colors hover:bg-co-panel-fg hover:text-co-ink disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-co-panel-fg",
         className,
       )}
       {...rest}
