@@ -17,9 +17,14 @@ import { cn } from "@/lib/utils";
  * call sites keep compiling.
  *
  * Hover never turns anything green: the signal is for state, and hover is not state.
+ *
+ * Press: boxed buttons settle to 0.96 on `:active` (150ms, ease-out), so a press
+ * registers before its result arrives; letting go mid-press glides back. Text links skip
+ * it, and `still` opts a button out — use it on full-width buttons (anything wider than
+ * ~200px reads 4% as a jump) and dense, repeated controls.
  */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-3.5 whitespace-nowrap font-mono text-[12px] font-normal uppercase tracking-[0.06em] transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50",
+  "group/button inline-flex shrink-0 items-center justify-center gap-3.5 whitespace-nowrap font-mono text-[12px] font-normal uppercase tracking-[0.06em] transition-[color,background-color,border-color,scale] duration-(--duration-press) ease-(--ease-enter) disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -65,7 +70,12 @@ export interface ButtonProps
   dots?: boolean;
   /** A trailing arrow that nudges right on hover, for text links. */
   arrow?: boolean;
+  /** No press scale — for full-width buttons and dense, repeated controls. */
+  still?: boolean;
 }
+
+const TEXT_VARIANTS = new Set(["link", "linkOnDark", "outline", "outlineOnDark"]);
+const PRESS = "active:not-disabled:scale-[0.96]";
 
 function Button({
   className,
@@ -74,12 +84,14 @@ function Button({
   asChild = false,
   dots = false,
   arrow = false,
+  still = false,
   children,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot : "button";
+  const press = !still && !TEXT_VARIANTS.has(variant ?? "primary");
   return (
-    <Comp className={cn(buttonVariants({ variant, size, className }))} {...props}>
+    <Comp className={cn(buttonVariants({ variant, size }), press && PRESS, className)} {...props}>
       <Slottable>{children}</Slottable>
       {dots ? <SignalDots /> : null}
       {arrow ? (
