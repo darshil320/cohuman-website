@@ -226,6 +226,27 @@ next flick. Same rule: clip and transform only, never opacity.
 sideways under 768px (`co-rail`): one figure and the edge of the next in view, snapping,
 bleeding through the gutter. From 768px the same children sit in the section's grid.
 
+### Interaction motion (Nov 2026 UX pass)
+
+The things people cause run on named tokens in `:root` (`globals.css`), mirrored for
+framer in `src/lib/motion.ts`. Curves: `--ease-enter` (appearing), `--ease-exit`
+(leaving), `--ease-move` (resizing in place). Exits are shorter than entrances. Overlays
+**wipe**, never fade.
+
+| What | How | Where |
+|---|---|---|
+| Press | boxed buttons settle to 0.96, 150ms; text links and `still` buttons don't | `Button` |
+| Dialogs | panel wipes down from 0.97 scale, 220ms in / 160ms out; veil instant, held until the panel leaves | `co-modal`, `co-veil` |
+| Header panels, mobile menu | wipe down from the bar, 280ms in / 200ms out, a transition (interruptible); `inert` while closed | `co-drop` |
+| In-place expanders | grid rows 0fr → 1fr, 250ms / 190ms | `co-expander` |
+| Sticky quote bar | rises 280ms, leaves 200ms | `series-sticky-bar.tsx` |
+| Slow submits | "Sending…" only after 300ms, held ≥ 500ms, rolls in (no fade) | `SubmitButton`, `usePendingSubmit` |
+
+Small controls keep their visual size and get a 44px invisible target (`co-hit`). Under
+`prefers-reduced-motion` a global layer resolves every transition and animation on its
+first frame; only `[data-motion-keep]` (work-in-progress indicators) keeps moving. Smooth
+scrolls go through `scrollToId`, which jumps instead.
+
 ## Rules
 
 1. **One green thing per screen.** The header's quote dots are always on screen, so content
