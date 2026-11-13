@@ -332,6 +332,47 @@
 :root {
   --background: var(--color-co-bg);
   --foreground: var(--color-co-ink);
+
+  /*
+    Interaction motion tokens (UX pass, Nov 2026 — values from the charles-ux-animation
+    skill). Signal's reveal tokens (`--ease-co`, `--ease-plot`, `--duration-plot`) stay as
+    they are; these time the things people cause: presses, overlays, expanders.
+
+    Named apart from Tailwind's `--ease-in` / `--ease-out` on purpose, so the stock
+    `ease-*` utilities keep their meaning. Mirrored for framer in `src/lib/motion.ts` —
+    change both together.
+
+    Signal has no opacity fades, so overlays wipe (clip-path) where the skill's recipes
+    fade; the durations and curves are the skill's.
+  */
+  --ease-enter: cubic-bezier(0.32, 0.72, 0, 1); /* appearing, responding to input */
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45); /* leaving */
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1); /* moving or resizing on screen */
+  --duration-press: 150ms;
+  --duration-modal-in: 220ms;
+  --duration-modal-out: 160ms;
+  --duration-drawer-in: 280ms;
+  --duration-drawer-out: 200ms;
+  --duration-expand-in: 250ms;
+  --duration-expand-out: 190ms;
+}
+
+/*
+  Hit area: an invisible 44×44 zone around a control whose visual has to stay smaller
+  (close buttons, the menu toggle, 40px icon buttons). The visual never grows.
+*/
+@utility co-hit {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
 }
 
 /*
@@ -737,5 +778,129 @@ a:focus-visible,
 
   .co-clip::after {
     display: none;
+  }
+}
+
+/*
+  Overlays, interaction motion. Signal never fades, so these wipe — the same plotter
+  motion as the page — on the skill's timings: ease-out in, ease-in out, exits shorter.
+
+  `co-modal`: Radix dialog panels. Radix keeps a closing dialog mounted until its CSS
+  animation ends, so these are keyframes keyed on `data-state`. The panel opens top to
+  bottom while settling from 0.97 scale (`scale`, not `transform`, so the centring
+  `translate` is untouched), and closes back up the way it came. No fill on the open
+  animation: once landed the panel carries no clip-path, so focus rings are never cut.
+  `co-veil`: the ink veil arrives at once and holds until the panel has left, so the two
+  halves of the dialog finish together.
+*/
+@keyframes co-modal-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+    scale: 0.97;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    scale: 1;
+  }
+}
+
+@keyframes co-modal-out {
+  from {
+    clip-path: inset(0 0 0 0);
+    scale: 1;
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+    scale: 0.97;
+  }
+}
+
+@keyframes co-hold {
+  to {
+    visibility: visible;
+  }
+}
+
+.co-modal[data-state="open"] {
+  animation: co-modal-in var(--duration-modal-in) var(--ease-enter);
+}
+
+.co-modal[data-state="closed"] {
+  animation: co-modal-out var(--duration-modal-out) var(--ease-exit) forwards;
+}
+
+.co-veil[data-state="closed"] {
+  animation: co-hold var(--duration-modal-out) linear forwards;
+}
+
+/*
+  `co-drop`: a full-height panel that drops from the header bar (the mobile menu, the
+  Collections panel). A transition, not keyframes, so closing it halfway open turns it
+  around from where it is. It stays mounted once opened; while closed it is clipped away,
+  `visibility: hidden` (so nothing in it takes focus or clicks) and `inert` in the markup.
+  `@starting-style` gives the first open, which mounts it already open, a start to wipe
+  from.
+*/
+.co-drop {
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition:
+    clip-path var(--duration-drawer-out) var(--ease-exit),
+    visibility 0s linear var(--duration-drawer-out);
+}
+
+.co-drop[data-open] {
+  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  transition:
+    clip-path var(--duration-drawer-in) var(--ease-enter),
+    visibility 0s linear 0s;
+}
+
+@starting-style {
+  .co-drop[data-open] {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/*
+  `co-expander`: a block that opens in place. The rows of a one-cell grid go 0fr → 1fr, so
+  the content's real height animates without measuring it. `overflow-y: clip` (not
+  `hidden`) lets a swipe rail inside still bleed sideways to the screen edge.
+*/
+.co-expander {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-expand-out) var(--ease-move);
+}
+
+.co-expander[data-open] {
+  grid-template-rows: 1fr;
+  transition-duration: var(--duration-expand-in);
+}
+
+.co-expander > * {
+  min-height: 0;
+  overflow-x: visible;
+  overflow-y: clip;
+}
+
+/*
+  Reduced motion, globally. Every transition and animation on the site resolves on its
+  first frame — end states and information are identical, only the travel is gone. The
+  one exemption is `[data-motion-keep]`: an indicator that work is still happening keeps
+  moving, because a frozen one reads as a hang. (The reveal primitives above also drop
+  their hidden start state under reduced motion.)
+*/
+@media (prefers-reduced-motion: reduce) {
+  *:not([data-motion-keep]):not([data-motion-keep] *),
+  *:not([data-motion-keep]):not([data-motion-keep] *)::before,
+  *:not([data-motion-keep]):not([data-motion-keep] *)::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
   }
 }
