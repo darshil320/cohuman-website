@@ -59,9 +59,13 @@ export function OrgatecPopup() {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        {/* Flat ink veil, no blur: Signal has no glass. */}
-        <Dialog.Overlay className="fixed inset-0 z-[70] bg-co-ink/70" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(480px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-ink bg-co-bg">
+        {/*
+            Flat ink veil, no blur: Signal has no glass. The panel wipes down from its top
+            edge while settling from 0.97 (`co-modal`); the veil arrives at once and holds
+            until the panel has left (`co-veil`) — Signal has no fades.
+          */}
+        <Dialog.Overlay className="co-veil fixed inset-0 z-[70] bg-co-ink/70" />
+        <Dialog.Content className="co-modal fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(480px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-ink bg-co-bg">
           <div className="flex items-start justify-between gap-6 border-b border-co-ink p-6 sm:px-8 sm:py-7">
             <Logo className="w-[160px]" sizes="160px" />
             <Dialog.Close
@@ -89,7 +93,7 @@ export function OrgatecPopup() {
             />
 
             <Dialog.Close asChild>
-              <Button type="button" className="mt-8 w-full sm:w-auto">
+              <Button type="button" still className="mt-8 w-full sm:w-auto">
                 See you there
               </Button>
             </Dialog.Close>

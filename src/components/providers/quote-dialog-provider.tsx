@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { trackQuoteOpened } from "@/lib/analytics";
 
@@ -21,8 +21,12 @@ export function useQuoteDialog() {
 export function QuoteDialogProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState<string | undefined>(undefined);
+  // The dialog is opened from code, not a Radix Trigger, so Radix has nothing to hand
+  // focus back to on close; remember the control that opened it.
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const openQuote = useCallback((nextSubject?: string) => {
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setSubject(nextSubject);
     setOpen(true);
     trackQuoteOpened(nextSubject ?? "general");
@@ -35,9 +39,21 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
       {children}
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
-          {/* Flat ink veil, no blur: Signal has no glass. */}
-          <Dialog.Overlay className="fixed inset-0 z-[70] bg-co-ink/70" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(600px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-ink bg-co-bg">
+          {/*
+            Flat ink veil, no blur: Signal has no glass. The panel wipes down from its top
+            edge while settling from 0.97 (`co-modal`); the veil arrives at once and holds
+            until the panel has left (`co-veil`) — Signal has no fades.
+          */}
+          <Dialog.Overlay className="co-veil fixed inset-0 z-[70] bg-co-ink/70" />
+          <Dialog.Content
+            onCloseAutoFocus={(event) => {
+              const target = returnFocusRef.current;
+              // Not if it has gone or sits in a closed panel (the mobile menu's quote button).
+              if (!target || !target.isConnected || target.closest("[inert]")) return;
+              event.preventDefault();
+              target.focus({ preventScroll: true });
+            }}
+            className="co-modal fixed left-1/2 top-1/2 z-[71] max-h-[90vh] w-[min(600px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-co-ink bg-co-bg">
             <div className="flex items-start justify-between gap-6 border-b border-co-ink p-6 sm:px-8 sm:py-7">
               <div className="min-w-0">
                 <p className="co-eyebrow">Enquiry — get a quote</p>
@@ -50,7 +66,7 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
               </div>
               <Dialog.Close
                 aria-label="Close"
-                className="flex h-10 w-10 shrink-0 items-center justify-center border border-co-ink text-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
+                className="co-hit flex h-10 w-10 shrink-0 items-center justify-center border border-co-ink text-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
               >
                 <X className="h-4 w-4" strokeWidth={1.5} />
               </Dialog.Close>
