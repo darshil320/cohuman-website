@@ -21,10 +21,11 @@ const PANEL_LINKS = [
 
 /**
  * The Collections panel — the header's full-page menu (Nov 2026, after amardeepdesign.com's
- * Products menu). Clicking "Collections" opens it under the bar: every group on the left
- * in display type with its count, and the active group's products as pictures on the
- * right. Pointing at (or focusing) a group swaps the pictures; the group's name itself
- * links to its section of /collections.
+ * Products menu). Clicking "Collections" opens it under the bar: the groups on the left in
+ * display type with their counts and, under them, a short list of related pages; the
+ * active group's products on the right as large, borderless pictures, three across.
+ * Pointing at (or focusing) a group swaps the pictures; the group's name links to its
+ * section of /collections.
  *
  * It wipes down from the bar, like the mobile menu — no fade. Mounted only while open,
  * so the framer `initial` never reaches the server HTML.
@@ -53,8 +54,8 @@ export function CollectionsPanel({
           style={{ top: HEADER_HEIGHT }}
           className="fixed inset-x-0 bottom-0 hidden overflow-y-auto border-t border-co-border bg-co-bg xl:block"
         >
-          <div className="co-shell grid min-h-full grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] gap-x-[clamp(32px,5vw,96px)] py-[clamp(32px,4vw,64px)]">
-            <div className="flex flex-col">
+          <div className="co-shell grid grid-cols-[minmax(280px,0.7fr)_minmax(0,1.7fr)] gap-x-[clamp(40px,5vw,96px)] py-[clamp(36px,4vw,64px)]">
+            <nav aria-label="Collection groups" className="lg:sticky lg:top-0 lg:self-start">
               <ul className="list-none p-0">
                 {groups.map((group) => {
                   const on = group.id === active.id;
@@ -67,25 +68,25 @@ export function CollectionsPanel({
                         onFocus={() => setActiveId(group.id)}
                         aria-current={on ? "true" : undefined}
                         className={cn(
-                          "inline-flex items-start gap-3 whitespace-nowrap py-1 font-display text-[clamp(40px,3.8vw,72px)] font-semibold leading-[1.08] tracking-[-0.02em] transition-colors duration-150",
-                          on ? "text-co-ink" : "text-co-border hover:text-co-muted-2",
+                          "inline-flex items-start gap-2.5 whitespace-nowrap py-1.5 font-display text-[clamp(36px,3.4vw,60px)] font-semibold leading-[1.05] tracking-[-0.02em] transition-colors duration-150",
+                          on ? "text-co-ink" : "text-co-muted-2/45 hover:text-co-muted-2",
                         )}
                       >
                         {group.label}
-                        <span className="co-data mt-[0.6em] text-co-muted-2">({pad(group.items.length)})</span>
+                        <span className="co-data mt-[0.5em] text-co-muted-2">({pad(group.items.length)})</span>
                       </Link>
                     </li>
                   );
                 })}
               </ul>
 
-              <ul className="mt-auto grid list-none gap-0 border-t border-co-ink p-0 pt-2">
+              <ul className="mt-10 grid list-none gap-2.5 border-t border-co-border p-0 pt-5">
                 {PANEL_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       onClick={onClose}
-                      className="co-data flex min-h-11 items-center justify-between border-b border-co-border text-co-muted transition-colors hover:text-co-ink"
+                      className="co-data inline-flex min-h-8 items-center gap-2 text-co-muted transition-colors hover:text-co-ink"
                     >
                       {link.label}
                       <span aria-hidden>→</span>
@@ -93,23 +94,31 @@ export function CollectionsPanel({
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
             <div>
-              <div className="flex items-baseline justify-between gap-6 border-b border-co-ink pb-3">
-                <p className="max-w-[56ch] text-[15px] leading-[1.55] text-co-ink-soft">{active.blurb}</p>
+              <div className="flex items-baseline justify-between gap-6">
+                <p className="co-eyebrow">
+                  {active.label} · {pad(active.items.length)}
+                </p>
                 <Link
                   href={`/collections#${active.id}`}
                   onClick={onClose}
-                  className="co-data shrink-0 text-co-ink underline-offset-4 hover:underline"
+                  className="co-data text-co-ink underline-offset-4 hover:underline"
                 >
-                  View all {active.label} →
+                  View all →
                 </Link>
               </div>
-              <ul className="mt-6 grid list-none grid-cols-3 gap-x-5 gap-y-8 p-0 2xl:grid-cols-4">
+              <ul className="mt-5 grid list-none grid-cols-3 gap-x-6 gap-y-9 p-0">
                 {active.items.map((item) => (
-                  <li key={item.slug}>
-                    <CollectionCard item={item} onNavigate={onClose} size="sm" sizes="(min-width: 1536px) 14vw, 18vw" />
+                  <li key={item.slug} className="min-w-0">
+                    <CollectionCard
+                      item={item}
+                      variant="plain"
+                      onNavigate={onClose}
+                      size="sm"
+                      sizes="(min-width: 1536px) 20vw, 22vw"
+                    />
                   </li>
                 ))}
               </ul>
@@ -122,9 +131,10 @@ export function CollectionsPanel({
 }
 
 /**
- * Collections inside the phone menu: a row that expands in place to every group, each a
- * swipe rail of product pictures — products first, so a seating link no longer drops a
- * visitor straight into the quote form.
+ * Collections inside the phone menu: a row that expands in place to the groups, each a
+ * heading that links to its section and a swipe rail of fixed-width pictures — products
+ * first, so a seating link no longer drops a visitor straight into the quote form.
+ * Cards are a fixed 148px with one-line names, so the rail stays even.
  */
 export function MobileCollections({
   groups,
@@ -161,29 +171,42 @@ export function MobileCollections({
       </button>
 
       {expanded ? (
-        <div id="mobile-collections" className="grid gap-7 pb-6">
+        <div id="mobile-collections" className="pb-5">
           {groups.map((group) => (
-            <section key={group.id} aria-label={group.label}>
-              <div className="flex items-baseline justify-between">
-                <p className="co-eyebrow">
-                  {group.label} ({pad(group.items.length)})
-                </p>
-                <Link href={`/collections#${group.id}`} onClick={onNavigate} className="co-data text-co-ink">
-                  All →
-                </Link>
-              </div>
-              <ul className="-mx-[18px] mt-3 flex list-none gap-3 overflow-x-auto px-[18px] sm:-mx-6 sm:px-6 lg:-mx-12 lg:px-12 pb-1 [scrollbar-width:none]">
+            <section key={group.id} aria-label={group.label} className="border-t border-co-border py-4">
+              <Link
+                href={`/collections#${group.id}`}
+                onClick={onNavigate}
+                className="flex items-baseline justify-between gap-4"
+              >
+                <span className="font-heading text-[19px] font-semibold text-co-ink">
+                  {group.label} <span className="co-data text-co-muted-2">({pad(group.items.length)})</span>
+                </span>
+                <span className="co-data text-co-ink">All →</span>
+              </Link>
+              <ul className="-mx-[18px] mt-3 flex list-none snap-x snap-mandatory scroll-px-[18px] gap-3 overflow-x-auto px-[18px] pb-1 sm:scroll-px-6 [scrollbar-width:none] sm:-mx-6 sm:px-6">
                 {group.items.map((item) => (
-                  <li key={item.slug} className="w-[38vw] max-w-[180px] shrink-0">
-                    <CollectionCard item={item} onNavigate={onNavigate} size="sm" sizes="40vw" />
+                  <li key={item.slug} className="w-[148px] shrink-0 snap-start">
+                    <CollectionCard
+                      item={item}
+                      variant="plain"
+                      showLine={false}
+                      onNavigate={onNavigate}
+                      size="sm"
+                      sizes="148px"
+                    />
                   </li>
                 ))}
               </ul>
             </section>
           ))}
-          <Link href="/collections" onClick={onNavigate} className="co-data text-co-ink">
-            All collections →
-          </Link>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-co-border pt-4">
+            {PANEL_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} onClick={onNavigate} className="co-data text-co-ink">
+                {link.label} →
+              </Link>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

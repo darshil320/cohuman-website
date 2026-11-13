@@ -9,22 +9,39 @@ import { cn } from "@/lib/utils";
  * (`co-cutout`); room shots are cropped to fill. Shared by the header's Collections
  * panel, /collections and the product pages, so every list of products looks the same.
  *
- * No hooks, so it renders on the server and inside the client panel alike.
+ * `variant`:
+ * - `boxed` (pages): a 4:5 frame in a hairline border, the line under the name.
+ * - `plain` (menus): a borderless 4:3 frame, name and line each held to one line, so a
+ *   row of cards never goes ragged when one name or size is longer than the rest.
+ *
+ * No hooks, so it renders on the server and inside the client menus alike.
  */
 export function CollectionCard({
   item,
   sizes,
   onNavigate,
   size = "md",
+  variant = "boxed",
+  showLine = true,
 }: {
   item: CollectionItem;
   sizes: string;
   onNavigate?: () => void;
   size?: "sm" | "md";
+  variant?: "boxed" | "plain";
+  showLine?: boolean;
 }) {
+  const plain = variant === "plain";
   return (
-    <Link href={item.href} onClick={onNavigate} className="group block">
-      <span className="relative block aspect-[4/5] overflow-hidden border border-co-border bg-co-bg-alt transition-colors duration-150 group-hover:border-co-ink">
+    <Link href={item.href} onClick={onNavigate} className="group block min-w-0">
+      <span
+        className={cn(
+          "relative block overflow-hidden bg-co-bg-alt",
+          plain
+            ? "aspect-[4/3]"
+            : "aspect-[4/5] border border-co-border transition-colors duration-150 group-hover:border-co-ink",
+        )}
+      >
         <Image
           src={item.image}
           alt={item.imageAlt}
@@ -36,13 +53,16 @@ export function CollectionCard({
       </span>
       <span
         className={cn(
-          "block font-heading font-semibold leading-[1.25] text-co-ink",
+          "block font-heading font-semibold leading-[1.25] text-co-ink underline-offset-4 group-hover:underline",
           size === "sm" ? "mt-3 text-[16px]" : "mt-4 text-[clamp(18px,1.5vw,22px)]",
+          plain && "truncate",
         )}
       >
         {item.title}
       </span>
-      <span className="co-data mt-1 block text-co-muted-2">{item.line}</span>
+      {showLine ? (
+        <span className={cn("co-data mt-1 block text-co-muted-2", plain && "truncate")}>{item.line}</span>
+      ) : null}
     </Link>
   );
 }
