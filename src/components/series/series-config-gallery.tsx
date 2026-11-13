@@ -89,7 +89,11 @@ export function SeriesConfigGallery() {
           </button>
         </div>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-2" role="group" aria-label="Configurations">
+        {/*
+          Each bar's button is 44px tall and padded 4px a side with no gap between them, so
+          the bars sit 8px apart as before but every target is ≥ 28×44 and none overlap.
+        */}
+        <div className="mt-6 flex flex-wrap justify-center" role="group" aria-label="Configurations">
           {configs.map((c, i) => (
             <button
               key={c.slug}
@@ -97,7 +101,7 @@ export function SeriesConfigGallery() {
               aria-label={`${c.n} — ${c.name}`}
               aria-current={i === index}
               onClick={() => go(i)}
-              className="py-2"
+              className="flex h-11 items-center px-1"
             >
               <span className={cn("block h-[3px] w-5 sm:w-7", i === index ? "bg-co-green" : "bg-co-border hover:bg-co-muted-2")} />
             </button>

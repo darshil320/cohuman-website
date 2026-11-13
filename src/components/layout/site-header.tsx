@@ -102,7 +102,7 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
         style={{ height: HEADER_HEIGHT }}
         className="co-shell flex items-center justify-between gap-4 sm:gap-8"
       >
-        <Link href="/" className="group flex shrink-0 items-center" aria-label="Cohuman — home">
+        <Link href="/" className="co-hit group flex shrink-0 items-center" aria-label="Cohuman — home">
           <Logo
             eager
             tone={onDark ? "light" : "dark"}
