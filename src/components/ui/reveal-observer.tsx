@@ -19,6 +19,9 @@ import { useEffect } from "react";
  * of the subtree it has already seen — cheap, because it only ever observes elements that
  * still lack `data-shown`.
  */
+/** Far larger than any page, so "above the viewport" always falls inside the root. */
+const SCROLLED_PAST_PX = 100_000;
+
 export function RevealObserver() {
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
@@ -31,7 +34,13 @@ export function RevealObserver() {
           observer.unobserve(entry.target);
         }
       },
-      { rootMargin: "0px 0px -10% 0px" },
+      // The huge top margin counts everything ABOVE the viewport as seen. Chrome clips a
+      // target by its own clip-path, and a hidden reveal is clipped to a zero-size line at
+      // its leading edge (the top edge on phones). When a jump — an anchor link, a fast
+      // fling, `scrollIntoView` — carries that edge from below the viewport to above it
+      // between two frames, it never intersects the viewport itself, and the content
+      // would stay hidden for good. Anything scrolled past is simply shown.
+      { rootMargin: `${SCROLLED_PAST_PX}px 0px -10% 0px` },
     );
 
     const observeAll = () => {
