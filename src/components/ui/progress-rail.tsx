@@ -35,9 +35,10 @@ export function ProgressRail({
         aria-valuetext={caption}
         className={cn("relative h-[2px]", tone === "dark" ? "bg-co-panel-border" : "bg-co-border")}
       >
+        {/* Grows from the left edge with `scaleX`, never `width`: no layout per frame. */}
         <span
-          className="absolute inset-y-0 left-0 block bg-co-green transition-[width] duration-[400ms] ease-linear motion-reduce:transition-none"
-          style={{ width: `${total > 0 ? (clamped / total) * 100 : 0}%` }}
+          className="absolute inset-0 block origin-left bg-co-green transition-transform duration-(--duration-plot) ease-(--ease-plot) motion-reduce:transition-none"
+          style={{ transform: `scaleX(${total > 0 ? clamped / total : 0})` }}
         />
       </div>
       <p className={cn("co-data mt-2", tone === "dark" ? "text-co-panel-faint" : "text-co-muted-2")}>{caption}</p>

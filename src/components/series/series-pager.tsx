@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { scrollToId } from "@/lib/motion";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
@@ -19,9 +20,8 @@ export function SeriesPager() {
   const prev = series.configs[(index - 1 + count) % count];
   const next = series.configs[(index + 1) % count];
 
-  const scrollTo = (id: string) => {
-    document.querySelector(`#${id}`)?.scrollIntoView({ behavior: "smooth" });
-  };
+  // Smooth unless the visitor asked for reduced motion.
+  const scrollTo = scrollToId;
 
   const load = (target: typeof config) => {
     pickConfig(series.configs.indexOf(target));

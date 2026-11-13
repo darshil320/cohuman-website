@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { finishLabel, selectedParts } from "@/lib/series";
 import { SERIES_BAR_HEIGHT } from "@/lib/layout";
+import { DURATION_S, EASE_ENTER, EASE_EXIT, scrollToId } from "@/lib/motion";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
@@ -22,7 +23,7 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
   const finish = finishLabel(selection);
 
   const toEnquire = () => {
-    document.querySelector("#enquire")?.scrollIntoView({ behavior: "smooth" });
+    scrollToId("enquire");
     history.pushState(null, "", "#enquire");
   };
 
@@ -33,9 +34,8 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
           style={{ height: SERIES_BAR_HEIGHT }}
           className="fixed bottom-0 left-0 right-0 z-40 border-t border-co-ink bg-co-bg-alt"
           initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ duration: 0.3, ease: [0.65, 0, 0.35, 1] }}
+          animate={{ y: 0, transition: { duration: DURATION_S.drawerIn, ease: EASE_ENTER } }}
+          exit={{ y: "100%", transition: { duration: DURATION_S.drawerOut, ease: EASE_EXIT } }}
         >
           {/*
             Fixed height, matching `SERIES_BAR_HEIGHT`, because the assembly section

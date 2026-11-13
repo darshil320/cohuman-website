@@ -6,6 +6,7 @@ import { RegistrationCross } from "@/components/ui/registration-cross";
 import type { SeriesConfig, SeriesDefinition } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
+import { scrollToId } from "@/lib/motion";
 
 /** The finish a configuration was photographed in, or null where the series names none. */
 function finishCaption(series: SeriesDefinition, item: SeriesConfig): string | null {
@@ -36,7 +37,7 @@ export function SeriesConfigGallery() {
 
   const configure = () => {
     pickConfig(index);
-    document.querySelector("#configuration")?.scrollIntoView({ behavior: "smooth" });
+    scrollToId("configuration");
   };
 
   return (
