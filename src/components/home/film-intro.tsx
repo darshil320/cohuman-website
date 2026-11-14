@@ -53,12 +53,26 @@ export function FilmIntro({ product }: { product: { name: string; href: string }
           <KineticHeading>{`${siteConfig.tagline}.`}</KineticHeading>
         </h1>
 
-        {/* Phones: the sentence and both links stay in the empty upper half of the cut. */}
-        <div className="mt-5 max-w-[34ch] md:hidden">
-          <p className="text-[14px] leading-[1.5]">{SENTENCE}</p>
-          <HeroLinks product={product} className="mt-2" />
-        </div>
+        {/* Phones: the sentence stays in the empty upper half of the portrait cut. */}
+        <p className="mt-4 max-w-[34ch] text-[14px] leading-[1.5] md:hidden">{SENTENCE}</p>
       </div>
+
+      {/*
+        Phones: the two actions on the floor under the desk (the portrait cut keeps its
+        bottom ~quarter clear), as full-width ruled rows — a short parts list rather than
+        two loose links — sitting above the control block and the WhatsApp button.
+      */}
+      <nav
+        aria-label="Hero"
+        className="co-shell pointer-events-none absolute inset-x-0 bottom-[calc(48px+clamp(8px,2svh,24px))] z-10 text-co-ink md:hidden"
+      >
+        <HeroRow href="/configure" index="01">
+          Configure a desk
+        </HeroRow>
+        <HeroRow href={product.href} index="02">
+          {product.name}
+        </HeroRow>
+      </nav>
 
       {/*
         From md, a readout along the floor, bottom left. Measured: across the loop the
@@ -111,6 +125,29 @@ function HeroLink({ href, children }: { href: string; children: string }) {
       <span
         aria-hidden
         className="absolute inset-x-0 bottom-2.5 h-px origin-left scale-x-0 bg-co-ink transition-transform duration-300 ease-(--ease-enter) group-hover:scale-x-100 group-focus-visible:scale-x-100"
+      />
+    </Link>
+  );
+}
+
+/** A phone action row: index, label, arrow, between two hairlines; the rule inks on press. */
+function HeroRow({ href, index, children }: { href: string; index: string; children: string }) {
+  return (
+    <Link
+      href={href}
+      className="group co-data pointer-events-auto relative grid min-h-11 grid-cols-[2rem_1fr_auto] items-center border-t border-co-ink/25 text-co-ink last:border-b"
+    >
+      <span className="text-co-muted-2">{index}</span>
+      <span>{children}</span>
+      <span
+        aria-hidden
+        className="transition-transform duration-(--duration-press) ease-(--ease-enter) group-active:translate-x-1 group-focus-visible:translate-x-1"
+      >
+        →
+      </span>
+      <span
+        aria-hidden
+        className="absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-co-ink transition-transform duration-300 ease-(--ease-enter) group-active:scale-x-100 group-focus-visible:scale-x-100"
       />
     </Link>
   );
