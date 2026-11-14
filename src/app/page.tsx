@@ -186,7 +186,7 @@ export default async function HomePage() {
 
       <BuildWorkstation eyebrow="05 / Build" />
 
-      <VisitAndEnquire eyebrow="06 / Visit" />
+      <VisitAndEnquire eyebrow="06 / Visit" figure={firstProjectFigure + featured.length} />
     </div>
   );
 }
