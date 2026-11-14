@@ -355,6 +355,19 @@
   --duration-drawer-out: 200ms;
   --duration-expand-in: 250ms;
   --duration-expand-out: 190ms;
+  --duration-page: 360ms; /* route change: the next sheet draws down over the last */
+
+  /*
+    Native controls in the house colours: the caret, checkboxes, the date and time
+    pickers on the showroom form, and the scrollbar (steel on paper, never a grey OS
+    bar). A tap flashes a faint square of ink rather than the platform's blue-grey. The
+    gutter is reserved so the page does not shift sideways when a menu locks scrolling.
+  */
+  accent-color: var(--color-co-ink);
+  caret-color: var(--color-co-ink);
+  scrollbar-color: var(--color-co-border-strong) var(--color-co-bg);
+  scrollbar-gutter: stable;
+  -webkit-tap-highlight-color: rgb(35 31 32 / 0.08);
 }
 
 /*
@@ -902,5 +915,225 @@ a:focus-visible,
     transition-duration: 0.01ms !important;
     transition-delay: 0s !important;
     scroll-behavior: auto !important;
+  }
+}
+
+
+/*
+  ── Detail pass (Nov 2026): the instrument layer ──────────────────────────────────────
+*/
+
+/*
+  Route change — the next sheet is drawn over the last. React's <ViewTransition>
+  (`PageTransition`, keyed by pathname) names the page content only for the length of a
+  navigation. The old sheet holds still; the new one is plotted top to bottom over it.
+  The root (header, chrome) does not animate at all, so the bar is a fixed reference.
+  Same-page changes (a configurator pick, a lazy chunk resolving) never trigger it.
+
+  STORYBOARD (ms after the click lands)
+     0   old sheet frozen in place
+     0   new sheet starts drawing down from the header line, ease-out
+   360   new sheet fully drawn; old sheet released
+*/
+@keyframes co-page-draw {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(.co-page-out) {
+  z-index: 1;
+}
+
+::view-transition-group(.co-page-in) {
+  z-index: 2;
+}
+
+::view-transition-old(.co-page-out) {
+  animation: co-hold var(--duration-page) linear both;
+}
+
+::view-transition-new(.co-page-in) {
+  animation: co-page-draw var(--duration-page) var(--ease-enter) both;
+}
+
+/*
+  Read-head: a 1px rule under the header that tracks how far down the sheet you are.
+  Scroll-driven CSS only (no listener, no JS), so browsers without scroll timelines
+  simply never show it. Ink, never green — the header's dots are this screen's signal.
+  It is a position indicator tied 1:1 to the scroll, so it keeps working under reduced
+  motion (`data-motion-keep` in the markup).
+*/
+.co-readhead {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .co-readhead {
+    display: block;
+    transform-origin: left center;
+    animation: co-rule-draw linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+/*
+  Plotted frame: on hover or keyboard focus a boxed card's frame is drawn in ink, edge by
+  edge, clockwise from the top-left corner — the pen going round the figure — instead of
+  the border snapping dark. The lines sit just inside the hairline: the frame clips its
+  overflow (for the image), so anything on the border itself would be cut. Leaving retracts all four at once, quickly. Pointer hover
+  only (`group-hover` is behind `(hover: hover)`), transform only.
+
+  STORYBOARD (ms after hover)
+     0   top edge draws left → right
+   100   right edge draws top → bottom
+   200   bottom edge draws right → left
+   300   left edge draws bottom → top
+   400   frame closed
+*/
+.co-plot-frame > span {
+  position: absolute;
+  background: var(--color-co-ink);
+  transition: transform 150ms var(--ease-exit) 0ms;
+}
+
+.co-plot-frame > span:nth-child(1) {
+  inset: 0 0 auto 0;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.co-plot-frame > span:nth-child(2) {
+  inset: 0 0 0 auto;
+  width: 1px;
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+.co-plot-frame > span:nth-child(3) {
+  inset: auto 0 0 0;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.co-plot-frame > span:nth-child(4) {
+  inset: 0 auto 0 0;
+  width: 1px;
+  transform: scaleY(0);
+  transform-origin: center bottom;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover > * > .co-plot-frame > span {
+    transform: scale(1);
+    transition: transform 100ms linear;
+  }
+}
+
+.group:focus-visible > * > .co-plot-frame > span {
+  transform: scale(1);
+  transition: transform 100ms linear;
+}
+
+.group:hover > * > .co-plot-frame > span:nth-child(2),
+.group:focus-visible > * > .co-plot-frame > span:nth-child(2) {
+  transition-delay: 100ms;
+}
+
+.group:hover > * > .co-plot-frame > span:nth-child(3),
+.group:focus-visible > * > .co-plot-frame > span:nth-child(3) {
+  transition-delay: 200ms;
+}
+
+.group:hover > * > .co-plot-frame > span:nth-child(4),
+.group:focus-visible > * > .co-plot-frame > span:nth-child(4) {
+  transition-delay: 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/*
+  Print: the page as a spec sheet. A buyer who prints or saves a series page as PDF gets
+  the drawing set on white — no header, footer, floating buttons or WebGL canvas (the
+  poster render prints instead), every scroll reveal shown whether or not it was reached,
+  and the ink spec block turned to ink-on-paper so the printer does not drop its ground
+  and leave pale text on white.
+*/
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    scrollbar-gutter: auto;
+  }
+
+  canvas,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+  }
+
+  .co-reveal,
+  .co-clip,
+  .co-rule,
+  .co-kinetic-word,
+  .co-wipe-in {
+    animation: none !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .co-clip::after {
+    display: none !important;
+  }
+
+  .bg-co-panel {
+    background: none !important;
+    border: 1px solid var(--color-co-ink);
+    margin-inline: 0 !important;
+  }
+
+  .border-co-panel-fg {
+    border-color: var(--color-co-ink) !important;
+  }
+
+  .text-co-panel-fg {
+    color: var(--color-co-ink) !important;
+  }
+
+  .text-co-panel-muted,
+  .text-co-panel-faint {
+    color: var(--color-co-muted-2) !important;
+  }
+
+  .border-co-panel-border {
+    border-color: var(--color-co-border) !important;
+  }
+
+  figure,
+  tr {
+    break-inside: avoid;
   }
 }

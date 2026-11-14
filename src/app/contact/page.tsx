@@ -13,6 +13,7 @@ import { SpecRows } from "@/components/ui/spec-rows";
 import { publicFileExists } from "@/lib/public-assets";
 import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { mailtoHref, siteConfig, telHref, whatsappHref } from "@/lib/site-config";
+import { CopyButton } from "@/components/common/copy-button";
 
 const FAQ_ITEMS = [
   {
@@ -139,12 +140,15 @@ export default async function ContactPage({ searchParams }: Props) {
               {siteConfig.emails.map((inbox) => (
                 <div key={inbox.address} className="bg-co-bg p-5">
                   <p className="co-eyebrow">{inbox.label}</p>
-                  <a
-                    href={mailtoHref(inbox.address, "Enquiry from the Cohuman website")}
-                    className={`${MONO_LINK} mt-3 block break-all`}
-                  >
-                    {inbox.address}
-                  </a>
+                  <div className="mt-3 flex items-baseline justify-between gap-4">
+                    <a
+                      href={mailtoHref(inbox.address, "Enquiry from the Cohuman website")}
+                      className={`${MONO_LINK} block min-w-0 break-all`}
+                    >
+                      {inbox.address}
+                    </a>
+                    <CopyButton value={inbox.address} label={inbox.address} />
+                  </div>
                   <p className="mt-2 text-[13px] leading-[1.5] text-co-muted">{inbox.note}</p>
                 </div>
               ))}

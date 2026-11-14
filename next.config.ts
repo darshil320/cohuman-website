@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 // All imagery is served from `public/` now — the Unsplash remote pattern this used to
 // carry is gone along with the stock photography it allowed.
 const nextConfig: NextConfig = {
+  /*
+    React <ViewTransition> on route changes (`src/components/layout/page-transition.tsx`):
+    the next page is drawn down over the last. Experimental in Next 16 — set this to false
+    and every navigation is a plain swap again; nothing else depends on it.
+  */
+  experimental: {
+    viewTransition: true,
+  },
   // Retired URLs, kept working: the Residence sector became Hospitality.
   async redirects() {
     return [{ source: "/sectors/residence", destination: "/sectors/hospitality", permanent: true }];

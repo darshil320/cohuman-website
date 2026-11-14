@@ -39,7 +39,7 @@ export function CollectionCard({
           "relative block overflow-hidden bg-co-bg-alt",
           plain
             ? "aspect-[4/3]"
-            : "aspect-[4/5] border border-co-border transition-colors duration-150 group-hover:border-co-ink",
+            : "aspect-[4/5] border border-co-border",
         )}
       >
         <Image
@@ -50,6 +50,15 @@ export function CollectionCard({
           quality={90}
           className={item.imageKind === "cutout" ? "co-cutout object-contain p-[8%]" : "object-cover"}
         />
+        {/* Boxed cards: on hover or focus the frame is plotted in ink, edge by edge. */}
+        {plain ? null : (
+          <span aria-hidden className="co-plot-frame pointer-events-none absolute inset-0">
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+        )}
       </span>
       <span
         className={cn(

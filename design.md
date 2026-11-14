@@ -242,6 +242,17 @@ framer in `src/lib/motion.ts`. Curves: `--ease-enter` (appearing), `--ease-exit`
 | Sticky quote bar | rises 280ms, leaves 200ms | `series-sticky-bar.tsx` |
 | Slow submits | "Sending…" only after 300ms, held ≥ 500ms, rolls in (no fade) | `SubmitButton`, `usePendingSubmit` |
 
+| Route change | the next sheet is plotted top → bottom over the last, 360ms; header and chrome hold still | `PageTransition` (React `ViewTransition`, keyed by pathname; `experimental.viewTransition` in `next.config.ts`) |
+| Read-head | 1px ink rule under the header tracks scroll position; scroll-driven CSS, absent where unsupported | `co-readhead` |
+| Card hover | a boxed card's frame is plotted in ink, edge by edge clockwise, 4 × 100ms linear; retracts at once | `co-plot-frame` in `CollectionCard` |
+| Copy | "Copy" rolls to "Copied" (or "Select it" if blocked), announced, resets after 2s | `CopyButton` (/contact inboxes) |
+
+Instrument details with no motion: the footer reads Surat's local time (`LocalTime`, a
+dashed placeholder until mount, updated on the minute); native controls, caret and
+scrollbar take ink and steel; taps flash a faint ink square. **Print** turns any page into
+a spec sheet: chrome (`data-print="hide"`) and the WebGL canvas drop out, every reveal is
+shown, and the ink spec block prints as ink on paper.
+
 Small controls keep their visual size and get a 44px invisible target (`co-hit`). Under
 `prefers-reduced-motion` a global layer resolves every transition and animation on its
 first frame; only `[data-motion-keep]` (work-in-progress indicators) keeps moving. Smooth

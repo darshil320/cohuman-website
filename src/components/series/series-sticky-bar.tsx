@@ -31,6 +31,7 @@ export function SeriesStickyBar({ visible }: { visible: boolean }) {
     <AnimatePresence>
       {visible ? (
         <motion.div
+          data-print="hide"
           style={{ height: SERIES_BAR_HEIGHT }}
           className="fixed bottom-0 left-0 right-0 z-40 border-t border-co-ink bg-co-bg-alt"
           initial={{ y: "100%" }}

@@ -93,6 +93,7 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
 
   return (
     <header
+      data-print="hide"
       className={cn(
         "fixed inset-x-0 top-0 z-[60] border-b transition-colors duration-200",
         transparent ? "border-transparent bg-transparent" : "border-co-border bg-co-bg",
@@ -216,6 +217,13 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
           </button>
         </div>
       </div>
+
+      {/* Read-head: how far down the sheet you are (scroll-driven CSS, see globals.css). */}
+      <span
+        aria-hidden
+        data-motion-keep
+        className={cn("co-readhead pointer-events-none absolute inset-x-0 -bottom-px h-px", ink)}
+      />
 
       <CollectionsPanel
         open={drawerOpen}

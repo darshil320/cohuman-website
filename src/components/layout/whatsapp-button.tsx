@@ -12,6 +12,7 @@ import { whatsappHref } from "@/lib/site-config";
 export function WhatsAppButton() {
   return (
     <a
+      data-print="hide"
       href={whatsappHref("Hi Cohuman, I'd like to ask about office furniture for our space.")}
       target="_blank"
       rel="noopener noreferrer"

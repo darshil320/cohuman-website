@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LocalTime } from "@/components/common/local-time";
 import { Logo } from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
@@ -19,7 +20,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-co-panel text-co-panel-muted">
+    <footer data-print="hide" className="bg-co-panel text-co-panel-muted">
       <div className="co-shell">
         {/* Phones: the two link lists sit side by side, so the footer is one screen, not two. */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 border-b border-co-panel-border py-[clamp(56px,7vw,104px)] lg:grid-cols-[1.6fr_repeat(3,1fr)] lg:gap-x-[clamp(32px,4vw,72px)]">
@@ -92,6 +93,7 @@ export function SiteFooter() {
           </span>
           <span>{siteConfig.cities.join(" · ")}</span>
           <span>{siteConfig.coordinates.label}</span>
+          <LocalTime />
           <span>Founded by {siteConfig.founder}</span>
         </div>
       </div>
