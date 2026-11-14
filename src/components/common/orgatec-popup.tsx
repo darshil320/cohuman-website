@@ -11,8 +11,19 @@ import { ORGATEC_2026, isAnnouncementLive } from "@/lib/events/orgatec";
 /** Session key: once dismissed, the popup stays away for the rest of the visit. */
 const DISMISSED_KEY = "co-orgatec-2026-dismissed";
 
-/** Let the page paint and settle before the popup asks for attention. */
-const OPEN_DELAY_MS = 1500;
+/**
+ * Let the visitor read first: the popup asks for attention only after they have had
+ * time with the page (client decision: 8–10s).
+ */
+const OPEN_DELAY_MS = 9000;
+/** If they are busy at that moment (in a dialog, typing in a form), ask again later. */
+const RETRY_MS = 3000;
+
+/** Never interrupt: another dialog is open, or focus is in a form field. */
+function visitorIsBusy(): boolean {
+  if (document.querySelector("[role=dialog]")) return true;
+  return document.activeElement?.closest("input, textarea, select") != null;
+}
 
 function readDismissed(): boolean {
   try {
@@ -45,7 +56,15 @@ export function OrgatecPopup() {
 
   useEffect(() => {
     if (!isAnnouncementLive(ORGATEC_2026, new Date()) || readDismissed()) return;
-    const timer = window.setTimeout(() => setOpen(true), OPEN_DELAY_MS);
+    let timer = 0;
+    const attempt = () => {
+      if (visitorIsBusy()) {
+        timer = window.setTimeout(attempt, RETRY_MS);
+        return;
+      }
+      setOpen(true);
+    };
+    timer = window.setTimeout(attempt, OPEN_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, []);
 

@@ -44,7 +44,7 @@ reveals and rules are untouched.
 | Configuration gallery bars | pointer, touch | several | which configuration is shown |
 | Sticky quote bar | scroll | automatic | the quote action is here |
 | Project rail, piece gallery, lightbox | pointer, swipe, keyboard | several | which photo, how many |
-| ORGATEC popup | timer, 1.5s after load | once per session | event, booth, dates |
+| ORGATEC popup | timer, 9s after load (1.5s before 14 Nov) | once per session | event, booth, dates |
 | Scroll reveals | scroll | passive, many | nothing; the Signal "plotter" signature |
 | Press and hover on controls | all | many | the press registered |
 
@@ -60,7 +60,7 @@ five questions.
 | 2 | broken | No JS dependence (found in Verify) | `ui/reveal-observer.tsx` | Chrome clips an IO target by its own `clip-path`. A hidden reveal is a zero-size line at its leading edge (the top on phones), so a jump past it (anchor, fling, `scrollIntoView`) never fired, leaving content hidden for good. At 375px the /contact submit couldn't be clicked | `rootMargin` top of 100000px: anything scrolled past counts as seen | S | applied `a9eadde` |
 | 3 | broken | Jakob (Esc), focus | `layout/site-header.tsx`, `layout/collections-panel.tsx` | Mobile menu ignored Esc; neither overlay moved, trapped or returned focus | `useOverlayFocus`: focus moves in, Tab cycles trigger + panel, Esc closes, focus returns to the trigger | M | applied `1d29892` |
 | 4 | broken | Focus restore (found in Verify) | `providers/quote-dialog-provider.tsx` | The dialog opens from code, so focus fell to `<body>` on close | Focus returns to the control that opened it | S | applied `b019867` |
-| 5 | friction | Doherty threshold | `orgatec-popup.tsx:15,63` | A modal interrupts every first visit 1.5s after load, and is the LCP element on `/` and `/contact` | Retire it after 21 Nov (the show ends), or make it a non-modal strip, or open it on first scroll or interaction | S | **proposed** (client decision) |
+| 5 | friction | Doherty threshold | `orgatec-popup.tsx:15,63` | A modal interrupts every first visit 1.5s after load, and is the LCP element on `/` and `/contact` | Retire it after 21 Nov (the show ends), or make it a non-modal strip, or open it on first scroll or interaction | S | **partly applied** 14 Nov: opens after 9s (client: 8–10s) and waits while a dialog is open or a field has focus |
 | 6 | friction | Nothing enters at first paint | `ui/kinetic-heading.tsx` (H1 in `film-intro`, `PageHero`, /about, /contact, sectors) | H1 words are masked at `translateY(110%)` on first paint and rise in | Above the fold, ship the H1 at its final state; keep the rise for below-fold headings | S | **proposed** (removes a Signal motion named in `design.md`) |
 | 7 | friction | Doherty, async button | `enquiry-form`, `b2b-form`, `showroom-visit-form`, `series-enquire` | "Sending…" swapped in on the same frame (flashing on fast replies); not announced; double Enter could resubmit | Disabled at once with no dimming; "Sending…" only after 300ms, held ≥500ms, rolling in within one grid cell; `aria-live`; in-flight guard (triple Enter sends once) | M | applied `5127358` |
 | 8 | friction | Slow in and slow out, exits | `site-header.tsx`, `collections-panel.tsx`, `series-sticky-bar.tsx` | 300ms ease-in-out both ways | Drawer recipe: 280ms `--ease-enter` in, 200ms `--ease-exit` out | S | applied `1d29892`, `0a89d5e` |
