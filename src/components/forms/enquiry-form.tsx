@@ -24,11 +24,13 @@ const baseInterestOptions = [
 
 interface EnquiryFormProps {
   defaultInterest?: string;
+  /** Prefills Requirements (the configurator's specification). */
+  defaultMessage?: string;
   onSuccess?: () => void;
   compact?: boolean;
 }
 
-export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryFormProps) {
+export function EnquiryForm({ defaultInterest, defaultMessage, onSuccess, compact }: EnquiryFormProps) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { busy, pending, run } = usePendingSubmit();
@@ -108,7 +110,8 @@ export function EnquiryForm({ defaultInterest, onSuccess, compact }: EnquiryForm
           <Textarea
             id={id("message")}
             name="message"
-            rows={4}
+            rows={defaultMessage ? 8 : 4}
+            defaultValue={defaultMessage}
             placeholder="Floor area, timeline, existing layout, budget band, anything else useful…"
           />
         </div>

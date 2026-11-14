@@ -145,7 +145,9 @@ export function Configurator() {
 
   function sendSpecification() {
     if (!resolved) return;
-    openQuote(`${summarySubject(resolved)}\n\n${summaryText(resolved)}`);
+    // The subject is the one-line interest (the API caps it at 200 characters); the full
+    // specification travels in the Requirements field, where the visitor can add to it.
+    openQuote(summarySubject(resolved), summaryText(resolved));
   }
 
   /** Pager moves hand focus to the new step; strip moves leave it on the strip. */

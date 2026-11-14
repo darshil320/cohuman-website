@@ -7,7 +7,11 @@ import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { trackQuoteOpened } from "@/lib/analytics";
 
 interface QuoteDialogContextValue {
-  openQuote: (subject?: string) => void;
+  /**
+   * `subject` is the short "interest" line (≤200 chars, one line); `details` — e.g. a
+   * configurator's full specification — prefills the Requirements field instead.
+   */
+  openQuote: (subject?: string, details?: string) => void;
 }
 
 const QuoteDialogContext = createContext<QuoteDialogContextValue | null>(null);
@@ -21,13 +25,15 @@ export function useQuoteDialog() {
 export function QuoteDialogProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState<string | undefined>(undefined);
+  const [details, setDetails] = useState<string | undefined>(undefined);
   // The dialog is opened from code, not a Radix Trigger, so Radix has nothing to hand
   // focus back to on close; remember the control that opened it.
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
-  const openQuote = useCallback((nextSubject?: string) => {
+  const openQuote = useCallback((nextSubject?: string, nextDetails?: string) => {
     returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setSubject(nextSubject);
+    setDetails(nextDetails);
     setOpen(true);
     trackQuoteOpened(nextSubject ?? "general");
   }, []);
@@ -87,7 +93,7 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
                 <X className="h-4 w-4" strokeWidth={1.5} />
               </Dialog.Close>
             </div>
-            <EnquiryForm defaultInterest={subject} onSuccess={() => undefined} />
+            <EnquiryForm defaultInterest={subject} defaultMessage={details} onSuccess={() => undefined} />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
