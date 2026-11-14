@@ -50,6 +50,29 @@ export function CollectionCard({
           quality={90}
           className={item.imageKind === "cutout" ? "co-cutout object-contain p-[8%]" : "object-cover"}
         />
+        {/*
+          Boxed cards, pointer devices: the second picture wipes in over the first, left to
+          right, while the frame is plotted — the piece, then the piece in its room (or a
+          room, then the product on white). A cut-out gets its own fog plate under it so it
+          multiplies onto the panel, not onto the photo beneath. Never on touch, where it
+          is display:none and so never fetched.
+        */}
+        {!plain && item.hoverImage ? (
+          <>
+            {item.hoverImage.kind === "cutout" ? <span aria-hidden className="co-swap absolute inset-0 bg-co-bg-alt" /> : null}
+            <Image
+              src={item.hoverImage.src}
+              alt=""
+              aria-hidden
+              fill
+              sizes={sizes}
+              className={cn(
+                "co-swap",
+                item.hoverImage.kind === "cutout" ? "co-cutout object-contain p-[8%]" : "object-cover",
+              )}
+            />
+          </>
+        ) : null}
         {/* Boxed cards: on hover or focus the frame is plotted in ink, edge by edge. */}
         {plain ? null : (
           <span aria-hidden className="co-plot-frame pointer-events-none absolute inset-0">

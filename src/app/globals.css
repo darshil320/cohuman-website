@@ -355,7 +355,9 @@
   --duration-drawer-out: 200ms;
   --duration-expand-in: 250ms;
   --duration-expand-out: 190ms;
-  --duration-page: 360ms; /* route change: the next sheet draws down over the last */
+  --duration-page: 300ms; /* route change: the new sheet drawing down */
+  --duration-page-out: 160ms; /* route change: the old sheet lifting away */
+  --duration-page-gap: 180ms; /* new sheet waits until the old one has gone, plus a beat */
 
   /*
     Native controls in the house colours: the caret, checkboxes, the date and time
@@ -930,17 +932,31 @@ a:focus-visible,
   The root (header, chrome) does not animate at all, so the bar is a fixed reference.
   Same-page changes (a configurator pick, a lazy chunk resolving) never trigger it.
 
+  Sequential, never overlapping: two pages on screen at once read as a rendering bug.
+
   STORYBOARD (ms after the click lands)
-     0   old sheet frozen in place
-     0   new sheet starts drawing down from the header line, ease-out
-   360   new sheet fully drawn; old sheet released
+     0   old sheet lifts: its bottom edge rises to the header line, ease-in
+   160   old sheet gone; a beat of bare paper under the header
+   180   new sheet starts drawing down from the header line, settling 12px, ease-out
+   480   new sheet fully drawn
 */
+@keyframes co-page-lift {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
 @keyframes co-page-draw {
   from {
     clip-path: inset(0 0 100% 0);
+    translate: 0 12px;
   }
   to {
     clip-path: inset(0 0 0 0);
+    translate: 0 0;
   }
 }
 
@@ -957,12 +973,14 @@ a:focus-visible,
   z-index: 2;
 }
 
+/* The old sheet is taken up first — its lower edge rises to the header line — */
 ::view-transition-old(.co-page-out) {
-  animation: co-hold var(--duration-page) linear both;
+  animation: co-page-lift var(--duration-page-out) var(--ease-exit) both;
 }
 
+/* — and only then is the new one laid down, settling 12px as it is drawn. */
 ::view-transition-new(.co-page-in) {
-  animation: co-page-draw var(--duration-page) var(--ease-enter) both;
+  animation: co-page-draw var(--duration-page) var(--ease-enter) var(--duration-page-gap) both;
 }
 
 /*
@@ -1058,6 +1076,32 @@ a:focus-visible,
 .group:hover > * > .co-plot-frame > span:nth-child(4),
 .group:focus-visible > * > .co-plot-frame > span:nth-child(4) {
   transition-delay: 300ms;
+}
+
+/*
+  Hover swap (`CollectionCard`): the second picture is clipped to nothing and wipes in
+  left to right on hover or focus — the same plotter wipe as the page, 400ms in, 200ms
+  out. Pointer devices only; elsewhere it is not displayed and therefore not fetched.
+*/
+.co-swap {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .co-swap {
+    display: block;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 200ms var(--ease-exit);
+  }
+
+  .group:hover .co-swap {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 400ms var(--ease-enter);
+  }
+}
+
+.group:focus-visible .co-swap {
+  clip-path: inset(0 0 0 0);
 }
 
 @media (prefers-reduced-motion: reduce) {

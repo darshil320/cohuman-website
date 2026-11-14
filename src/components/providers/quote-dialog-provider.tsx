@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { trackQuoteOpened } from "@/lib/analytics";
 
@@ -31,6 +31,22 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
     setOpen(true);
     trackQuoteOpened(nextSubject ?? "general");
   }, []);
+
+  // Q opens the quote dialog from anywhere — unless the visitor is typing, holding a
+  // modifier, or already inside a dialog or menu.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "q" && event.key !== "Q") return;
+      if (event.defaultPrevented || event.repeat || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("input, textarea, select, [contenteditable=''], [contenteditable='true']")) return;
+      if (document.querySelector("[role=dialog], #mobile-menu[data-open], #collections-panel[data-open]")) return;
+      event.preventDefault();
+      openQuote();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [openQuote]);
 
   const value = useMemo(() => ({ openQuote }), [openQuote]);
 

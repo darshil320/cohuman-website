@@ -242,7 +242,10 @@ framer in `src/lib/motion.ts`. Curves: `--ease-enter` (appearing), `--ease-exit`
 | Sticky quote bar | rises 280ms, leaves 200ms | `series-sticky-bar.tsx` |
 | Slow submits | "Sending…" only after 300ms, held ≥ 500ms, rolls in (no fade) | `SubmitButton`, `usePendingSubmit` |
 
-| Route change | the next sheet is plotted top → bottom over the last, 360ms; header and chrome hold still | `PageTransition` (React `ViewTransition`, keyed by pathname; `experimental.viewTransition` in `next.config.ts`) |
+| Route change | sequential, never overlapping: the old sheet lifts (bottom edge up to the header, 160ms), a beat, then the new sheet draws down settling 12px (300ms); header and chrome hold still | `PageTransition` (React `ViewTransition`, keyed by pathname; `experimental.viewTransition` in `next.config.ts`) |
+| Card hover swap | the second picture wipes in left → right (400ms in / 200ms out) while the frame plots: a piece's cut-out → its room; a system's room → its render on white. Pointer devices only | `co-swap`, `CollectionItem.hoverImage` |
+| Q | opens the quote dialog from anywhere (not while typing, with a modifier, or inside a dialog/menu); a square `Q` key cap sits in the header button from `xl` | `QuoteDialogProvider`, header |
+| Spec sheet | "Spec sheet ↓" on series and product pages opens print → Save as PDF, file named after the product; print adds a masthead (logo, page address, contacts) | `SpecSheetButton`, `PrintMasthead` |
 | Read-head | 1px ink rule under the header tracks scroll position; scroll-driven CSS, absent where unsupported | `co-readhead` |
 | Card hover | a boxed card's frame is plotted in ink, edge by edge clockwise, 4 × 100ms linear; retracts at once | `co-plot-frame` in `CollectionCard` |
 | Copy | "Copy" rolls to "Copied" (or "Select it" if blocked), announced, resets after 2s | `CopyButton` (/contact inboxes) |

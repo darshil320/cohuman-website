@@ -13,6 +13,7 @@ import { buildCollectionMenu, type CollectionGroup } from "@/lib/catalog/collect
 import { ALL_SERIES } from "@/lib/series";
 import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 import { siteConfig } from "@/lib/site-config";
+import { SpecSheetButton } from "@/components/common/spec-sheet-button";
 
 /**
  * One product — a PM x Cohuman piece or a chair — after amardeepdesign.com's product page,
@@ -155,11 +156,12 @@ export default async function ProductPage({ params }: PageProps) {
           </p>
           {piece.size?.note ? <p className="co-data mt-2 text-co-muted-2">{piece.size.note}</p> : null}
 
-          <div className="mt-10 flex flex-wrap gap-3 lg:mt-auto lg:pt-10">
+          <div data-print="hide" className="mt-10 flex flex-wrap gap-3 lg:mt-auto lg:pt-10">
             <EnquireButton subject={`${piece.name} — ${piece.type}`}>Get a quote</EnquireButton>
             <Button asChild variant="secondary">
               <Link href={`/collections#${piece.group}`}>All {groupLabel}</Link>
             </Button>
+            <SpecSheetButton title={`${piece.name} — ${piece.type}`} />
           </div>
         </div>
 

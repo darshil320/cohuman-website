@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { PageTransition } from "@/components/layout/page-transition";
+import { PrintMasthead } from "@/components/layout/print-masthead";
 import { SiteHeader } from "@/components/layout/site-header";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -299,6 +300,7 @@ export default async function RootLayout({
         <QuoteDialogProvider>
           <SiteHeader groups={groups} />
           <main className="flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
+            <PrintMasthead />
             <PageTransition>{children}</PageTransition>
           </main>
           <SiteFooter />

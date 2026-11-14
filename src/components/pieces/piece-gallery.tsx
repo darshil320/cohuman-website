@@ -58,7 +58,7 @@ export function PieceGallery({ images, name }: { images: GalleryImage[]; name: s
         ))}
 
         {count > 1 ? (
-          <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-between px-3 sm:px-4">
+          <div data-print="hide" className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-between px-3 sm:px-4">
             <button
               type="button"
               aria-label="Previous picture"

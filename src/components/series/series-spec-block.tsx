@@ -24,6 +24,7 @@ import { useSeriesConfigurator } from "./series-context";
 import { SeriesNameHeading } from "./series-name-hero";
 import { SeriesConfigRail } from "./series-config-rail";
 import { SeriesStage } from "./series-stage";
+import { SpecSheetButton } from "@/components/common/spec-sheet-button";
 
 /** The first thing a keyboard user can act on inside a section. */
 const FOCUSABLE =
@@ -220,7 +221,7 @@ export function SeriesSpecBlock() {
             <p className="mt-3 text-[13px] leading-relaxed text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
           ) : null}
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div data-print="hide" className="mt-10 flex flex-wrap gap-3">
             <Button type="button" variant="onDark" onClick={(event) => goToSection("enquire", event)}>
               Get a quote
             </Button>
@@ -231,6 +232,7 @@ export function SeriesSpecBlock() {
             >
               Anatomy <span aria-hidden>↓</span>
             </Button>
+            <SpecSheetButton title={`${series.wordmark} — ${config.name}`} variant="secondaryOnDark" />
           </div>
           <p className="mt-5 max-w-[40ch] text-[13px] leading-relaxed text-co-panel-faint">
             Price on request. Quantity, finish and installation move the number, so we quote

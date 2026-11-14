@@ -19,6 +19,12 @@ export interface CollectionItem {
   imageAlt: string;
   /** `cutout`: a render on white, multiplied onto the frame. `scene`: a room, cropped. */
   imageKind: "cutout" | "scene";
+  /**
+   * The second picture a boxed card wipes to on hover: the other half of the story. A
+   * piece shown as a cut-out reveals itself in its room; a system shown in a room reveals
+   * the product on white. Absent when there is no second picture worth showing.
+   */
+  hoverImage?: { src: string; alt: string; kind: "cutout" | "scene" };
 }
 
 export interface CollectionGroup {
@@ -44,6 +50,12 @@ function pieceItem(piece: Piece): CollectionItem {
     image: card.src,
     imageAlt: card.alt,
     imageKind: "cutout",
+    // The room shot where there is one; Type A is drawings only, so its second drawing.
+    hoverImage: piece.scene
+      ? { src: piece.scene.src, alt: piece.scene.alt, kind: "scene" }
+      : piece.views[1]
+        ? { src: piece.views[1].src, alt: piece.views[1].alt, kind: "cutout" }
+        : undefined,
   };
 }
 
@@ -52,10 +64,22 @@ function systemItem(collection: Collection, series: SeriesDefinition | undefined
   const title = series?.wordmark ?? collection.wordmark ?? collection.name;
   const own = SYSTEM_PHOTO[collection.slug];
   if (own) {
-    return { slug: collection.slug, title, line: collection.kicker, href, image: own.src, imageAlt: own.alt, imageKind: "scene" };
+    // A specified series: its bench (or first configuration) as the studio render.
+    const render = series?.configs.find((c) => c.slug.includes("bench")) ?? series?.configs[0];
+    return {
+      slug: collection.slug,
+      title,
+      line: collection.kicker,
+      href,
+      image: own.src,
+      imageAlt: own.alt,
+      imageKind: "scene",
+      hoverImage: render ? { src: render.image, alt: render.imageAlt, kind: "cutout" } : undefined,
+    };
   }
   if (!isPhotographed(collection)) return null;
   const photo = collection.photos.find((p) => p.kind === "scene") ?? collection.photos[0];
+  const second = collection.photos.find((p) => p !== photo && p.kind !== photo.kind);
   return {
     slug: collection.slug,
     title,
@@ -64,6 +88,7 @@ function systemItem(collection: Collection, series: SeriesDefinition | undefined
     image: photo.src,
     imageAlt: photo.alt,
     imageKind: photo.kind,
+    hoverImage: second ? { src: second.src, alt: second.alt, kind: second.kind } : undefined,
   };
 }
 

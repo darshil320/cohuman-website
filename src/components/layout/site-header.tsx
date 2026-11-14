@@ -176,11 +176,20 @@ export function SiteHeader({ groups }: { groups: CollectionGroup[] }) {
             dots
             variant={onDark ? "onDark" : "primary"}
             onClick={() => openQuote()}
+            aria-keyshortcuts="q"
             className="co-hit gap-2.5 px-3 sm:gap-3.5 sm:px-4"
           >
             {/* Shortened on phones so the action never drops out of the bar. */}
             <span className="sm:hidden">Quote</span>
             <span className="hidden sm:inline">Get a quote</span>
+            {/* The keyboard shortcut, shown where there is a keyboard: a square key cap. */}
+            <kbd
+              aria-hidden
+              title="Press Q"
+              className="hidden h-[18px] min-w-[18px] items-center justify-center border border-current px-1 font-mono text-[10px] leading-none opacity-70 xl:inline-flex"
+            >
+              Q
+            </kbd>
           </Button>
 
           {/*
