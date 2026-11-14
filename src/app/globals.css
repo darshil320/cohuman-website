@@ -885,6 +885,12 @@ a:focus-visible,
 */
 .co-expander {
   display: grid;
+  /*
+    One column, never wider than the container. Left implicit, the track sizes to its
+    content's max-content width — a sideways picture rail inside (the phone menu's
+    Collections) then widened the whole menu past the screen and it scrolled sideways.
+  */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   transition: grid-template-rows var(--duration-expand-out) var(--ease-move);
 }
