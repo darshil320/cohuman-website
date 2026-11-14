@@ -4,58 +4,101 @@ import { KineticHeading } from "@/components/ui/kinetic-heading";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 
-const LABEL = "Office systems / Surat, IN";
+const LABEL = "Office systems — Surat, IN";
 const SENTENCE = "Configurable desking, cabins and meeting tables, specified to the millimetre.";
 
 /**
- * The page's claim, set over the lead film as a drawing's title block.
+ * The page's claim, set straight onto the lead film as a heads-up readout — no panel, no
+ * scrim, no box (Nov 2026: the framed title block read as a widget pasted on the video).
  *
- * The film orbits the desk, so the desk moves through the frame and no part of it stays
- * empty for the whole loop. So the claim gets its own paper instead of a scrim: a canvas
- * panel in a 1px ink frame, ruled into a mono strip, the headline, one sentence and the
- * action. It sits high in the top left: on desktop as a short, wide strip inside the band
- * of sweep the orbit leaves above the desk, on phones as a small stacked block. The ink
- * control block holds the opposite corner, bottom left.
+ * Placement is measured, not guessed. Across every frame of the 10s orbit (desktop cut)
+ * the desk fills 19–84% of the frame's height; only the top 19% of sweep stays empty the
+ * whole time, and the bottom edge is floor. So, from md:
+ *
+ *   ── OFFICE SYSTEMS — SURAT, IN ───────────────────────────── 21.1702° N 72.8311° E
+ *   Precision-made modular office furniture.            ← one line, sized to the band
+ *   ·
+ *   ·                       (the desk, unobstructed)
+ *   ·
+ *   [controls]  Configurable desking, cabins and meeting tables, …
+ *               CONFIGURE A DESK →   ── FIG. 01 — ARQ EXECUTIVE DESK →
+ *
+ * The headline's size is `min(vw, vh)`-bound so the label and headline always end inside
+ * the empty band whatever the window's shape. The phone cut is portrait, with the desk in
+ * its lower half and 10–53% of the frame empty, so phones stack everything up there.
  *
  * It is the homepage's H1 and LCP text: `KineticHeading` animates transform only, so the
- * words paint on the first frame and read with scripting off. The headline and sentence
- * are the site's existing copy (`siteConfig.tagline` and the hero line), not new claims.
- *
- * The footage itself is a link to the product it shows (Nov 2026 review): a full-frame
- * link sits under the title block, and a caption in the bottom-right corner names the
- * product so the click is not a surprise.
+ * words paint on the first frame and read with scripting off. Copy is the site's existing
+ * tagline and hero line, not new claims.
  */
 export function FilmIntro({ product }: { product: { name: string; href: string } }) {
   return (
     <div
       className="co-shell relative min-h-[100svh] pb-[clamp(112px,16vh,160px)]"
-      style={{ paddingTop: `calc(${HEADER_HEIGHT}px + clamp(16px, 3vh, 32px))` }}
+      style={{ paddingTop: `calc(${HEADER_HEIGHT}px + clamp(10px, 2vh, 20px))` }}
     >
-      {/*
-        Phones: a 360px stacked block. From lg: a short, wide strip — the headline on one
-        line, then label | sentence | action — so it stays in the band of sweep above the
-        desk instead of reaching down onto the marble.
-      */}
+      {/* The footage is a link to the product it shows; the readout sits above it. */}
       <Link href={product.href} aria-label={`See ${product.name}`} className="absolute inset-0 z-0" />
-      <Link
-        href={product.href}
-        className="co-data absolute bottom-[clamp(16px,3vh,28px)] right-[18px] sm:right-6 lg:right-12 z-10 flex min-h-11 items-center border border-co-ink bg-co-bg px-4 text-co-ink transition-colors hover:bg-co-ink hover:text-co-bg"
-      >
-        {product.name} →
-      </Link>
-      <div className="relative z-10 w-full max-w-[360px] border border-co-ink bg-co-bg lg:grid lg:w-fit lg:max-w-none lg:grid-cols-[auto_minmax(0,1fr)_auto]">
-        <p className="co-data flex items-center border-b border-co-ink px-4 py-2.5 lg:order-2 lg:border-b-0 lg:border-r lg:border-t">
-          {LABEL}
+
+      {/* Top band: the label on a datum line, then the headline. */}
+      <div className="pointer-events-none relative z-10 text-co-ink">
+        <p className="co-data flex items-center gap-3">
+          <span aria-hidden className="block h-px w-8 shrink-0 bg-co-ink" />
+          <span className="shrink-0">{LABEL}</span>
+          <span aria-hidden data-reveal className="co-rule hidden h-px min-w-0 flex-1 bg-co-ink sm:block" />
+          <span aria-hidden className="hidden shrink-0 sm:block">
+            {siteConfig.coordinates.label}
+          </span>
         </p>
-        <h1 className="co-display px-4 pb-4 pt-3.5 text-[clamp(min(1.625rem,7.6vw),2vw,1.75rem)] lg:order-1 lg:col-span-3 lg:whitespace-nowrap lg:px-5 lg:py-4 lg:text-[clamp(1.375rem,1.9vw,1.75rem)]">
+        <h1 className="co-display mt-3 max-w-[14ch] text-[clamp(2rem,8.6vw,2.75rem)] leading-[1.02] md:mt-2.5 md:max-w-none md:whitespace-nowrap md:text-[clamp(1.75rem,min(2.8vw,4.6vh),3.25rem)]">
           <KineticHeading>{`${siteConfig.tagline}.`}</KineticHeading>
         </h1>
-        <p className="border-t border-co-ink px-4 py-3 text-[14px] leading-[1.45] text-co-ink lg:order-3 lg:flex lg:items-center lg:border-r">
-          {SENTENCE}
-        </p>
-        <Button asChild className="h-auto min-h-12 w-full lg:order-4 lg:w-auto lg:border-t lg:border-co-ink">
-          <Link href="/configure">Configure a desk</Link>
-        </Button>
+
+        {/* Phones: the sentence and both links stay in the empty upper half of the cut. */}
+        <div className="mt-5 max-w-[34ch] md:hidden">
+          <p className="text-[14px] leading-[1.5]">{SENTENCE}</p>
+          <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+            <Button asChild variant="link" arrow className="pointer-events-auto">
+              <Link href="/configure">Configure a desk</Link>
+            </Button>
+            <Button asChild variant="link" arrow className="pointer-events-auto">
+              <Link href={product.href}>{product.name}</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/*
+        From md, a readout along the floor, bottom left. Measured: across the loop the
+        floor's left ~55% stays clear, while the desk's legs cross the right half — so the
+        sentence, the action and the figure callout share one left-hand group, starting
+        clear of the ink control block (or on the shell's column on wide screens) and
+        capped short of the halfway line. Type only, nothing boxed. Positioned with left /
+        width rather than `co-shell`, whose own padding would override the offsets.
+      */}
+      <div className="pointer-events-none absolute bottom-[clamp(14px,2.6vh,26px)] left-[max(196px,calc((100vw-1440px)/2+48px))] z-10 hidden w-[min(540px,calc(54vw-196px))] text-co-ink md:block">
+        <p className="text-[14px] leading-[1.5]">{SENTENCE}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-x-7 gap-y-1">
+          <Button asChild variant="link" arrow className="pointer-events-auto">
+            <Link href="/configure">Configure a desk</Link>
+          </Button>
+          <Link
+            href={product.href}
+            className="group co-data pointer-events-auto inline-flex min-h-11 items-center gap-3"
+          >
+            <span
+              aria-hidden
+              className="block h-px w-8 origin-left bg-co-ink transition-transform duration-(--duration-press) ease-(--ease-enter) group-hover:scale-x-150"
+            />
+            <span className="underline-offset-4 group-hover:underline">Fig. 01 — {product.name}</span>
+            <span
+              aria-hidden
+              className="transition-transform duration-(--duration-press) ease-(--ease-enter) group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );

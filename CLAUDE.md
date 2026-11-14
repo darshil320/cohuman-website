@@ -350,11 +350,15 @@ review there is **one panel** — the 1-2-3 selector and the comparison film are
 - **The lead film** — `LEAD_FILM` in **`src/lib/hero-films.ts`**: full screen under the
   transparent header, with the page's **H1** set over it by `FilmIntro`
   (`src/components/home/film-intro.tsx`): a mono line, the tagline, one sentence and
-  one action, on a canvas title block (1px ink frame) high in the top left: from `lg` a
-  short, wide strip (headline on one line, then label | sentence | action) that stays in
-  the band of sweep above the orbiting desk; on phones a 360px stacked block. The desk
-  is **ARQ** (designer collab, PM x Cohuman); the film is to link to ARQ's page once it
-  exists.
+  one action, set **straight on the footage in ink — no panel, scrim or box** (client,
+  Nov 2026: the framed title block read as a widget). Placement is measured from the
+  film's frames: across the orbit only the top 19% of sweep and the floor's left ~55%
+  stay clear. From `md`: a mono label on a datum line (with the coordinates) and a
+  one-line headline sized `min(vw, vh)` to end inside the top band; the sentence,
+  "Configure a desk" and a `Fig. 01 — ARQ executive desk` callout sit bottom left, clear
+  of the control block. Phones stack everything in the portrait cut's empty upper half.
+  Re-measure (min-frame occupancy) if the film changes. The desk is **ARQ** (designer
+  collab, PM x Cohuman); the footage links to `/products/arq`.
 - **Fallback** — `SignalHeroPanel` (`signal-hero.tsx`), the bench on the green grid,
   takes the hero and the H1 only if the lead film's poster is missing.
 
