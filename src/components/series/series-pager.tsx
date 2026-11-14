@@ -29,7 +29,7 @@ export function SeriesPager() {
   };
 
   return (
-    <nav id="pager" aria-label="Configurations" className="border-y border-co-ink">
+    <nav id="pager" aria-label="Configurations" data-print="hide" className="border-y border-co-ink">
       <div className="co-shell grid grid-cols-2 md:grid-cols-[1fr_minmax(260px,340px)_1fr]">
         <button
           type="button"

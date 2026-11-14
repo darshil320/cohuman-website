@@ -115,8 +115,9 @@ export function SeriesAnatomy() {
     driftY.set(0);
   }, [driftX, driftY]);
 
+  // Interactive drawing: left out of the printed spec sheet (`data-print="hide"`).
   return (
-    <section id="anatomy" className="co-section scroll-mt-[72px]">
+    <section id="anatomy" data-print="hide" className="co-section scroll-mt-[72px]">
       <div className="co-shell">
         <SectionHeading
           eyebrow={seriesSectionEyebrow(series, "anatomy", section.eyebrow)}

@@ -55,7 +55,7 @@ export function SeriesConfigGallery() {
             type="button"
             aria-label="Previous configuration"
             onClick={() => go(index - 1)}
-            className="flex h-[44px] items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg sm:h-[52px]"
+            className="flex h-[44px] items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg sm:h-[52px] print:invisible"
           >
             ←
           </button>
@@ -83,7 +83,7 @@ export function SeriesConfigGallery() {
             type="button"
             aria-label="Next configuration"
             onClick={() => go(index + 1)}
-            className="flex h-[44px] items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg sm:h-[52px]"
+            className="flex h-[44px] items-center justify-center border border-co-ink transition-colors hover:bg-co-ink hover:text-co-bg sm:h-[52px] print:invisible"
           >
             →
           </button>
@@ -93,7 +93,7 @@ export function SeriesConfigGallery() {
           Each bar's button is 44px tall and padded 4px a side with no gap between them, so
           the bars sit 8px apart as before but every target is ≥ 28×44 and none overlap.
         */}
-        <div className="mt-6 flex flex-wrap justify-center" role="group" aria-label="Configurations">
+        <div data-print="hide" className="mt-6 flex flex-wrap justify-center" role="group" aria-label="Configurations">
           {configs.map((c, i) => (
             <button
               key={c.slug}
