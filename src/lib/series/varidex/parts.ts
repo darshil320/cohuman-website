@@ -13,7 +13,7 @@ import type { SeriesPart } from "../types";
 export const VARIDEX_PARTS: SeriesPart[] = [
   {
     n: "1",
-    name: "Adjustable foot",
+    name: "Leveler",
     group: "Chassis",
     why: "Levels out 30mm of floor variance — enough for most screed and carpet-tile transitions.",
     rows: [
@@ -26,7 +26,7 @@ export const VARIDEX_PARTS: SeriesPart[] = [
     n: "2",
     name: "Side leg",
     group: "Chassis",
-    why: "The end support every configuration stands on, at 720mm working height.",
+    why: "The end support every configuration stands on, at 750 mm working height.",
     rows: [
       { k: "Material", v: "2.0mm metal pipe" },
       { k: "Finishing", v: "Powder coating, 80–120 microns" },

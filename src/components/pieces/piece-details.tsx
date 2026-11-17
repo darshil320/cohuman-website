@@ -51,7 +51,9 @@ export function PieceDetails({ piece }: { piece: Piece }) {
             {piece.parts.map((part) => (
               <div key={part.label} className="contents">
                 <dt className="text-co-muted-2">{part.label}</dt>
-                <dd>{pieceSizeLabel(part.size)} (W × D × H)</dd>
+                <dd>
+                  {pieceSizeLabel(part.size)} (W × D × H){part.size.note ? `, ${part.size.note}` : ""}
+                </dd>
               </div>
             ))}
           </dl>
@@ -75,6 +77,16 @@ export function PieceDetails({ piece }: { piece: Piece }) {
           <p>{piece.upholstery}.</p>
         </Row>
       ) : null}
+
+      {piece.details?.map((detail) => (
+        <Row key={detail.title} title={detail.title}>
+          <ul className="list-none space-y-2 p-0">
+            {detail.lines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </Row>
+      ))}
 
       {piece.finish ? (
         <Row title="Finish">

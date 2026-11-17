@@ -13,8 +13,8 @@ import { FigureCaption } from "@/components/ui/figure-caption";
 import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { CollectionCard } from "@/components/collections/collection-card";
 import { catalog, pieceLeadImage, type Piece } from "@/lib/catalog";
-import { buildCollectionMenu, type CollectionItem } from "@/lib/catalog/collection-menu";
-import { LEAD_FILM, type HeroFilm } from "@/lib/hero-films";
+import { DESIGNER_COLLAB_CREDIT, buildCollectionMenu, type CollectionItem } from "@/lib/catalog/collection-menu";
+import { LEAD_FILM, SYSTEM_FILM, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
 import { ALL_SERIES, VARIDEX_SERIES, type SeriesConfig } from "@/lib/series";
 import { cn } from "@/lib/utils";
@@ -32,12 +32,12 @@ export const metadata: Metadata = {
 const HERO_CONFIG_SLUG = "face-to-face";
 
 /**
- * PM x Cohuman on the homepage: each piece in its room, not on white — the scene is what
+ * Designer collab on the homepage: each piece in its room, not on white — the scene is what
  * sells a designer piece. Same card as everywhere else, with the room shot swapped in.
  */
 function designerItems(pieces: Piece[]): CollectionItem[] {
   return pieces
-    .filter((piece) => piece.group === "pm-x-cohuman")
+    .filter((piece) => piece.group === "designer-collab")
     .map((piece) => {
       const lead = pieceLeadImage(piece);
       return {
@@ -52,7 +52,7 @@ function designerItems(pieces: Piece[]): CollectionItem[] {
     });
 }
 
-/** The product the lead film shows: ARQ, from PM x Cohuman. */
+/** The product the lead film shows: ARQ, from Designer collab. */
 const HERO_PRODUCT = { name: "ARQ executive desk", href: "/products/arq" };
 
 /**
@@ -82,7 +82,13 @@ function playableMobile(mobile: HeroFilm["mobile"]): HeroFilm["mobile"] {
  */
 function heroPanels(config: SeriesConfig): HeroPanel[] {
   if (publicFileExists(LEAD_FILM.poster)) {
-    return [{ kind: "film" as const, film: playable(LEAD_FILM), overlay: <FilmIntro product={HERO_PRODUCT} /> }];
+    // Slide 1, the lead film with the page's claim; slide 2, the Stretch system film,
+    // which plays after it (client, Nov 2026). Each hands on when it ends.
+    const lead: HeroPanel = { kind: "film", film: playable(LEAD_FILM), overlay: <FilmIntro product={HERO_PRODUCT} /> };
+    const system = publicFileExists(SYSTEM_FILM.poster)
+      ? [{ kind: "film" as const, film: playable(SYSTEM_FILM) }]
+      : [];
+    return [lead, ...system];
   }
   return [
     {
@@ -101,7 +107,7 @@ export default async function HomePage() {
     catalog.getPieces(),
   ]);
   const groups = buildCollectionMenu({ collections, pieces, series: ALL_SERIES });
-  const systems = groups.flatMap((g) => (g.id === "workstations" || g.id === "seating" ? g.items : []));
+  const systems = groups.flatMap((g) => (g.id === "workstations" || g.id === "seating" || g.id === "phone-booths" ? g.items : []));
 
   const heroConfig =
     VARIDEX_SERIES.configs.find((c) => c.slug === HERO_CONFIG_SLUG) ?? VARIDEX_SERIES.configs[0];
@@ -114,15 +120,15 @@ export default async function HomePage() {
     <div>
       <HeroCarousel panels={heroPanels(heroConfig)} />
 
-      {/* 01 — PM x Cohuman: the designer pieces, each in its room. Catalogue order. */}
+      {/* 01 — Designer collab: the designer pieces, each in its room. Catalogue order. */}
       <section className="co-shell co-section">
         <SectionHeading
           layout="stacked"
-          eyebrow="01 / PM x Cohuman"
+          eyebrow="01 / Designer collab"
           title="Designed in collaboration."
-          blurb="Executive desks, lounge seating, a coffee table and a library, designed for Cohuman."
-          linkHref="/collections#pm-x-cohuman"
-          linkLabel="All PM x Cohuman"
+          blurb={`${DESIGNER_COLLAB_CREDIT}. Executive desks, lounge seating, a coffee table and a library, designed for Cohuman.`}
+          linkHref="/collections#designer-collab"
+          linkLabel="All designer collab"
         />
         <PictureGrid items={designerItems(pieces)} />
       </section>

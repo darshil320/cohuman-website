@@ -18,8 +18,8 @@ export const VARIDEX_SERIES: SeriesDefinition = {
   eyebrow: "Adjustable-beam desking system",
   promise: "Eight components. Every top quoted as a range.",
   intro:
-    "The beam adjusts, so one chassis covers a span of sizes instead of one. Specify the top you want between the listed limits and the frame takes it up — desks, returns, benches and meeting tables off the same eight part numbers.",
-  workingHeightMm: 720,
+    "The beam adjusts, so one chassis covers a span of sizes instead of one. Specify the top you want between the listed limits and the frame takes it up — cabin tables, returns and benches off the same eight part numbers.",
+  workingHeightMm: 750,
   codeLabel: "Lead component",
 
   configs: VARIDEX_CONFIGS,
@@ -37,7 +37,7 @@ export const VARIDEX_SERIES: SeriesDefinition = {
   parts: VARIDEX_PARTS,
   anatomySection: {
     eyebrow: "Anatomy",
-    heading: "Thirteen parts, each with a gauge you can hold us to.",
+    heading: "Every part, with a gauge you can hold us to.",
   },
   // The 2-seater shot: the frame is unobstructed and the legs read against the floor,
   // which the 4-seater render's chairs hide.

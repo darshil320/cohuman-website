@@ -9,20 +9,17 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SpecRows, type SpecRow } from "@/components/ui/spec-rows";
 import { TickNumber } from "@/components/ui/tick-number";
 import {
-  INFERRED_CODE_FOOTNOTE,
   depthFieldLabel,
   depthOptions,
   finishLabel,
-  isInferredCode,
   lengthFieldLabel,
   selectedDepth,
   selectedLength,
-  selectedParts,
 } from "@/lib/series";
-import { prefersReducedMotion } from "./series-config-flight";
+import { prefersReducedMotion } from "@/lib/motion";
 import { useSeriesConfigurator } from "./series-context";
 import { SeriesNameHeading } from "./series-name-hero";
-import { SeriesConfigRail } from "./series-config-rail";
+import { SeriesConfigPicker } from "./series-config-picker";
 import { SeriesStage } from "./series-stage";
 import { SpecSheetButton } from "@/components/common/spec-sheet-button";
 
@@ -43,23 +40,12 @@ function goToSection(id: string, event: MouseEvent<HTMLButtonElement>) {
   if (event.detail === 0) target.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true });
 }
 
-/** A provisional part number: the ° for the eye, the word for a screen reader. */
-function Provisional() {
-  return (
-    <>
-      <span aria-hidden title={INFERRED_CODE_FOOTNOTE}>
-        °
-      </span>
-      <span className="sr-only"> (provisional)</span>
-    </>
-  );
-}
-
 /**
  * B — the spec block. Officemate's solid colour block, turned to ink: mono spec rows,
  * the two size selectors, the progress rail and the bill of components on the right; the
  * viewer — poster plus WebGL stage, with its dimension lines — on the canvas to its left.
- * The configuration picker runs full width underneath.
+ * The configuration picker sits directly under the viewer, so a click swaps the image
+ * the visitor is looking at.
  *
  * The progress rail is this view's one green thing. It counts what is set, not where
  * you are: a configuration is always selected, so one of three is set on arrival; length
@@ -76,9 +62,6 @@ export function SeriesSpecBlock() {
   const depth = selectedDepth(selection);
   const depths = depthOptions(selection);
   const finish = finishLabel(selection);
-  const parts = selectedParts(selection);
-  const inferred = isInferredCode(series, parts.code);
-  const hasInferredBom = parts.bom.some((line) => isInferredCode(series, line.code));
 
   const lengthDone = touched.length || config.lens.length === 1;
   const depthDone = touched.depth || depths.locked || depths.values.length === 1;
@@ -128,8 +111,11 @@ export function SeriesSpecBlock() {
       <div className="co-shell grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
         <div className="min-w-0 pb-[clamp(32px,4vw,64px)] pt-[clamp(40px,5vw,72px)] lg:pr-[clamp(24px,3.5vw,56px)]">
           <SeriesNameHeading />
-          <div className="mt-[clamp(32px,4vw,56px)] lg:sticky lg:top-[104px]">
+          {/* Not sticky any more: the picker lives under the viewer, and the two together
+              are taller than a laptop screen. */}
+          <div className="mt-[clamp(32px,4vw,56px)]">
             <SeriesStage />
+            <SeriesConfigPicker />
           </div>
         </div>
 
@@ -185,41 +171,8 @@ export function SeriesSpecBlock() {
             className="mt-6"
           />
 
-          {/* A drawing set's parts list: a header row, then one hairline per component. */}
-          <table className="co-data mt-10 w-full border-collapse">
-            <caption className="co-eyebrow mb-3 text-left text-co-panel-faint">Bill of components</caption>
-            <thead>
-              <tr className="border-y border-co-panel-border text-co-panel-faint">
-                <th scope="col" className="py-2 pr-3 text-left font-normal">
-                  Component
-                </th>
-                <th scope="col" className="py-2 pr-3 text-left font-normal">
-                  Code
-                </th>
-                <th scope="col" className="w-[52px] py-2 text-right font-normal">
-                  Qty
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {parts.bom.map((line) => (
-                <tr key={line.code} className="border-b border-co-panel-border align-baseline">
-                  <td className="py-2.5 pr-3 normal-case text-co-panel-fg">{line.name}</td>
-                  <td className="whitespace-nowrap py-2.5 pr-3 text-co-panel-muted">
-                    {line.code}
-                    {isInferredCode(series, line.code) ? <Provisional /> : null}
-                  </td>
-                  <td className="whitespace-nowrap py-2.5 text-right text-co-panel-fg">{line.qty}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {parts.bomNote ? (
-            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-muted">{parts.bomNote}</p>
-          ) : null}
-          {inferred || hasInferredBom ? (
-            <p className="mt-3 text-[13px] leading-relaxed text-co-panel-faint">{INFERRED_CODE_FOOTNOTE}</p>
-          ) : null}
+          {/* Bill of components removed (Nov 2026 review). Part codes still travel in the
+              enquiry (series-enquire.tsx). */}
 
           <div data-print="hide" className="mt-10 flex flex-wrap gap-3">
             <Button type="button" variant="onDark" onClick={(event) => goToSection("enquire", event)}>
@@ -240,10 +193,6 @@ export function SeriesSpecBlock() {
           </p>
         </div>
 
-      </div>
-
-      <div id="configurations" className="co-shell scroll-mt-[72px] border-t border-co-border py-[clamp(28px,3vw,44px)]">
-        <SeriesConfigRail />
       </div>
     </section>
   );

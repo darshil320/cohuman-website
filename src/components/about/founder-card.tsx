@@ -8,7 +8,7 @@ import type { Founder } from "@/lib/catalog";
 /**
  * One co-founder, as a figure on a drawing sheet.
  *
- * Square photo frame with a registration cross and a figure caption ("Fig. 0X — Name,
+ * Portrait (4:5) photo frame with a registration cross and a figure caption ("Fig. 0X — Name,
  * Role"), the name in display caps, role and focus areas as data labels, the bio in the Body cut.
  * The photograph is shown as supplied — no high-key grade, which is for interiors, not
  * people. Where no photo has been supplied the frame stays, labelled, and empty: never a
@@ -20,20 +20,20 @@ export function FounderCard({ founder, figure }: { founder: Founder; figure: num
       <figure>
         <div className="relative">
           {founder.photo ? (
-            <ClipReveal className="aspect-square border border-co-border bg-co-bg-alt">
+            <ClipReveal className="aspect-[4/5] border border-co-border bg-co-bg-alt">
               <Image
                 src={founder.photo.src}
                 alt={founder.photo.alt}
                 fill
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                className="object-cover"
+                className="object-cover object-top"
               />
             </ClipReveal>
           ) : (
             <div
               role="img"
               aria-label={`Photograph of ${founder.name} to follow`}
-              className="flex aspect-square items-end border border-co-border bg-co-bg-alt p-4"
+              className="flex aspect-[4/5] items-end border border-co-border bg-co-bg-alt p-4"
             >
               <span className="co-eyebrow">Photograph to follow</span>
             </div>

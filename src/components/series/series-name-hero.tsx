@@ -1,35 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useSeriesConfigurator } from "./series-context";
 
 /**
- * A — the name hero, split in two so the spec panel can sit beside it (client request,
- * "suggestion 1"): the breadcrumb runs full width here, and `SeriesNameHeading` — the
- * series eyebrow, the configuration's name and the dimension rule carrying its size
- * range — opens the left column of the spec block, above the viewer, with the ink
- * panel rising alongside it on the right.
- *
- * Everything reads the shared configurator state, so picking a configuration anywhere
- * on the page renames this hero. `#configuration` stays on this section: it is the top
- * of the product, where the pager and gallery scroll back to.
+ * A — the top of the product. The breadcrumb was removed (client, Nov 2026); what is
+ * left is the `#configuration` anchor the pager scrolls back to. `SeriesNameHeading`
+ * opens the spec block's left column, above the viewer, beside the ink panel.
  */
 export function SeriesNameHero() {
-  const { series } = useSeriesConfigurator();
-
-  return (
-    <section id="configuration" className="relative scroll-mt-[72px]">
-      <div className="co-shell pt-[clamp(24px,3vw,40px)]">
-        <nav aria-label="Breadcrumb" className="co-eyebrow flex flex-wrap items-center gap-2">
-          <Link href="/collections" className="hover:text-co-ink">
-            Collections
-          </Link>
-          <span aria-hidden>/</span>
-          <span className="text-co-ink">{series.wordmark}</span>
-        </nav>
-      </div>
-    </section>
-  );
+  return <div id="configuration" aria-hidden className="scroll-mt-[72px]" />;
 }
 
 /** The heading half of the name hero, set at the top of the spec block's left column. */
@@ -45,7 +24,7 @@ export function SeriesNameHeading() {
         {config.name}
         <span className="sr-only">, {series.name}</span>
       </h1>
-      <p className="co-lead mt-6 max-w-[46ch]">{series.promise}</p>
+      {/*<p className="co-lead mt-6 max-w-[46ch]">{series.promise}</p>*/}
     </div>
   );
 }

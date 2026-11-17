@@ -106,6 +106,63 @@ skill by name with the Skill tool (or `/name`), then give it the prompt in the t
 skill and the code disagree, fix whichever is wrong in the same change — never leave them
 drifting.
 
+## Nov 2026 review — what changed (see `docs/feedback-plan-2026-11-17.md`)
+
+- **Standard height is 750 mm** (`workingHeightMm` in both series), confirmed by the client.
+- Table names: "Single table" → **Cabin table**, "Return table" → **Cabin return table**.
+  The **meeting table is phase 2**: commented out in both `configs.ts`; Stretch S now
+  opens on the bench (`PROS_DEFAULT_SLUG`).
+- Visitor-facing copy says **system**, not "series" (configurator, enquiry lines, llms.txt).
+  Code identifiers keep `series`.
+- The series spec panel has **no bill of components**; part codes still go in the enquiry.
+- Anatomy: "Side bar" removed, "Adjustable foot" is **Leveler**, no parts count in the
+  heading, larger image.
+- Main nav has no Solutions (still in the footer); the hero label is "Office systems".
+- Every product panel carries the same fields (`STANDARD_FIELDS` in
+  `src/components/product/spec-fields.tsx`) with **"Not available"** for gaps;
+  `docs/cohuman-missing-data.xlsx` lists the same gaps per product (built by a script in
+  the session that made it; regenerate from `pieces.json` / `collections.json`).
+- **No breadcrumbs on product pages** (series and `ProductSpecLayout`); breadcrumb JSON-LD
+  stays for search.
+- **Hero has two slides** (`heroPanels` in `src/app/page.tsx`): the ARQ film, then
+  `SYSTEM_FILM` (a 28 s cut of the Stretch System explainer — Cohuman wordmark, "STRETCH",
+  the leg and beam, Stretch V and S, workstations, "Make it work"; recipe in
+  `hero-films.ts`; its own portrait cut for phones). In a sequence each film plays once and
+  hands on when it ends (`onEnded`); a lone film loops. **Controls are bottom-centre dots**
+  (client, Nov 2026) — the ink control block, arrows, labels and timecode are gone; pressing
+  the current dot pauses / resumes (WCAG 2.2.2). The hero's desktop links now sit on the
+  shell column.
+- **Phone booths** are a fourth group (`phone-booths` in `PIECE_GROUPS` and
+  `collection-menu.ts`). The phone booth's text and photographs come from the supplier's
+  page (worklyffe.com, WYN series), rewritten, and sold under Cohuman's own name **Alcove**
+  (`/products/alcove`; the client is allowed to use the supplier's material, not its name).
+  Five models renamed for Cohuman — Solo, Focus, Duo, Huddle, Team (WYN PRO, EXTRA, CHAT,
+  DISCUSS, MEET) — with the brochure's sizes converted from inches to mm, and folded
+  `details` rows (acoustics, construction, installation). Its studio shots sit on a grey backdrop, so
+  they are `photos` (shown whole, never multiplied) and its card uses the room shot.
+- `Piece.photos`: extra photographs shown whole after the room shot (studio shots that
+  are not cut-outs on white). Ergohuman's room shots and its grey photo use it too.
+- **/configure was rebuilt system-first** (catalogue v31 p. 15 + the review): System →
+  Top & finish → Partition → VOLT & BOLT → Accessories → Configuration. Data:
+  `src/lib/configurator/systems.ts` (9 systems: S and V sized from `src/lib/series`; F,
+  Apex, Element borrow Stretch S's table types and sizes; E and R a cabin table sized to
+  plan; square and loop legs "details to come"), `power.ts` (VOLT & BOLT units, no supplier
+  name, codes or prices), and the catalogue options in `src/lib/finishes.ts`
+  (`CORE_OPTIONS`, `EDGE_OPTIONS`, `CORNER_OPTIONS`, `PARTITION_OPTIONS`, `FABRIC_SHADES`,
+  `CABLE_OPTIONS`, `STORAGE_OPTIONS`; pictures in `public/configurator/`). Benches carry
+  `sharing` on their `SeriesConfig`. `configurator.test.ts` guards the rules and the
+  ≤200-character enquiry subject.
+- **Board shades are v31's CH-01…CH-07** (Frosty White … Sonoma Oak); warranty 10 years
+  for workspace systems, 5 for other products, shown in every product panel.
+- **Accessories** is a fifth group: VOLT & BOLT pop-up box, cable cubby, power dock, power
+  track, floor box, cable manager (photos from the supplier's price list, cropped clear of
+  AI marks; some products carry the supplier's engraved logo), pedestals and desk
+  accessories (catalogue drawings).
+- Boxed collection cards are **3:2** (the 4:5 frame cropped the table legs).
+- Designer collab carries `DESIGNER_COLLAB_CREDIT` ("Collection 1 — designed by Parth
+  Makwana") in `collection-menu.ts`. Ergohuman: no "Plus"; versions are viewer pictures
+  and a Configurations row; colours black and grey.
+
 ## Stack
 
 - Next.js (App Router) + TypeScript, React 19
@@ -145,30 +202,35 @@ Founders section of `/about`. Fields: `slug`, `name`, `role`, `bio` (2–4 sente
 `focus[]`, optional `photo { src, alt }` (file in `public/founders/`), `linkedin` (https
 linkedin.com), `quote`. Two founders today — Tushar Shah (Co-founder & CEO) and Jigar
 Rathod (Co-founder & COO), bios verbatim from the client; the section's closing line is
-`FOUNDERS_CLOSE` in `src/app/about/page.tsx`. **Photos and LinkedIn are pending** — a
+`FOUNDERS_CLOSE` in `src/app/about/page.tsx`. **Photos are in** (`public/founders/`, 4:5); **LinkedIn is pending.** A
 founder without a photo gets a labelled empty frame (never a stock face). Focus areas
 were taken from the bios, not supplied separately. `src/lib/catalog/founders.test.ts`
 allows personal career history (the exception above) but rejects the old trading name,
 counted track records and photo paths that don't exist — run `npm test` after editing.
 
-## Collections menu, PM x Cohuman and single products
+## Collections menu, Designer collab and single products
 
-Everything a visitor can browse is grouped like the 2026 catalogue — **PM x Cohuman**
+Everything a visitor can browse is grouped like the 2026 catalogue — **Designer collab**
 (designer pieces), **Workstations** (the desking systems), **Seating** — by one builder,
 `buildCollectionMenu` (`src/lib/catalog/collection-menu.ts`). It feeds three places that
 must never disagree: the header's **Collections panel** (`collections-panel.tsx` — a
 click, not a hover, opens a full-page menu under the bar: groups in display type with
 counts on the left, the active group's products as pictures on the right; on phones the
 menu row expands in place to a picture rail per group), the **/collections** page (one
-picture grid per group, anchored `#pm-x-cohuman` / `#workstations` / `#seating`) and the
+picture grid per group, anchored `#designer-collab` / `#workstations` / `#seating`) and the
 homepage. Every list of products uses `CollectionCard` — picture, name, one line.
 
-**Single products** (the eight PM x Cohuman pieces and Ergohuman) live in
+**Single products** (the eight Designer collab pieces — designed by Parth Makwana, the
+`designer` field in `pieces.json`, credited under the name and in the spec panel — and
+Ergohuman) live in
 `src/data/pieces.json`, parsed with `piecesSchema` (`piece-schema.ts`), served by
-`catalog.getPieces()` and rendered at **`/products/[slug]`**, after amardeepdesign.com's
-product page: name and one size line beside a large gallery (`PieceGallery`), then the
-catalogue's one sentence beside folded `<details>` rows (`PieceDetails`), versions where
-the catalogue draws them, more from the group, `CtaBand`. Text is the catalogue's,
+`catalog.getPieces()` and rendered at **`/products/[slug]`**, opening like the
+Stretch S / V pages (client, Nov 2026 — **every product page shares this layout**,
+`ProductSpecLayout` in `src/components/product/`): name, tagline and the viewer with a
+thumbnail grid directly under it on the left (`ProductViewer` — click swaps the picture,
+no carousel), the ink "01 / Specification" panel on the right (type, sizes, collection,
+designer, Get a quote, Spec sheet). Then "02 / Details" folded (`PieceDetails`), versions
+where the catalogue draws them, more from the group, `CtaBand`. Text is the catalogue's,
 verbatim; sizes only where it prints them (ARQ, MELLOW, MODO have none). These pages carry
 no `DimensionLine` — the gallery opens on a room shot, and a line drawn under it would
 measure nothing. `pieces.test.ts` checks every image exists. Images are in
@@ -215,9 +277,9 @@ A collection is one of two kinds, and `/collections/[slug]` renders whichever it
 2. **A photographed range** — STRETCH F (slug `fulcrum`), APEX (`apex`), ELEMENT
    (`element`). The client supplied photographs only (`~/Downloads/Workstation/`), no
    specification, so these quote **no sizes, no part codes and no dimension lines**: the
-   page (`src/components/collections/collection-gallery.tsx`) shows the range in situ, the
-   pieces on white, the leg finishes as photographed, and ends on the enquiry ("sized to
-   plan"). Everything lives in the `src/data/collections.json` entry (`wordmark`, `lead`,
+   page (`src/components/collections/collection-gallery.tsx`) uses the same
+   `ProductSpecLayout` — every photograph in the viewer, the ink panel beside it — then the
+   leg finishes as photographed, and ends on the enquiry ("sized to plan"). Everything lives in the `src/data/collections.json` entry (`wordmark`, `lead`,
    `pieces`, `photos`, `legFinishes`), validated by `collection-schema.ts`;
    `collections.test.ts` checks every photo file exists and that no millimetre size or
    seat count creeps into the copy. Photos are in `public/fulcrum|apex|element/`, converted
@@ -271,11 +333,12 @@ collection is a desking series with a configurator, not a bucket for SKUs.
   block and the pager, then hands off to the pager's own quote button. **There is no
   size chart** — the client removed it; the per-configuration sizes live in the spec
   block's selectors (and `chartLengths`/`chartDepths` still feed llms.txt).
-- **Configuration picker** (`series-config-rail.tsx` + `series-config-flight.tsx`): a
-  horizontal filmstrip. The chosen card grows (name, size range, seats, code) while the
-  others shrink, then a copy of its render flies into the viewer (`[data-viewer-frame]`
-  in `series-stage.tsx`) as the page scrolls up to it, and the strip re-centres on it.
-  Reduced motion: instant select and jump.
+- **Configuration picker** (`series-config-picker.tsx`, client, Nov 2026): a plain grid
+  of small thumbnails directly under the viewer, with the top-finish filter under it — no
+  carousel, no flight, no scroll. A click swaps the viewer's image in place. (The old
+  filmstrip and its fly-into-the-viewer animation were removed.) The viewer is no longer
+  sticky. The per-configuration gallery (`series-config-gallery`) is commented out in
+  `series-pdp.tsx`; section numbers below the spec block start at 02.
   The enquiry posts to the existing `POST /api/enquiry` with configuration, size and
   bill of components folded into `interest`/`message`.
 - **Viewer** — WebGL stage (`three` + `@react-three/fiber`, demand-driven frame loop:
@@ -358,7 +421,7 @@ review there is **one panel** — the 1-2-3 selector and the comparison film are
   "Configure a desk" and a `Fig. 01 — ARQ executive desk` callout sit bottom left, clear
   of the control block. Phones stack everything in the portrait cut's empty upper half.
   Re-measure (min-frame occupancy) if the film changes. The desk is **ARQ** (designer
-  collab, PM x Cohuman); the footage links to `/products/arq`.
+  collab); the footage links to `/products/arq`.
 - **Fallback** — `SignalHeroPanel` (`signal-hero.tsx`), the bench on the green grid,
   takes the hero and the H1 only if the lead film's poster is missing.
 
@@ -374,10 +437,9 @@ trimmed so the desk sits whole in the lower half, clear of the title block — r
 `<source media>`, and the video's own poster is set in an effect (the lead video is
 server-rendered, where the viewport is unknown).
 
-The ink corner block holds every hero control: pause / play (required for looping video,
-WCAG 2.2.2), the arrows, one bar per panel — the active bar fills with the film's
-playback — and a mono timecode. Reduced motion never autoplays (the poster stays, Play is
-offered). While the hero is under it the header is transparent (`src/lib/hero-chrome.ts`).
+The hero's only controls are dots, bottom centre: one per slide, the current one a short
+track filling with its film's playback; pressing the current dot pauses / resumes (WCAG
+2.2.2). Reduced motion never autoplays (the poster stays; pressing the dot plays). While the hero is under it the header is transparent (`src/lib/hero-chrome.ts`).
 The header must never get `backdrop-filter`, `filter` or `transform` — see the comment in
 `site-header.tsx` for the mobile-menu bug that caused.
 
@@ -429,8 +491,7 @@ space type).
   the catalogue address is still named "FURNITURE CONCEPTS 2.0", and a keyless embed
   shows it. Once the Google Business Profile is renamed to Cohuman, paste the URL kept in
   the comment there; the homepage's visit section and /contact pick it up.
-- **Founder photos and LinkedIn** are still to come — `src/data/founders.json` has both
-  founders' text; the cards show a labelled empty frame until photos are added.
+- **Founder LinkedIn links** are still to come (photos are in).
 - **`siteConfig.suratPhotos` is empty on purpose.** The only showroom photo on file,
   `public/site/surat-storefront.jpg`, shows the shop sign "FURNITURE CONCEPTS-2.0" (the
   previous trading name). It is kept on disk but not listed; the showroom sections on
@@ -531,7 +592,7 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   mono counter and square arrows — no green, the page has many of them. Do not reintroduce framer `initial={{ opacity: 0 }}`
   on static content: it serializes as an inline `opacity:0`, so the page is blank when
   JS fails.
-- **The homepage is pictures first**: 01 PM x Cohuman (each piece in its room), 02
+- **The homepage is pictures first**: 01 Designer collab (each piece in its room), 02
   systems and seating (from `buildCollectionMenu`), then spaces, projects, build, visit.
   The lead film links to ARQ's page (`HERO_PRODUCT` in `src/app/page.tsx`). The old
   systems index and its line-drawing previews are gone; `public/lines/` and

@@ -50,7 +50,7 @@ function guidanceLines(): string[] {
     "- Cohuman is a business-to-business manufacturer and fit-out contractor, not a retailer. The action at the end of every enquiry is a quotation, not a purchase.",
     "- There are no prices to quote. Catalog pages show a qualitative band only — Value, Mid or Premium — because final cost depends on quantity, finish, size and site conditions. Do not estimate a figure.",
     `- Quote turnaround is ${siteConfig.enquiryTurnaround}, answered by a specifier rather than an autoresponder.`,
-    "- Desking is sold as a configurable series, not as fixed SKUs: a customer picks a configuration, a length and a depth, and the quote depends on all three. Sizes are in millimetres.",
+    "- Desking is sold as a configurable system, not as fixed SKUs: a customer picks a configuration, a length and a depth, and the quote depends on all three. Sizes are in millimetres.",
     `- For bulk, franchise or multi-site work the correct route is ${url("/b2b")}, which is handled by a separate desk from single-item enquiries.`,
     `- The showroom is in Surat, at ${siteConfig.address.line1}, ${siteConfig.address.line2}; the factory is also in Surat. Visits can be booked at ${url("/contact")}.`,
     `- Written enquiries: ${siteConfig.email}. Languages: English, Hindi, Gujarati.`,
@@ -92,7 +92,7 @@ export async function buildLlmsTxt(): Promise<string> {
 
     "## Designer pieces and seating",
     "",
-    "Single products with their own page: the PM x Cohuman designer collaboration (executive desks, sofas, accent chairs, a coffee table, a library) and office chairs.",
+    "Single products with their own page: the designer collaboration with Parth Makwana (executive desks, sofas, accent chairs, a coffee table, a library) and office chairs.",
     "",
     ...pieces.map(
       (piece) =>
@@ -100,9 +100,9 @@ export async function buildLlmsTxt(): Promise<string> {
     ),
     "",
 
-    "## Desking series",
+    "## Desking systems",
     "",
-    "A series is either configurable (its own sizes and component schedule) or a photographed range (pieces shown, sizes quoted to the customer's plan).",
+    "A system is either configurable (its own sizes and component schedule) or a photographed range (pieces shown, sizes quoted to the customer's plan).",
     "",
     ...collections.map((collection) => {
       const series = ALL_SERIES.find((s) => s.slug === collection.slug);
@@ -144,7 +144,7 @@ export async function buildLlmsTxt(): Promise<string> {
     "## Key pages",
     "",
     `- [Home](${url("/")}): what Cohuman makes and who it makes it for.`,
-    `- [Collections](${url("/collections")}): the desking series and their configurators.`,
+    `- [Collections](${url("/collections")}): the desking systems and their configurators.`,
     `- [Tops & finishes](${url("/finishes")}): board shades, veneer, frame colours by system, top cores, edges, screen positions and the technical specification.`,
     `- [Sectors](${url("/sectors")}): executive, healthcare and hospitality work.`,
     `- [Solutions by space](${url("/solutions")}): furniture schedules by room type.`,
@@ -300,7 +300,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
     `- Quote turnaround: ${siteConfig.enquiryTurnaround}`,
     "",
 
-    "## Desking series in full",
+    "## Desking systems in full",
     "",
     ...collections.flatMap((collection) => {
       const series = ALL_SERIES.find((s) => s.slug === collection.slug);

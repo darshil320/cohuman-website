@@ -3,7 +3,7 @@ import { KineticHeading } from "@/components/ui/kinetic-heading";
 import { HEADER_HEIGHT } from "@/lib/layout";
 import { siteConfig } from "@/lib/site-config";
 
-const LABEL = "Office systems — Surat, IN";
+const LABEL = "Office systems";
 const SENTENCE = "Configurable desking, cabins and meeting tables, specified to the millimetre.";
 
 /**
@@ -14,13 +14,13 @@ const SENTENCE = "Configurable desking, cabins and meeting tables, specified to 
  * the desk fills 19–84% of the frame's height; only the top 19% of sweep stays empty the
  * whole time, and the bottom edge is floor. So, from md:
  *
- *   ── OFFICE SYSTEMS — SURAT, IN ───────────────────────────── 21.1702° N 72.8311° E
+ *   ── OFFICE SYSTEMS ───────────────────────────────────── 21.1702° N 72.8311° E
  *   Precision-made modular office furniture.            ← one line, sized to the band
  *   ·
  *   ·                       (the desk, unobstructed)
  *   ·
- *   [controls]  Configurable desking, cabins and meeting tables, …
- *               CONFIGURE A DESK →  |  ARQ EXECUTIVE DESK →
+ *   Configurable desking, cabins and meeting tables, …
+ *   CONFIGURE A DESK →  |  ARQ EXECUTIVE DESK →
  *
  * The headline's size is `min(vw, vh)`-bound so the label and headline always end inside
  * the empty band whatever the window's shape. The phone cut is portrait, with the desk in
@@ -60,7 +60,7 @@ export function FilmIntro({ product }: { product: { name: string; href: string }
       {/*
         Phones: the two actions on the floor under the desk (the portrait cut keeps its
         bottom ~quarter clear), as full-width ruled rows — a short parts list rather than
-        two loose links — sitting above the control block and the WhatsApp button.
+        two loose links — sitting above the slide dots and the WhatsApp button.
       */}
       <nav
         aria-label="Hero"
@@ -77,12 +77,12 @@ export function FilmIntro({ product }: { product: { name: string; href: string }
       {/*
         From md, a readout along the floor, bottom left. Measured: across the loop the
         floor's left ~55% stays clear, while the desk's legs cross the right half — so the
-        sentence and the two links share one left-hand group, starting
-        clear of the ink control block (or on the shell's column on wide screens) and
-        capped short of the halfway line. Type only, nothing boxed. Positioned with left /
+        sentence and the two links share one left-hand group on the shell's column
+        (the ink control block that used to sit here became bottom-centre dots, Nov
+        2026), capped short of the halfway line. Type only, nothing boxed. Positioned with left /
         width rather than `co-shell`, whose own padding would override the offsets.
       */}
-      <div className="pointer-events-none absolute bottom-[clamp(14px,2.6vh,26px)] left-[max(196px,calc((100vw-1440px)/2+48px))] z-10 hidden w-[min(540px,calc(54vw-196px))] text-co-ink md:block">
+      <div className="pointer-events-none absolute bottom-[clamp(14px,2.6vh,26px)] left-6 z-10 hidden w-[min(540px,calc(54vw-24px))] lg:left-[max(48px,calc((100vw-1440px)/2+48px))] lg:w-[min(540px,calc(54vw-48px))] text-co-ink md:block">
         <p className="text-[14px] leading-[1.5]">{SENTENCE}</p>
         <HeroLinks product={product} className="mt-1.5" />
       </div>

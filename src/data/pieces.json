@@ -3,7 +3,8 @@
     "slug": "arq",
     "name": "ARQ",
     "type": "Executive desk",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A stone-look top with a sculpted front edge rests on a dark base, with a side return built in.",
     "about": "ARQ is an executive desk for the cabin. The sculpted edge gives the top a clear front, and the side return keeps a second work surface within reach.",
     "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
@@ -33,7 +34,8 @@
     "slug": "loop",
     "name": "LOOP",
     "type": "Executive desk",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A long executive top carried on a looped metal leg at one end and a storage pedestal at the other.",
     "about": "LOOP balances an open, looped leg against a solid storage pedestal, so the desk reads light at one end and grounded at the other.",
     "size": {
@@ -74,7 +76,8 @@
     "slug": "duet",
     "name": "DUET",
     "type": "Sofa",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A high-backed sofa whose outer shell wraps around the seat, in three sizes.",
     "about": "DUET's shell rises around the seat to make a quiet, enclosed corner in an open lounge. Available as a single seat, a two-seater and a three-seater.",
     "size": {
@@ -121,7 +124,8 @@
     "slug": "axen",
     "name": "AXEN",
     "type": "Sofa",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A deep, low seat carried on a slim angled metal frame, shown as a two-seater.",
     "about": "AXEN keeps its seat low and deep, lifted on a slim angled frame so the sofa looks light from every side. Single, two and three seater versions are available on request.",
     "size": {
@@ -169,7 +173,8 @@
     "slug": "mellow",
     "name": "MELLOW",
     "type": "Accent chair",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A rounded armchair with a split back and wraparound arms, on a solid wood base.",
     "about": "MELLOW pairs a soft, rounded seat with a warm wooden base: a chair for receptions, cabins and quiet corners.",
     "finish": "Wood and veneer in PU; metallic PU and powder-coat options available on request",
@@ -200,7 +205,8 @@
     "slug": "modo",
     "name": "MODO",
     "type": "Accent chair",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A tub chair: a soft upholstered seat set inside a dark outer shell.",
     "about": "MODO sets a soft seat inside a firm dark shell, giving a compact tub chair for breakout and reception spaces.",
     "upholstery": "Fabric, leather and eco-leather options available on request",
@@ -230,7 +236,8 @@
     "slug": "orca",
     "name": "ORCA",
     "type": "Coffee table",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "A soft-cornered square top on four rounded corner legs.",
     "about": "ORCA's soft corners and rounded legs make a coffee table that sits easily with any of the lounge pieces.",
     "size": {
@@ -271,7 +278,8 @@
     "slug": "ren",
     "name": "REN",
     "type": "Library",
-    "group": "pm-x-cohuman",
+    "group": "designer-collab",
+    "designer": "Parth Makwana",
     "tagline": "Open shelving on slim dark uprights and a low plinth, freestanding or as a library wall.",
     "about": "REN works as a single freestanding unit or as a full library wall, with open shelves for books, files and objects.",
     "size": {
@@ -319,50 +327,80 @@
     "availableAs": [
       "With headrest",
       "Without headrest",
-      "With leg rest",
-      "Plus"
+      "With leg rest"
+    ],
+    "colours": [
+      "Black",
+      "Grey"
     ],
     "scene": {
       "src": "/pieces/ergohuman/scene.jpg",
-      "alt": "An Ergohuman mesh chair at a desk in a bright room with plants"
+      "alt": "A black Ergohuman mesh chair at a desk in a bright room with a plant"
     },
     "views": [
       {
+        "src": "/pieces/ergohuman/three-quarter.jpg",
+        "label": "Three-quarter",
+        "alt": "Black Ergohuman chair with headrest from the three-quarter view"
+      },
+      {
         "src": "/pieces/ergohuman/front.jpg",
         "label": "Front",
-        "alt": "Ergohuman chair from the front"
+        "alt": "Black Ergohuman chair with headrest from the front"
       },
       {
         "src": "/pieces/ergohuman/side.jpg",
         "label": "Side",
-        "alt": "Ergohuman chair from the side"
+        "alt": "Black Ergohuman chair with headrest from the side"
       },
       {
         "src": "/pieces/ergohuman/back.jpg",
         "label": "Back",
-        "alt": "Ergohuman chair from the back"
+        "alt": "Black Ergohuman chair with headrest from the back"
       }
     ],
     "versions": [
       {
         "src": "/pieces/ergohuman/v-headrest.jpg",
         "label": "With headrest",
-        "alt": "Ergohuman chair with headrest"
+        "alt": "Black Ergohuman chair with headrest"
       },
       {
         "src": "/pieces/ergohuman/v-no-headrest.jpg",
         "label": "Without headrest",
-        "alt": "Ergohuman chair without headrest"
+        "alt": "Black Ergohuman chair without a headrest"
       },
       {
         "src": "/pieces/ergohuman/v-leg-rest.jpg",
         "label": "With leg rest",
-        "alt": "Ergohuman chair with the leg rest pulled out"
+        "alt": "Black Ergohuman chair with the leg rest pulled out"
       },
       {
-        "src": "/pieces/ergohuman/v-plus.jpg",
-        "label": "Plus",
-        "alt": "Ergohuman Plus chair"
+        "src": "/pieces/ergohuman/v-leg-rest-front.jpg",
+        "label": "With leg rest, front",
+        "alt": "Black Ergohuman chair with the leg rest stowed, from the front"
+      }
+    ],
+    "photos": [
+      {
+        "src": "/pieces/ergohuman/room-cafe.jpg",
+        "label": "At a desk",
+        "alt": "A black Ergohuman chair at a wooden desk with a laptop, in a brick-walled office"
+      },
+      {
+        "src": "/pieces/ergohuman/room-office.jpg",
+        "label": "In an office",
+        "alt": "Black Ergohuman chairs at long wooden desks in an open office with brick walls"
+      },
+      {
+        "src": "/pieces/ergohuman/room-rear.jpg",
+        "label": "From behind",
+        "alt": "A black Ergohuman chair from behind, at a desk in a bright room"
+      },
+      {
+        "src": "/pieces/ergohuman/grey.jpg",
+        "label": "Grey",
+        "alt": "The grey Ergohuman chair, close up on its mesh back and armrest"
       }
     ]
   },
@@ -462,6 +500,506 @@
         "src": "/pieces/type-a/main-table-top.jpg",
         "label": "Main table, top",
         "alt": "Plan of the Type A main table, 2100 by 800 mm, with 1700 by 400 mm side storage"
+      }
+    ]
+  },
+  {
+    "slug": "alcove",
+    "name": "Alcove",
+    "type": "Phone booth",
+    "group": "phone-booths",
+    "tagline": "A quiet room you can set down anywhere on the floor: for calls, focus work and meetings of up to eight, with light, air and power built in.",
+    "about": "Alcove is a family of modular, free-standing booths — a value-driven alternative to building walls. Each model is self-contained, with LED lighting, silent ventilation and power, and cuts surrounding noise by 32 dB. It installs quickly, without building work, and moves or packs down when the floor plan changes.",
+    "availableAs": [
+      "Alcove Solo",
+      "Alcove Focus",
+      "Alcove Duo",
+      "Alcove Huddle",
+      "Alcove Team"
+    ],
+    "builtIn": "LED overhead lighting with a motion sensor, silent overhead ventilation fans, and a power socket and USB charging port at worksurface height",
+    "scene": {
+      "src": "/pieces/alcove/scene.jpg",
+      "alt": "A single-seat phone booth with an orange shell beside desks in an open office"
+    },
+    "photos": [
+      {
+        "src": "/pieces/alcove/room-two-seat.jpg",
+        "label": "Two seats, in an office",
+        "alt": "A two-seat booth with a white shell and glass doors in an open office"
+      },
+      {
+        "src": "/pieces/alcove/room-meeting.jpg",
+        "label": "Meeting pod, in a lobby",
+        "alt": "A large glass-fronted meeting pod with a green shell in a bright lobby with lounge chairs"
+      },
+      {
+        "src": "/pieces/alcove/room-lounge.jpg",
+        "label": "Lounge pod, in a studio",
+        "alt": "A glass-fronted pod with a yellow shell in an industrial-style office"
+      },
+      {
+        "src": "/pieces/alcove/single-front.jpg",
+        "label": "Single seat, front",
+        "alt": "A single-seat booth with a dark shell, glass door and a high stool, from the front"
+      },
+      {
+        "src": "/pieces/alcove/two-seat.jpg",
+        "label": "Two seats",
+        "alt": "A two-seat booth with a white shell, glass front and two high stools at a counter"
+      },
+      {
+        "src": "/pieces/alcove/two-seat-front.jpg",
+        "label": "Two seats, front",
+        "alt": "A two-seat booth with a dark glass front and two high stools, from the front"
+      },
+      {
+        "src": "/pieces/alcove/two-seat-table.jpg",
+        "label": "Two seats, with a table",
+        "alt": "A dark two-seat booth with glass doors, a chair and a small table"
+      },
+      {
+        "src": "/pieces/alcove/four-seat.jpg",
+        "label": "Four seats",
+        "alt": "A four-seat meeting pod with a white shell, glass front, a table and four chairs"
+      },
+      {
+        "src": "/pieces/alcove/four-seat-white.jpg",
+        "label": "Four seats, white frame",
+        "alt": "A four-seat meeting pod with a light frame, a table and four chairs"
+      },
+      {
+        "src": "/pieces/alcove/lounge.jpg",
+        "label": "Lounge pod",
+        "alt": "A teal pod with a glass front, two upholstered seats and a high table"
+      },
+      {
+        "src": "/pieces/alcove/lounge-side.jpg",
+        "label": "Lounge pod, side",
+        "alt": "A teal pod from the side, with upholstered seats and a high table inside"
+      },
+      {
+        "src": "/pieces/alcove/room-teal.jpg",
+        "label": "Solo, teal shell",
+        "alt": "A single booth with a teal shell and a high stool beside desks in a bright office"
+      },
+      {
+        "src": "/pieces/alcove/construction.jpg",
+        "label": "Construction",
+        "alt": "Exploded drawing of the booth: insulating glass, sound-absorbing lining, carpet and aluminium frame"
+      },
+      {
+        "src": "/pieces/alcove/airflow.jpg",
+        "label": "Ventilation",
+        "alt": "Drawing of air moving in and out through the booth's overhead fans"
+      },
+      {
+        "src": "/pieces/alcove/acoustic-layers.jpg",
+        "label": "Acoustic layers",
+        "alt": "The wall layers: soundproof panel, plywood, sound-absorbing cotton and steel plate"
+      }
+    ],
+    "views": [
+      {
+        "src": "/pieces/alcove/single.jpg",
+        "label": "Single seat",
+        "alt": "A single-seat booth with a dark shell, glass door and a blue high stool"
+      }
+    ],
+    "seats": "1 to 8, by model",
+    "parts": [
+      {
+        "label": "Alcove Solo",
+        "size": {
+          "w": [
+            1000
+          ],
+          "d": [
+            1000
+          ],
+          "h": [
+            2170
+          ],
+          "note": "1 seat, shelf"
+        }
+      },
+      {
+        "label": "Alcove Focus",
+        "size": {
+          "w": [
+            1800
+          ],
+          "d": [
+            1200
+          ],
+          "h": [
+            2170
+          ],
+          "note": "1 seat, table"
+        }
+      },
+      {
+        "label": "Alcove Duo",
+        "size": {
+          "w": [
+            1600,
+            2200
+          ],
+          "d": [
+            1200
+          ],
+          "h": [
+            2170
+          ],
+          "note": "2 or 3 seats, shelf"
+        }
+      },
+      {
+        "label": "Alcove Huddle",
+        "size": {
+          "w": [
+            2200
+          ],
+          "d": [
+            1200,
+            1800,
+            2400
+          ],
+          "h": [
+            2170
+          ],
+          "note": "2, 4 or 6 seats, table"
+        }
+      },
+      {
+        "label": "Alcove Team",
+        "size": {
+          "w": [
+            2400
+          ],
+          "d": [
+            2000,
+            3000,
+            4000
+          ],
+          "h": [
+            2170
+          ],
+          "note": "4, 6 or 8 seats, table"
+        }
+      }
+    ],
+    "finish": "Powder-coated steel shell; acoustic lining in a choice of colours; laminate worksurface; black or silver carpet insert; nickel-silver door hardware",
+    "details": [
+      {
+        "title": "The models",
+        "lines": [
+          "Alcove Solo — a one-person booth for calls and short focus work, with a built-in shelf; stand, or add a high stool.",
+          "Alcove Focus — a roomier single booth with a full table and a task chair, for work that needs files and a laptop. Solid acoustic or glass back wall.",
+          "Alcove Duo — two or three seats at a bar-height shelf along the back wall, for joint calls, interviews and quick breaks.",
+          "Alcove Huddle — a meeting booth for two, four or six on chairs or sofas, with a laminate tabletop.",
+          "Alcove Team — the largest, for four, six or eight, with room for sofas, a whiteboard or a screen."
+        ]
+      },
+      {
+        "title": "Acoustics",
+        "lines": [
+          "Cuts surrounding noise by 32 dB.",
+          "Fire-rated acoustic board, carpet and polyester foam line the walls; sound-absorbing felt inside."
+        ]
+      },
+      {
+        "title": "Construction",
+        "lines": [
+          "All-metal structure in 1.2 mm electro-galvanised steel.",
+          "Single-glazed 8 mm tempered glass door and back wall; the door locks.",
+          "80 to 100% of the materials can be recycled at the end of its life."
+        ]
+      },
+      {
+        "title": "Installation and safety",
+        "lines": [
+          "Plug and play: usable as soon as it is set up, and it can be moved, taken apart and stored.",
+          "Building sprinklers reach inside through the overhead panel.",
+          "Optional tie-down straps hold it to the floor for earthquake safety."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "pop-up-box",
+    "name": "VOLT & BOLT pop-up box",
+    "type": "Power and data",
+    "group": "accessories",
+    "tagline": "Power and data that rise out of the desk top when you need them and close flush when you don't.",
+    "about": "Set into the top of a workstation or a conference table, the pop-up box opens to sockets, USB charging, data and video, and closes back into a flat lid. Soft-open hydraulic versions take a set number of modules and can be fitted to the run.",
+    "availableAs": [
+      "Built-in pop-up box",
+      "Hydraulic soft-open pop-up box",
+      "Glide-in pop-up"
+    ],
+    "builtIn": "Universal sockets, USB-A and USB-C charging, data, HDMI, audio — depending on the model",
+    "finish": "Silver or black; customisable boxes also in white, grey, brass and stainless steel",
+    "colours": [
+      "Silver",
+      "Black",
+      "White",
+      "Grey",
+      "Brass",
+      "Stainless steel"
+    ],
+    "scene": {
+      "src": "/pieces/pop-up-box/white-desk.jpg",
+      "alt": "A white desk with a small pop-up box open on the top"
+    },
+    "photos": [
+      {
+        "src": "/pieces/pop-up-box/desk.jpg",
+        "alt": "A brushed-steel pop-up box open in a wooden desk top beside a lamp and a phone",
+        "label": "In a wooden desk"
+      },
+      {
+        "src": "/pieces/pop-up-box/box.jpg",
+        "alt": "A black pop-up box with sockets, data and video ports and its cables",
+        "label": "The box and its cables"
+      }
+    ],
+    "views": []
+  },
+  {
+    "slug": "cable-cubby",
+    "name": "VOLT & BOLT cable cubby",
+    "type": "Power and data",
+    "group": "accessories",
+    "tagline": "A flush box in the desk top that keeps sockets and cables under a soft-close flap.",
+    "about": "The cable cubby sits level with the table top. Its brushed aluminium flap flips or slides open to sockets, charging and pass-through holes for cables, and closes softly over them. Some versions carry a wireless charger in the lid.",
+    "availableAs": [
+      "Flip-open cable cubby",
+      "Slide-open cable cubby",
+      "Cable cubby with wireless charger"
+    ],
+    "builtIn": "Universal sockets, USB charging, data and pass-through holes — depending on the model",
+    "finish": "Brushed aluminium",
+    "colours": [
+      "Silver",
+      "Black"
+    ],
+    "scene": {
+      "src": "/pieces/cable-cubby/desk.jpg",
+      "alt": "A brushed-steel cable cubby in a wooden conference table, with a phone charging on it"
+    },
+    "photos": [
+      {
+        "src": "/pieces/cable-cubby/slide.jpg",
+        "alt": "A slim slide-open cable cubby with a wireless charging pad",
+        "label": "Slide-open"
+      },
+      {
+        "src": "/pieces/cable-cubby/open.jpg",
+        "alt": "An open black cable cubby with sockets and cable holes",
+        "label": "Open"
+      },
+      {
+        "src": "/pieces/cable-cubby/box.jpg",
+        "alt": "A silver cable cubby with its flap raised, showing the sockets inside",
+        "label": "Flap raised"
+      }
+    ],
+    "views": []
+  },
+  {
+    "slug": "power-dock",
+    "name": "VOLT & BOLT power dock",
+    "type": "Power and data",
+    "group": "accessories",
+    "tagline": "A round dock that lifts out of the desk at a push and sinks back flush.",
+    "about": "The power dock is a cylinder set into the desk top: press it and it rises to sockets and USB charging, press again and it drops level with the surface. Twirl docks turn open instead, and some carry a wireless charger on top.",
+    "availableAs": [
+      "Push-up power dock",
+      "Push-up dock with wireless charger",
+      "Twirl power dock"
+    ],
+    "builtIn": "Universal sockets, USB-A and USB-C charging; wireless charging on some models",
+    "colours": [
+      "White",
+      "Black",
+      "Grey"
+    ],
+    "scene": {
+      "src": "/pieces/power-dock/wireless.jpg",
+      "alt": "A white push-up power dock raised from a desk, with a phone charging on its top"
+    },
+    "photos": [
+      {
+        "src": "/pieces/power-dock/push-up.jpg",
+        "alt": "A black push-up power dock raised, with its cable",
+        "label": "Push-up, black"
+      },
+      {
+        "src": "/pieces/power-dock/twirl.jpg",
+        "alt": "A white twirl power dock with its cover turned open",
+        "label": "Twirl"
+      }
+    ],
+    "views": []
+  },
+  {
+    "slug": "power-track",
+    "name": "VOLT & BOLT power track",
+    "type": "Power and data",
+    "group": "accessories",
+    "tagline": "A rail on or in the desk top that takes sockets and USB adaptors wherever you need them along it.",
+    "about": "The power track runs along the back of a desk, on the surface or recessed into it. Round adaptors twist on anywhere along the rail for a socket or a charger, so the power sits where each person works.",
+    "availableAs": [
+      "Surface-mounted track",
+      "Recessed track",
+      "Track with LED light"
+    ],
+    "builtIn": "Twist-on universal socket and USB adaptors; surge protection",
+    "colours": [
+      "Silver",
+      "Grey",
+      "Black",
+      "White"
+    ],
+    "scene": {
+      "src": "/pieces/power-track/desk.jpg",
+      "alt": "A power track along a wooden desk top with plug-in adaptors and a laptop"
+    },
+    "photos": [
+      {
+        "src": "/pieces/power-track/wall.jpg",
+        "alt": "A power track mounted above a black desk with a monitor",
+        "label": "Above a desk"
+      }
+    ],
+    "views": []
+  },
+  {
+    "slug": "floor-box",
+    "name": "VOLT & BOLT floor box",
+    "type": "Power and data",
+    "group": "accessories",
+    "tagline": "A box set into the floor that brings power and data up to the desk.",
+    "about": "Floor boxes sit flush in concrete or raised floors under a steel or brass cover, and open to sockets and data for the desks above them. Built for offices, malls and data centres.",
+    "availableAs": [
+      "8 modules",
+      "12 modules",
+      "15 modules",
+      "24 modules"
+    ],
+    "builtIn": "Sockets and data modules under a hinged cover",
+    "scene": {
+      "src": "/pieces/floor-box/office.jpg",
+      "alt": "An open floor box with sockets in a wooden office floor, under a desk"
+    },
+    "photos": [
+      {
+        "src": "/pieces/floor-box/open.jpg",
+        "alt": "An open floor box set into a grey office floor under a desk",
+        "label": "Open, under a desk"
+      }
+    ],
+    "views": []
+  },
+  {
+    "slug": "cable-manager",
+    "name": "VOLT & BOLT cable manager",
+    "type": "Cable management",
+    "group": "accessories",
+    "tagline": "A flexible spine that gathers the cables from the floor to the desk.",
+    "about": "The cable manager is a jointed spine that carries every cable from the floor box or wall up to the desk top in one neat run, and bends to follow the desk.",
+    "availableAs": [
+      "Round spine, 1.5 m",
+      "Square spine, 780 mm"
+    ],
+    "colours": [
+      "White",
+      "Grey",
+      "Black",
+      "Silver"
+    ],
+    "scene": {
+      "src": "/pieces/cable-manager/spine.jpg",
+      "alt": "A black jointed cable spine standing upright in a curve"
+    },
+    "views": []
+  },
+  {
+    "slug": "pedestals",
+    "name": "Pedestal units",
+    "type": "Storage",
+    "group": "accessories",
+    "tagline": "Storage that sits under or beside the desk.",
+    "about": "Three pedestal units go with every workspace system: a door with a shelf, a three-drawer unit, and a metal pedestal on castors.",
+    "size": {
+      "w": [
+        400
+      ],
+      "d": [
+        400
+      ],
+      "h": [
+        650
+      ],
+      "note": "1D + 1S and three-drawer units"
+    },
+    "availableAs": [
+      "1 door + 1 shelf (1D + 1S)",
+      "Three-drawer unit",
+      "Metal pedestal"
+    ],
+    "views": [
+      {
+        "src": "/pieces/pedestals/1d1s.jpg",
+        "alt": "Line drawing of a pedestal unit with one door and one shelf",
+        "label": "1D + 1S"
+      },
+      {
+        "src": "/pieces/pedestals/3-drawer.jpg",
+        "alt": "Line drawing of a three-drawer pedestal unit",
+        "label": "Three-drawer unit"
+      },
+      {
+        "src": "/pieces/pedestals/metal.jpg",
+        "alt": "Line drawing of a metal pedestal with three drawers on castors",
+        "label": "Metal pedestal"
+      }
+    ]
+  },
+  {
+    "slug": "desk-accessories",
+    "name": "Desk accessories",
+    "type": "Accessories",
+    "group": "accessories",
+    "tagline": "The small parts that finish a workstation.",
+    "about": "A metal drawer that slides under the top, a pen tray, a stationery tray and a divider, for every workspace system.",
+    "availableAs": [
+      "Metal drawer",
+      "Pen tray",
+      "Stationery tray",
+      "Divider"
+    ],
+    "views": [
+      {
+        "src": "/pieces/desk-accessories/metal-drawer.jpg",
+        "alt": "Line drawing of a metal drawer that fits under a desk top",
+        "label": "Metal drawer"
+      },
+      {
+        "src": "/pieces/desk-accessories/pen-tray.jpg",
+        "alt": "Drawing of a metal pen tray",
+        "label": "Pen tray"
+      },
+      {
+        "src": "/pieces/desk-accessories/stationery-tray.jpg",
+        "alt": "Drawing of a metal stationery tray",
+        "label": "Stationery tray"
+      },
+      {
+        "src": "/pieces/desk-accessories/divider.jpg",
+        "alt": "Line drawing of a desk divider",
+        "label": "Divider"
       }
     ]
   }

@@ -81,3 +81,31 @@ export const LEAD_FILM: HeroFilm = {
     video: { mp4: "/video/hero-desk-mobile.mp4", webm: "/video/hero-desk-mobile.webm" },
   },
 };
+
+/**
+ * Slide 2 (client, Nov 2026): a 28-second cut of the "Stretch System Video" explainer
+ * (1920×1080, 30 fps, 1:59 — Drive, Workstation / Strech S / Source), in five parts joined
+ * by 0.5 s dissolves: the Cohuman wordmark, centred (114.0–116.8 s) → "STRETCH", centred
+ * (0.3–3.2) → the leg joint, the legs and the short beam (18.0–24.5) → "Two designs",
+ * Stretch V and Stretch S side by side, the workstations and an office floor
+ * (97.6–113.6) → "Make it work" (117.0–118.8). Full frame — the explainer's logo pill in
+ * the top-right corner is painted out with `delogo`, not cropped, so the wordmark stays
+ * centred. Recipe (one input, five `trim` → `delogo=x=1696:y=26:w=200:h=110` → `xfade`):
+ * `/tmp/vid/build.sh` in the session that made it; H.264 CRF 23 + VP9 CRF 36; poster at 0.5 s.
+ * Plays after the lead film, then hands back to it. Phones get a portrait version: the
+ * whole frame scaled to the phone's width (720×1564), over a washed-out, colourless,
+ * heavily softened copy of itself (`gblur=sigma=60,eq=contrast=0.3:brightness=0.28:
+ * saturation=0`), so the wordmark and the Stretch V / S pair are never cropped.
+ */
+export const SYSTEM_FILM: HeroFilm = {
+  id: "system",
+  label: "Stretch",
+  poster: "/video/hero-system-poster.jpg",
+  alt: "Animated film of the Stretch system: a Stretch V and a Stretch S table side by side, then both set up as workstations across an office floor",
+  video: { mp4: "/video/hero-system.mp4", webm: "/video/hero-system.webm" },
+  tone: "light",
+  mobile: {
+    poster: "/video/hero-system-mobile-poster.jpg",
+    video: { mp4: "/video/hero-system-mobile.mp4", webm: "/video/hero-system-mobile.webm" },
+  },
+};

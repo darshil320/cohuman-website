@@ -1,27 +1,40 @@
 import type { Dispatch, SetStateAction } from "react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { ALL_OPTIONS, type ResolvedSpecification, type Specification } from "@/lib/configurator";
 import {
-  clampIndex,
-  configSizeRange,
-  depthFieldLabel,
-  depthOptions,
-  lengthFieldLabel,
-} from "@/lib/series";
-import { EmptyNote, Field, FinishGroup, OptionTiles, StepHeading } from "./configurator-controls";
+  POWER_OPTIONS,
+  SYSTEMS,
+  TO_PLAN,
+  VENEER,
+  sharingLabel,
+  withSystem,
+  type ResolvedSpecification,
+  type Specification,
+  type TopOption,
+} from "@/lib/configurator";
+import {
+  BOARD_SHADES,
+  CABLE_OPTIONS,
+  CORE_OPTIONS,
+  CORNER_OPTIONS,
+  EDGE_OPTIONS,
+  FABRIC_SHADES,
+  PARTITION_OPTIONS,
+  STORAGE_OPTIONS,
+  type PictureOption,
+} from "@/lib/finishes";
+import { clampIndex, configSizeRange, depthFieldLabel, depthOptions, lengthFieldLabel } from "@/lib/series";
+import { EmptyNote, Field, StepHeading } from "./configurator-controls";
 import { seatLabel, sizeHint } from "./labels";
+import { PictureTiles, SwatchRow } from "./picture-tiles";
 
 /**
- * The five step bodies. Each reads the one specification and writes it through the
- * configurator's own setter, so the option logic is exactly the configurator's — these
- * only decide how a choice is drawn.
- *
- * Every step opens the same way — a question in extended caps and a plain note — even
- * when the series has nothing to offer in it, so the panel never changes shape between
- * steps and an empty step reads as an answer rather than a gap.
+ * The six step bodies, in the catalogue's order (v31, p. 15) with the configuration last
+ * (Nov 2026 review): system, top and finish, partition, VOLT & BOLT, accessories,
+ * configuration. Each reads the one specification and writes it through `setSpec`; the
+ * option logic lives in `@/lib/configurator`, these only decide how a choice is drawn.
  */
 
-export type StepKey = "series" | "config" | "top" | "legs" | "extras";
+export type StepKey = "system" | "top" | "partition" | "power" | "accessories" | "config";
 
 interface StepProps {
   spec: Specification;
@@ -29,59 +42,216 @@ interface StepProps {
   setSpec: Dispatch<SetStateAction<Specification>>;
 }
 
-function SeriesStep({ spec, onPick }: { spec: Specification; onPick: (slug: string) => void }) {
+/** Picture tiles for a list of catalogue options, single choice, optional "none". */
+function choiceTiles(
+  options: readonly PictureOption[],
+  active: string | null,
+  pick: (slug: string | null) => void,
+  none?: string,
+) {
+  return [
+    ...(none ? [{ id: "none", name: none, empty: true, on: active === null, onPick: () => pick(null) }] : []),
+    ...options.map((option) => ({
+      id: option.slug,
+      name: option.name,
+      note: option.note,
+      src: option.src,
+      on: option.slug === active,
+      onPick: () => pick(option.slug),
+    })),
+  ];
+}
+
+function SystemStep({ spec, resolved, setSpec }: StepProps) {
   return (
     <>
-      <StepHeading heading="Which system?" note="Both run at 720mm working height." />
-      <OptionTiles
-        items={ALL_OPTIONS.map((entry) => ({
-          id: entry.series.slug,
-          name: entry.series.name,
-          note: entry.series.promise,
-          on: entry.series.slug === spec.seriesSlug,
-          onPick: () => onPick(entry.series.slug),
+      <StepHeading heading="Which system?" note="Standard height is 750 mm of the table top." />
+      <PictureTiles
+        label="System"
+        items={SYSTEMS.map((system) => ({
+          id: system.slug,
+          name: system.name,
+          note: system.note,
+          src: system.legImage,
+          fit: "cover",
+          on: system.slug === spec.systemSlug,
+          onPick: () => setSpec((s) => withSystem(s, system.slug)),
+        }))}
+      />
+      {resolved.system.frameShades.length ? (
+        <div className="mt-10">
+          <SwatchRow
+            label="Frame finish"
+            swatches={resolved.system.frameShades}
+            active={spec.frameShade}
+            keyOf={(swatch) => swatch.name}
+            onPick={(name) => setSpec((s) => ({ ...s, frameShade: name }))}
+          />
+        </div>
+      ) : (
+        <div className="mt-8">
+          <EmptyNote>Frame finishes for {resolved.system.name}: not available yet — we confirm them on the quote.</EmptyNote>
+        </div>
+      )}
+    </>
+  );
+}
+
+function TopStep({ spec, setSpec }: StepProps) {
+  return (
+    <>
+      <StepHeading heading="Which top?" note="The core, the edge and corner profile, and the finish. 25 mm tops, 2 mm PVC edge band." />
+      <div className="grid gap-10">
+        <Field label="Top core">
+          <PictureTiles label="Top core" items={choiceTiles(CORE_OPTIONS, spec.core, (slug) => slug && setSpec((s) => ({ ...s, core: slug })))} />
+        </Field>
+        <Field label="Edge">
+          <PictureTiles label="Edge" items={choiceTiles(EDGE_OPTIONS, spec.edge, (slug) => slug && setSpec((s) => ({ ...s, edge: slug })))} />
+        </Field>
+        <Field label="Corner">
+          <PictureTiles label="Corner" columns={2} items={choiceTiles(CORNER_OPTIONS, spec.corner, (slug) => slug && setSpec((s) => ({ ...s, corner: slug })))} />
+        </Field>
+        <SwatchRow
+          label="Top finish"
+          swatches={BOARD_SHADES}
+          active={spec.topShade}
+          keyOf={(swatch) => swatch.code ?? swatch.name}
+          onPick={(key) => setSpec((s) => ({ ...s, topShade: key }))}
+          extra={{ key: VENEER, name: "Veneer", note: "Veneer — as per selection" }}
+        />
+      </div>
+    </>
+  );
+}
+
+function PartitionStep({ spec, resolved, setSpec }: StepProps) {
+  return (
+    <>
+      <StepHeading heading="Which partition?" note="A screen between or behind the desks — or keep the desk open." />
+      <PictureTiles
+        label="Partition"
+        items={choiceTiles(
+          PARTITION_OPTIONS,
+          spec.partition,
+          (slug) => setSpec((s) => ({ ...s, partition: slug, fabric: s.fabric ?? FABRIC_SHADES[1].code ?? null })),
+          "No partition",
+        )}
+      />
+      {resolved.partition?.fabric ? (
+        <div className="mt-10">
+          <SwatchRow
+            label="Fabric"
+            swatches={FABRIC_SHADES}
+            active={spec.fabric}
+            keyOf={(swatch) => swatch.code ?? swatch.name}
+            onPick={(code) => setSpec((s) => ({ ...s, fabric: code }))}
+          />
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+function PowerStep({ spec, setSpec }: StepProps) {
+  return (
+    <>
+      <StepHeading heading="Which VOLT & BOLT system?" note="Power and data at the desk, and how the cables reach it." />
+      <div className="grid gap-10">
+        <Field label="Power and data">
+          <PictureTiles
+            label="Power and data"
+            items={choiceTiles(POWER_OPTIONS, spec.power, (slug) => setSpec((s) => ({ ...s, power: slug })), "None").map(
+              (tile) => ({ ...tile, fit: "cover" as const }),
+            )}
+          />
+        </Field>
+        <Field label="Cable management">
+          <PictureTiles
+            label="Cable management"
+            items={choiceTiles(CABLE_OPTIONS, spec.cable, (slug) => setSpec((s) => ({ ...s, cable: slug })), "None")}
+          />
+        </Field>
+      </div>
+    </>
+  );
+}
+
+function AccessoriesStep({ spec, setSpec }: StepProps) {
+  return (
+    <>
+      <StepHeading heading="Any accessories?" note="Optional — select as many as apply, or none." />
+      <PictureTiles
+        label="Accessories"
+        multi
+        columns={4}
+        items={STORAGE_OPTIONS.map((option) => ({
+          id: option.slug,
+          name: option.name,
+          meta: option.note,
+          src: option.src,
+          on: spec.accessories.includes(option.slug),
+          onPick: () =>
+            setSpec((s) => ({
+              ...s,
+              accessories: s.accessories.includes(option.slug)
+                ? s.accessories.filter((slug) => slug !== option.slug)
+                : [...s.accessories, option.slug],
+            })),
         }))}
       />
     </>
   );
 }
 
+function tableMeta(system: ResolvedSpecification["system"], table: TopOption): string {
+  if (table.toPlan) return "Sized to your plan";
+  const series = system.tables.kind === "series" || system.tables.kind === "shared" ? system.tables.series : null;
+  const config = series?.configs.find((entry) => entry.slug === table.slug);
+  return [config ? `${configSizeRange(config)} mm` : null, seatLabel(table.seats), table.sharing ? sharingLabel(table.sharing) : null]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 function ConfigurationStep({ spec, resolved, setSpec }: StepProps) {
-  const { options, top } = resolved;
-  const config = options.series.configs.find((entry) => entry.slug === top.slug);
-  // The same derivation the spec block uses: round and square tops lock their depth.
-  const depths = config
-    ? depthOptions({ series: options.series, config, lenIndex: spec.lenIndex, depIndex: spec.depIndex })
-    : null;
+  const { system, tables, top } = resolved;
+
+  if (!tables.length || !top) {
+    return (
+      <>
+        <StepHeading heading="Which configuration?" />
+        <EmptyNote>
+          {system.name}: table types and sizes are not available yet. Send the specification
+          and we will quote it to your plan.
+        </EmptyNote>
+      </>
+    );
+  }
+
+  const series = system.tables.kind === "series" || system.tables.kind === "shared" ? system.tables.series : null;
+  const config = series?.configs.find((entry) => entry.slug === top.slug) ?? null;
+  const depths = config && series ? depthOptions({ series, config, lenIndex: spec.lenIndex, depIndex: spec.depIndex }) : null;
 
   return (
     <>
       <StepHeading
         heading="Which configuration?"
-        note={`${options.tops.length} configurations in this series. Pick one, then its size.`}
+        note="Benches are marked sharing (face to face) or non-sharing (one row). Sizes are fixed, as the catalogue lists them."
       />
-      <OptionTiles
-        dense
-        items={options.tops.map((entry) => {
-          const source = options.series.configs.find((c) => c.slug === entry.slug);
-          const range = source ? `${configSizeRange(source)} mm` : null;
-          return {
-            id: entry.slug,
-            name: entry.name,
-            meta: [range, seatLabel(entry.seats)].filter((line): line is string => Boolean(line)),
-            on: entry.slug === spec.topSlug,
-            onPick: () => setSpec((s) => ({ ...s, topSlug: entry.slug, lenIndex: 0, depIndex: 0 })),
-          };
-        })}
+      <PictureTiles
+        label="Configuration"
+        items={tables.map((table) => ({
+          id: table.slug,
+          name: table.name,
+          meta: tableMeta(system, table),
+          src: table.image || undefined,
+          on: table.slug === top.slug,
+          onPick: () => setSpec((s) => ({ ...s, configSlug: table.slug, lenIndex: 0, depIndex: 0 })),
+        }))}
       />
 
       {config ? (
         <div className="mt-10 grid gap-8">
-          <Field
-            label={lengthFieldLabel(config)}
-            hint={sizeHint({ axis: "length", config, count: top.lens.length })}
-            hintId="cfg-length-hint"
-          >
+          <Field label={lengthFieldLabel(config)} hint={sizeHint({ axis: "length", config, count: top.lens.length })} hintId="cfg-length-hint">
             <SegmentedControl
               label={lengthFieldLabel(config)}
               describedBy="cfg-length-hint"
@@ -90,7 +260,6 @@ function ConfigurationStep({ spec, resolved, setSpec }: StepProps) {
               onChange={(index) => setSpec((s) => ({ ...s, lenIndex: index }))}
             />
           </Field>
-
           {depths && depths.values.length > 0 ? (
             <Field
               label={depthFieldLabel(config)}
@@ -110,130 +279,28 @@ function ConfigurationStep({ spec, resolved, setSpec }: StepProps) {
             </Field>
           ) : null}
         </div>
-      ) : null}
+      ) : (
+        <div className="mt-8">
+          <EmptyNote>Size: {TO_PLAN.toLowerCase()}.</EmptyNote>
+        </div>
+      )}
     </>
   );
 }
 
-function FinishStep({ spec, resolved, setSpec }: StepProps) {
-  const topFinishes = resolved.options.finishes.filter((f) => f.applies === "top");
-  const frameFinishes = resolved.options.finishes.filter((f) => f.applies === "frame");
-
-  if (!topFinishes.length && !frameFinishes.length) {
-    return (
-      <>
-        <StepHeading heading="Which finishes?" />
-        <EmptyNote>
-          This series’ specification names materials rather than finish colours, so there
-          is nothing to choose here — we confirm the finish on the quote.
-        </EmptyNote>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <StepHeading
-        heading="Which finishes?"
-        note="The top and the frame are specified separately. Both are keyed under the plan."
-      />
-      <div className="grid gap-8">
-        {topFinishes.length ? (
-          <FinishGroup
-            label="Top finish"
-            items={topFinishes}
-            activeCode={spec.topFinishCode}
-            onPick={(code) => setSpec((s) => ({ ...s, topFinishCode: code }))}
-          />
-        ) : null}
-        {frameFinishes.length ? (
-          <FinishGroup
-            label="Frame finish"
-            items={frameFinishes}
-            activeCode={spec.frameFinishCode}
-            onPick={(code) => setSpec((s) => ({ ...s, frameFinishCode: code }))}
-          />
-        ) : null}
-      </div>
-    </>
-  );
-}
-
-function LegStep({ spec, resolved, setSpec }: StepProps) {
-  return (
-    <>
-      <StepHeading
-        heading="Which leg package?"
-        note="Beams follow the top you picked, so they are not a separate choice."
-      />
-      <OptionTiles
-        items={resolved.options.legs.map((entry) => ({
-          id: entry.code,
-          name: entry.name,
-          note: entry.note,
-          meta: entry.code,
-          on: entry.code === spec.legCode,
-          onPick: () => setSpec((s) => ({ ...s, legCode: entry.code })),
-        }))}
-      />
-    </>
-  );
-}
-
-function ExtrasStep({ spec, resolved, setSpec }: StepProps) {
-  const { accessories } = resolved.options;
-
-  if (!accessories.length) {
-    return (
-      <>
-        <StepHeading heading="Anything to add?" />
-        <EmptyNote>
-          This series publishes no accessory schedule — tell us what you need on the enquiry
-          and we will quote it against the run.
-        </EmptyNote>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <StepHeading heading="Anything to add?" note="Optional — select as many as apply, or none." />
-      <OptionTiles
-        multi
-        items={accessories.map((entry) => ({
-          id: entry.code,
-          name: entry.name,
-          note: entry.note,
-          meta: entry.code,
-          on: spec.accessoryCodes.includes(entry.code),
-          onPick: () =>
-            setSpec((s) => ({
-              ...s,
-              accessoryCodes: s.accessoryCodes.includes(entry.code)
-                ? s.accessoryCodes.filter((code) => code !== entry.code)
-                : [...s.accessoryCodes, entry.code],
-            })),
-        }))}
-      />
-    </>
-  );
-}
-
-export function StepBody({
-  step,
-  onPickSeries,
-  ...props
-}: StepProps & { step: StepKey; onPickSeries: (slug: string) => void }) {
+export function StepBody({ step, ...props }: StepProps & { step: StepKey }) {
   switch (step) {
-    case "series":
-      return <SeriesStep spec={props.spec} onPick={onPickSeries} />;
+    case "system":
+      return <SystemStep {...props} />;
+    case "top":
+      return <TopStep {...props} />;
+    case "partition":
+      return <PartitionStep {...props} />;
+    case "power":
+      return <PowerStep {...props} />;
+    case "accessories":
+      return <AccessoriesStep {...props} />;
     case "config":
       return <ConfigurationStep {...props} />;
-    case "top":
-      return <FinishStep {...props} />;
-    case "legs":
-      return <LegStep {...props} />;
-    case "extras":
-      return <ExtrasStep {...props} />;
   }
 }

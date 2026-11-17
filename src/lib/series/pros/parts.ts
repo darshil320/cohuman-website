@@ -35,7 +35,7 @@ export const PROS_PARTS: SeriesPart[] = [
   },
   {
     n: "3",
-    name: "Adjustable foot",
+    name: "Leveler",
     group: "Chassis",
     why: "Levels out 30mm of floor variance — enough for most screed and carpet-tile transitions.",
     rows: [
@@ -98,18 +98,9 @@ export const PROS_PARTS: SeriesPart[] = [
     ],
     focus: { x: 33.4, y: 33.4, zoom: 2.8 },
   },
+  // "Side bar" removed (Nov 2026 review): it is not visible in the anatomy image.
   {
     n: "9",
-    name: "Side bar",
-    group: "Chassis",
-    why: "The rail the top sits on. Also where screens and CPU holders bracket in.",
-    rows: [
-      { k: "Material", v: "60×25×T1.5mm metal pipe" },
-      { k: "Finishing", v: "Powder coating, 80–120 microns" },
-    ],
-  },
-  {
-    n: "10",
     name: "Wires box",
     group: "Cable management",
     why: "A hinged box under the top for adaptors, so bricks never sit on the floor.",

@@ -33,6 +33,11 @@ export interface SeriesConfig {
   /** Selectable depths in mm. Ignored when `dia` or `sq`. */
   deps: number[];
   seats: string;
+  /**
+   * Benches only (Nov 2026 review): "sharing" — people face each other across one top
+   * (face-to-face) — or "non-sharing" — one row, side by side (in-line).
+   */
+  sharing?: "sharing" | "non-sharing";
   /** Square top: depth always matches the selected side length. */
   sq?: boolean;
   /** Round top: quoted as a diameter, depth is not selectable. */

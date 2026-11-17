@@ -103,6 +103,7 @@ export function CollectionsPanel({
               <div className="flex items-baseline justify-between gap-6">
                 <p className="co-eyebrow">
                   {active.label} · {pad(active.items.length)}
+                  {active.credit ? <span className="ml-3 text-co-ink">{active.credit}</span> : null}
                 </p>
                 <Link
                   href={`/collections#${active.id}`}
@@ -193,6 +194,7 @@ export function MobileCollections({
                 >
                   <span className="font-heading text-[19px] font-semibold text-co-ink">
                     {group.label} <span className="co-data text-co-muted-2">({pad(group.items.length)})</span>
+                    {group.credit ? <span className="co-data mt-1 block text-co-muted-2">{group.credit}</span> : null}
                   </span>
                   <span className="co-data text-co-ink">All →</span>
                 </Link>

@@ -10,7 +10,7 @@ export const VARIDEX_ELEMENTS: SeriesElement[] = [
     kind: "Legs",
     name: "4 legs package",
     code: "CHS-4FLEG072-PC",
-    note: "A full leg set at 720mm working height. Every freestanding table starts here.",
+    note: "A full leg set at 750 mm working height. Every freestanding table starts here.",
   },
   {
     ref: "2",
@@ -45,7 +45,7 @@ export const VARIDEX_ELEMENTS: SeriesElement[] = [
     kind: "Legs",
     name: "2 legs package",
     code: "CHS-2FLEG072-PC",
-    note: "One pair at 720mm. Returns and the small square meeting tops.",
+    note: "One pair at 750 mm. Returns and the small square meeting tops.",
   },
   {
     ref: "5",

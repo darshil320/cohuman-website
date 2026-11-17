@@ -46,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // The demo catalog (/catalog, 16 illustrative products) is not real Cohuman product
   // data, so it is left out of the sitemap and marked noindex until real products replace it.
-  // PM x Cohuman and seating: each piece has its own page and its own photographs.
+  // Designer collab and seating: each piece has its own page and its own photographs.
   const pieceEntries: MetadataRoute.Sitemap = pieces.map((piece) => ({
     url: `${siteConfig.url}/products/${piece.slug}`,
     lastModified: CONTENT_REVISED.collections,

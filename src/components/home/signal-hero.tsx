@@ -74,7 +74,7 @@ export function SignalHeroPanel({
         style={{ "--co-header": `${HEADER_HEIGHT}px` } as CSSProperties}
       >
         <div className="flex flex-col lg:col-span-6 lg:pr-10">
-          <p className="co-eyebrow">Office systems / Surat, IN</p>
+          <p className="co-eyebrow">Office systems</p>
 
           {/*
             The 40px floor gives way to 10.4vw under ~385px, so "ENGINEERED" (8.4em wide in
@@ -150,7 +150,7 @@ export function SignalHeroPanel({
               </div>
               {/*
                 Working height, drawn on the near-left leg from the floor (82% down the
-                render) to the worktop (37%) — the span "720 H" actually measures. The
+                render) to the worktop (37%) — the span "750 H" actually measures. The
                 positions are read off this render; move them if the hero image changes.
               */}
               <DimensionLine

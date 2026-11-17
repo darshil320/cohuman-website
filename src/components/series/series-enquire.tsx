@@ -48,7 +48,7 @@ export function SeriesEnquire() {
 
   // Presentation only: the payload below builds its own plain-text lines.
   const selectionRows: SpecRow[] = [
-    { k: "Series", v: `${series.name} — ${series.eyebrow.toLowerCase()}` },
+    { k: "System", v: `${series.name} — ${series.eyebrow.toLowerCase()}` },
     { k: "Configuration", v: config.name },
     { k: "Size", v: size },
     ...(finish ? [{ k: "Top finish", v: finish }] : []),
@@ -82,7 +82,7 @@ export function SeriesEnquire() {
       interest,
       message: specSummary(
         [
-          `Series: ${series.name}`,
+          `System: ${series.name}`,
           `Configuration: ${config.name}`,
           `Size: ${size}`,
           ...(finish ? [`Top finish: ${finish}`] : []),

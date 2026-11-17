@@ -69,6 +69,36 @@
         "kind": "cutout",
         "caption": "High table",
         "alt": "Stretch F high table on frame legs joined by a footrest rail"
+      },
+      {
+        "src": "/fulcrum/frame-bench.jpg",
+        "alt": "Stretch F bench frame: four frame legs, twin beams and a solid panel leg at the centre",
+        "caption": "Bench frame with a panel leg at the centre",
+        "kind": "cutout"
+      },
+      {
+        "src": "/fulcrum/frame-table.jpg",
+        "alt": "Stretch F four-leg table frame with its beams, without a top",
+        "caption": "Table frame",
+        "kind": "cutout"
+      },
+      {
+        "src": "/fulcrum/frame-tray.jpg",
+        "alt": "Stretch F frame end with a beam and a cable tray",
+        "caption": "Frame end with a cable tray",
+        "kind": "cutout"
+      },
+      {
+        "src": "/fulcrum/frame-panel-leg.jpg",
+        "alt": "Stretch F solid panel leg carrying two beams",
+        "caption": "Panel leg with twin beams",
+        "kind": "cutout"
+      },
+      {
+        "src": "/fulcrum/frame-bench-long.jpg",
+        "alt": "Stretch F long bench frame with panel legs along its run",
+        "caption": "Long bench frame",
+        "kind": "cutout"
       }
     ]
   },
@@ -163,6 +193,24 @@
         "kind": "scene",
         "caption": "Cabin table",
         "alt": "A Stretch E cabin table on an angular dark leg, with executive chairs, in a dim cabin"
+      },
+      {
+        "src": "/stretch-e/conference.jpg",
+        "kind": "scene",
+        "caption": "Conference table",
+        "alt": "A Stretch E conference table on angular dark legs, with grey executive chairs, in a grey room"
+      },
+      {
+        "src": "/stretch-e/conference-wide.jpg",
+        "kind": "scene",
+        "caption": "Conference table, wide view",
+        "alt": "A long Stretch E conference table on angular dark legs, with executive chairs and a plant"
+      },
+      {
+        "src": "/stretch-e/cabin.jpg",
+        "kind": "scene",
+        "caption": "Cabin table with storage",
+        "alt": "A Stretch E cabin table on an angular leg beside a wall of dark storage"
       }
     ]
   },
@@ -184,6 +232,18 @@
         "kind": "scene",
         "caption": "Conference table",
         "alt": "A Stretch R conference table with a curved dark top on broad pale legs, chairs around it"
+      },
+      {
+        "src": "/stretch-r/conference-angle.jpg",
+        "kind": "scene",
+        "caption": "Conference table, from the end",
+        "alt": "A Stretch R conference table with a curved dark top on broad pale legs, by a window"
+      },
+      {
+        "src": "/stretch-r/cabin.jpg",
+        "kind": "scene",
+        "caption": "Cabin table",
+        "alt": "A Stretch R cabin desk with a curved top on a broad pale leg, with storage behind it"
       }
     ]
   }

@@ -29,7 +29,7 @@ export interface CatalogRepository {
   getSpaces(): Promise<Space[]>;
   getServices(): Promise<Service[]>;
   getFounders(): Promise<Founder[]>;
-  /** Single products with their own page: PM x Cohuman and seating. */
+  /** Single products with their own page: Designer collab and seating. */
   getPieces(): Promise<Piece[]>;
   getPiece(slug: string): Promise<Piece | null>;
 }

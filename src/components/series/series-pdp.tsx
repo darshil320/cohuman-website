@@ -7,7 +7,10 @@ import { SeriesAnatomy } from "./series-anatomy";
 // Assembly section hidden on client request — uncomment this import, the <SeriesAssembly />
 // line below and "assembly" in SECTION_ORDER (src/lib/series/sections.ts) to bring it back.
 // import { SeriesAssembly } from "./series-assembly";
-import { SeriesConfigGallery } from "./series-config-gallery";
+// Configuration gallery hidden on client request (Nov 2026) — uncomment this import, the
+// <SeriesConfigGallery /> line below and renumber FIRST_SECTION_NO in
+// src/lib/series/sections.ts to bring it back.
+// import { SeriesConfigGallery } from "./series-config-gallery";
 import { SeriesEnquire } from "./series-enquire";
 import { SeriesGalleryStrip } from "./series-gallery";
 import { SeriesNameHero } from "./series-name-hero";
@@ -22,7 +25,7 @@ import { SeriesStickyBar } from "./series-sticky-bar";
  *   A  name hero          SeriesNameHero (breadcrumb) + SeriesNameHeading, which opens
  *                         the spec block's left column, beside the panel
  *   B  ink spec block     SeriesSpecBlock (+ the viewer and the configuration picker)
- *   C  gallery            SeriesConfigGallery
+ *   C  gallery            SeriesConfigGallery — hidden for now
  *      the drawing set    anatomy, products — the series' own spec data. The element
  *                         set, the finish board and the wire-channel table were cut in
  *                         the Nov 2026 review: the catalogue carries finishes on one
@@ -61,7 +64,7 @@ function SeriesPdpBody() {
     <div>
       <SeriesNameHero />
       <SeriesSpecBlock />
-      <SeriesConfigGallery />
+      {/* <SeriesConfigGallery /> — hidden, see the import note above. */}
 
       {/* <SeriesAssembly /> — hidden, see the import note above. */}
       <SeriesAnatomy />

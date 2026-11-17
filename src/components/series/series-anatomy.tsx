@@ -125,7 +125,7 @@ export function SeriesAnatomy() {
           blurb={section.blurb}
         />
 
-        <div className="grid items-start gap-[clamp(28px,3.4vw,56px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+        <div className="grid items-start gap-[clamp(28px,3.4vw,56px)] lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.75fr)]">
           <figure className="min-w-0 lg:sticky" style={{ top: HEADER_HEIGHT + STAGE_TOP_GAP }}>
             <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 sm:gap-x-4">
               <div

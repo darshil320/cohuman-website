@@ -15,8 +15,8 @@ export const PROS_SERIES: SeriesDefinition = {
   eyebrow: "Beam desking system",
   promise: "Seven components. Six table types. One office.",
   intro:
-    "A single splayed leg and beam chassis carries every table in the range — from an 800 mm round table to a 4-metre meeting table. Specify once, extend for a decade.",
-  workingHeightMm: 720,
+    "A single splayed leg and beam chassis carries every table in the range — from an 800 mm round table to a full bench. Specify once, extend for a decade.",
+  workingHeightMm: 750,
 
   configs: PROS_CONFIGS,
   defaultConfigSlug: PROS_DEFAULT_SLUG,
@@ -34,7 +34,7 @@ export const PROS_SERIES: SeriesDefinition = {
   parts: PROS_PARTS,
   anatomySection: {
     eyebrow: "Anatomy",
-    heading: "Ten parts, each with a gauge you can hold us to.",
+    heading: "Every part, with a gauge you can hold us to.",
   },
   // The near-elevation shot, not the three-quarter one: it is the only render where the
   // frame reads square-on, which is what makes the part callouts land on the real part.

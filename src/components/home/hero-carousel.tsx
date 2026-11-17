@@ -21,11 +21,11 @@ const FRAME = "object-cover object-[var(--film-x)_50%] md:object-center";
 /** Below this width a film's portrait cut, when it has one, replaces the landscape one. */
 const MOBILE_MEDIA = "(max-width: 767px)";
 
-/** Height of the ink control block (its cells are `min-h-12`). */
-const CONTROLS_HEIGHT = 48;
-
 /** Horizontal travel, in px, that counts as a swipe on touch screens. */
 const SWIPE_PX = 48;
+
+/** How long after a film starts the next film in the sequence is mounted. */
+const NEXT_FILM_DELAY_MS = 4000;
 
 export type HeroPanel =
   | {
@@ -36,12 +36,6 @@ export type HeroPanel =
     }
   | { kind: "content"; label: string; node: ReactNode; tone?: "light" | "dark" };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
-function timecode(seconds: number): string {
-  const s = Math.max(0, Math.floor(seconds));
-  return `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
-}
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -59,11 +53,10 @@ const panelTone = (panel: HeroPanel) => (panel.kind === "film" ? (panel.film.ton
  * Changing panel wipes the new one in left to right over the old ("images wipe, never
  * fade"); reduced motion swaps instantly.
  *
- * The ink corner block holds every control: pause / play for a running film (a looping
- * video must be stoppable — WCAG 2.2.2), the arrows, and one bar per panel. The active
- * bar is the logo's green bar used as a progress line: on a film it fills with playback,
- * on a still panel it is full. A mono timecode closes the block while a film plays. Progress and timecode are written straight to the DOM from the video's frame
- * loop, so a playing film never re-renders React.
+ * Controls are a row of dots, bottom centre (client, Nov 2026): one per slide, the
+ * current one a short track filling with its film's playback; pressing it pauses or
+ * resumes. Progress is written straight to the DOM from the video's frame loop, so a
+ * playing film never re-renders React.
  *
  * While the hero is under the header it publishes `overHero` and the active panel's tone
  * (`setHeroChrome`), which is what turns the header transparent.
@@ -82,7 +75,6 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const swipeStart = useRef<number | null>(null);
   const progressRefs = useRef(new Map<number, HTMLSpanElement>());
-  const clockRef = useRef<HTMLSpanElement>(null);
 
   const active = panels[index];
   const activeFilm = active?.kind === "film" && active.film.video ? active.film : null;
@@ -108,12 +100,22 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
     [index, total],
   );
 
+  // In a sequence, mount the next film a few seconds after this one starts, so it is
+  // loaded by the time this one ends — but never on the critical path of first paint.
+  useEffect(() => {
+    if (total < 2 || paused) return;
+    const next = (index + 1) % total;
+    const timer = window.setTimeout(() => {
+      setOpened((seen) => (seen.has(next) ? seen : new Set([...seen, next])));
+    }, NEXT_FILM_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [index, total, paused]);
+
   // A film reports its playhead every frame; paint the bar and the clock directly.
   const onTick = useCallback((panelIndex: number, current: number, duration: number) => {
     const bar = progressRefs.current.get(panelIndex);
     const fraction = duration > 0 ? Math.min(current / duration, 1) : 0;
     if (bar) bar.style.transform = `scaleX(${fraction})`;
-    if (clockRef.current) clockRef.current.textContent = `${timecode(current)} / ${timecode(duration)}`;
   }, []);
 
   // Tell the header whether it is sitting on the hero, and on what.
@@ -123,7 +125,7 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
       if (!node) return;
       // Solid once the ink control block reaches the header: a transparent header over
       // that block would put the ink logo on ink.
-      const overHero = node.getBoundingClientRect().bottom > HEADER_HEIGHT + CONTROLS_HEIGHT;
+      const overHero = node.getBoundingClientRect().bottom > HEADER_HEIGHT;
       setHeroChrome({ overHero, tone });
     };
     update();
@@ -188,6 +190,8 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
               active={index === i}
               mounted={opened.has(i)}
               playing={index === i && !paused}
+              loop={total < 2}
+              onEnded={total > 1 && index === i ? () => go(i + 1) : undefined}
               onTick={(current, duration) => onTick(i, current, duration)}
             >
               {panel.overlay}
@@ -198,87 +202,56 @@ export function HeroCarousel({ panels }: { panels: HeroPanel[] }) {
         </div>
       ))}
 
+      {/*
+        Dot navigation (client, Nov 2026: the ink control block overlapped the hero's
+        links). One dot per slide, bottom centre. The current slide's dot stretches into a
+        short track that fills with its film's playback; pressing it pauses or resumes the
+        film — moving video must stay stoppable (WCAG 2.2.2) without a visible button.
+      */}
       {total > 1 || activeFilm ? (
-        <div className="absolute bottom-0 left-0 z-20 flex items-stretch bg-co-panel text-co-panel-fg">
-          {activeFilm ? (
-            <button
-              type="button"
-              aria-label={paused ? "Play film" : "Pause film"}
-              aria-pressed={paused}
-              onClick={() => setUserPaused(!paused)}
-              className="co-data flex min-h-12 w-12 items-center justify-center border-r border-co-panel-border transition-colors hover:bg-co-panel-border"
-            >
-              {paused ? <PlayIcon /> : <PauseIcon />}
-            </button>
-          ) : null}
-          {total > 1 ? (
-            <>
+        <div
+          role="group"
+          aria-label="Hero slides"
+          className={cn(
+            "absolute inset-x-0 bottom-3 z-20 flex justify-center gap-1 md:bottom-5",
+            tone === "dark" ? "text-co-bg" : "text-co-ink",
+          )}
+        >
+          {panels.map((panel, i) => {
+            const on = i === index;
+            const isFilm = panel.kind === "film" && Boolean(panel.film.video);
+            const label = on && isFilm
+              ? `${paused ? "Play" : "Pause"} slide ${i + 1}: ${panelLabel(panel)}`
+              : `Show slide ${i + 1}: ${panelLabel(panel)}`;
+            return (
               <button
+                key={i}
                 type="button"
-                aria-label="Previous panel"
-                onClick={() => go(index - 1)}
-                className="flex min-h-12 w-12 items-center justify-center border-r border-co-panel-border transition-colors hover:bg-co-panel-border"
+                aria-label={label}
+                aria-current={on}
+                onClick={() => (on && isFilm ? setUserPaused(!paused) : go(i))}
+                className="group flex h-11 min-w-11 items-center justify-center px-1.5"
               >
-                <ArrowIcon direction="left" />
+                <span
+                  className={cn(
+                    "relative block h-[7px] overflow-hidden rounded-full border border-current transition-[width] duration-300 ease-(--ease-enter)",
+                    on ? "w-7" : "w-[7px] opacity-60 group-hover:opacity-100",
+                  )}
+                >
+                  {on ? (
+                    <span
+                      ref={(node) => {
+                        if (node) progressRefs.current.set(i, node);
+                        else progressRefs.current.delete(i);
+                      }}
+                      className="absolute inset-0 block origin-left bg-current"
+                      style={{ transform: isFilm ? "scaleX(0)" : "scaleX(1)" }}
+                    />
+                  ) : null}
+                </span>
               </button>
-              <div role="group" aria-label="Hero panels" className="flex items-center gap-1 px-3 sm:px-4">
-                {panels.map((panel, i) => {
-                  const on = i === index;
-                  const isFilm = panel.kind === "film" && Boolean(panel.film.video);
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      aria-label={`Show panel ${i + 1}: ${panelLabel(panel)}`}
-                      aria-current={on}
-                      onClick={() => go(i)}
-                      className="group flex min-h-12 flex-col items-start justify-center gap-1.5 px-1.5 sm:px-2"
-                    >
-                      <span
-                        className={cn(
-                          "co-data",
-                          on ? "text-co-panel-fg" : "text-co-panel-faint group-hover:text-co-panel-fg",
-                        )}
-                      >
-                        {pad(i + 1)}
-                        <span className="ml-1.5 hidden sm:inline">{panelLabel(panel)}</span>
-                      </span>
-                      <span className="relative block h-[3px] w-8 bg-co-panel-border sm:w-10">
-                        {on ? (
-                          <span
-                            ref={(node) => {
-                              if (node) progressRefs.current.set(i, node);
-                              else progressRefs.current.delete(i);
-                            }}
-                            className="absolute inset-0 block origin-left bg-co-green"
-                            style={{ transform: isFilm ? "scaleX(0)" : "scaleX(1)" }}
-                          />
-                        ) : null}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <button
-                type="button"
-                aria-label="Next panel"
-                onClick={() => go(index + 1)}
-                className="flex min-h-12 w-12 items-center justify-center border-l border-co-panel-border transition-colors hover:bg-co-panel-border"
-              >
-                <ArrowIcon direction="right" />
-              </button>
-            </>
-          ) : null}
-          {/* The film's timecode, inside the block: nothing else floats over the footage. */}
-          {activeFilm ? (
-            <span
-              ref={clockRef}
-              aria-hidden
-              className="co-data hidden items-center border-l border-co-panel-border px-4 tabular-nums text-co-panel-muted sm:flex"
-            >
-              00:00 / 00:00
-            </span>
-          ) : null}
+            );
+          })}
         </div>
       ) : null}
     </section>
@@ -300,6 +273,8 @@ function FilmPanel({
   active,
   mounted,
   playing,
+  loop,
+  onEnded,
   onTick,
   children,
 }: {
@@ -308,10 +283,20 @@ function FilmPanel({
   active: boolean;
   mounted: boolean;
   playing: boolean;
+  /** One film loops; in a sequence each film plays once and hands on (`onEnded`). */
+  loop: boolean;
+  onEnded?: () => void;
   onTick: (current: number, duration: number) => void;
   children?: ReactNode;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // In a sequence a film that comes round again starts from its first frame.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !active || loop) return;
+    if (video.ended || video.currentTime > 0) video.currentTime = 0;
+  }, [active, loop]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -373,10 +358,13 @@ function FilmPanel({
           ref={videoRef}
           aria-hidden
           muted
-          loop
+          loop={loop}
+          onEnded={onEnded}
           playsInline
           poster={film.mobile ? undefined : film.poster}
-          preload={lead ? "auto" : "metadata"}
+          // Mounting is the gate (the next film mounts a few seconds after the page
+          // settles), so a mounted film loads fully and hands over without a stall.
+          preload="auto"
           className={cn("absolute inset-0 h-full w-full", FRAME)}
         >
           {/* Phones take the portrait cut; `media` on <source> picks it, first match wins. */}
@@ -429,36 +417,5 @@ function FilmPoster({ film, mobilePoster, lead }: { film: HeroFilm; mobilePoster
   arrows or media symbols, so typed ones fell back to a system font, and ▶ can render as
   an emoji. 1.25px strokes and square fills on `currentColor`, sized to the 12px data label.
 */
-function PlayIcon() {
-  return (
-    <svg aria-hidden width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
-      <path d="M0 0l10 6-10 6z" />
-    </svg>
-  );
-}
 
-function PauseIcon() {
-  return (
-    <svg aria-hidden width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
-      <rect x="0" y="0" width="3.5" height="12" />
-      <rect x="6.5" y="0" width="3.5" height="12" />
-    </svg>
-  );
-}
 
-function ArrowIcon({ direction }: { direction: "left" | "right" }) {
-  return (
-    <svg
-      aria-hidden
-      width="14"
-      height="10"
-      viewBox="0 0 14 10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.25"
-      className={direction === "left" ? "-scale-x-100" : undefined}
-    >
-      <path d="M0 5h12.5M8.5 1l4 4-4 4" />
-    </svg>
-  );
-}

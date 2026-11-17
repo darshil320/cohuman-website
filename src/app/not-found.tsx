@@ -21,13 +21,13 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Page not found",
   description:
-    "That page does not exist. Browse the catalog, the desking series, or ask for a quote.",
+    "That page does not exist. Browse the catalog, the desking systems, or ask for a quote.",
   robots: { index: false, follow: true },
 };
 
 const ROUTES = [
   { href: "/catalog", label: "Catalog", note: "Every product, by category and price band." },
-  { href: "/collections", label: "Desking series", note: "Configure a size, then enquire." },
+  { href: "/collections", label: "Desking systems", note: "Configure a size, then enquire." },
   { href: "/sectors", label: "Sectors", note: "Executive, healthcare and hospitality work." },
   { href: "/contact", label: "Contact", note: "Ask a specifier, or book a showroom visit." },
 ];

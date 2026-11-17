@@ -48,7 +48,6 @@ export function SeriesStage() {
 
   return (
     <div className="group">
-      {/* `data-viewer-frame`: where the configuration picker flies a chosen render to. */}
       <div
         data-viewer-frame
         className={cn(

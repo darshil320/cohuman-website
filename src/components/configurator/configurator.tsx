@@ -2,19 +2,24 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ALL_OPTIONS,
+  defaultSpecification,
   resolveSpecification,
   summaryRows,
   summarySubject,
   summaryText,
   estimate,
+  type FinishOption,
+  type ResolvedSpecification,
   type Specification,
+  type TopOption,
 } from "@/lib/configurator";
+import type { Swatch } from "@/lib/finishes";
+import { ProductViewer, type ProductImage } from "@/components/product/product-viewer";
 import { useQuoteDialog } from "@/components/providers/quote-dialog-provider";
 import { Button } from "@/components/ui/button";
 import { ProgressRail } from "@/components/ui/progress-rail";
 import { HEADER_HEIGHT } from "@/lib/layout";
-import { EmptyNote, StepNav, pad } from "./configurator-controls";
+import { StepNav, pad } from "./configurator-controls";
 import { StepBody, type StepKey } from "./configurator-steps";
 import { SpecificationBlock } from "./configurator-summary";
 import { TableFigure } from "./table-figure";
@@ -22,10 +27,10 @@ import { TableFigure } from "./table-figure";
 /**
  * Quote configurator.
  *
- * Five steps — series, configuration, top, legs, extras — over one specification object,
- * with a plan drawing that re-plots on every change. The specification is resolved
- * through the same helpers the PDP uses, so the size string and part numbers the
- * customer sees here are the ones the product page would quote.
+ * Six steps over one specification object (Nov 2026 rework, catalogue v31): system (the
+ * leg), top and finish, partition, VOLT & BOLT, accessories, then the configuration and
+ * its fixed size. A plan drawing re-plots on every change, and under it the pictures of
+ * what is selected. Sizes are resolved through the same helpers the PDP uses.
  *
  * Pricing is deliberately absent: `estimate()` is the single seam that turns this into a
  * costed quote when the rate card lands. Until then the last step shows the full
@@ -41,29 +46,42 @@ import { TableFigure } from "./table-figure";
  */
 
 const STEPS: readonly { key: StepKey; label: string }[] = [
-  { key: "series", label: "Series" },
-  { key: "config", label: "Configuration" },
+  { key: "system", label: "System" },
   { key: "top", label: "Top & finish" },
-  { key: "legs", label: "Legs" },
-  { key: "extras", label: "Extras" },
+  { key: "partition", label: "Partition" },
+  { key: "power", label: "VOLT & BOLT" },
+  { key: "accessories", label: "Accessories" },
+  { key: "config", label: "Configuration" },
 ];
 
 /** Breathing room between the sticky header and a step scrolled up to meet it. */
 const SCROLL_GAP_PX = 24;
 
-function defaultSpec(): Specification {
-  const first = ALL_OPTIONS[0];
-  const top = first.tops.find((t) => t.slug === first.series.defaultConfigSlug) ?? first.tops[0];
-  return {
-    seriesSlug: first.series.slug,
-    topSlug: top.slug,
-    lenIndex: 0,
-    depIndex: 0,
-    legCode: first.legs[0]?.code ?? "",
-    topFinishCode: first.finishes.find((f) => f.applies === "top")?.code ?? null,
-    frameFinishCode: first.finishes.find((f) => f.applies === "frame")?.code ?? null,
-    accessoryCodes: [],
-  };
+/** A swatch as the plan drawing's finish key wants it. */
+function asFinish(swatch: Swatch | null, applies: FinishOption["applies"]): FinishOption | null {
+  if (!swatch) return null;
+  return { code: swatch.code ?? swatch.name, name: swatch.name, spec: "", fill: swatch.fill ?? "#8f8874", applies };
+}
+
+/** The plan needs a table to draw; a system with none on record draws a plain desk. */
+const PLAIN_DESK: TopOption = { slug: "desk", name: "Desk", shape: "rect", seats: "", image: "", imageAlt: "", lens: [], deps: [] };
+
+/** Pictures of what is selected, in build order: table, leg, top, partition, power. */
+function selectionImages(resolved: ResolvedSpecification): ProductImage[] {
+  const { system, top } = resolved;
+  const table = top?.image
+    ? [{ src: top.image, alt: top.imageAlt, label: top.name, kind: "cutout" as const }]
+    : system.photo
+      ? [{ ...system.photo, label: system.name, kind: "scene" as const }]
+      : [];
+  const parts = [
+    system.legImage ? { src: system.legImage, alt: `The ${system.name} leg`, label: `${system.name} leg` } : null,
+    { src: resolved.core.src, alt: resolved.core.name, label: resolved.core.name },
+    { src: resolved.edge.src, alt: `${resolved.edge.name} edge`, label: `${resolved.edge.name} edge` },
+    resolved.partition ? { src: resolved.partition.src, alt: resolved.partition.name, label: resolved.partition.name } : null,
+    resolved.power ? { src: resolved.power.src, alt: resolved.power.name, label: resolved.power.name } : null,
+  ].filter((part): part is { src: string; alt: string; label: string } => part !== null);
+  return [...table, ...parts.map((part) => ({ ...part, kind: "scene" as const }))];
 }
 
 /** "Step 2 of 5 — next: Top & finish", or ready to send on the last step. */
@@ -106,45 +124,18 @@ function useStepHandoff(step: number) {
 }
 
 export function Configurator() {
-  const [spec, setSpec] = useState<Specification>(defaultSpec);
+  const [spec, setSpec] = useState<Specification>(() => defaultSpecification());
   const [step, setStep] = useState(0);
   const { openQuote } = useQuoteDialog();
   const { regionRef, armHandoff } = useStepHandoff(step);
 
   const resolved = useMemo(() => resolveSpecification(spec), [spec]);
-  const price = useMemo(() => (resolved ? estimate(resolved) : null), [resolved]);
-
-  if (!resolved) {
-    return (
-      <EmptyNote>
-        The configurator could not load a series to specify. Send us the floor plan and a
-        headcount below and we will specify it with you.
-      </EmptyNote>
-    );
-  }
-  const { options, top, leg, topFinish, frameFinish, accessories } = resolved;
-  const hasScreen = accessories.some((a) => /screen|felt/i.test(`${a.name} ${a.note}`));
-
-  /** Switching series invalidates every downstream choice, so they are re-seeded. */
-  function pickSeries(slug: string) {
-    const next = ALL_OPTIONS.find((entry) => entry.series.slug === slug);
-    if (!next) return;
-    const nextTop =
-      next.tops.find((t) => t.slug === next.series.defaultConfigSlug) ?? next.tops[0];
-    setSpec({
-      seriesSlug: slug,
-      topSlug: nextTop.slug,
-      lenIndex: 0,
-      depIndex: 0,
-      legCode: next.legs[0]?.code ?? "",
-      topFinishCode: next.finishes.find((f) => f.applies === "top")?.code ?? null,
-      frameFinishCode: next.finishes.find((f) => f.applies === "frame")?.code ?? null,
-      accessoryCodes: [],
-    });
-  }
+  const price = useMemo(() => estimate(resolved), [resolved]);
+  const images = useMemo(() => selectionImages(resolved), [resolved]);
+  const top = resolved.top ?? PLAIN_DESK;
+  const legName = top.sharing || /bench/i.test(top.name) ? "Bench legs" : "Four legs";
 
   function sendSpecification() {
-    if (!resolved) return;
     // The subject is the one-line interest (the API caps it at 200 characters); the full
     // specification travels in the Requirements field, where the visitor can add to it.
     openQuote(summarySubject(resolved), summaryText(resolved));
@@ -164,18 +155,20 @@ export function Configurator() {
   return (
     <div className="grid grid-cols-1 gap-x-[clamp(28px,4vw,80px)] gap-y-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
       {/* Fig. 01 — the plan, held in view while the steps scroll. */}
-      <div className="lg:sticky lg:top-[104px] lg:self-start">
+      <div className="grid gap-10 lg:self-start">
         <TableFigure
           top={top}
-          leg={leg}
-          topFinish={topFinish}
-          frameFinish={frameFinish}
-          hasScreen={hasScreen}
-          length={resolved.length}
-          depth={resolved.depth}
-          wordmark={options.series.wordmark}
+          leg={{ code: "", name: legName, note: "", ref: "" }}
+          topFinish={asFinish(resolved.topShade, "top")}
+          frameFinish={asFinish(resolved.frameShade, "frame")}
+          hasScreen={resolved.partition !== null}
+          length={resolved.length ?? 1400}
+          depth={resolved.depth ?? (resolved.length ? null : 700)}
+          wordmark={resolved.system.name}
           size={resolved.size}
         />
+        {/* What is selected, as pictures: the table, its leg, the top, partition and power. */}
+        <ProductViewer key={images.map((image) => image.src).join("|")} images={images} name="Your selection" />
       </div>
 
       <div className="min-w-0">
@@ -199,13 +192,7 @@ export function Configurator() {
             Step {pad(step + 1)} / {current.label}
           </p>
           <div className="mt-3">
-            <StepBody
-              step={current.key}
-              spec={spec}
-              resolved={resolved}
-              setSpec={setSpec}
-              onPickSeries={pickSeries}
-            />
+            <StepBody step={current.key} spec={spec} resolved={resolved} setSpec={setSpec} />
           </div>
 
           {next ? null : (

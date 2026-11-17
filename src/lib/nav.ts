@@ -8,7 +8,7 @@ export const primaryNav: NavLink[] = [
   { label: "Sectors", href: "/sectors" },
   // { label: "Catalog", href: "/catalog" },
   // B2B is reached from the Collections drawer and the footer, not the bar.
-  { label: "Solutions", href: "/solutions" },
+  // Solutions left the bar (Nov 2026 review); still in the footer and fullNav.
   { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
 ];
@@ -16,6 +16,7 @@ export const primaryNav: NavLink[] = [
 export const fullNav: NavLink[] = [
   { label: "Home", href: "/" },
   ...primaryNav,
+  { label: "Solutions", href: "/solutions" },
   { label: "Configure", href: "/configure" },
   { label: "Services", href: "/services" },
   { label: "Contact & Showroom", href: "/contact" },

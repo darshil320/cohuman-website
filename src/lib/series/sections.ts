@@ -3,8 +3,10 @@ import type { SeriesDefinition } from "./types";
 /* -------------------------------------------------------------------------------------
    Section numbering for the lower half of the series PDP.
 
-   The name hero, spec block and configuration gallery above hold 01–03; everything from
-   the assembly down continues the count. The gallery strip only exists on some series
+   The spec block above holds 01 (its configuration picker, which sits under the viewer,
+   is unnumbered; the configuration gallery that was 03 is hidden — set this back to 4
+   if both return to numbered sections); everything from the assembly down continues
+   the count. The gallery strip only exists on some series
    (VARIDEX), so the number is worked out from what actually renders — a page never
    skips a number.
    The predicates mirror each component's own early `return null`.
@@ -20,7 +22,7 @@ const SECTION_ORDER: readonly SeriesSectionKey[] = [
   "enquire",
 ];
 
-const FIRST_SECTION_NO = 4;
+const FIRST_SECTION_NO = 2;
 
 function rendersSection(series: SeriesDefinition, key: SeriesSectionKey): boolean {
   switch (key) {

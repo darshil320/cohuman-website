@@ -10,7 +10,7 @@ import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { itemListJsonLd } from "@/lib/seo/structured-data";
 
 const COLLECTIONS_DESCRIPTION =
-  "Every Cohuman collection in one place: the PM x Cohuman designer pieces, the workstation systems and the seating.";
+  "Every Cohuman collection in one place: the designer collab pieces, the workstation systems and the seating.";
 
 export const metadata: Metadata = {
   title: "Collections",
@@ -34,7 +34,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * Collections — pictures first (Nov 2026 review). One section per group, in the
  * catalogue's order, each a grid of picture cards with a name and one line; the detail
  * lives on each product's own page. Section ids match the header panel's links
- * (`/collections#pm-x-cohuman`).
+ * (`/collections#designer-collab`).
  */
 export default async function CollectionsPage() {
   const [collections, pieces] = await Promise.all([catalog.getCollections(), catalog.getPieces()]);
@@ -68,6 +68,7 @@ export default async function CollectionsPage() {
                 {group.label}{" "}
                 <span className="co-data align-top text-co-muted-2">({pad(group.items.length)})</span>
               </h2>
+              {group.credit ? <p className="co-data mt-3 text-co-ink">{group.credit}</p> : null}
             </div>
             <p className="max-w-[46ch] text-[15px] leading-[1.55] text-co-ink-soft lg:pb-2">{group.blurb}</p>
           </div>

@@ -10,7 +10,9 @@ import { cn } from "@/lib/utils";
  * panel, /collections and the product pages, so every list of products looks the same.
  *
  * `variant`:
- * - `boxed` (pages): a 4:5 frame in a hairline border, the line under the name.
+ * - `boxed` (pages): a 3:2 frame in a hairline border, the line under the name. Landscape,
+ *   the shape of the room photographs: the old 4:5 frame cropped their sides, and with
+ *   them the table legs (Nov 2026 review).
  * - `plain` (menus): a borderless 4:3 frame, name and line each held to one line, so a
  *   row of cards never goes ragged when one name or size is longer than the rest.
  *
@@ -39,7 +41,7 @@ export function CollectionCard({
           "relative block overflow-hidden bg-co-bg-alt",
           plain
             ? "aspect-[4/3]"
-            : "aspect-[4/5] border border-co-border",
+            : "aspect-[3/2] border border-co-border",
         )}
       >
         <Image

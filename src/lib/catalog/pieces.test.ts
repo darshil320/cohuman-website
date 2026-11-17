@@ -10,7 +10,7 @@ const valid = {
   slug: "loop",
   name: "LOOP",
   type: "Executive desk",
-  group: "pm-x-cohuman",
+  group: "designer-collab",
   tagline: "A long executive top.",
   about: "LOOP balances an open leg against a pedestal.",
   size: { w: [2400], d: [1100], h: [800] },
@@ -55,9 +55,9 @@ describe("pieceSizeLabel", () => {
 });
 
 describe("src/data/pieces.json", () => {
-  it("carries the catalogue's eight PM x Cohuman pieces, in its order", async () => {
+  it("carries the catalogue's eight Designer collab pieces, in its order", async () => {
     const pieces = await repo.getPieces();
-    expect(pieces.filter((p) => p.group === "pm-x-cohuman").map((p) => p.slug)).toEqual([
+    expect(pieces.filter((p) => p.group === "designer-collab").map((p) => p.slug)).toEqual([
       "arq",
       "loop",
       "duet",

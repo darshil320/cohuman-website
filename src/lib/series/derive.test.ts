@@ -123,8 +123,8 @@ describe("spanLabel", () => {
     );
   });
 
-  it("covers the whole PROS range, round table to meeting table", () => {
-    expect(spanLabel(PROS_SERIES.configs)).toBe(`800${NB}→${NB}4000${NB}mm`);
+  it("covers the whole PROS range, round table to bench (meeting table is phase 2)", () => {
+    expect(spanLabel(PROS_SERIES.configs)).toBe(`800${NB}→${NB}2000${NB}mm`);
   });
 
   it("covers the whole VARIDEX range", () => {
@@ -196,16 +196,14 @@ describe("series data", () => {
     expect(PROS_SERIES.configs.map((c) => c.name)).toEqual([
       "Round table",
       "Square table",
-      "Single table",
-      "Return table",
-      "Meeting table",
+      "Cabin table",
+      "Cabin return table",
       "Bench",
     ]);
     expect(VARIDEX_SERIES.configs.map((c) => c.name)).toEqual([
       "Square table",
-      "Single table",
-      "Return table",
-      "Meeting table",
+      "Cabin table",
+      "Cabin return table",
       "In-line bench",
       "Face-to-face bench",
     ]);

@@ -65,11 +65,11 @@ export const PROS_CONFIGS: SeriesConfig[] = [
   {
     slug: "single",
     n: "03",
-    short: "Single table",
-    name: "Single table",
+    short: "Cabin table",
+    name: "Cabin table",
     code: "CHSS-ST-SB160",
     image: "/pros/single-desk.jpg",
-    imageAlt: "Stretch S single table with modesty panel",
+    imageAlt: "Stretch S cabin table with modesty panel",
     finish: "oak",
     lens: [1200, 1400, 1500, 1600, 1800, 2000],
     deps: [600, 700, 750, 900],
@@ -83,39 +83,41 @@ export const PROS_CONFIGS: SeriesConfig[] = [
   {
     slug: "return",
     n: "04",
-    short: "Return table",
-    name: "Return table",
+    short: "Cabin return table",
+    name: "Cabin return table",
     code: "CHSS-RT-SB110",
     image: "/pros/return-desk.jpg",
-    imageAlt: "Stretch S return table with desk screen",
+    imageAlt: "Stretch S cabin return table with desk screen",
     finish: "oak",
     lens: [1200, 1400, 1500, 1600],
     deps: [600, 700, 750, 900],
     seats: "1",
     bom: [TWO_LEG, FOUR_LEG, SHORT_BEAM("1 pc")],
   },
-  {
-    slug: "meeting",
-    n: "05",
-    short: "Meeting table",
-    name: "Meeting table",
-    code: "CHSS-MT-SB200",
-    image: "/pros/meet-long.jpg",
-    imageAlt: "Stretch S meeting table on the long beam",
-    finish: "walnut",
-    lens: [2400, 3200, 3600, 4000],
-    deps: [1200],
-    seats: "8–12",
-    bom: [
-      LONG_BEAM("1 pc"),
-      BENCH_LEG_PAIR("1 pc"),
-      BENCH_MID_LEG("2 pcs"),
-      { name: "Wire box", code: "CHSS-WBOX-PC", qty: "2 pcs" },
-    ],
-  },
+  // Meeting table moved to phase 2 (Nov 2026 review) — uncomment to bring it back.
+  // {
+  //   slug: "meeting",
+  //   n: "05",
+  //   short: "Meeting table",
+  //   name: "Meeting table",
+  //   code: "CHSS-MT-SB200",
+  //   image: "/pros/meet-long.jpg",
+  //   imageAlt: "Stretch S meeting table on the long beam",
+  //   finish: "walnut",
+  //   lens: [2400, 3200, 3600, 4000],
+  //   deps: [1200],
+  //   seats: "8–12",
+  //   bom: [
+  //     LONG_BEAM("1 pc"),
+  //     BENCH_LEG_PAIR("1 pc"),
+  //     BENCH_MID_LEG("2 pcs"),
+  //     { name: "Wire box", code: "CHSS-WBOX-PC", qty: "2 pcs" },
+  //   ],
+  // },
   {
     slug: "bench",
-    n: "06",
+    sharing: "sharing",
+    n: "05",
     short: "Bench",
     name: "Bench",
     code: "CHSS-BN4-SB160",
@@ -141,4 +143,5 @@ export const PROS_CONFIGS: SeriesConfig[] = [
 ];
 
 /** Landing configuration — the meeting table shows the range's reach. */
-export const PROS_DEFAULT_SLUG = "meeting";
+// Was "meeting"; the meeting table moved to phase 2 (Nov 2026).
+export const PROS_DEFAULT_SLUG = "bench";

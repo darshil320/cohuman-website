@@ -28,14 +28,14 @@ export const PROS_ELEMENTS: SeriesElement[] = [
     kind: "Legs",
     name: "Four-leg package",
     code: "CHSS-4FLEG072-PC",
-    note: "A full A-frame set at 720mm working height. Freestanding tables.",
+    note: "A full A-frame set at 750 mm working height. Freestanding tables.",
   },
   {
     ref: "2",
     kind: "Legs",
     name: "Two-leg package",
     code: "CHSS-2FLEG072-PC",
-    note: "One pair, 720mm. Returns, connectors, small meeting tops.",
+    note: "One pair, 750 mm. Returns, connectors, small meeting tops.",
   },
   {
     ref: "4",
