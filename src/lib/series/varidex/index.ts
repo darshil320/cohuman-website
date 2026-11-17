@@ -37,7 +37,7 @@ export const VARIDEX_SERIES: SeriesDefinition = {
   parts: VARIDEX_PARTS,
   anatomySection: {
     eyebrow: "Anatomy",
-    heading: "Every part, with a gauge you can hold us to.",
+    heading: "Anatomy",
   },
   // The 2-seater shot: the frame is unobstructed and the legs read against the floor,
   // which the 4-seater render's chairs hide.

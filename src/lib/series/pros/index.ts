@@ -34,7 +34,7 @@ export const PROS_SERIES: SeriesDefinition = {
   parts: PROS_PARTS,
   anatomySection: {
     eyebrow: "Anatomy",
-    heading: "Every part, with a gauge you can hold us to.",
+    heading: "Anatomy",
   },
   // The near-elevation shot, not the three-quarter one: it is the only render where the
   // frame reads square-on, which is what makes the part callouts land on the real part.

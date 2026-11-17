@@ -11,7 +11,7 @@ import { HEADER_HEIGHT } from "@/lib/layout";
 import type { SeriesPartFocus } from "@/lib/series";
 import { cn } from "@/lib/utils";
 import { useSeriesConfigurator } from "./series-context";
-import { seriesSectionEyebrow } from "@/lib/series";
+import { seriesSectionNo } from "@/lib/series";
 
 /**
  * Numbered part list beside the reference render.
@@ -119,10 +119,13 @@ export function SeriesAnatomy() {
   return (
     <section id="anatomy" data-print="hide" className="co-section scroll-mt-[72px]">
       <div className="co-shell">
+        {/* The section's name is its title (client, Nov 2026), set a step larger than an
+            h2; the label above keeps only the section number so the word is not said twice. */}
         <SectionHeading
-          eyebrow={seriesSectionEyebrow(series, "anatomy", section.eyebrow)}
+          eyebrow={String(seriesSectionNo(series, "anatomy")).padStart(2, "0")}
           title={section.heading}
           blurb={section.blurb}
+          titleClassName="text-[clamp(44px,5.6vw,88px)] leading-[0.95]"
         />
 
         <div className="grid items-start gap-[clamp(28px,3.4vw,56px)] lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.75fr)]">
