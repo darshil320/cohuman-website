@@ -125,9 +125,9 @@ drifting.
 - **No breadcrumbs on product pages** (series and `ProductSpecLayout`); breadcrumb JSON-LD
   stays for search.
 - **Hero has two slides** (`heroPanels` in `src/app/page.tsx`): the ARQ film, then
-  `SYSTEM_FILM` (a 28 s cut of the Stretch System explainer — Cohuman wordmark, "STRETCH",
-  the leg and beam, Stretch V and S, workstations, "Make it work"; recipe in
-  `hero-films.ts`; its own portrait cut for phones). In a sequence each film plays once and
+  the system films (`SYSTEM_FILMS` — today `STRETCH_S_FILM`, the client's edited Stretch S
+  film, 27 s desktop / 17 s phone cut, made to `docs/video-brief-stretch.md`; Stretch V
+  joins as slide 3 when edited; recipe in `hero-films.ts`). In a sequence each film plays once and
   hands on when it ends (`onEnded`); a lone film loops. **Controls are bottom-centre dots**
   (client, Nov 2026) — the ink control block, arrows, labels and timecode are gone; pressing
   the current dot pauses / resumes (WCAG 2.2.2). The hero's desktop links now sit on the
@@ -564,6 +564,9 @@ a route. Template-literal and variable hrefs are out of the checker's reach.
   `src/lib/catalog/resolve.ts` (`resolveCatLabel`, `resolveColName`); only
   components that open the quote dialog or manage local state (buttons, forms,
   filters) are client components.
+- **Static files are cached** by `headers()` in `next.config.ts` (images and video under
+  `public/`: a day in the browser, a year at Vercel's edge, refreshed on each deploy).
+  No external CDN — the domain's DNS is at GoDaddy and Vercel already serves from its edge.
 - No `console.log` in committed code; surface errors via thrown errors / API
   error responses instead.
 - Animated figures use `useCountUp` (`src/lib/use-count-up.ts`) via `CountUp` or

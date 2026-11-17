@@ -14,7 +14,7 @@ import { StaggerContainer, StaggerItem } from "@/components/ui/scroll-reveal";
 import { CollectionCard } from "@/components/collections/collection-card";
 import { catalog, pieceLeadImage, type Piece } from "@/lib/catalog";
 import { DESIGNER_COLLAB_CREDIT, buildCollectionMenu, type CollectionItem } from "@/lib/catalog/collection-menu";
-import { LEAD_FILM, SYSTEM_FILM, type HeroFilm } from "@/lib/hero-films";
+import { LEAD_FILM, SYSTEM_FILMS, type HeroFilm } from "@/lib/hero-films";
 import { publicFileExists } from "@/lib/public-assets";
 import { ALL_SERIES, VARIDEX_SERIES, type SeriesConfig } from "@/lib/series";
 import { cn } from "@/lib/utils";
@@ -82,13 +82,13 @@ function playableMobile(mobile: HeroFilm["mobile"]): HeroFilm["mobile"] {
  */
 function heroPanels(config: SeriesConfig): HeroPanel[] {
   if (publicFileExists(LEAD_FILM.poster)) {
-    // Slide 1, the lead film with the page's claim; slide 2, the Stretch system film,
-    // which plays after it (client, Nov 2026). Each hands on when it ends.
+    // Slide 1, the lead film with the page's claim; then the system films (Stretch S, and
+    // Stretch V once edited), which play after it (client, Nov 2026). Each hands on when it ends.
     const lead: HeroPanel = { kind: "film", film: playable(LEAD_FILM), overlay: <FilmIntro product={HERO_PRODUCT} /> };
-    const system = publicFileExists(SYSTEM_FILM.poster)
-      ? [{ kind: "film" as const, film: playable(SYSTEM_FILM) }]
-      : [];
-    return [lead, ...system];
+    const systems = SYSTEM_FILMS.filter((film) => publicFileExists(film.poster)).map(
+      (film): HeroPanel => ({ kind: "film", film: playable(film) }),
+    );
+    return [lead, ...systems];
   }
   return [
     {

@@ -11,6 +11,28 @@ const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
   },
+  /*
+    Files served straight from `public/` — the hero films and posters, and the images
+    drawn `unoptimized` (finish swatches, configurator tiles) — otherwise go out with
+    `max-age=0, must-revalidate`, so every visit re-checks each one. Their names are not
+    content hashes, so browsers keep them for a day and refresh in the background for a
+    week after; the CDN keeps them a year (each deploy starts a fresh edge cache, so a
+    replaced file is never served stale past a release). `/_next/image` responses are
+    cached by `images.minimumCacheTTL` below and `_next/static` by Next itself.
+  */
+  async headers() {
+    return [
+      {
+        source: "/:path*.:ext(jpg|jpeg|png|webp|avif|svg|mp4|webm)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800",
+          },
+        ],
+      },
+    ];
+  },
   // Retired URLs, kept working: the Residence sector became Hospitality.
   async redirects() {
     return [{ source: "/sectors/residence", destination: "/sectors/hospitality", permanent: true }];
