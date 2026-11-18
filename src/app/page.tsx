@@ -82,8 +82,8 @@ function playableMobile(mobile: HeroFilm["mobile"]): HeroFilm["mobile"] {
  */
 function heroPanels(config: SeriesConfig): HeroPanel[] {
   if (publicFileExists(LEAD_FILM.poster)) {
-    // Slide 1, the lead film with the page's claim; then the system films (Stretch S, and
-    // Stretch V once edited), which play after it (client, Nov 2026). Each hands on when it ends.
+    // Slide 1, the lead film with the page's claim; then the Stretch film (both designs),
+    // which plays after it (client, Nov 2026). Each hands on when it ends.
     const lead: HeroPanel = { kind: "film", film: playable(LEAD_FILM), overlay: <FilmIntro product={HERO_PRODUCT} /> };
     const systems = SYSTEM_FILMS.filter((film) => publicFileExists(film.poster)).map(
       (film): HeroPanel => ({ kind: "film", film: playable(film) }),

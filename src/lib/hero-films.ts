@@ -22,6 +22,13 @@
  *
  * (VP9 `-crf 33` for the WebM; the poster is the first frame). Crop a watermark out with
  * `-vf "crop=…"` when a clip carries one.
+ *
+ * Since Nov 2026 the desktop files are a sharper encode of the same clip (re-sent as
+ * `001(4K).mp4` — byte-identical to `VIDEO 2 .mp4`, still 1344×768): Lanczos-scaled to
+ * 1920 wide with a light unsharp, H.264 CRF 21 (3.4 MB) and VP9 CRF 30 (2.0 MB), as
+ * `hero-arq.*` so browsers holding the old `hero-desk.*` files fetch the new ones:
+ *
+ *   -vf "scale=1920:-2:flags=lanczos,unsharp=5:5:0.6:5:5:0.0,setsar=1"
  */
 export interface HeroFilm {
   id: string;
@@ -55,9 +62,9 @@ export interface HeroFilm {
 export const LEAD_FILM: HeroFilm = {
   id: "desk",
   label: "Film",
-  poster: "/video/hero-desk-poster.jpg",
+  poster: "/video/hero-arq-poster.jpg",
   alt: "An executive desk with a marble top on a dark timber pedestal and slab legs, filmed in a slow orbit in a pale studio",
-  video: { mp4: "/video/hero-desk.mp4", webm: "/video/hero-desk.webm" },
+  video: { mp4: "/video/hero-arq.mp4", webm: "/video/hero-arq.webm" },
   tone: "light",
   // On a phone without the portrait cut: left of centre, where the pedestal meets the
   // marble top through the orbit.
@@ -83,29 +90,31 @@ export const LEAD_FILM: HeroFilm = {
 };
 
 /**
- * Slide 2 (client, Nov 2026): the Stretch S film, edited from the "Stretch System Video"
- * explainer to the brief in `docs/video-brief-stretch.md` — the Cohuman wordmark,
- * "Stretch S", the leg joint, "One set of parts", the configurations, the office floor and
- * the wordmark again. Delivered as `stretch-s-desktop.webm` (1920×1080, 27.3 s) and
- * `stretch-s-mobile.webm` (1080×1920, 17.3 s, its own edit). The editor left a small
- * Cohuman wordmark in the top-right corner of every frame — a second logo beside the
- * header's — so it is painted out with `delogo` (desktop `x=1516:y=138:w=226:h=52`,
- * mobile `x=784:y=222:w=246:h=56`, at the source sizes). Audio dropped; H.264 CRF 23
- * `+faststart` and VP9 CRF 36; the phone cut scaled to 720×1280; posters at 0.3 s.
- * Stretch V's film follows as slide 3 once it is edited (add it to `SYSTEM_FILMS`).
+ * Slide 2 (client, Nov 2026): the Stretch film — one film for both designs, replacing the
+ * separate Stretch S / Stretch V films. Edited from the "Stretch System Video" explainer
+ * to the brief in `docs/video-brief-stretch.md`: the Cohuman wordmark, "Stretch", the leg
+ * joint, the short beam, "One set of parts", the bench and round table, "Two designs"
+ * (Stretch V and Stretch S side by side), the office floor rising to the plan, the
+ * wordmark again (its first frame, so it loops). Delivered as `stretch-desktop.mp4`
+ * (1920×1080, 22.1 s) and `stretch-mobile.mp4` (1080×1920, 17.3 s — its own tighter
+ * edit, V and S stacked) with an edit log. The editor put a small Cohuman wordmark in
+ * the top-right corner of every frame — a second logo beside the header's — so it is
+ * painted out with `delogo` (desktop `x=1516:y=138:w=226:h=52`, mobile
+ * `x=784:y=222:w=246:h=56`, at the source sizes). Audio dropped; H.264 CRF 23
+ * `+faststart` and VP9 CRF 36; the phone cut scaled to 720×1280; posters are frame 0.
  */
-export const STRETCH_S_FILM: HeroFilm = {
-  id: "stretch-s",
-  label: "Stretch S",
-  poster: "/video/hero-stretch-s-poster.jpg",
-  alt: "Animated film of Stretch S: the splayed leg joint, the tables it builds from one set of parts, and an office floor furnished with them",
-  video: { mp4: "/video/hero-stretch-s.mp4", webm: "/video/hero-stretch-s.webm" },
+export const STRETCH_FILM: HeroFilm = {
+  id: "stretch",
+  label: "Stretch",
+  poster: "/video/hero-stretch-poster.jpg",
+  alt: "Animated film of the Stretch system: the splayed leg joint, tables built from one set of parts, Stretch V and Stretch S side by side, and an office floor furnished with them",
+  video: { mp4: "/video/hero-stretch.mp4", webm: "/video/hero-stretch.webm" },
   tone: "light",
   mobile: {
-    poster: "/video/hero-stretch-s-mobile-poster.jpg",
-    video: { mp4: "/video/hero-stretch-s-mobile.mp4", webm: "/video/hero-stretch-s-mobile.webm" },
+    poster: "/video/hero-stretch-mobile-poster.jpg",
+    video: { mp4: "/video/hero-stretch-mobile.mp4", webm: "/video/hero-stretch-mobile.webm" },
   },
 };
 
 /** The system films that play after the lead film, in order. */
-export const SYSTEM_FILMS: readonly HeroFilm[] = [STRETCH_S_FILM];
+export const SYSTEM_FILMS: readonly HeroFilm[] = [STRETCH_FILM];

@@ -125,9 +125,9 @@ drifting.
 - **No breadcrumbs on product pages** (series and `ProductSpecLayout`); breadcrumb JSON-LD
   stays for search.
 - **Hero has two slides** (`heroPanels` in `src/app/page.tsx`): the ARQ film, then
-  the system films (`SYSTEM_FILMS` — today `STRETCH_S_FILM`, the client's edited Stretch S
-  film, 27 s desktop / 17 s phone cut, made to `docs/video-brief-stretch.md`; Stretch V
-  joins as slide 3 when edited; recipe in `hero-films.ts`). In a sequence each film plays once and
+  the Stretch film (`SYSTEM_FILMS` — today `STRETCH_FILM`, the client's edited film of
+  both designs, 22 s desktop / 17 s phone cut, made to `docs/video-brief-stretch.md`; no
+  separate Stretch V slide; recipe in `hero-films.ts`). In a sequence each film plays once and
   hands on when it ends (`onEnded`); a lone film loops. **Controls are bottom-centre dots**
   (client, Nov 2026) — the ink control block, arrows, labels and timecode are gone; pressing
   the current dot pauses / resumes (WCAG 2.2.2). The hero's desktop links now sit on the
@@ -426,8 +426,9 @@ review there is **one panel** — the 1-2-3 selector and the comparison film are
   takes the hero and the H1 only if the lead film's poster is missing.
 
 The film files live in `public/video/` (MP4 + WebM + a poster). The current lead film is
-the client's `VIDEO 2 .mp4`: 1344×768, 10 seconds, one continuous orbit of the
-marble-topped desk, no cuts, no watermark — encoded full frame with the audio stripped.
+the client's `VIDEO 2 .mp4` (re-sent as `001(4K).mp4`, the same file): 1344×768, 10
+seconds, the marble-topped desk, no watermark — upscaled to 1920 wide as `hero-arq.*`
+with the audio stripped.
 The claim sits on its own title block, not on the footage. Set each film's `tone` (header type colour
 over it) and `mobileFocus` (the part of the frame a phone keeps). A film may also carry a
 `mobile` portrait cut (poster + video) that replaces it below 768px — the lead film does:
